@@ -9,7 +9,9 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hejuhenryk.THM",
+      "appleTeamId": "55NT296GTJ"
     },
     "android": {
       "adaptiveIcon": {
