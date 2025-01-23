@@ -1,8 +1,8 @@
-# Welcome to your Expo app 👋
+# Welcome to your THS - TESS APP in EXPO 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-It was created with: 
+It was created with:
 
 ```
 npx create-expo-app@latest
@@ -12,7 +12,6 @@ npx create-expo-app@latest
 npm run reset-project
 ```
 
-
 ## Get started
 
 1. Install dependencies
@@ -20,9 +19,8 @@ npm run reset-project
    ```bash
    yarn
    ```
-
 2. We will need to use developer build (we can not use expo go)
- Sett up you env
+   Sett up you env
 
    [text](https://docs.expo.dev/get-started/set-up-your-environment/)
 
