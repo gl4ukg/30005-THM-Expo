@@ -1,4 +1,3 @@
-import { BottomMenu } from "@/components/BottomMenu";
 import { Stack } from "expo-router";
 import { View } from "react-native";
 
@@ -16,11 +15,8 @@ export default function RootLayout() {
       >
         <Stack>
           <Stack.Screen name="index" options={{ title: "Dashboard" }} />
-          <Stack.Screen name="login" options={{ title: "Home" }} />
-          <Stack.Screen name="something" options={{ title: "Something" }} />
         </Stack>
       </View>
-      <BottomMenu />
     </View>
   );
 }
