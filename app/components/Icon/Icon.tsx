@@ -1,38 +1,28 @@
 import Reactﬁ from 'react';
 import { View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
-import iconMapping from './iconMapping';
-import colors from '../../colors'
-
-type IconName = keyof typeof iconMapping;
-
-type SizeOptions = 'small' | 'large';
+import {iconMapping} from './iconMapping';
+import {colors} from '../../colors'
 
 type IconProps = {
-    name: IconName;
-    size?: SizeOptions;
-    color?: string;
+    name: keyof typeof iconMapping;
+    size?: keyof typeof iconSize;
+    color?:  keyof typeof colors;
 };
 
-const getSizeValue= (size:SizeOptions)=>{
-    switch (size){
-        case 'small':
-            return 24;
-        case 'large':
-            return 32;
-        default:
-            return 24;
-    }
-}
-const Icon: React.FC<IconProps> = ({ name, size = 'small', color = colors.primary }) => {
+export const iconSize = {
+    sm:24,
+    md:32,
+} 
+
+export const Icon: React.FC<IconProps> = ({ name, size = 'sm', color = "primary" }) => {
     const IconComponent = iconMapping[name];
-    const IconSize = getSizeValue(size)
+    const iconSizeNumber = iconSize[size];
+    const IconColor = colors[color];
 
     return (
-            <View style={{ width: IconSize, height: IconSize }}>
-                <IconComponent size={IconSize} color={color} />
+            <View style={{ width: iconSizeNumber, height: iconSizeNumber }}>
+                <IconComponent size={iconSizeNumber} color={IconColor} />
             </View>
     );
 };
-
-export default Icon;

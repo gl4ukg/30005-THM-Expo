@@ -19,7 +19,7 @@ import User from './icons/User';
 
 type IconName = 'Search'|'Meter'|'Menu'|'Locked'|'Email'|'Password'|'Download'|'Upload'|'Settings'|'Cart'|'Task'|'Trash'|'User'|'Up'|'Down'|'Left'|'Right';
 
-const iconMapping: Record<IconName, React.FC<any>> = {
+export const iconMapping: Record<IconName, React.FC<any>> = {
     Search,
     Meter,
     Menu,
@@ -38,5 +38,3 @@ const iconMapping: Record<IconName, React.FC<any>> = {
     Left,
     Right,
 };
-
-export default iconMapping;

@@ -1,4 +1,4 @@
-const colors = {
+export const colors = {
     primary: '#009640',
     t25: '#007C34',
     t50:'#005F27',
@@ -10,6 +10,4 @@ const colors = {
   };
   
   export type Colors = typeof colors; 
-  
-  export default colors;
   
