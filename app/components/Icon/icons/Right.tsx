@@ -6,7 +6,7 @@ interface SearchProps {
     color: string;
 }
 
-const Down: React.FC<SearchProps> = ({ size, color }) => {
+const Right: React.FC<SearchProps> = ({ size, color }) => {
     return (
         <Svg width={size} height={size} viewBox="0 0 24 24">
             <Rect width={size} height={size} transform="translate(24.5 24) rotate(180)" fill="none" fill-opacity="0.01"/>
@@ -16,4 +16,4 @@ const Down: React.FC<SearchProps> = ({ size, color }) => {
     );
 };
 
-export default Down;
+export default Right;
