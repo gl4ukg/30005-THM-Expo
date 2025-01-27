@@ -1,6 +1,7 @@
 import { NavMenu } from "@/components/UI";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { tokens } from "@/lib/tokens";
+import { Icon } from "@/components/Icon/Icon";
 
 const Dashboard = () => {
   return (
@@ -28,13 +29,13 @@ const Dashboard = () => {
               { title: "Home", to: "/" },
               { title: "UI", to: "/ui" },
             ],
-            icon: () => <Text>Home</Text>,
+            icon: () => <Icon name="Locked" color="#000" size="sm" />,
           },
           {
             id: "2",
             title: "About",
             links: [{ title: "About", to: "/ui" }],
-            icon: () => <Text>About</Text>,
+            icon: () => <Icon name="Locked" color="#000" size="sm" />,
           },
           {
             id: "4",
@@ -43,7 +44,7 @@ const Dashboard = () => {
               { title: "Home", to: "/" },
               { title: "UI", to: "/ui" },
             ],
-            icon: () => <Text>Home</Text>,
+            icon: () => <Icon name="Locked" color="#000" size="sm" />,
           },
           {
             id: "3",
@@ -52,7 +53,7 @@ const Dashboard = () => {
               { title: "Home", to: "/" },
               { title: "UI", to: "/ui" },
             ],
-            icon: () => <Text>Home</Text>,
+            icon: () => <Icon name="Locked" color="#000" size="sm" />,
           },
           {
             id: "11",
@@ -61,13 +62,13 @@ const Dashboard = () => {
               { title: "Home", to: "/" },
               { title: "UI", to: "/ui" },
             ],
-            icon: () => <Text>Home</Text>,
+            icon: () => <Icon name="Locked" color="#000" size="sm" />,
           },
           {
             id: "22",
             title: "About",
             links: [{ title: "About", to: "/ui" }],
-            icon: () => <Text>About</Text>,
+            icon: () => <Icon name="Settings" color="#000" size="sm" />,
           },
           {
             id: "43",
@@ -76,7 +77,7 @@ const Dashboard = () => {
               { title: "Home", to: "/" },
               { title: "UI", to: "/ui" },
             ],
-            icon: () => <Text>Home</Text>,
+            icon: () => <Icon name="Locked" color="#000" size="sm" />,
           },
           {
             id: "34",
@@ -85,7 +86,7 @@ const Dashboard = () => {
               { title: "Home", to: "/" },
               { title: "UI", to: "/ui" },
             ],
-            icon: () => <Text>Home</Text>,
+            icon: () => <Icon name="Locked" color="#000" size="sm" />,
           },
           {
             id: "16",
@@ -94,13 +95,13 @@ const Dashboard = () => {
               { title: "Home", to: "/" },
               { title: "UI", to: "/ui" },
             ],
-            icon: () => <Text>Home</Text>,
+            icon: () => <Icon name="Locked" color="#000" size="sm" />,
           },
           {
             id: "27",
             title: "About",
             links: [{ title: "About", to: "/ui" }],
-            icon: () => <Text>About</Text>,
+            icon: () => <Icon name="Settings" color="#000" size="sm" />,
           },
           {
             id: "48",
@@ -109,7 +110,7 @@ const Dashboard = () => {
               { title: "Home", to: "/" },
               { title: "UI", to: "/ui" },
             ],
-            icon: () => <Text>Home</Text>,
+            icon: () => <Icon name="Settings" color="#000" size="sm" />,
           },
           {
             id: "39",
@@ -118,7 +119,7 @@ const Dashboard = () => {
               { title: "Home", to: "/" },
               { title: "UI", to: "/ui" },
             ],
-            icon: () => <Text>Home</Text>,
+            icon: () => <Icon name="Locked" color="#000" size="sm" />,
           },
           {
             id: "51",
@@ -127,13 +128,13 @@ const Dashboard = () => {
               { title: "Home", to: "/" },
               { title: "UI", to: "/ui" },
             ],
-            icon: () => <Text>Home</Text>,
+            icon: () => <Icon name="Locked" color="#000" size="sm" />,
           },
           {
             id: "52",
             title: "About",
             links: [{ title: "About", to: "/ui" }],
-            icon: () => <Text>About</Text>,
+            icon: () => <Icon name="Settings" color="#000" size="sm" />,
           },
           {
             id: "54",
@@ -142,7 +143,7 @@ const Dashboard = () => {
               { title: "Home", to: "/" },
               { title: "UI", to: "/ui" },
             ],
-            icon: () => <Text>Home</Text>,
+            icon: () => <Icon name="Locked" color="#000" size="sm" />,
           },
         ]}
       />

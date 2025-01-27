@@ -24,7 +24,6 @@ type NavElementType = NavLink | NavMenu;
 
 export const NavElement: FC<NavElementType> = (props) => {
   if ("to" in props) {
-    console.log(props.to);
     return (
       <Link asChild href={props.to} style={[styles.container]}>
         <Pressable
@@ -37,7 +36,6 @@ export const NavElement: FC<NavElementType> = (props) => {
     );
   } else if ("links" in props) {
     const { isCollapsed, toggleCollapsed, id } = props;
-    console.log(id, isCollapsed);
     return (
       <>
         <Pressable
