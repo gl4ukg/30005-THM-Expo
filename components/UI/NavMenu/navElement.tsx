@@ -20,7 +20,7 @@ interface NavMenu extends NavElement {
 export type NavElementsType =
   | NavLink
   | Omit<NavMenu, "isCollapsed" | "toggleCollapsed">;
-type NavElementType = NavLink | NavMenu;
+type NavElementType = { handleLinkPress?: () => void } & (NavLink | NavMenu);
 
 export const NavElement: FC<NavElementType> = (props) => {
   if ("to" in props) {
@@ -28,6 +28,7 @@ export const NavElement: FC<NavElementType> = (props) => {
       <Link asChild href={props.to} style={[styles.container]}>
         <Pressable
           style={({ pressed }) => [pressed && styles.containerPressed]}
+          onPress={props?.handleLinkPress}
         >
           <View>{props.icon && <props.icon />}</View>
           <Text>{props.title}</Text>
@@ -61,6 +62,7 @@ export const NavElement: FC<NavElementType> = (props) => {
                     style={({ pressed }) => [
                       pressed && styles.containerPressed,
                     ]}
+                    onPress={props?.handleLinkPress}
                   >
                     <View>{link.icon && <link.icon />}</View>
                     <Text>{link.title}</Text>

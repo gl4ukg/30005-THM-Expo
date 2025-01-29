@@ -1,13 +1,14 @@
-import { ButtonTHS } from "@/components/UI/Button/button";
 import {
   type NavElementsType,
   NavElement,
 } from "@/components/UI/NavMenu/navElement";
-import { Link } from "expo-router";
 import { FC, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
-export const NavMenu: FC<{ elements: NavElementsType[] }> = ({ elements }) => {
+export const NavMenu: FC<{
+  elements: NavElementsType[];
+  handleLinkPress?: () => void;
+}> = ({ elements, handleLinkPress }) => {
   const collapsable = elements.filter((element) => "links" in element);
   const [areCollapsed, updateAreCollapsed] = useState<Record<string, boolean>>(
     collapsable.reduce((acc, element) => {
@@ -48,6 +49,7 @@ export const NavMenu: FC<{ elements: NavElementsType[] }> = ({ elements }) => {
               title={element.title}
               icon={element.icon}
               links={element.links}
+              handleLinkPress={handleLinkPress}
             />
           );
         } else {
@@ -57,10 +59,12 @@ export const NavMenu: FC<{ elements: NavElementsType[] }> = ({ elements }) => {
               title={element.title}
               icon={element.icon}
               to={element.to}
+              handleLinkPress={handleLinkPress}
             />
           );
         }
       })}
+      <View style={{ height: 50 }} />
     </ScrollView>
   );
 };
@@ -68,6 +72,13 @@ export const NavMenu: FC<{ elements: NavElementsType[] }> = ({ elements }) => {
 const styles = StyleSheet.create({
   list: {
     width: "100%",
+    minWidth: 300,
     flex: 1,
+    paddingTop: 10,
+    paddingBottom: 50,
+    marginBottom: 40,
+    borderTopWidth: 2,
+    borderColor: "#009640",
+    backgroundColor: "#BDECB9",
   },
 });
