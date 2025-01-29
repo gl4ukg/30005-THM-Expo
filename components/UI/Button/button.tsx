@@ -1,0 +1,57 @@
+import { colors } from "@/lib/tokens/colors";
+import React, { ReactNode } from "react";
+
+import {
+  Pressable,
+  View,
+  Text,
+  type PressableProps,
+  StyleSheet,
+} from "react-native";
+
+interface ButtonTHSProps extends PressableProps {
+  title: string;
+  children?: ReactNode | ReactNode[];
+}
+export const ButtonTHS: React.FC<ButtonTHSProps> = ({
+  children,
+  title,
+  onPress,
+}) => {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.container,
+        pressed && styles.containerPressed,
+      ]}
+    >
+      <View>
+        {React.Children.map(children, (child) => child)}
+        <Text style={styles.text}>{title}</Text>
+      </View>
+    </Pressable>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: colors.secondary[500],
+  },
+  containerPressed: {
+    opacity: 0.6,
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "white",
+  },
+});

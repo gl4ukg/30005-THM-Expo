@@ -18,7 +18,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.THM"
+      "package": "com.hejuhenryk.THM"
     },
     "web": {
       "bundler": "metro",
@@ -34,6 +34,17 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
+        }
+      ],
+      ["expo-font",
+        {"fonts":
+          [
+            "node_modules/@expo-google-fonts/open-sans/OpenSans_400Regular.ttf",
+            "node_modules/@expo-google-fonts/open-sans/OpenSans_600SemiBold.ttf",
+            "node_modules/@expo-google-fonts/open-sans/Roboto_400Regular.ttf",
+            "node_modules/@expo-google-fonts/open-sans/Roboto_500Medium.ttf",
+            "node_modules/@expo-google-fonts/open-sans/RobotoCondensed_400Regular.ttf"
+          ]
         }
       ]
     ],
