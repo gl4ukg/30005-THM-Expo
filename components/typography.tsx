@@ -3,43 +3,43 @@ import { Text, StyleSheet } from 'react-native';
 import { Platform } from 'react-native';
 
 interface Props {
-  textType: 
-    | "Button"
-    | "ButtonCapstock"
-    | "Navigation"
-    | "Section Header"
-    | "Numerical Highlight"
-    | "Field Label"
-    | "Field Value"
-    | "Table Header"
-    | "Table Content";
-  string: string;
+  name: 
+    | "button"
+    | "buttonCapstock"
+    | "navigation"
+    | "sectionHeader"
+    | "numericalHighlight"
+    | "fieldLabel"
+    | "fieldValue"
+    | "tableHeader"
+    | "tableContent";
+  text: string;
 }
 
-export const Typography: FC<Props> = ({ textType, string }) => {
+export const Typography: FC<Props> = ({ name, text }) => {
 
-  return <Text style={getStyle(textType)}>{string}</Text>;
+  return <Text style={getStyle(name)}>{text}</Text>;
 };
 
-const getStyle = (textType: Props['textType']) => {
-  switch (textType) {
-    case 'Button':
+const getStyle = (name: Props['name']) => {
+  switch (name) {
+    case 'button':
       return styles.button;
-    case 'ButtonCapstock':
+    case 'buttonCapstock':
       return styles.buttonCapstock;
-    case 'Navigation':
+    case 'navigation':
       return styles.navigation;
-    case 'Section Header':
+    case 'sectionHeader':
       return styles.sectionHeader;
-    case 'Numerical Highlight':
+    case 'numericalHighlight':
       return styles.numericalHighlight;
-    case 'Field Label':
+    case 'fieldLabel':
       return styles.fieldLabel;
-    case 'Field Value':
+    case 'fieldValue':
       return styles.fieldValue;
-    case 'Table Header':
+    case 'tableHeader':
       return styles.tableHeader;
-    case 'Table Content':
+    case 'tableContent':
       return styles.tableContent;
   }
 };
