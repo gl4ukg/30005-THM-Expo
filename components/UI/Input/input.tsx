@@ -8,8 +8,6 @@ interface Props{
     icon?: IconName;
     label?: string;
     placeHolder?: string;
-
-
 }
 export const Input: React.FC<Props> = ({icon, label, placeHolder = "" }) => {
     const [text, onChangeText] = React.useState('')
@@ -17,16 +15,14 @@ export const Input: React.FC<Props> = ({icon, label, placeHolder = "" }) => {
     return (
         <View style={{flexDirection:"column"}}>
             { label &&
-                        <View style={{marginLeft:34}}>
-
-                <Typography name="fieldLabel" text={label}/>
+                <View style={{marginLeft:34}}>
+                    <Typography name="fieldLabel" text={label}/>
                 </View>
                 }   
             <View style={{flexDirection:'row', alignItems:"center"}}>
-                
                 { icon &&
                 <Icon name={icon} size="md"/>
-            }
+                }
                 <TextInput 
                     style={styles.input}
                     value={text}
