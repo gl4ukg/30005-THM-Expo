@@ -28,254 +28,81 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
           handleLinkPress={() => setIsOpen(false)}
           elements={[
             {
-              id: "1",
-              title: "SAS",
-              icon: () => <Icon name="Locked" color="black" />,
+              title: "Download / sync data",
+              to: "/(tabs)/hoses",
+              icon: () => <Icon name="Download" color="#009640" />,
+            },
+            {
+              title: "Upload your data",
+              to: "/(tabs)/user",
+              icon: () => <Icon name="Upload" color="#009640" />,
+            },
+            {
+              id: "Inspection",
+              title: "Inspection",
+              icon: () => <Icon name="Search" color="#009640" />,
               links: [
                 {
-                  title: "Home",
+                  title: "Inspect",
                   to: "/",
                 },
                 {
-                  title: "User",
+                  title: "Edit hose data",
                   to: "/(tabs)/user",
                 },
                 {
-                  title: "Hoses",
+                  title: "Update RFID",
+                  to: "/(tabs)/hoses",
+                },
+                {
+                  title: "Metering",
                   to: "/(tabs)/hoses",
                 },
               ],
             },
             {
-              id: "12",
-              title: "fsa",
-              icon: () => <Icon name="Locked" color="black" />,
-              links: [
-                {
-                  title: "Home",
-                  to: "/",
-                },
-                {
-                  title: "User",
-                  to: "/(tabs)/user",
-                },
-                {
-                  title: "Hoses",
-                  to: "/(tabs)/hoses",
-                },
-              ],
-            },
-            {
-              id: "131",
-              title: "Homevxfsd",
-              icon: () => <Icon name="Locked" color="black" />,
-              links: [
-                {
-                  title: "Home",
-                  to: "/",
-                },
-                {
-                  title: "User",
-                  to: "/(tabs)/user",
-                },
-                {
-                  title: "Hoses",
-                  to: "/(tabs)/hoses",
-                },
-              ],
-            },
-            {
-              id: "1532",
-              title: "Homeasdas",
-              icon: () => <Icon name="Locked" color="black" />,
-              links: [
-                {
-                  title: "Home",
-                  to: "/",
-                },
-                {
-                  title: "User",
-                  to: "/(tabs)/user",
-                },
-                {
-                  title: "Hoses",
-                  to: "/(tabs)/hoses",
-                },
-              ],
-            },
-            {
-              id: "1SDA",
-              title: "Home123",
-              icon: () => <Icon name="Locked" color="black" />,
-              links: [
-                {
-                  title: "Home",
-                  to: "/",
-                },
-                {
-                  title: "User",
-                  to: "/(tabs)/user",
-                },
-                {
-                  title: "Hoses",
-                  to: "/(tabs)/hoses",
-                },
-              ],
-            },
-            {
-              id: "1SDFS",
-              title: "Home23",
-              icon: () => <Icon name="Locked" color="black" />,
-              links: [
-                {
-                  title: "Home",
-                  to: "/",
-                },
-                {
-                  title: "User",
-                  to: "/(tabs)/user",
-                },
-                {
-                  title: "Hoses",
-                  to: "/(tabs)/hoses",
-                },
-              ],
-            },
-            {
-              title: "Userd23",
+              title: "Alerts /KPIs",
               to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
+              icon: () => <Icon name="Meter" color="#009640" />,
             },
             {
-              title: "User23",
+              title: "Order hoses",
               to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
+              icon: () => <Icon name="Cart" color="#009640" />,
             },
             {
-              title: "Usersd",
+              title: "Hose replacement & pressure testing",
               to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
+              icon: () => <Icon name="Task" color="#009640" />,
             },
             {
-              title: "Userd",
+              title: "Report ID as scrapped",
               to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
+              icon: () => <Icon name="Trash" color="#009640" />,
             },
             {
-              title: "User888f",
+              title: "Send mail",
               to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
+              icon: () => <Icon name="Email" color="#009640" />,
             },
             {
-              title: "User88",
+              title: "Settings",
               to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User99",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User9",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User8",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User7",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User5",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User4",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User3",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User2",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User1BF",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User1AAA",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User1XX",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User1QQ",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User1Q",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User1W",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User1U",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User1M",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User1B",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User1A",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
-            },
-            {
-              title: "User1F",
-              to: "/(tabs)/user",
-              icon: () => <Icon name="User" color="black" />,
+              icon: () => <Icon name="Settings" color="#009640" />,
             },
           ]}
         />
       </Collapsible>
-      <View style={[styles.wrapper, { paddingBottom: insets.bottom }]}>
-        <View style={styles.background}>
-          <TessLines />
+      <View style={[styles.navigationContainer, { bottom: insets.bottom }]}>
+        <View style={[styles.background, { bottom: -insets.bottom }]}>
+          <TessLines width={Dimensions.get("window").width * 0.6} />
         </View>
         <View style={styles.buttonsWrapper}>
           <Link asChild href="/(tabs)/user" style={styles.button}>
-            <Pressable style={({ pressed }) => [pressed && {}]}>
+            <Pressable
+              style={({ pressed }) => [pressed && {}]}
+              onPress={() => setIsOpen(false)}
+            >
               <Icon name="User" color="#fff" />
             </Pressable>
           </Link>
@@ -318,15 +145,13 @@ const styles = StyleSheet.create({
   collapsible: {
     position: "absolute",
     bottom: 0,
-    left: 0,
-    right: 0,
-    maxHeight: Dimensions.get("window").height - 150,
+    left: 20,
+    right: 20,
     flex: 1,
     paddingTop: 9,
-    paddingInline: 20,
     zIndex: 1000,
   },
-  wrapper: {
+  navigationContainer: {
     width: "100%",
     position: "absolute",
     bottom: 0,
@@ -336,8 +161,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#007c34",
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 9,
-    paddingInline: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 3,
     zIndex: 1000,
   },
   buttonsWrapper: {
@@ -345,8 +176,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: 20,
-    height: 32,
-    maxWidth: 450,
+    height: 50,
+    maxWidth: 350,
     width: "100%",
   },
   button: {
@@ -355,12 +186,12 @@ const styles = StyleSheet.create({
   },
   background: {
     position: "absolute",
-    bottom: 15,
+    bottom: 0,
     left: 0,
     right: 0,
-    height: 60,
+    top: 0,
     backgroundColor: "#007c34",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
   },
 });

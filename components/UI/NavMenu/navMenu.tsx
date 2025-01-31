@@ -64,7 +64,6 @@ export const NavMenu: FC<{
           );
         }
       })}
-      <View style={{ height: 50 }} />
     </ScrollView>
   );
 };

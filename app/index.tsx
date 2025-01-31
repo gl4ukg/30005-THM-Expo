@@ -42,6 +42,14 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   link: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 3,
     width: "100%",
     alignItems: "center",
     paddingVertical: 12,
@@ -49,7 +57,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     gap: 8,
-    elevation: 3,
     backgroundColor: "#BDECB9",
   },
 });

@@ -1,3 +1,4 @@
+import { Typography } from "@/components/typography";
 import { Href, Link } from "expo-router";
 import { FC } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -31,7 +32,7 @@ export const NavElement: FC<NavElementType> = (props) => {
           onPress={props?.handleLinkPress}
         >
           <View>{props.icon && <props.icon />}</View>
-          <Text>{props.title}</Text>
+          <Typography name="navigation" text={props.title} />
         </Pressable>
       </Link>
     );
@@ -48,9 +49,10 @@ export const NavElement: FC<NavElementType> = (props) => {
         >
           <View>{props.icon && <props.icon />}</View>
           <View>
-            <Text style={[styles.title, !isCollapsed && styles.titleOpened]}>
-              {props.title}
-            </Text>
+            <Typography
+              name={isCollapsed ? "navigation" : "navigationBold"}
+              text={props.title}
+            />
           </View>
         </Pressable>
         <Collapsible collapsed={isCollapsed} align="center">
@@ -65,7 +67,7 @@ export const NavElement: FC<NavElementType> = (props) => {
                     onPress={props?.handleLinkPress}
                   >
                     <View>{link.icon && <link.icon />}</View>
-                    <Text>{link.title}</Text>
+                    <Typography name="navigation" text={link.title} />
                   </Pressable>
                 </Link>
               </View>
@@ -86,7 +88,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     gap: 8,
-    elevation: 3,
     backgroundColor: "#BDECB9",
   },
   containerPressed: {
@@ -97,7 +98,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     gap: 2,
-    elevation: 3,
     backgroundColor: "#BDECB9",
   },
   innerLink: {

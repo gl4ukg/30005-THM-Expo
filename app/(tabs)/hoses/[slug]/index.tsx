@@ -1,3 +1,4 @@
+import { useLocalSearchParams } from "expo-router";
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -6,7 +7,7 @@ interface Props {
 }
 
 const Host: React.FC<Props> = (props) => {
-  console.log({ props });
+  const { slug } = useLocalSearchParams();
   return (
     <SafeAreaView
       style={{
@@ -15,8 +16,8 @@ const Host: React.FC<Props> = (props) => {
         alignItems: "center",
       }}
     >
-      <Text>Hosse 1{props.slug}</Text>
-      <Text>Hosse 1{props.slug}</Text>
+      <Text>Hosse {slug}</Text>
+      <Text>Hosse {slug}</Text>
     </SafeAreaView>
   );
 };

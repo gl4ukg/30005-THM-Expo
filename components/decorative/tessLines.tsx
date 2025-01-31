@@ -11,14 +11,14 @@ interface Props {
 export const TessLines: FC<Props> = ({
   color = "#005F27",
   width = 194,
-  height = 29,
+  height,
   style,
 }) => {
   return (
     <Svg
       style={style}
       width={width}
-      height={height}
+      height={height ?? (width * 29) / 194}
       viewBox="0 0 194 29"
       fill="none"
     >
