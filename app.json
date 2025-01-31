@@ -41,9 +41,9 @@
           [
             "node_modules/@expo-google-fonts/open-sans/OpenSans_400Regular.ttf",
             "node_modules/@expo-google-fonts/open-sans/OpenSans_600SemiBold.ttf",
-            "node_modules/@expo-google-fonts/open-sans/Roboto_400Regular.ttf",
-            "node_modules/@expo-google-fonts/open-sans/Roboto_500Medium.ttf",
-            "node_modules/@expo-google-fonts/open-sans/RobotoCondensed_400Regular.ttf"
+            "node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf",
+            "node_modules/@expo-google-fonts/roboto/Roboto_500Medium.ttf",
+            "node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_400Regular.ttf"
           ]
         }
       ]
