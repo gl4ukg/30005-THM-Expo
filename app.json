@@ -35,6 +35,17 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      ["expo-font",
+        {"fonts":
+          [
+            "node_modules/@expo-google-fonts/open-sans/OpenSans_400Regular.ttf",
+            "node_modules/@expo-google-fonts/open-sans/OpenSans_600SemiBold.ttf",
+            "node_modules/@expo-google-fonts/open-sans/Roboto_400Regular.ttf",
+            "node_modules/@expo-google-fonts/open-sans/Roboto_500Medium.ttf",
+            "node_modules/@expo-google-fonts/open-sans/RobotoCondensed_400Regular.ttf"
+          ]
+        }
       ]
     ],
     "experiments": {
