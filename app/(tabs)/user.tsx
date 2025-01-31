@@ -1,7 +1,7 @@
 import { Link } from "expo-router";
 import { SafeAreaView, Text, View } from "react-native";
 
-const Ui = () => {
+const User = () => {
   return (
     <SafeAreaView
       style={{
@@ -11,10 +11,10 @@ const Ui = () => {
       }}
     >
       <Link href="/">
-        <Text>Dashboard</Text>
+        <Text>User</Text>
       </Link>
     </SafeAreaView>
   );
 };
 
-export default Ui;
+export default User;
