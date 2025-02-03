@@ -1,7 +1,7 @@
 import { Icon } from "@/components/Icon/Icon"
 import { IconName } from "@/components/Icon/iconMapping"
 import { Typography } from "@/components/typography";
-import React from "react"
+import { useState } from "react";
 import { TextInput, StyleSheet, View } from "react-native"
 
 interface Props{
@@ -10,7 +10,7 @@ interface Props{
     placeHolder?: string;
 }
 export const Input: React.FC<Props> = ({icon, label, placeHolder = "" }) => {
-    const [text, onChangeText] = React.useState('')
+    const [text, onChangeText] = useState('')
 
     return (
         <View style={{flexDirection:"column"}}>
