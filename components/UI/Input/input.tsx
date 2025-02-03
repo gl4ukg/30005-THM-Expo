@@ -13,13 +13,13 @@ export const Input: React.FC<Props> = ({icon, label, placeHolder = "" }) => {
     const [text, onChangeText] = useState('')
 
     return (
-        <View style={{flexDirection:"column"}}>
+        <View style={styles.outerView}>
             { label &&
-                <View style={{marginLeft:34}}>
+                <View style={styles.labelView}>
                     <Typography name="fieldLabel" text={label}/>
                 </View>
                 }   
-            <View style={{flexDirection:'row', alignItems:"center"}}>
+            <View style={styles.innerView}>
                 { icon &&
                 <Icon name={icon} size="md"/>
                 }
@@ -40,6 +40,16 @@ const styles = StyleSheet.create({
         marginLeft: 2,
         borderWidth: 0,
         padding: 10,
-        backgroundColor:"#C9C9C9"
+        backgroundColor:"#C9C9C9",
     },
+    outerView:{
+        flexDirection:"column",
+    },
+    innerView:{
+        flexDirection:'row',
+        alignItems:"center",
+    },
+    labelView:{
+        marginLeft:34,
+    }
 });
