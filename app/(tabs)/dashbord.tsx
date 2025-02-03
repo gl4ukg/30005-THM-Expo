@@ -1,3 +1,4 @@
+import { Input } from "@/components/UI/Input/input";
 import { Link } from "expo-router";
 import { SafeAreaView, Text, View } from "react-native";
 
@@ -13,6 +14,8 @@ const Dashbord = () => {
       <Link href="/">
         <Text>Dashbord</Text>
       </Link>
+      <Input label="Email" icon="Email" placeHolder="ola@nordmann.com"/>
+
     </SafeAreaView>
   );
 };

@@ -17,7 +17,7 @@ import Trash from './icons/Trash';
 import User from './icons/User';
 
 
-type IconName = 'Search'|'Meter'|'Menu'|'Locked'|'Email'|'Password'|'Download'|'Upload'|'Settings'|'Cart'|'Task'|'Trash'|'User'|'Up'|'Down'|'Left'|'Right';
+export type IconName = 'Search'|'Meter'|'Menu'|'Locked'|'Email'|'Password'|'Download'|'Upload'|'Settings'|'Cart'|'Task'|'Trash'|'User'|'Up'|'Down'|'Left'|'Right';
 
 export const iconMapping: Record<IconName, React.FC<any>> = {
     Search,
