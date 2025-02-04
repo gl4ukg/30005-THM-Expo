@@ -1,29 +1,42 @@
-import { NavMenu } from "@/components/UI";
+import { ButtonTHS, NavMenu } from "@/components/UI";
 import {
-  Pressable,
+  ImageBackground,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
-import { Icon } from "@/components/Icon/Icon";
-import { BottomNavigation } from "@/components/UI/BottomNavigation";
-import { Link } from "expo-router";
+import { useState } from "react";
+import { Welcome } from "@/components/login/welcome";
+import { LoginScreen } from "@/components/login/login";
+import { Typography } from "@/components/typography";
+import { TessLines } from "@/components/decorative/tessLines";
 
 const Login = () => {
+  const [view, setView] = useState<string>("Welcome");
+  const handlePress = (page: string) => {
+    setView(page);
+  };
+
   return (
+    <ImageBackground source={require('../assets/images/TESS-THM-inspector.png')}   style={{
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    }}>
     <SafeAreaView style={styles.view}>
       <ScrollView contentContainerStyle={styles.navigationContainer}>
-        <Link asChild href="/(tabs)/dashbord" style={[styles.link]}>
-          <Pressable
-          // style={({ pressed }) => [pressed && styles.containerPressed]}
-          >
-            <Text>Dashbord</Text>
-          </Pressable>
-        </Link>
+        {view ==="Welcome" && (
+          <Welcome nextView={handlePress}/>            
+        )}
+        {view === "Login" && (
+          <LoginScreen nextView={handlePress}/>
+        )}
+        <Typography name={"button"} text={"© 2025 Copyright TESS AS"} style={{color:'white'}}/>
+        <TessLines/>
       </ScrollView>
     </SafeAreaView>
+    </ImageBackground>
   );
 };
 
