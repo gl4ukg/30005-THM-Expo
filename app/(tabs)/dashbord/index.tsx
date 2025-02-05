@@ -1,3 +1,4 @@
+import { DashboardNumber } from "@/components/dashboard";
 import { Icon } from "@/components/Icon/Icon";
 import { Typography } from "@/components/typography";
 import { Select } from "@/components/UI/Select";
@@ -52,6 +53,9 @@ const Dashbord = () => {
       router.push("/(tabs)/dashbord/hoses/contactTessTeam");
     }
   };
+  const goToFilter = (filter: string) => {
+    router.push(`/(tabs)/dashbord/hoses/${filter}`);
+  };
   return (
     <SafeAreaView style={style.safeView}>
       <View style={style.container}>
@@ -63,9 +67,30 @@ const Dashbord = () => {
             onChange={setSelected}
           />
         </View>
-        <Link href="/(tabs)/dashbord/hoses/failed">
-          <Text>Failed</Text>
-        </Link>
+        <View style={style.menu}>
+          <DashboardNumber
+            label="Failed"
+            value="12"
+            trend={1}
+            state="error"
+            onPress={() => goToFilter("Failed")}
+          />
+          <DashboardNumber
+            label="Overdue"
+            value="12"
+            trend={1}
+            state="warning"
+            onPress={() => goToFilter("Overdue")}
+          />
+          <DashboardNumber
+            label="Failed"
+            value="12"
+            trend={1}
+            state="success"
+            onPress={() => goToFilter("w/remarks")}
+          />
+        </View>
+
         <Link href="/(tabs)/dashbord/hoses/overdue">
           <Text>Overdue</Text>
         </Link>
@@ -118,6 +143,16 @@ const style = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     gap: 6,
+    // borderColor: "#009640",
+    // borderWidth: 2,
+  },
+  menu: {
+    width: "100%",
+    alignItems: "stretch",
+    justifyContent: "center",
+    padding: 0,
+    gap: 6,
+    flexDirection: "row",
     // borderColor: "#009640",
     // borderWidth: 2,
   },
