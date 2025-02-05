@@ -19,21 +19,20 @@ const Login = () => {
   };
 
   return (
-    <ImageBackground source={require('../assets/images/TESS-THM-inspector.png')}   style={{
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-    }}>
-    <SafeAreaView style={styles.view}>
-      <ScrollView contentContainerStyle={styles.navigationContainer}>
+    <ImageBackground source={require('../assets/images/TESS-THM-inspector.png')}>
+
+    <SafeAreaView >
+      <ScrollView contentContainerStyle={styles.scrollView}>
         {view ==="Welcome" && (
           <Welcome nextView={handlePress}/>            
         )}
         {view === "Login" && (
           <LoginScreen nextView={handlePress}/>
         )}
-        <Typography name={"button"} text={"© 2025 Copyright TESS AS"} style={{color:'white'}}/>
-        <TessLines/>
+        <View style={styles.footerView}>
+          <Typography name={"button"} text={"© 2025 Copyright TESS AS"} style={{color:'white'}}/>
+          <TessLines/>
+        </View>
       </ScrollView>
     </SafeAreaView>
     </ImageBackground>
@@ -43,16 +42,13 @@ const Login = () => {
 export default Login;
 
 const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    height: "100%",
+  safeArea: {
+    // height: "100%",
     position: "relative",
   },
-  navigationContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  scrollView: {
     width: "100%",
+    borderWidth: 2,
   },
   link: {
     shadowColor: "#000",
@@ -71,5 +67,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
     backgroundColor: "#BDECB9",
+  },
+  footerView:{
+    width:"100%",
+    gap:5,
+    alignItems:"center",
   },
 });
