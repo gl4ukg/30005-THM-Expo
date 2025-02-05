@@ -9,14 +9,14 @@ interface Props{
 export const Welcome: React.FC<Props> = ({nextView}) => {
     return <View style={styles.container}>
         <View style={styles.paragraph}>
-            <Typography text="WELCOME" name={"sectionHeader"} style={{color:'white'}}/>
-            <Typography text="to TESS Hose Management(THM)." name={"sectionHeader"} style={{color:'white'}}/>
-            <Typography text="Existing users: sign in with your user login" name={"sectionHeader"} style={{color:'white'}}/>
-            <Typography text="New users: request access and our team will revert to you with information needed to setup your account." name={"sectionHeader"} style={{color:'white'}}/>
+            <Typography text="WELCOME" name={"sectionHeader"} style={styles.whiteText}/>
+            <Typography text="to TESS Hose Management(THM)." name={"sectionHeader"} style={styles.whiteText}/>
+            <Typography text="Existing users: sign in with your user login" name={"sectionHeader"} style={styles.whiteText}/>
+            <Typography text="New users: request access and our team will revert to you with information needed to setup your account." name={"sectionHeader"} style={styles.whiteText}/>
         </View>
         <ButtonTHS title={"LOGIN"} onPress={() => nextView("Login")} />
         <View style={styles.semiFooter}>
-            <Typography name={"button"} text={"We hose the world"} style={{color:'white'}}/>
+            <Typography name={"button"} text={"We hose the world"} style={styles.whiteText}/>
             <Image source={require('../../assets/images/norway-flag.png')}/>
         </View>
     </View>;
@@ -40,4 +40,7 @@ const styles = StyleSheet.create({
         gap:5,
         alignItems:"center",
       },
+    whiteText:{
+        color:'white',
+    }
 })

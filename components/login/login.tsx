@@ -7,7 +7,7 @@ interface Props{
     nextView: (page:string) => void;
 }
 
-export const LoginScreen: React.FC<Props> = ({nextView}) => {
+export const LoginScreen: React.FC<Props> = () => {
     const [email, setEmail] = useState('');
     const [fullName, setFullName] = useState('');
     const [password, setPassword] = useState('');
@@ -18,15 +18,17 @@ export const LoginScreen: React.FC<Props> = ({nextView}) => {
         console.log("Password:", password);
     };
 
-    return <View style={styles.container}>
+    return (
+    <View style={styles.container}>
         <View style={styles.form}>
-        <Typography name={"sectionHeader"} text={"Login"} style={{color:"white"}}/>
-        <Input icon="Email" label="Email" placeHolder="ola@nordmann.no" value={email} onChangeText={setEmail} labelColor="white"/>
-        <Input icon="User" label="Your full name" value={fullName} onChangeText={setFullName} labelColor="white"/>
-        <Input icon="Password" label="Password" value={password} onChangeText={setPassword} labelColor="white" type="password"/>
+            <Typography name={"sectionHeader"} text={"Login"} style={styles.whiteText}/>
+            <Input icon="Email" label="Email" placeHolder="ola@nordmann.no" value={email} onChangeText={setEmail} labelColor="white"/>
+            <Input icon="User" label="Your full name" value={fullName} onChangeText={setFullName} labelColor="white"/>
+            <Input icon="Password" label="Password" value={password} onChangeText={setPassword} labelColor="white" type="password"/>
         </View>
         <ButtonTHS title={"login"} onPress={handleLogin} />
-    </View>;
+    </View>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -42,4 +44,7 @@ const styles = StyleSheet.create({
         gap:15,
         alignItems:"center",
       },
+      whiteText:{
+        color:'white',
+    },
 });

@@ -2,7 +2,7 @@ import { Icon } from "@/components/Icon/Icon"
 import { IconName } from "@/components/Icon/iconMapping"
 import { Typography } from "@/components/typography";
 import { useState } from "react";
-import { TextInput, StyleSheet, View, StyleProp, TextStyle, TouchableOpacity } from "react-native"
+import { TextInput, StyleSheet, View, TouchableOpacity } from "react-native"
 
 interface Props{
     icon?: IconName;
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     },
     iconContainer: {
         position: 'absolute',
-        right: 0, // Positioning the icon inside the text input field
+        right: 0,
         top: 10,
         justifyContent: 'center',
      },
