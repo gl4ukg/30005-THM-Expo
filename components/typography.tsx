@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
     }),
   },
   numericalHighlight: {
-    fontSize: 28,
-    lineHeight: 22,
+    fontSize: 22,
+    lineHeight: 28,
     fontFamily: Platform.select({
       android: "Roboto_500Medium",
       ios: "Roboto-Medium",
@@ -77,16 +77,16 @@ const styles = StyleSheet.create({
     }),
   },
   tableHeader: {
-    fontSize: 28,
-    lineHeight: 22,
+    fontSize: 22,
+    lineHeight: 28,
     fontFamily: Platform.select({
       android: "RobotoCondensed_400Regular",
       ios: "RobotoCondensed-Regular",
     }),
   },
   tableContent: {
-    fontSize: 28,
-    lineHeight: 22,
+    fontSize: 20,
+    lineHeight: 24,
     fontFamily: Platform.select({
       android: "RobotoCondensed_400Regular",
       ios: "RobotoCondensed-Regular",

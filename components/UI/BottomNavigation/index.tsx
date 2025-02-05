@@ -29,12 +29,12 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
           elements={[
             {
               title: "Download / sync data",
-              to: "/(tabs)/hoses",
+              to: "/(tabs)/dashbord/hoses",
               icon: () => <Icon name="Download" color="#009640" />,
             },
             {
               title: "Upload your data",
-              to: "/(tabs)/user",
+              to: "/(tabs)/dashbord",
               icon: () => <Icon name="Upload" color="#009640" />,
             },
             {
@@ -130,8 +130,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 50,
-    paddingTop: 9,
-    paddingInline: 20,
     zIndex: 1000,
   },
   modalOpen: {

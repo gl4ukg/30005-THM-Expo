@@ -10,18 +10,21 @@ import {
 import { Icon } from "@/components/Icon/Icon";
 import { BottomNavigation } from "@/components/UI/BottomNavigation";
 import { Link } from "expo-router";
+import { Typography } from "@/components/typography";
 
 const Login = () => {
   return (
     <SafeAreaView style={styles.view}>
       <ScrollView contentContainerStyle={styles.navigationContainer}>
-        <Link asChild href="/(tabs)/dashbord" style={[styles.link]}>
-          <Pressable
-          // style={({ pressed }) => [pressed && styles.containerPressed]}
-          >
-            <Text>Dashbord</Text>
-          </Pressable>
-        </Link>
+        <View style={styles.container}>
+          <Link asChild href="/(tabs)/dashbord" style={[styles.link]}>
+            <Pressable
+            // style={({ pressed }) => [pressed && styles.containerPressed]}
+            >
+              <Text>Dashbord</Text>
+            </Pressable>
+          </Link>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -35,10 +38,18 @@ const styles = StyleSheet.create({
     height: "100%",
     position: "relative",
   },
-  navigationContainer: {
+  container: {
     flex: 1,
+    height: "100%",
+    position: "relative",
     justifyContent: "center",
     alignItems: "center",
+  },
+  navigationContainer: {
+    // flex: 1,
+    // justifyContent: "center",
+    // alignItems: "center",
+    padding: 20,
     width: "100%",
   },
   link: {

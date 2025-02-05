@@ -32,7 +32,11 @@ export default function TabLayout() {
             style={styles.headerText}
           />
         </View>
-        <Tabs screenOptions={{ headerShown: false }} tabBar={() => <></>}>
+        <Tabs
+          screenOptions={{ headerShown: false }}
+          initialRouteName="dashbord"
+          tabBar={() => <></>}
+        >
           <Tabs.Screen
             name="user"
             options={
