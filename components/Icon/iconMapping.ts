@@ -15,8 +15,8 @@ import Cart from './icons/Cart';
 import Task from './icons/Task';
 import Trash from './icons/Trash';
 import User from './icons/User';
-import { TrendArrowDown } from "@/components/Icon/icons/TrendArrowDown";
-import { TrendArrowUp } from "@/components/Icon/icons/TrendArrowUp";
+import TrendArrowDown from "@/components/Icon/icons/TrendArrowDown";
+import TrendArrowUp from "@/components/Icon/icons/TrendArrowUp";
 
 export type IconName =
   | "Search"

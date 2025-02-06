@@ -70,33 +70,27 @@ const Dashbord = () => {
         <View style={style.menu}>
           <DashboardNumber
             label="Failed"
-            value="12"
+            value={1129}
             trend={1}
             state="error"
-            onPress={() => goToFilter("Failed")}
+            onPress={() => goToFilter("failed")}
           />
           <DashboardNumber
             label="Overdue"
-            value="12"
-            trend={1}
+            value={0}
+            trend={-1}
             state="warning"
-            onPress={() => goToFilter("Overdue")}
+            onPress={() => goToFilter("overdue")}
           />
           <DashboardNumber
             label="Failed"
-            value="12"
-            trend={1}
+            value={12}
+            trend={0}
             state="success"
-            onPress={() => goToFilter("w/remarks")}
+            onPress={() => goToFilter("withRemarks")}
           />
         </View>
 
-        <Link href="/(tabs)/dashbord/hoses/overdue">
-          <Text>Overdue</Text>
-        </Link>
-        <Link href="/(tabs)/dashbord/hoses/withRemarks">
-          <Text>w/remarks</Text>
-        </Link>
         <Link href="/(tabs)/dashbord/hoses/inspection">
           <Text>Hoses soon to be inspected</Text>
         </Link>

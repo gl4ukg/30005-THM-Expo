@@ -1,12 +1,8 @@
 import React from "react";
 import Svg, { Path, Rect } from "react-native-svg";
+import { type SvgIconProps } from "@/components/Icon/Icon";
 
-interface Props {
-  size: number;
-  color: string;
-}
-
-export const TrendArrowUp: React.FC<Props> = ({ size, color }) => {
+const TrendArrowUp: React.FC<SvgIconProps> = ({ size, color }) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24">
       <Rect
@@ -19,3 +15,5 @@ export const TrendArrowUp: React.FC<Props> = ({ size, color }) => {
     </Svg>
   );
 };
+
+export default TrendArrowUp;
