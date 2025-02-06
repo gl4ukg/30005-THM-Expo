@@ -12,7 +12,7 @@ export const Trend = ({
 }) => {
   const trendIcon =
     trend === 1 ? (
-      <Icon name="TrendArrowDown" size="sm" color={color} />
+      <Icon name="TrendArrowUp" size="sm" color={color} />
     ) : trend === -1 ? (
       <Icon name="TrendArrowDown" size="sm" color={color} />
     ) : (

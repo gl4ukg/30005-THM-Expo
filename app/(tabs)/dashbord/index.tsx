@@ -1,4 +1,5 @@
 import { DashboardNumber } from "@/components/dashboard";
+import { DashboardTitle } from "@/components/dashboard/dashboardTitle";
 import { Icon } from "@/components/Icon/Icon";
 import { Typography } from "@/components/typography";
 import { Select } from "@/components/UI/Select";
@@ -43,16 +44,6 @@ const Dashbord = () => {
 
   const router = useRouter();
 
-  const onActionChange = (value: (typeof menuOptions)[0]["value"]) => {
-    console.log(value);
-    if (value === "scrapHoses") {
-      router.push("/(tabs)/dashbord/hoses/scrapHoses");
-    } else if (value === "requestForQuote") {
-      router.push("/(tabs)/dashbord/hoses/requestForQuote");
-    } else if (value === "contactTessTeam") {
-      router.push("/(tabs)/dashbord/hoses/contactTessTeam");
-    }
-  };
   const goToFilter = (filter: string) => {
     router.push(`/(tabs)/dashbord/hoses/${filter}`);
   };
@@ -90,31 +81,39 @@ const Dashbord = () => {
             onPress={() => goToFilter("withRemarks")}
           />
         </View>
-
-        <Link href="/(tabs)/dashbord/hoses/inspection">
-          <Text>Hoses soon to be inspected</Text>
-        </Link>
-        <Link href="/(tabs)/dashbord/hoses/overdue">
-          <Text>Replacements overdue</Text>
-        </Link>
-        <Link href="/(tabs)/dashbord/hoses/upcoming">
-          <Text>Replacements upcoming</Text>
-        </Link>
-        <Link href="/(tabs)/dashbord/hoses/iInTransit">
-          <Text>New hoses in transit</Text>
-        </Link>
-        <Link href="/(tabs)/dashbord/hoses/recycled">
-          <Text>Hoses recycled</Text>
-        </Link>
-        {/* <View style={style.header}>
-          <Typography name="tableContent" text="Failed inspections (11)" />
-          <Select
-            menuTitle="Actions"
-            selected="Actions"
-            options={menuOptions}
-            onChange={onActionChange}
-          />
-        </View> */}
+        <DashboardTitle
+          onPress={() => goToFilter("inspection")}
+          label="Hoses soon to be inspected"
+          value={230}
+          trend={1}
+        />
+        <View style={style.replacements}>
+          <Typography name="sectionHeader" text="Replacements" />
+        </View>
+        <DashboardTitle
+          onPress={() => goToFilter("overdue")}
+          label="Replacements overdue"
+          value={123}
+          trend={-1}
+        />
+        <DashboardTitle
+          onPress={() => goToFilter("upcoming")}
+          label="Replacements upcoming"
+          value={8}
+          trend={1}
+        />
+        <DashboardTitle
+          onPress={() => goToFilter("iInTransit")}
+          label="New hoses in transit"
+          value={14}
+          trend={-1}
+        />
+        <DashboardTitle
+          onPress={() => goToFilter("recycled")}
+          label="Hoses recycled"
+          value={14}
+          trend={1}
+        />
       </View>
     </SafeAreaView>
   );
@@ -130,6 +129,7 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
+    gap: 12,
     padding: 20,
   },
   header: {
@@ -142,13 +142,18 @@ const style = StyleSheet.create({
   },
   menu: {
     width: "100%",
-    alignItems: "stretch",
+    alignItems: "center",
     justifyContent: "center",
     padding: 0,
-    gap: 6,
+    gap: 12,
     flexDirection: "row",
-    // borderColor: "#009640",
-    // borderWidth: 2,
+  },
+  replacements: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 20,
+    gap: 12,
   },
 });
 
