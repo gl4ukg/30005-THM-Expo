@@ -58,6 +58,7 @@ const Dashbord = () => {
             onChange={setSelected}
           />
         </View>
+
         <View style={style.menu}>
           <DashboardNumber
             label="Failed"
@@ -74,7 +75,7 @@ const Dashbord = () => {
             onPress={() => goToFilter("overdue")}
           />
           <DashboardNumber
-            label="Failed"
+            label="w/Remarks"
             value={12}
             trend={0}
             state="success"
@@ -142,8 +143,9 @@ const style = StyleSheet.create({
   },
   menu: {
     width: "100%",
+    position: "relative",
     alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "space-evenly",
     padding: 0,
     gap: 12,
     flexDirection: "row",

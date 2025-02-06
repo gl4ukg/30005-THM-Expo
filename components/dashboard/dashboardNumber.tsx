@@ -67,11 +67,11 @@ export const DashboardNumber: FC<Props> = ({
 const style = StyleSheet.create({
   container: {
     justifyContent: "center",
+    flex: 1,
     alignItems: "center",
     backgroundColor: "red",
     padding: 4,
     gap: 4,
-    width: 120,
   },
   valueContainer: {
     flexDirection: "row",
