@@ -1,11 +1,6 @@
 import Svg, { Path } from 'react-native-svg';
 
-interface SearchProps {
-    size: number;
-    color: string;
-}
-
-const Eye: React.FC<SearchProps> = () => {
+const Eye: React.FC = () => {
     return (
 <Svg width="16" height="16" viewBox="0 0 16 16" fill="none">
     <Path d="M8.00003 10C9.1046 10 10 9.10457 10 8C10 6.89543 9.1046 6 8.00003 6C6.89546 6 6.00003 6.89543 6.00003 8C6.00003 9.10457 6.89546 10 8.00003 10Z" fill="#666666"/>
