@@ -1,6 +1,7 @@
 import { Icon } from "@/components/Icon/Icon"
 import { IconName } from "@/components/Icon/iconMapping"
 import { Typography } from "@/components/typography";
+import { colors } from "@/lib/tokens/colors";
 import { useState } from "react";
 import { TextInput, StyleSheet, View, TouchableOpacity } from "react-native"
 
@@ -41,7 +42,7 @@ export const Input: React.FC<Props> = ({icon, label, placeHolder = "", value, on
                     />
                     {type === 'password' && 
                     <TouchableOpacity onPress={togglePasswordVisibility} style={styles.iconContainer}>
-                        <Icon name={isPasswordVisible ? "EyeOff" : "Eye"} size="md" color={labelColor} />
+                        <Icon name={isPasswordVisible ? "EyeOff" : "Eye"} size="xsm" color={colors.passwordEyeIcon} />
                     </TouchableOpacity>
                     }
             </View>
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
         marginLeft: 2,
         borderWidth: 0,
         padding: 10,
-        backgroundColor:"#C9C9C9",
+        backgroundColor:colors.inputBackground,
         position:"relative",
 
     },
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
     },
     iconContainer: {
         position: 'absolute',
-        right: 0,
+        right: 10,
         top: 10,
         justifyContent: 'center',
      },

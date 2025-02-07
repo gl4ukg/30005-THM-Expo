@@ -1,5 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { Typography } from "../typography";
+import { colors } from "@/lib/tokens/colors";
 
 interface Props{
     header?:string,
@@ -22,13 +23,13 @@ const styles = StyleSheet.create({
         width:"90%",
         margin:"auto",
         gap:10,
-        backgroundColor:"black",
+        backgroundColor:colors.black,
         paddingHorizontal:20,
         paddingVertical:10,
         opacity:3/4,
     },
     whiteText:{
-        color:'white',
+        color:colors.white,
     },
     centeredText: {
         textAlign: 'center',

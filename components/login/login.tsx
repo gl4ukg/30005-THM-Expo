@@ -4,6 +4,7 @@ import { ButtonTHS } from "../UI/Button/button"
 import { Input } from "../UI/Input/input";
 import { useState } from "react";
 import { LoginHeader } from "./loginHeader";
+import { colors } from "@/lib/tokens/colors";
 interface Props{
     nextView: (page:string) => void;
 }
@@ -46,6 +47,6 @@ const styles = StyleSheet.create({
         alignItems:"center",
       },
       whiteText:{
-        color:'white',
+        color:colors.white,
     },
 });

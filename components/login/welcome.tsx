@@ -3,9 +3,12 @@ import { Typography } from "../typography"
 import { ButtonTHS } from "../UI/Button/button"
 import {Image} from 'react-native'
 import { LoginHeader } from "./loginHeader";
+import { colors } from "@/lib/tokens/colors";
+
 interface Props{
     nextView: (page:string) => void;
 }
+
 const welcomeText =["to TESS Hose Management (THM).",
     "Existing users: sign in with your user login.",
     "New users: request access and our team will revert to you with information needed to setup your account."];
@@ -43,6 +46,6 @@ const styles = StyleSheet.create({
         alignItems:"center",
       },
     whiteText:{
-        color:'white',
+        color:colors.white,
     }
 })

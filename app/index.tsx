@@ -12,9 +12,10 @@ import { LoginScreen } from "@/components/login/login";
 import { Typography } from "@/components/typography";
 import { TessLines } from "@/components/decorative/tessLines";
 import { RequestAccess } from "@/components/login/requestAccess";
+import { colors } from "@/lib/tokens/colors";
 
 const Login = () => {
-  const [view, setView] = useState<string>("Welcome");
+  const [view, setView] = useState("Welcome");
   const handlePress = (page: string) => {
     setView(page);
   };
@@ -34,7 +35,7 @@ const Login = () => {
           <RequestAccess nextView={handlePress}/>
         )}
         <View style={styles.footerView}>
-          <Typography name={"button"} text={"© 2025 Copyright TESS AS"} style={{color:'white'}}/>
+          <Typography name={"button"} text={"© 2025 Copyright TESS AS"} style={styles.whiteText}/>
           <TessLines/>
         </View>
       </ScrollView>
@@ -77,4 +78,7 @@ const styles = StyleSheet.create({
     gap:5,
     alignItems:"center",
   },
+  whiteText:{
+    color:colors.white,
+  }
 });
