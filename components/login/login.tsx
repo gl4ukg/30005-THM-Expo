@@ -5,6 +5,7 @@ import { Input } from "../UI/Input/input";
 import { useState } from "react";
 import { LoginHeader } from "./loginHeader";
 import { colors } from "@/lib/tokens/colors";
+import { HelpLinks } from "./helpLinks";
 interface Props{
     nextView: (page:string) => void;
 }
@@ -29,6 +30,7 @@ export const LoginScreen: React.FC<Props> = () => {
             <Input icon="Password" label="Password" value={password} onChangeText={setPassword} labelColor="white" type="password"/>
         </View>
         <ButtonTHS title={"login"} onPress={handleLogin} />
+        <HelpLinks header="Unable to log in?"/>
     </View>
     )
 }
