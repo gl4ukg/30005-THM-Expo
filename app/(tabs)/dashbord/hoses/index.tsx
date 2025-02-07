@@ -17,7 +17,7 @@ const Hoses = () => {
         renderItem={({ item }) => (
           <Link
             style={{ margin: 10, padding: 30, backgroundColor: "red" }}
-            href={`/(tabs)/hoses/${item.id}`}
+            href={`/(tabs)/dashbord/hoses/hose/${item.id}`}
           >
             Hose {item.id}
           </Link>

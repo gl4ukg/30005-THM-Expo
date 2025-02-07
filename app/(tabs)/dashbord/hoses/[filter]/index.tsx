@@ -7,7 +7,8 @@ interface Props {
 }
 
 const Host: React.FC<Props> = (props) => {
-  const { slug } = useLocalSearchParams();
+  const { filter } = useLocalSearchParams();
+  console.log(filter);
   return (
     <SafeAreaView
       style={{
@@ -16,8 +17,7 @@ const Host: React.FC<Props> = (props) => {
         alignItems: "center",
       }}
     >
-      <Text>Hosse {slug}</Text>
-      <Text>Hosse {slug}</Text>
+      <Text>Filter by {filter}</Text>
     </SafeAreaView>
   );
 };

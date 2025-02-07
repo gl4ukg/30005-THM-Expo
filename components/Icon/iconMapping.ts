@@ -19,29 +19,58 @@ import Eye from './icons/Eye';
 import EyeOff from './icons/EyeOff';
 import Industry from './icons/Industry';
 import Phone from './icons/Phone';
+import TrendArrowDown from "@/components/Icon/icons/TrendArrowDown";
+import TrendArrowUp from "@/components/Icon/icons/TrendArrowUp";
 
-export type IconName = 'Search'|'Meter'|'Menu'|'Locked'|'Email'|'Password'|'Download'|'Upload'|'Settings'|'Cart'|'Task'|'Trash'|'User'|'Up'|'Down'|'Left'|'Right'|'Eye'|'EyeOff'|"Industry"|"Phone";
+  
+export type IconName =
+  | "Search"
+  | "Meter"
+  | "Menu"
+  | "Locked"
+  | "Email"
+  | "Password"
+  | "Download"
+  | "Upload"
+  | "Settings"
+  | "Cart"
+  | "Task"
+  | "Trash"
+  | "User"
+  | "Up"
+  | "Down"
+  | "Left"
+  | "Right"
+  | "TrendArrowUp"
+  | "TrendArrowDown"
+  |'Eye'
+  |'EyeOff'
+  |"Industry"
+  |"Phone";
 
 export const iconMapping: Record<IconName, React.FC<any>> = {
-    Search,
-    Meter,
-    Menu,
-    Locked,
-    Email,
-    Password,
-    Download,
-    Upload,
-    Settings,
-    Cart,
-    Task,
-    Trash,
-    User,
-    Up,
-    Down,
-    Left,
-    Right,
+
     Eye,
     EyeOff,
     Industry,
     Phone,
+  Search,
+  Meter,
+  Menu,
+  Locked,
+  Email,
+  Password,
+  Download,
+  Upload,
+  Settings,
+  Cart,
+  Task,
+  Trash,
+  User,
+  Up,
+  Down,
+  Left,
+  Right,
+  TrendArrowDown,
+  TrendArrowUp,
 };
