@@ -16,7 +16,7 @@ export const colors = {
   alertError: "#E51C22",
   alertErrorText: "#BC3442",
   extendedBlue: "#003e15",
-  extendedPurple: "#001e00",
+  extendedPurple: "#8E3A9E",
   dashbordRed: "#FFD5E3",
   dashbordRedText: "#D97E80",
   dashbordGreen: "#BDECB9",

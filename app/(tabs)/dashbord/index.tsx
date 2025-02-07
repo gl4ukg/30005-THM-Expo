@@ -1,11 +1,12 @@
 import { DashboardNumber } from "@/components/dashboard";
+import { DashboardChart } from "@/components/dashboard/dashboardChart";
 import { DashboardTitle } from "@/components/dashboard/dashboardTitle";
 import { Icon } from "@/components/Icon/Icon";
 import { Typography } from "@/components/typography";
 import { Select } from "@/components/UI/Select";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const options = [
   {
@@ -49,7 +50,7 @@ const Dashbord = () => {
   };
   return (
     <SafeAreaView style={style.safeView}>
-      <View style={style.container}>
+      <ScrollView contentContainerStyle={style.container}>
         <View style={style.header}>
           <Typography name="tableHeader" text="Inspections" />
           <Select
@@ -58,7 +59,7 @@ const Dashbord = () => {
             onChange={setSelected}
           />
         </View>
-
+        <DashboardChart />
         <View style={style.menu}>
           <DashboardNumber
             label="Failed"
@@ -115,7 +116,7 @@ const Dashbord = () => {
           value={14}
           trend={1}
         />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -123,11 +124,8 @@ const Dashbord = () => {
 const style = StyleSheet.create({
   safeView: {
     flex: 1,
-    borderColor: "yellow",
-    borderWidth: 2,
   },
   container: {
-    flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
     gap: 12,
