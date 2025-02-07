@@ -15,9 +15,14 @@ import Cart from './icons/Cart';
 import Task from './icons/Task';
 import Trash from './icons/Trash';
 import User from './icons/User';
+import Eye from './icons/Eye';
+import EyeOff from './icons/EyeOff';
+import Industry from './icons/Industry';
+import Phone from './icons/Phone';
 import TrendArrowDown from "@/components/Icon/icons/TrendArrowDown";
 import TrendArrowUp from "@/components/Icon/icons/TrendArrowUp";
 
+  
 export type IconName =
   | "Search"
   | "Meter"
@@ -37,9 +42,18 @@ export type IconName =
   | "Left"
   | "Right"
   | "TrendArrowUp"
-  | "TrendArrowDown";
+  | "TrendArrowDown"
+  |'Eye'
+  |'EyeOff'
+  |"Industry"
+  |"Phone";
 
 export const iconMapping: Record<IconName, React.FC<any>> = {
+
+    Eye,
+    EyeOff,
+    Industry,
+    Phone,
   Search,
   Meter,
   Menu,
