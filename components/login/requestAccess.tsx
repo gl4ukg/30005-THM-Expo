@@ -1,5 +1,4 @@
 import { View,StyleSheet } from "react-native"
-import { Typography } from "../typography"
 import { ButtonTHS } from "../UI/Button/button"
 import { Input } from "../UI/Input/input";
 import { useState } from "react";
