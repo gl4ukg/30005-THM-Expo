@@ -11,6 +11,7 @@ import { Welcome } from "@/components/login/welcome";
 import { LoginScreen } from "@/components/login/login";
 import { Typography } from "@/components/typography";
 import { TessLines } from "@/components/decorative/tessLines";
+import { RequestAccess } from "@/components/login/requestAccess";
 
 const Login = () => {
   const [view, setView] = useState<string>("Welcome");
@@ -28,6 +29,9 @@ const Login = () => {
         )}
         {view === "Login" && (
           <LoginScreen nextView={handlePress}/>
+        )}
+         {view === "RequestAccess" && (
+          <RequestAccess nextView={handlePress}/>
         )}
         <View style={styles.footerView}>
           <Typography name={"button"} text={"© 2025 Copyright TESS AS"} style={{color:'white'}}/>

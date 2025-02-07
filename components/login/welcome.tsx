@@ -1,20 +1,22 @@
-import { StyleSheet, View } from "react-native"
+import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { Typography } from "../typography"
 import { ButtonTHS } from "../UI/Button/button"
 import {Image} from 'react-native'
+import { LoginHeader } from "./loginHeader";
 interface Props{
     nextView: (page:string) => void;
 }
+const welcomeText =["to TESS Hose Management (THM).",
+    "Existing users: sign in with your user login.",
+    "New users: request access and our team will revert to you with information needed to setup your account."];
 
 export const Welcome: React.FC<Props> = ({nextView}) => {
     return <View style={styles.container}>
-        <View style={styles.paragraph}>
-            <Typography text="WELCOME" name={"sectionHeader"} style={styles.whiteText}/>
-            <Typography text="to TESS Hose Management(THM)." name={"sectionHeader"} style={styles.whiteText}/>
-            <Typography text="Existing users: sign in with your user login" name={"sectionHeader"} style={styles.whiteText}/>
-            <Typography text="New users: request access and our team will revert to you with information needed to setup your account." name={"sectionHeader"} style={styles.whiteText}/>
-        </View>
+       <LoginHeader header="WELCOME" subHeader={welcomeText}/>
         <ButtonTHS title={"LOGIN"} onPress={() => nextView("Login")} />
+            <TouchableOpacity onPress={() => nextView("RequestAccess")}>
+                <Typography text="Request Access" name="sectionHeader" style={styles.whiteText}/>
+            </TouchableOpacity>
         <View style={styles.semiFooter}>
             <Typography name={"button"} text={"We hose the world"} style={styles.whiteText}/>
             <Image source={require('../../assets/images/norway-flag.png')}/>

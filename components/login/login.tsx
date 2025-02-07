@@ -3,6 +3,7 @@ import { Typography } from "../typography"
 import { ButtonTHS } from "../UI/Button/button"
 import { Input } from "../UI/Input/input";
 import { useState } from "react";
+import { LoginHeader } from "./loginHeader";
 interface Props{
     nextView: (page:string) => void;
 }
@@ -21,7 +22,7 @@ export const LoginScreen: React.FC<Props> = () => {
     return (
     <View style={styles.container}>
         <View style={styles.form}>
-            <Typography name={"sectionHeader"} text={"Login"} style={styles.whiteText}/>
+            <LoginHeader header={"LOGIN"}/>
             <Input icon="Email" label="Email" placeHolder="ola@nordmann.no" value={email} onChangeText={setEmail} labelColor="white"/>
             <Input icon="User" label="Your full name" value={fullName} onChangeText={setFullName} labelColor="white"/>
             <Input icon="Password" label="Password" value={password} onChangeText={setPassword} labelColor="white" type="password"/>
