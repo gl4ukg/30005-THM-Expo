@@ -15,9 +15,12 @@ import Cart from './icons/Cart';
 import Task from './icons/Task';
 import Trash from './icons/Trash';
 import User from './icons/User';
+import Eye from './icons/Eye';
+import EyeOff from './icons/EyeOff';
+import Industry from './icons/Industry';
+import Phone from './icons/Phone';
 
-
-export type IconName = 'Search'|'Meter'|'Menu'|'Locked'|'Email'|'Password'|'Download'|'Upload'|'Settings'|'Cart'|'Task'|'Trash'|'User'|'Up'|'Down'|'Left'|'Right';
+export type IconName = 'Search'|'Meter'|'Menu'|'Locked'|'Email'|'Password'|'Download'|'Upload'|'Settings'|'Cart'|'Task'|'Trash'|'User'|'Up'|'Down'|'Left'|'Right'|'Eye'|'EyeOff'|"Industry"|"Phone";
 
 export const iconMapping: Record<IconName, React.FC<any>> = {
     Search,
@@ -37,4 +40,8 @@ export const iconMapping: Record<IconName, React.FC<any>> = {
     Down,
     Left,
     Right,
+    Eye,
+    EyeOff,
+    Industry,
+    Phone,
 };

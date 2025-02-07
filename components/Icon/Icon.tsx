@@ -13,6 +13,7 @@ export interface SvgIconProps {
 }
 
 export const iconSize = {
+  xsm:16,
   sm: 24,
   md: 32,
 };
