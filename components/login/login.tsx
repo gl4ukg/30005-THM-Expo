@@ -38,10 +38,11 @@ export const LoginScreen: React.FC<Props> = () => {
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        gap: 200,
+        gap: 150,
         borderWidth: 1, 
         borderColor: "yellow",
         height: "100%",
+        marginBottom:50,
     },   
     form:{
         width:"100%",

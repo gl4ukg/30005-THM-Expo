@@ -35,7 +35,7 @@ export const HelpLinks: React.FC<Props> = ({header}) => {
                     <Typography name={"button"} text={phoneNumber} style={styles.whiteText}/>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleEmailPress}>
-                    <Typography name={"button"} text={emailAddr} style={styles.whiteText}/>
+                    <Typography name={"navigationBold"} text={emailAddr} style={styles.linkColor}/>
                 </TouchableOpacity>
             </View>
         </View>
@@ -44,15 +44,16 @@ export const HelpLinks: React.FC<Props> = ({header}) => {
 }
 const styles = StyleSheet.create({
     paragraph:{
-        width:"90%",
+        width:"100%",
         margin:"auto",
         justifyContent:"center",
         alignItems:'center',
-        borderWidth:1,
-        borderColor:"red"
     },
     whiteText:{
         color:colors.white,
     },
+    linkColor:{
+        color:colors.linkLightGreen,
+    }
 
 })
