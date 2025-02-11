@@ -1,5 +1,6 @@
 import { Icon } from "@/components/Icon/Icon";
 import { Typography } from "@/components/typography";
+import { colors } from "@/lib/tokens/colors";
 import { FC, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -10,7 +11,7 @@ type Option<T> = {
 };
 interface Props<T> {
   menuTitle?: string;
-  selected: T;
+  selected: T | null;
   options: Option<T>[];
   onChange: (value: T) => void;
 }
@@ -31,14 +32,14 @@ export const Select: FC<Props<string>> = ({
     <View>
       <Pressable onPress={() => setIsOpen(!isOpen)} style={style.button}>
         <Text style={style.buttonText}>
-          {menuTitle
-            ? menuTitle
-            : options.find((o) => o.value === selected)?.label}
+          {selected
+            ? options.find((o) => o.value === selected)?.label
+            : menuTitle || "Select"}
         </Text>
         {isOpen ? (
-          <Icon name="Up" color="#009640" />
+          <Icon name="Up" color={colors.primary} />
         ) : (
-          <Icon name="Down" color="#009640" />
+          <Icon name="Down" color={colors.primary} />
         )}
       </Pressable>
       <Modal visible={isOpen} transparent>
@@ -67,7 +68,7 @@ const style = StyleSheet.create({
   modal: {
     flex: 1,
     position: "relative",
-    backgroundColor: "#00000075",
+    backgroundColor: colors.black + "75",
   },
   button: {
     flexDirection: "row",
@@ -75,10 +76,10 @@ const style = StyleSheet.create({
     gap: 6,
   },
   buttonText: {
-    color: "#009640",
+    color: colors.primary,
   },
   options: {
-    backgroundColor: "#BDECB9",
+    backgroundColor: colors.dashbordGreen,
     width: "90%",
     position: "absolute",
     top: "20%",
@@ -88,8 +89,8 @@ const style = StyleSheet.create({
     gap: 20,
     borderTopWidth: 2,
     borderBottomWidth: 2,
-    borderTopColor: "#009640",
-    borderBottomColor: "#009640",
+    borderTopColor: colors.primary,
+    borderBottomColor: colors.primary,
   },
   option: {
     width: "100%",

@@ -1,6 +1,7 @@
 import { ButtonTHS, NavMenu } from "@/components/UI";
 import {
   ImageBackground,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -13,6 +14,7 @@ import { Typography } from "@/components/typography";
 import { TessLines } from "@/components/decorative/tessLines";
 import { RequestAccess } from "@/components/login/requestAccess";
 import { colors } from "@/lib/tokens/colors";
+import { Link } from "expo-router";
 
 const Login = () => {
   const [view, setView] = useState("Welcome");
@@ -21,25 +23,33 @@ const Login = () => {
   };
 
   return (
-    <ImageBackground source={require('../assets/images/TESS-THM-inspector.png')}>
-
-    <SafeAreaView >
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        {view ==="Welcome" && (
-          <Welcome nextView={handlePress}/>            
-        )}
-        {view === "Login" && (
-          <LoginScreen nextView={handlePress}/>
-        )}
-         {view === "RequestAccess" && (
-          <RequestAccess nextView={handlePress}/>
-        )}
-        <View style={styles.footerView}>
-          <Typography name={"button"} text={"© 2025 Copyright TESS AS"} style={styles.whiteText}/>
-          <TessLines/>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <ImageBackground
+      source={require("../assets/images/TESS-THM-inspector.png")}
+    >
+      <SafeAreaView>
+        <Link href="/(tabs)/dashbord" asChild>
+          <Pressable style={styles.link}>
+            <Typography
+              name={"button"}
+              text={"Back to dashboard"}
+              style={styles.whiteText}
+            />
+          </Pressable>
+        </Link>
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          {view === "Welcome" && <Welcome nextView={handlePress} />}
+          {view === "Login" && <LoginScreen nextView={handlePress} />}
+          {view === "RequestAccess" && <RequestAccess nextView={handlePress} />}
+          <View style={styles.footerView}>
+            <Typography
+              name={"button"}
+              text={"© 2025 Copyright TESS AS"}
+              style={styles.whiteText}
+            />
+            <TessLines />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </ImageBackground>
   );
 };
