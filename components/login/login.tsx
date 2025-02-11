@@ -21,6 +21,12 @@ export const LoginScreen: React.FC<Props> = () => {
 		}
 	};
 
+	const handleNameBlur = () => {
+		if (!/^[a-zA-Z\s]+$/.test(fullName)) {
+			Alert.alert('Invalid Name', 'Please enter a valid name.');
+		}
+	};
+
 	const handleLogin = () => {
 		console.log('Email:', email);
 		console.log('Full Name:', fullName);
@@ -46,6 +52,7 @@ export const LoginScreen: React.FC<Props> = () => {
 					value={fullName}
 					onChangeText={setFullName}
 					labelColor='white'
+					onBlur={handleNameBlur}
 				/>
 				<Input
 					icon='Password'
