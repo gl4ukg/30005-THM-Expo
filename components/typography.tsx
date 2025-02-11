@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   navigationBold: {
     fontSize: 16,
     lineHeight: 22,
-    fontWeight: 600,
+    fontWeight: "600",
     fontFamily: Platform.select({
       android: "OpenSans_400Regular",
       ios: "OpenSans-Regular",

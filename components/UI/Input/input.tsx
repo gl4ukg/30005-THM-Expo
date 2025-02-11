@@ -3,7 +3,7 @@ import { IconName } from "@/components/Icon/iconMapping"
 import { Typography } from "@/components/typography";
 import { colors } from "@/lib/tokens/colors";
 import { useState } from "react";
-import { TextInput, StyleSheet, View, TouchableOpacity } from "react-native"
+import { TextInput, StyleSheet, View, Pressable } from "react-native"
 
 interface Props{
     icon?: IconName;
@@ -41,9 +41,9 @@ export const Input: React.FC<Props> = ({icon, label, placeHolder = "", value, on
                     secureTextEntry={type === 'password' && !isPasswordVisible}
                     />
                     {type === 'password' && 
-                    <TouchableOpacity onPress={togglePasswordVisibility} style={styles.iconContainer}>
+                    <Pressable onPress={togglePasswordVisibility} style={styles.iconContainer}>
                         <Icon name={isPasswordVisible ? "EyeOff" : "Eye"} size="xsm" color={colors.passwordEyeIcon} />
-                    </TouchableOpacity>
+                    </Pressable>
                     }
             </View>
         </View>
