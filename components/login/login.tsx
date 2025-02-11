@@ -16,13 +16,13 @@ export const LoginScreen: React.FC<Props> = () => {
 	const [password, setPassword] = useState('');
 
 	const handleEmailBlur = () => {
-		if (!email.includes('@')) {
+		if (!email.includes('@') && email !== '') {
 			Alert.alert('Invalid Email', 'Please enter a valid email address.');
 		}
 	};
 
 	const handleNameBlur = () => {
-		if (!/^[a-zA-Z\s]+$/.test(fullName)) {
+		if (!/^[a-zA-Z\s]+$/.test(fullName) && fullName !== '') {
 			Alert.alert('Invalid Name', 'Please enter a valid name.');
 		}
 	};
