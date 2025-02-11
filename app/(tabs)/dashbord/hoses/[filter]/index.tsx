@@ -1,3 +1,4 @@
+import { ListTable } from "@/components/dashboard/listTable";
 import { Typography } from "@/components/typography";
 import { Select } from "@/components/UI/Select";
 import { useLocalSearchParams } from "expo-router";
