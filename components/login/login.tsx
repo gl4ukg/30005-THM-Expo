@@ -22,7 +22,7 @@ export const LoginScreen: React.FC<Props> = () => {
 	};
 
 	const handleNameBlur = () => {
-		if (!/^[a-zA-Z\s]+$/.test(fullName) && fullName !== '') {
+		if (!/^[\p{L}\s]+$/u.test(fullName) && fullName !== '') {
 			Alert.alert('Invalid Name', 'Please enter a valid name.');
 		}
 	};
