@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { Pressable, StyleSheet, View } from "react-native"
 import { Typography } from "../typography"
 import { ButtonTHS } from "../UI/Button/button"
 import {Image} from 'react-native'
@@ -17,9 +17,9 @@ export const Welcome: React.FC<Props> = ({nextView}) => {
     return <View style={styles.container}>
        <LoginHeader header="WELCOME" subHeader={welcomeText}/>
         <ButtonTHS title={"LOGIN"} onPress={() => nextView("Login")} />
-            <TouchableOpacity onPress={() => nextView("RequestAccess")}>
+            <Pressable onPress={() => nextView("RequestAccess")}>
                 <Typography text="Request Access" name="sectionHeader" style={styles.whiteText}/>
-            </TouchableOpacity>
+            </Pressable>
         <View style={styles.semiFooter}>
             <Typography name={"button"} text={"We hose the world"} style={styles.whiteText}/>
             <Image source={require('../../assets/images/norway-flag.png')}/>

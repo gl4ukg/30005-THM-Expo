@@ -1,4 +1,4 @@
-import { View, Linking, Alert, TouchableOpacity,StyleSheet } from "react-native"
+import { View, Linking, Alert,StyleSheet, Pressable } from "react-native"
 import { Typography } from "../typography";
 import { colors } from "@/lib/tokens/colors";
 
@@ -31,12 +31,12 @@ export const HelpLinks: React.FC<Props> = ({header}) => {
             <View>
                 <Typography name={"navigationBold"} text={header} style={styles.whiteText}/>
                 <Typography name={"navigation"} text={"Please contact the THM team:"} style={styles.whiteText}/>
-                <TouchableOpacity onPress={handlePhonePress}>
+                <Pressable onPress={handlePhonePress}>
                     <Typography name={"button"} text={phoneNumber} style={styles.whiteText}/>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleEmailPress}>
+                </Pressable>
+                <Pressable onPress={handleEmailPress}>
                     <Typography name={"navigationBold"} text={emailAddr} style={styles.linkColor}/>
-                </TouchableOpacity>
+                </Pressable>
             </View>
         </View>
 
