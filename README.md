@@ -2,7 +2,7 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-It was created with: 
+It was created with:
 
 ```
 npx create-expo-app@latest
@@ -12,23 +12,32 @@ npx create-expo-app@latest
 npm run reset-project
 ```
 
-
 ## Get started
 
 1. Install dependencies
 
    ```bash
-   yarn
+   npm i
    ```
 
-2. We will need to use developer build (we can not use expo go)
- Sett up you env
+2. Build project with expo
 
-   [text](https://docs.expo.dev/get-started/set-up-your-environment/)
+   ```
+   npx expo prebuild --clean
+   ```
+
+3. We will need to use developer build (we can not use expo go)
+   Set up you env
+
+   [docs](https://docs.expo.dev/get-started/set-up-your-environment/)
+   [Troubleshoot XCode](https://lonare.medium.com/exp-oxcode-must-be-fully-installed-before-you-can-continue-continue-to-the-app-store-65c8ff0d1496)
 
    ```
    npx expo run:ios --device
+   npx expo run:android --device
    ```
+
+   **NB: Make sure the name of the repository does not include spaces as it will cause trouble with the android build**
 
 In the output, you'll find options to open the app in a
 
