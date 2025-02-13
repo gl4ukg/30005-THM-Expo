@@ -1,15 +1,206 @@
+import { Icon } from "@/components/Icon/Icon";
 import { Typography } from "@/components/typography";
-import { FC } from "react";
-import { View } from "react-native";
-interface Props {}
-export const ListTable: FC<Props> = ({}) => {
+import { colors } from "@/lib/tokens/colors";
+import { FC, useState } from "react";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
+interface Props {
+  data: {
+    id: string;
+    position: string;
+    condition: string;
+    lastInspection: string;
+    missingData?: boolean;
+  }[];
+}
+
+const spacing = {
+  paddingBlock: 10,
+};
+export const ListTable: FC<Props> = ({ data }) => {
   return (
-    <View>
-      <View>
-        <Typography name="tableHeader" text="Hose ID" />
-        <Typography name="tableHeader" text="Position/Condition" />
-        <Typography name="tableHeader" text="Hose ID" />
+    <View style={style.container}>
+      <View
+        style={[
+          style.tableHeader,
+          {
+            paddingLeft: spacing.paddingBlock,
+            paddingRight: spacing.paddingBlock,
+          },
+        ]}
+      >
+        <Typography
+          name="tableHeader"
+          text="Hose ID"
+          style={[style.label, style.labelColumOne]}
+        />
+        <Typography
+          name="tableHeader"
+          text="Position/Condition"
+          style={[style.label, style.labelColumTwo]}
+        />
+        <Typography
+          name="tableHeader"
+          text="Inspected"
+          style={[style.label, style.labelColumThree]}
+        />
+      </View>
+      <FlatList
+        data={data}
+        renderItem={({ item }) => (
+          <Element
+            id={item.id}
+            position={item.position}
+            condition={item.condition}
+            lastInspection={item.lastInspection}
+            isMissingData={item.missingData}
+          />
+        )}
+        keyExtractor={(item) => item.id}
+      />
+    </View>
+  );
+};
+
+interface ElementProps {
+  id: string;
+  position: string;
+  condition: string;
+  lastInspection: string;
+  isMissingData?: boolean;
+  canBeSelected?: boolean;
+  isSelected?: boolean;
+  onSelect?: () => void;
+}
+const Element: FC<ElementProps> = ({
+  id,
+  position,
+  condition,
+  lastInspection,
+  isMissingData,
+  canBeSelected,
+  isSelected,
+  onSelect,
+}) => {
+  const [selected, setSelected] = useState<boolean>(isSelected || false);
+  const handleSelect = () => {};
+  return (
+    <View
+      style={[
+        elementStyle.container,
+        isSelected && elementStyle.containerSelected,
+      ]}
+    >
+      <View style={elementStyle.columnOne}>
+        <Typography name="tableContentNumber" text={id} />
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            height: 22,
+          }}
+        >
+          {isMissingData && (
+            <Icon name="Alert" color={colors.alertError} size="xsm" />
+          )}
+        </View>
+      </View>
+      <View style={elementStyle.columnTwo}>
+        <Typography
+          name="tableContent"
+          text={position}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        />
+        <View style={elementStyle.subtitleDateContainer}>
+          <Typography
+            name="tableContent"
+            text={
+              condition.length
+                ? condition
+                : "44-Visible leakage - and some more defects"
+            }
+            style={elementStyle.subtitle}
+            numberOfLines={1}
+          />
+          <Typography
+            name="tableContentNumber"
+            text={lastInspection.length ? lastInspection : "N/A"}
+            style={elementStyle.date}
+          />
+        </View>
+      </View>
+      <View style={elementStyle.columnThree}>
+        {true && <View style={elementStyle.checkbox}></View>}
       </View>
     </View>
   );
 };
+
+const elementStyle = StyleSheet.create({
+  container: {
+    width: "100%",
+    flexDirection: "row",
+    gap: 5,
+    paddingTop: 10,
+    paddingBottom: 3,
+    borderBottomWidth: 1,
+    borderColor: colors.secondary95,
+  },
+  containerSelected: {
+    backgroundColor: "hotpink",
+  },
+  columnOne: {
+    width: 80,
+    paddingLeft: 10,
+  },
+  columnTwo: {
+    flex: 1,
+  },
+  columnThree: {
+    width: 40,
+    padding: 10,
+    alignItems: "center",
+  },
+  subtitleDateContainer: {
+    flexDirection: "row",
+    gap: 5,
+    flex: 1,
+  },
+  subtitle: {
+    flex: 1,
+  },
+  date: {
+    width: 70,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 3,
+    borderColor: "black",
+    borderWidth: 1,
+  },
+});
+
+const style = StyleSheet.create({
+  container: {
+    width: "100%",
+    flex: 1,
+  },
+  tableHeader: {
+    width: "100%",
+    flexDirection: "row",
+    gap: 5,
+    paddingTop: 20,
+    paddingBottom: 2,
+    borderBottomColor: colors.black,
+    borderBottomWidth: 1,
+    // flex: 1,
+  },
+  label: {
+    alignSelf: "flex-start",
+    paddingTop: 20,
+  },
+  labelColumOne: { width: 70 },
+  labelColumTwo: { flex: 1 },
+  labelColumThree: { width: 105 },
+});

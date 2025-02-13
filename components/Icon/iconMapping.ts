@@ -21,9 +21,10 @@ import Industry from './icons/Industry';
 import Phone from './icons/Phone';
 import TrendArrowDown from "./icons/TrendArrowDown";
 import TrendArrowUp from "./icons/TrendArrowUp";
+import Alert from "./icons/Alert";
 
-  
 export type IconName =
+  | "Alert"
   | "Search"
   | "Meter"
   | "Menu"
@@ -43,12 +44,13 @@ export type IconName =
   | "Right"
   | "TrendArrowUp"
   | "TrendArrowDown"
-  |'Eye'
-  |'EyeOff'
-  |"Industry"
-  |"Phone";
+  | "Eye"
+  | "EyeOff"
+  | "Industry"
+  | "Phone";
 
 export const iconMapping: Record<IconName, React.FC<any>> = {
+  Alert,
   Eye,
   EyeOff,
   Industry,

@@ -21,6 +21,7 @@
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		D1FBC94392F743FEBFB4E894 /* Roboto_500Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F002E27D239C4C6CB6B6081A /* Roboto_500Medium.ttf */; };
 		D72CA27DB7A74026B8BAA991 /* Roboto_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5CD6FEC11D24140A131F6C3 /* Roboto_400Regular.ttf */; };
+		3CEEBA091D5F4147866BDFE2 /* RobotoCondensed_300Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1881C45A5520449CA0CA53E9 /* RobotoCondensed_300Light.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		F002E27D239C4C6CB6B6081A /* Roboto_500Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_500Medium.ttf; path = "../node_modules/@expo-google-fonts/roboto/Roboto_500Medium.ttf"; sourceTree = "<group>"; };
 		F2E8493DE2584F07858F1E82 /* OpenSans_600SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = OpenSans_600SemiBold.ttf; path = "../node_modules/@expo-google-fonts/open-sans/OpenSans_600SemiBold.ttf"; sourceTree = "<group>"; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-THM/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		1881C45A5520449CA0CA53E9 /* RobotoCondensed_300Light.ttf */ = {isa = PBXFileReference; name = "RobotoCondensed_300Light.ttf"; path = "../node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_300Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +86,7 @@
 				D5CD6FEC11D24140A131F6C3 /* Roboto_400Regular.ttf */,
 				F002E27D239C4C6CB6B6081A /* Roboto_500Medium.ttf */,
 				C17C8A636F804569A11C0C2F /* RobotoCondensed_400Regular.ttf */,
+				1881C45A5520449CA0CA53E9 /* RobotoCondensed_300Light.ttf */,
 			);
 			name = Resources;
 			path = "";
@@ -233,6 +236,7 @@
 				D1FBC94392F743FEBFB4E894 /* Roboto_500Medium.ttf in Resources */,
 				096F3A5DA63244A88F5BA01C /* RobotoCondensed_400Regular.ttf in Resources */,
 				45B56A3968C422F754884FB0 /* PrivacyInfo.xcprivacy in Resources */,
+				3CEEBA091D5F4147866BDFE2 /* RobotoCondensed_300Light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,7 +397,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hejuhenryk.THM;
-				PRODUCT_NAME = THM;
+				PRODUCT_NAME = "THM";
 				SWIFT_OBJC_BRIDGING_HEADER = "THM/THM-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -422,7 +426,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hejuhenryk.THM;
-				PRODUCT_NAME = THM;
+				PRODUCT_NAME = "THM";
 				SWIFT_OBJC_BRIDGING_HEADER = "THM/THM-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -12,18 +12,25 @@ import {
 interface ButtonTHSProps extends PressableProps {
   title: string;
   children?: ReactNode | ReactNode[];
+  variant: "primary" | "s";
 }
 export const ButtonTHS: React.FC<ButtonTHSProps> = ({
   children,
   title,
   onPress,
+  variant,
 }) => {
+  const variantStyle: Record<ButtonTHSProps["variant"], any> = {
+    primary: {},
+    s: {},
+  };
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }) => [
         styles.container,
         pressed && styles.containerPressed,
+        variantStyle[variant],
       ]}
     >
       <View>

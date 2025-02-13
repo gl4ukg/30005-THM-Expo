@@ -1,3 +1,4 @@
+import { mockedData } from "@/app/(tabs)/dashbord/hoses/[filter]/mocked";
 import { ListTable } from "@/components/dashboard/listTable";
 import { Typography } from "@/components/typography";
 import { Select } from "@/components/UI/Select";
@@ -11,7 +12,7 @@ interface Props {
 }
 
 type HostType = {
-  id: number;
+  id: string;
   name: string;
   position: string;
   condition: string;
@@ -19,13 +20,12 @@ type HostType = {
   lastInspectionDate: string;
   nextInspection: string;
   nextInspectionDate: string;
-  missingData: string[];
+  missingData: boolean;
 };
 
 const getFilteredHoses = (filter: string) => {
-  const random6DiggetString: string = Array.from({ length: 6 }, () =>
-    Math.floor(Math.random() * 10)
-  ).join("");
+  const random7DiggetString = (): string =>
+    Array.from({ length: 7 }, () => Math.floor(Math.random() * 10)).join("");
   const randomDateString = () => {
     const dateNum =
       Math.random() * (+new Date("01-01-2026") - +new Date("01-01-2000") + 1) +
@@ -33,7 +33,17 @@ const getFilteredHoses = (filter: string) => {
     const date = new Date(dateNum);
     return date.toLocaleDateString().replace(/\/20/g, "").replace(/\//g, "");
   };
-  const mockedList: HostType[] = [];
+  const mockedList: HostType[] = mockedData.map((item) => ({
+    id: item.id,
+    name: item.Description,
+    position: item.S2Equipment,
+    condition: item.hoseCondition,
+    lastInspection: randomDateString(),
+    lastInspectionDate: randomDateString(),
+    nextInspection: randomDateString(),
+    nextInspectionDate: randomDateString(),
+    missingData: Math.random() > 0.5,
+  }));
   return {
     listLength: mockedList.length,
     listTitle: `Failed inspections (${mockedList.length})`,
@@ -56,25 +66,17 @@ const Host: React.FC<Props> = (props) => {
     setAction(value);
   };
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <ScrollView contentContainerStyle={style.container}>
-        <View style={style.header}>
-          <Typography name="tableHeader" text={listTitle} />
-          <Select
-            selected={action}
-            options={options}
-            onChange={onChangeAction}
-            menuTitle="Actions"
-          />
-        </View>
-        <ListTable />
-      </ScrollView>
+    <SafeAreaView style={style.safeView}>
+      <View style={style.header}>
+        <Typography name="tableHeader" text={listTitle} />
+        <Select
+          selected={action}
+          options={options}
+          onChange={onChangeAction}
+          menuTitle="Actions"
+        />
+      </View>
+      <ListTable data={[...getFilteredHoses("filter").filteredList]} />
     </SafeAreaView>
   );
 };
@@ -85,19 +87,11 @@ const style = StyleSheet.create({
   safeView: {
     flex: 1,
   },
-  container: {
-    justifyContent: "flex-start",
-    alignItems: "center",
-    gap: 12,
-    padding: 20,
-  },
   header: {
-    // width: "100%",
+    width: "100%",
     alignItems: "center",
     padding: 20,
     gap: 6,
-    // borderColor: "#009640",
-    // borderWidth: 2,
   },
   menu: {
     width: "100%",
