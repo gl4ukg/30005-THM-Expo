@@ -1,34 +1,53 @@
+import { Typography } from "@/components/typography";
 import { colors } from "@/lib/tokens/colors";
 import React, { ReactNode } from "react";
 
 import {
   Pressable,
   View,
-  Text,
   type PressableProps,
   StyleSheet,
+  ViewStyle,
+  TextStyle,
 } from "react-native";
 
 interface ButtonTHSProps extends PressableProps {
   title: string;
   children?: ReactNode | ReactNode[];
+  variant: "primary"| "secondary"|"link";
+  disabled?: boolean;
+
 }
 export const ButtonTHS: React.FC<ButtonTHSProps> = ({
   children,
   title,
   onPress,
+  variant,
+  disabled = false,
 }) => {
+  const variantstyle: Record<ButtonTHSProps["variant"], ViewStyle> = {
+    primary:{backgroundColor: colors.primary50},
+    secondary:{backgroundColor: colors.white},
+    link:{}
+  }
+  const textColorMap: Record<ButtonTHSProps["variant"], TextStyle> = {
+    primary:{color: colors.white},
+    secondary:{color: colors.black},
+    link: {color: colors.black},
+  };
   return (
     <Pressable
-      onPress={onPress}
+      onPress={disabled ? undefined : onPress}
       style={({ pressed }) => [
         styles.container,
+        variantstyle[variant],
         pressed && styles.containerPressed,
+        disabled && styles.containerDisabled
       ]}
     >
       <View>
         {React.Children.map(children, (child) => child)}
-        <Text style={styles.text}>{title}</Text>
+        <Typography name={"button"} text={title} style={textColorMap[variant]}/>
       </View>
     </Pressable>
   );
@@ -49,16 +68,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 3,
-    backgroundColor: colors.secondary[500],
+    width:"80%",
+    margin:"auto"
   },
   containerPressed: {
-    opacity: 0.6,
+    borderColor:colors.white,
   },
-  text: {
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: "bold",
-    letterSpacing: 0.25,
-    color: "white",
-  },
+  containerDisabled:{
+    opacity:0.5
+  }
+
 });

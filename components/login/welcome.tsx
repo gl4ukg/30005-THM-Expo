@@ -16,7 +16,7 @@ const welcomeText =["to TESS Hose Management (THM).",
 export const Welcome: React.FC<Props> = ({nextView}) => {
     return <View style={styles.container}>
        <LoginHeader header="WELCOME" subHeader={welcomeText}/>
-        <ButtonTHS title={"LOGIN"} onPress={() => nextView("Login")} />
+        <ButtonTHS title={"LOGIN"} onPress={() => nextView("Login")} variant={"primary"} />
             <Pressable onPress={() => nextView("RequestAccess")}>
                 <Typography text="Request Access" name="sectionHeader" style={styles.whiteText}/>
             </Pressable>

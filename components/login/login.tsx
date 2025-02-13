@@ -1,5 +1,4 @@
 import { View, StyleSheet, Alert } from 'react-native';
-import { Typography } from '../typography';
 import { ButtonTHS } from '../UI/Button/button';
 import { Input } from '../UI/Input/input';
 import { useState } from 'react';
@@ -33,6 +32,8 @@ export const LoginScreen: React.FC<Props> = () => {
 		console.log('Password:', password);
 	};
 
+    const isButtonDisabled = !email || !fullName || !password;
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.form}>
@@ -63,7 +64,7 @@ export const LoginScreen: React.FC<Props> = () => {
 					type='password'
 				/>
 			</View>
-			<ButtonTHS title={'login'} onPress={handleLogin} />
+			<ButtonTHS title={'LOGIN'} onPress={handleLogin} variant={"primary"} disabled={isButtonDisabled}/>
 			<HelpLinks header='Unable to log in?' />
 		</View>
 	);
