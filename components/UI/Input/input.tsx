@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { TextInput, StyleSheet, View, Pressable } from 'react-native';
 
 interface Props {
-	icon: string;
+	icon: IconName;
 	label: string;
 	placeHolder?: string;
 	value: string;
@@ -43,7 +43,7 @@ export const Input: React.FC<Props> = ({
 				</View>
 			)}
 			<View style={styles.innerView}>
-				{icon && <Icon name={icon} size='md' color={labelColor} />}
+				{icon && <Icon name={icon} size='md' color={labelColor}/>}
 				<TextInput
 					style={styles.input}
 					value={value}
@@ -85,9 +85,11 @@ const styles = StyleSheet.create({
 	innerView: {
 		flexDirection: 'row',
 		alignItems: 'center',
+		gap:3
 	},
 	labelView: {
-		marginLeft: 34,
+		marginLeft: 37,
+		marginBottom:1,
 	},
 	iconContainer: {
 		position: 'absolute',
