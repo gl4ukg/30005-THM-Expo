@@ -15,7 +15,7 @@ export const RequestAccess: React.FC<Props> = () => {
     const [fullName, setFullName] = useState('');
     const [mobileNumber, setMobileNumber] = useState('');
     const [company, setCompany] = useState('');
-    const [unit, setUnit] = useState('');
+    const [units, setUnits] = useState(['']);
 
     
     const handleRequest = () => {
@@ -23,10 +23,20 @@ export const RequestAccess: React.FC<Props> = () => {
         console.log("Full Name:", fullName);
         console.log("Mobile Number:", mobileNumber);
         console.log("Company:", company);
-        console.log("Unit:", unit)
+        console.log("Unit:", units)
     };
 
-    const isButtonDisabled = !email || !fullName || !mobileNumber || !company || !unit;
+    const addUnitField = () => {
+        setUnits([...units, '']); 
+    };
+    
+    const updateUnitValue = (index: number, value: string) => {
+        const newUnits = [...units];
+        newUnits[index] = value; 
+        setUnits(newUnits);
+    };
+
+    const isButtonDisabled = !email || !fullName || !mobileNumber || !company || !units;
 
     return (
         <View style={styles.container}>
@@ -36,7 +46,12 @@ export const RequestAccess: React.FC<Props> = () => {
                 <Input icon="User" label="Your full name" value={fullName} onChangeText={setFullName} labelColor={colors.white}/>
                 <Input icon="Phone" label="Your mobile number" value={mobileNumber} onChangeText={setMobileNumber} labelColor={colors.white}/>
                 <Input icon="Industry" label="Your company" value={company} onChangeText={setCompany} labelColor={colors.white}/>
-                <Input icon="Task" label="Your unit (plant, vessel, rig)" value={unit} onChangeText={setUnit} labelColor={colors.white}/>
+                {units.map((unit, index) => (
+                    <Input key={index} icon="Task" label={index === 0 ?"Your unit (plant, vessel, rig)":`Unit ${index + 1}`} value={unit} onChangeText={(value) => updateUnitValue(index, value)} labelColor={colors.white}/>
+                ))}
+                <View style={styles.buttonPlacement}>
+                    <ButtonTHS title={"+ Add more units?"} variant={"link"} onPress={addUnitField}/>
+                </View>
             </View>
             <ButtonTHS title={"REQUEST ACCESS"} onPress={handleRequest} variant={"primary"} disabled={isButtonDisabled}/>
             <HelpLinks header="Not sure what to do?"/>
@@ -48,15 +63,17 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         gap: 50,
-        borderWidth: 1, 
-        borderColor: "yellow",
         height: "100%",
-        padding: 20,
+        paddingVertical:20,
     },
     form:{
         width:"100%",
         gap:15,
         alignItems:"center",
-      },
+    },
+    buttonPlacement:{
+        marginTop:-15,
+        marginLeft:-35,
+    }
 
 })

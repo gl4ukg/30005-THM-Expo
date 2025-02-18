@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     }),
   },
   fieldLabel: {
-    fontSize: 14,
+    fontSize: 16,
     lineHeight: 22,
     fontFamily: Platform.select({
       android: "Roboto_400Regular",

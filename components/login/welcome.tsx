@@ -30,8 +30,6 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         gap: 200,
-        borderWidth: 1, 
-        borderColor: "yellow",
         height: "100%",
         padding: 20,
     },

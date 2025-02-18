@@ -41,7 +41,7 @@ const Login = () => {
           {view === "RequestAccess" && <RequestAccess nextView={handlePress} />}
           <View style={styles.footerView}>
             <Typography
-              name={"button"}
+              name={"navigation"}
               text={"© 2025 Copyright TESS AS"}
               style={styles.whiteText}
             />
