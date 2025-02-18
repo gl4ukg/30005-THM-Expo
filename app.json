@@ -31,9 +31,9 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+          "imageWidth": 250,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#000"
         }
       ],
       ["expo-font",
@@ -43,6 +43,7 @@
             "node_modules/@expo-google-fonts/open-sans/OpenSans_600SemiBold.ttf",
             "node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf",
             "node_modules/@expo-google-fonts/roboto/Roboto_500Medium.ttf",
+            "node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_300Light.ttf",
             "node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_400Regular.ttf"
           ]
         }

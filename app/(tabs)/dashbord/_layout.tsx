@@ -13,7 +13,7 @@ export default function DashbordLayout() {
         />
         <Stack.Screen name="hoses/index" options={{ headerShown: true }} />
         <Stack.Screen
-          name="hoses/[slug]/index"
+          name="hoses/hose/[slug]"
           options={{ headerShown: true }}
         />
       </Stack>

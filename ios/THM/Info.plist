@@ -62,6 +62,7 @@
       <string>Roboto_400Regular.ttf</string>
       <string>Roboto_500Medium.ttf</string>
       <string>RobotoCondensed_400Regular.ttf</string>
+      <string>RobotoCondensed_300Light.ttf</string>
     </array>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
