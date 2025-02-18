@@ -1,5 +1,6 @@
 import { Icon } from "@/components/Icon/Icon";
 import { Typography } from "@/components/typography";
+import { Checkbox } from "@/components/UI/Checkbox";
 import { colors } from "@/lib/tokens/colors";
 import { FC, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
@@ -17,6 +18,7 @@ const spacing = {
   paddingBlock: 10,
 };
 export const ListTable: FC<Props> = ({ data }) => {
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   return (
     <View style={style.container}>
       <View
@@ -53,6 +55,14 @@ export const ListTable: FC<Props> = ({ data }) => {
             condition={item.condition}
             lastInspection={item.lastInspection}
             isMissingData={item.missingData}
+            isSelected={selectedIds.includes(item.id)}
+            onSelectedChange={
+              selectedIds.includes(item.id)
+                ? () =>
+                    setSelectedIds(selectedIds.filter((id) => id !== item.id))
+                : () => setSelectedIds([...selectedIds, item.id])
+            }
+            canBeSelected={true}
           />
         )}
         keyExtractor={(item) => item.id}
@@ -69,7 +79,7 @@ interface ElementProps {
   isMissingData?: boolean;
   canBeSelected?: boolean;
   isSelected?: boolean;
-  onSelect?: () => void;
+  onSelectedChange?: () => void;
 }
 const Element: FC<ElementProps> = ({
   id,
@@ -79,15 +89,18 @@ const Element: FC<ElementProps> = ({
   isMissingData,
   canBeSelected,
   isSelected,
-  onSelect,
+  onSelectedChange,
 }) => {
   const [selected, setSelected] = useState<boolean>(isSelected || false);
-  const handleSelect = () => {};
+  const handleSelect = () => {
+    setSelected((selected) => !selected);
+    onSelectedChange && onSelectedChange();
+  };
   return (
     <View
       style={[
         elementStyle.container,
-        isSelected && elementStyle.containerSelected,
+        selected && elementStyle.containerSelected,
       ]}
     >
       <View style={elementStyle.columnOne}>
@@ -100,7 +113,7 @@ const Element: FC<ElementProps> = ({
           }}
         >
           {isMissingData && (
-            <Icon name="Alert" color={colors.alertError} size="xsm" />
+            <Icon name="Alert" color={colors.error} size="xsm" />
           )}
         </View>
       </View>
@@ -130,7 +143,9 @@ const Element: FC<ElementProps> = ({
         </View>
       </View>
       <View style={elementStyle.columnThree}>
-        {true && <View style={elementStyle.checkbox}></View>}
+        {canBeSelected && (
+          <Checkbox isChecked={selected} onChange={handleSelect} />
+        )}
       </View>
     </View>
   );
@@ -147,7 +162,8 @@ const elementStyle = StyleSheet.create({
     borderColor: colors.secondary95,
   },
   containerSelected: {
-    backgroundColor: "hotpink",
+    backgroundColor: colors.lightContrast25,
+    borderColor: colors.primary25,
   },
   columnOne: {
     width: 80,
@@ -158,7 +174,6 @@ const elementStyle = StyleSheet.create({
   },
   columnThree: {
     width: 40,
-    padding: 10,
     alignItems: "center",
   },
   subtitleDateContainer: {

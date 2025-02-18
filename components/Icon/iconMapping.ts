@@ -22,9 +22,11 @@ import Phone from './icons/Phone';
 import TrendArrowDown from "./icons/TrendArrowDown";
 import TrendArrowUp from "./icons/TrendArrowUp";
 import Alert from "./icons/Alert";
+import CheckboxChecked from "./icons/CheckboxChecked";
 
 export type IconName =
   | "Alert"
+  | "CheckboxChecked"
   | "Search"
   | "Meter"
   | "Menu"
@@ -51,6 +53,7 @@ export type IconName =
 
 export const iconMapping: Record<IconName, React.FC<any>> = {
   Alert,
+  CheckboxChecked,
   Eye,
   EyeOff,
   Industry,

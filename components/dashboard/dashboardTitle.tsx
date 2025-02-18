@@ -24,9 +24,9 @@ export const DashboardTitle: FC<Props> = ({ label, value, onPress, trend }) => {
               style={styles.trend}
               color={
                 trend === 1
-                  ? tokens.colors.alertErrorText
+                  ? tokens.colors.errorText
                   : trend === -1
-                  ? tokens.colors.alertSuccessText
+                  ? tokens.colors.lightContrast
                   : "transparent"
               }
             />
