@@ -1,4 +1,3 @@
-import { ButtonTHS, NavMenu } from "@/components/UI";
 import {
   ImageBackground,
   Pressable,
@@ -14,12 +13,7 @@ import { Typography } from "@/components/typography";
 import { TessLines } from "@/components/decorative/tessLines";
 import { RequestAccess } from "@/components/login/requestAccess";
 import { colors } from "@/lib/tokens/colors";
-=========
-import { Icon } from "@/components/Icon/Icon";
-import { BottomNavigation } from "@/components/UI/BottomNavigation";
 import { Link } from "expo-router";
-import { Typography } from "@/components/typography";
->>>>>>>>> Temporary merge branch 2
 
 const Login = () => {
   const [view, setView] = useState("Welcome");
@@ -88,12 +82,12 @@ const styles = StyleSheet.create({
     gap: 8,
     backgroundColor: "#BDECB9",
   },
-  footerView:{
-    width:"100%",
-    gap:5,
-    alignItems:"center",
+  footerView: {
+    width: "100%",
+    gap: 5,
+    alignItems: "center",
   },
-  whiteText:{
-    color:colors.white,
-  }
+  whiteText: {
+    color: colors.white,
+  },
 });
