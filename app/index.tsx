@@ -35,7 +35,7 @@ const Login = () => {
           <RequestAccess nextView={handlePress}/>
         )}
         <View style={styles.footerView}>
-          <Typography name={"button"} text={"© 2025 Copyright TESS AS"} style={styles.whiteText}/>
+          <Typography name={"navigation"} text={"© 2025 Copyright TESS AS"} style={styles.whiteText}/>
           <TessLines/>
         </View>
       </ScrollView>

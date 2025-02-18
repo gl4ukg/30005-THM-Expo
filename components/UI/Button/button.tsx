@@ -14,7 +14,7 @@ import {
 interface ButtonTHSProps extends PressableProps {
   title: string;
   children?: ReactNode | ReactNode[];
-  variant: "primary"| "secondary"|"link";
+  variant: "primary"|"secondary"|"link";
   disabled?: boolean;
 
 }
@@ -28,13 +28,19 @@ export const ButtonTHS: React.FC<ButtonTHSProps> = ({
   const variantstyle: Record<ButtonTHSProps["variant"], ViewStyle> = {
     primary:{backgroundColor: colors.primary50},
     secondary:{backgroundColor: colors.white},
-    link:{}
+    link:{paddingLeft:0,marginLeft:0}
   }
   const textColorMap: Record<ButtonTHSProps["variant"], TextStyle> = {
     primary:{color: colors.white},
     secondary:{color: colors.black},
-    link: {color: colors.black},
+    link: {color: colors.white, textAlign:"left"},
   };
+
+  const typographyStyle: TextStyle = {
+    fontSize: variant === "link" ? 16 : 18,
+    ...textColorMap[variant],
+  };
+
   return (
     <Pressable
       onPress={disabled ? undefined : onPress}
@@ -47,7 +53,7 @@ export const ButtonTHS: React.FC<ButtonTHSProps> = ({
     >
       <View>
         {React.Children.map(children, (child) => child)}
-        <Typography name={"button"} text={title} style={textColorMap[variant]}/>
+        <Typography name={"button"} text={title} style={typographyStyle}/>
       </View>
     </Pressable>
   );
