@@ -11,7 +11,7 @@ interface Props {
   onPress: () => void;
 }
 
-export const DashboardTitle: FC<Props> = ({ label, value, onPress, trend }) => {
+export const Secondary: FC<Props> = ({ label, value, onPress, trend }) => {
   return (
     <Pressable onPress={onPress} style={styles.pressable}>
       <View style={styles.container}>
@@ -24,9 +24,9 @@ export const DashboardTitle: FC<Props> = ({ label, value, onPress, trend }) => {
               style={styles.trend}
               color={
                 trend === 1
-                  ? tokens.colors.alertErrorText
+                  ? tokens.colors.errorText
                   : trend === -1
-                  ? tokens.colors.alertSuccessText
+                  ? tokens.colors.lightContrast
                   : "transparent"
               }
             />

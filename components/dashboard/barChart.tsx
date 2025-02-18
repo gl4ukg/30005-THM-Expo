@@ -8,18 +8,18 @@ const calculateAvg = (arr: { value: number }[]) => {
   return arr.reduce((a, b) => a + b.value, 0) / arr.length;
 };
 
-export const DashboardChart = () => {
+export const BarChartDashbord = () => {
   const barData: barDataItem[] = [
     {
-      value: 128,
+      value: 12855,
       label: "Jan",
     },
     {
-      value: 128,
+      value: 12855,
       label: "Feb",
     },
     {
-      value: 128,
+      value: 12855,
       label: "Mar",
     },
     {
@@ -27,7 +27,7 @@ export const DashboardChart = () => {
       label: "Apr",
     },
     {
-      value: 1082,
+      value: 1282,
       label: "May",
     },
     {

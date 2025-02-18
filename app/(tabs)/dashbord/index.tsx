@@ -1,10 +1,8 @@
-import { DashboardNumber } from "@/components/dashboard";
-import { DashboardChart } from "@/components/dashboard/dashboardChart";
-import { DashboardTitle } from "@/components/dashboard/dashboardTitle";
+import { BarChart, Primary, Secondary } from "@/components/dashboard";
 import { Icon } from "@/components/Icon/Icon";
 import { Typography } from "@/components/typography";
 import { Select } from "@/components/UI/Select";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -59,23 +57,23 @@ const Dashbord = () => {
             onChange={setSelected}
           />
         </View>
-        <DashboardChart />
+        <BarChart />
         <View style={style.menu}>
-          <DashboardNumber
+          <Primary
             label="Failed"
             value={1129}
             trend={1}
             state="error"
             onPress={() => goToFilter("failed")}
           />
-          <DashboardNumber
+          <Primary
             label="Overdue"
             value={0}
             trend={-1}
             state="warning"
             onPress={() => goToFilter("overdue")}
           />
-          <DashboardNumber
+          <Primary
             label="w/Remarks"
             value={12}
             trend={0}
@@ -83,7 +81,7 @@ const Dashbord = () => {
             onPress={() => goToFilter("withRemarks")}
           />
         </View>
-        <DashboardTitle
+        <Secondary
           onPress={() => goToFilter("inspection")}
           label="Hoses soon to be inspected"
           value={230}
@@ -92,25 +90,25 @@ const Dashbord = () => {
         <View style={style.replacements}>
           <Typography name="sectionHeader" text="Replacements" />
         </View>
-        <DashboardTitle
+        <Secondary
           onPress={() => goToFilter("overdue")}
           label="Replacements overdue"
           value={123}
           trend={-1}
         />
-        <DashboardTitle
+        <Secondary
           onPress={() => goToFilter("upcoming")}
           label="Replacements upcoming"
           value={8}
           trend={1}
         />
-        <DashboardTitle
+        <Secondary
           onPress={() => goToFilter("iInTransit")}
           label="New hoses in transit"
           value={14}
           trend={-1}
         />
-        <DashboardTitle
+        <Secondary
           onPress={() => goToFilter("recycled")}
           label="Hoses recycled"
           value={14}

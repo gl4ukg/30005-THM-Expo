@@ -13,13 +13,7 @@ interface Props {
   onPress: () => void;
 }
 
-export const DashboardNumber: FC<Props> = ({
-  value,
-  label,
-  onPress,
-  trend,
-  state,
-}) => {
+export const Primary: FC<Props> = ({ value, label, onPress, trend, state }) => {
   const colors: Record<
     Props["state"],
     { backgroundColor: string; textColor: string }

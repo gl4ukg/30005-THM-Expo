@@ -11,6 +11,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		3CEEBA091D5F4147866BDFE2 /* RobotoCondensed_300Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1881C45A5520449CA0CA53E9 /* RobotoCondensed_300Light.ttf */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		45B56A3968C422F754884FB0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = BB4F99A1EE88F4DF0297BC4B /* PrivacyInfo.xcprivacy */; };
 		4C9B164927624126AA3FC3C7 /* OpenSans_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB56B6E1AFB447FF8232E07E /* OpenSans_400Regular.ttf */; };
@@ -30,6 +31,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = THM/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = THM/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = THM/main.m; sourceTree = "<group>"; };
+		1881C45A5520449CA0CA53E9 /* RobotoCondensed_300Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = RobotoCondensed_300Light.ttf; path = "../node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_300Light.ttf"; sourceTree = "<group>"; };
 		527E406FCC89452EA5CD696B /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "THM/noop-file.swift"; sourceTree = "<group>"; };
 		58EEBF8E8E6FB1BC6CAF49B5 /* libPods-THM.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-THM.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C2E3173556A471DD304B334 /* Pods-THM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THM.debug.xcconfig"; path = "Target Support Files/Pods-THM/Pods-THM.debug.xcconfig"; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 				D5CD6FEC11D24140A131F6C3 /* Roboto_400Regular.ttf */,
 				F002E27D239C4C6CB6B6081A /* Roboto_500Medium.ttf */,
 				C17C8A636F804569A11C0C2F /* RobotoCondensed_400Regular.ttf */,
+				1881C45A5520449CA0CA53E9 /* RobotoCondensed_300Light.ttf */,
 			);
 			name = Resources;
 			path = "";
@@ -233,6 +236,7 @@
 				D1FBC94392F743FEBFB4E894 /* Roboto_500Medium.ttf in Resources */,
 				096F3A5DA63244A88F5BA01C /* RobotoCondensed_400Regular.ttf in Resources */,
 				45B56A3968C422F754884FB0 /* PrivacyInfo.xcprivacy in Resources */,
+				3CEEBA091D5F4147866BDFE2 /* RobotoCondensed_300Light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
