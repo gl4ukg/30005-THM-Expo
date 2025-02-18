@@ -1,3 +1,5 @@
-import { DashboardNumber } from "./dashboardNumber";
+import { Primary } from "./primary";
+import { Secondary } from "./secondary";
+import { BarChartDashbord as BarChart } from "./barChart";
 
-export { DashboardNumber };
+export { Primary, Secondary, BarChart };

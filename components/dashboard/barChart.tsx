@@ -8,7 +8,7 @@ const calculateAvg = (arr: { value: number }[]) => {
   return arr.reduce((a, b) => a + b.value, 0) / arr.length;
 };
 
-export const DashboardChart = () => {
+export const BarChartDashbord = () => {
   const barData: barDataItem[] = [
     {
       value: 12855,

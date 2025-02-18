@@ -11,7 +11,7 @@ interface Props {
   onPress: () => void;
 }
 
-export const DashboardTitle: FC<Props> = ({ label, value, onPress, trend }) => {
+export const Secondary: FC<Props> = ({ label, value, onPress, trend }) => {
   return (
     <Pressable onPress={onPress} style={styles.pressable}>
       <View style={styles.container}>
