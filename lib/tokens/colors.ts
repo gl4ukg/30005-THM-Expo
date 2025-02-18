@@ -23,8 +23,9 @@ export const colors = {
   dashbordRedText: "#D97E80",
   dashbordGreen: "#BDECB9",
   dashbordGreenText: "#5FA570",
-  passwordEyeIcon: "#666666",
-  inputBackground: "#C9C9C9",
   dashbordYellow: "#FFEFCD",
   dashbordYellowText: "#C3A972",
+  passwordEyeIcon:"#666666",
+  inputBackground:"#C9C9C9",
+  linkLightGreen:"#70FFAE"
 } as const;

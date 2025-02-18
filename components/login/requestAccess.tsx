@@ -4,6 +4,7 @@ import { Input } from "../UI/Input/input";
 import { useState } from "react";
 import { LoginHeader } from "./loginHeader";
 import { colors } from "@/lib/tokens/colors";
+import { HelpLinks } from "./helpLinks";
 
 interface Props{
     nextView: (page:string) => void;
@@ -25,6 +26,8 @@ export const RequestAccess: React.FC<Props> = () => {
         console.log("Unit:", unit)
     };
 
+    const isButtonDisabled = !email || !fullName || !mobileNumber || !company || !unit;
+
     return (
         <View style={styles.container}>
             <LoginHeader header="REQUEST ACCESS"/>
@@ -35,7 +38,8 @@ export const RequestAccess: React.FC<Props> = () => {
                 <Input icon="Industry" label="Your company" value={company} onChangeText={setCompany} labelColor={colors.white}/>
                 <Input icon="Task" label="Your unit (plant, vessel, rig)" value={unit} onChangeText={setUnit} labelColor={colors.white}/>
             </View>
-            <ButtonTHS title={"REQUEST ACCESS"} onPress={handleRequest} />
+            <ButtonTHS title={"REQUEST ACCESS"} onPress={handleRequest} variant={"primary"} disabled={isButtonDisabled}/>
+            <HelpLinks header="Not sure what to do?"/>
 
         </View>
     )
