@@ -1,15 +1,25 @@
 import { FC } from 'react';
-import { Text, StyleSheet, StyleProp, TextStyle } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  StyleProp,
+  TextStyle,
+  TextProps,
+} from "react-native";
 import { Platform } from "react-native";
 
-interface Props {
+interface Props extends TextProps {
   name: keyof typeof styles;
   text: string;
   style?: StyleProp<TextStyle>;
 }
 
-export const Typography: FC<Props> = ({ name, text, style }) => {
-  return <Text style={[styles[name], style]}>{text}</Text>;
+export const Typography: FC<Props> = ({ name, text, style, ...restProps }) => {
+  return (
+    <Text style={[styles[name], style]} {...restProps}>
+      {text}
+    </Text>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -20,7 +30,7 @@ const styles = StyleSheet.create({
       ios: "OpenSans-Regular",
     }),
   },
-  buttonCapstock: {
+  buttonCapsLock: {
     fontSize: 18,
     fontFamily: Platform.select({
       android: "OpenSans_400Regular",
@@ -77,19 +87,27 @@ const styles = StyleSheet.create({
     }),
   },
   tableHeader: {
-    fontSize: 22,
-    lineHeight: 28,
+    fontSize: 16,
+    lineHeight: 22,
+    fontFamily: Platform.select({
+      android: "RobotoCondensed_300Light",
+      ios: "RobotoCondensed-Light",
+    }),
+  },
+  tableContent: {
+    fontSize: 16,
+    lineHeight: 22,
     fontFamily: Platform.select({
       android: "RobotoCondensed_400Regular",
       ios: "RobotoCondensed-Regular",
     }),
   },
-  tableContent: {
-    fontSize: 20,
-    lineHeight: 24,
+  tableContentNumber: {
+    fontSize: 16,
+    lineHeight: 22,
     fontFamily: Platform.select({
-      android: "RobotoCondensed_400Regular",
-      ios: "RobotoCondensed-Regular",
+      android: "RobotoCondensed_300Light",
+      ios: "RobotoCondensed-Light",
     }),
   },
 });

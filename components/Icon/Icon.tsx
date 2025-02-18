@@ -1,6 +1,4 @@
-import Reactﬁ from "react";
 import { View } from "react-native";
-import { SvgProps } from "react-native-svg";
 import { iconMapping } from "./iconMapping";
 
 type IconProps = {
@@ -9,7 +7,13 @@ type IconProps = {
   color?: string;
 };
 
+export interface SvgIconProps {
+  size: number;
+  color: string;
+}
+
 export const iconSize = {
+  xsm:16,
   sm: 24,
   md: 32,
 };

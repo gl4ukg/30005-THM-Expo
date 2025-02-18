@@ -1,9 +1,10 @@
+import { BarChart, Primary, Secondary } from "@/components/dashboard";
 import { Icon } from "@/components/Icon/Icon";
 import { Typography } from "@/components/typography";
 import { Select } from "@/components/UI/Select";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const options = [
   {
@@ -42,19 +43,12 @@ const Dashbord = () => {
 
   const router = useRouter();
 
-  const onActionChange = (value: (typeof menuOptions)[0]["value"]) => {
-    console.log(value);
-    if (value === "scrapHoses") {
-      router.push("/(tabs)/dashbord/hoses/scrapHoses");
-    } else if (value === "requestForQuote") {
-      router.push("/(tabs)/dashbord/hoses/requestForQuote");
-    } else if (value === "contactTessTeam") {
-      router.push("/(tabs)/dashbord/hoses/contactTessTeam");
-    }
+  const goToFilter = (filter: string) => {
+    router.push(`/(tabs)/dashbord/hoses/${filter}`);
   };
   return (
     <SafeAreaView style={style.safeView}>
-      <View style={style.container}>
+      <ScrollView contentContainerStyle={style.container}>
         <View style={style.header}>
           <Typography name="tableHeader" text="Inspections" />
           <Select
@@ -63,40 +57,64 @@ const Dashbord = () => {
             onChange={setSelected}
           />
         </View>
-        <Link href="/(tabs)/dashbord/hoses/failed">
-          <Text>Failed</Text>
-        </Link>
-        <Link href="/(tabs)/dashbord/hoses/overdue">
-          <Text>Overdue</Text>
-        </Link>
-        <Link href="/(tabs)/dashbord/hoses/withRemarks">
-          <Text>w/remarks</Text>
-        </Link>
-        <Link href="/(tabs)/dashbord/hoses/inspection">
-          <Text>Hoses soon to be inspected</Text>
-        </Link>
-        <Link href="/(tabs)/dashbord/hoses/overdue">
-          <Text>Replacements overdue</Text>
-        </Link>
-        <Link href="/(tabs)/dashbord/hoses/upcoming">
-          <Text>Replacements upcoming</Text>
-        </Link>
-        <Link href="/(tabs)/dashbord/hoses/iInTransit">
-          <Text>New hoses in transit</Text>
-        </Link>
-        <Link href="/(tabs)/dashbord/hoses/recycled">
-          <Text>Hoses recycled</Text>
-        </Link>
-        {/* <View style={style.header}>
-          <Typography name="tableContent" text="Failed inspections (11)" />
-          <Select
-            menuTitle="Actions"
-            selected="Actions"
-            options={menuOptions}
-            onChange={onActionChange}
+        <BarChart />
+        <View style={style.menu}>
+          <Primary
+            label="Failed"
+            value={1129}
+            trend={1}
+            state="error"
+            onPress={() => goToFilter("failed")}
           />
-        </View> */}
-      </View>
+          <Primary
+            label="Overdue"
+            value={0}
+            trend={-1}
+            state="warning"
+            onPress={() => goToFilter("overdue")}
+          />
+          <Primary
+            label="w/Remarks"
+            value={12}
+            trend={0}
+            state="success"
+            onPress={() => goToFilter("withRemarks")}
+          />
+        </View>
+        <Secondary
+          onPress={() => goToFilter("inspection")}
+          label="Hoses soon to be inspected"
+          value={230}
+          trend={1}
+        />
+        <View style={style.replacements}>
+          <Typography name="sectionHeader" text="Replacements" />
+        </View>
+        <Secondary
+          onPress={() => goToFilter("overdue")}
+          label="Replacements overdue"
+          value={123}
+          trend={-1}
+        />
+        <Secondary
+          onPress={() => goToFilter("upcoming")}
+          label="Replacements upcoming"
+          value={8}
+          trend={1}
+        />
+        <Secondary
+          onPress={() => goToFilter("iInTransit")}
+          label="New hoses in transit"
+          value={14}
+          trend={-1}
+        />
+        <Secondary
+          onPress={() => goToFilter("recycled")}
+          label="Hoses recycled"
+          value={14}
+          trend={1}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -104,13 +122,11 @@ const Dashbord = () => {
 const style = StyleSheet.create({
   safeView: {
     flex: 1,
-    borderColor: "yellow",
-    borderWidth: 2,
   },
   container: {
-    flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
+    gap: 12,
     padding: 20,
   },
   header: {
@@ -120,6 +136,22 @@ const style = StyleSheet.create({
     gap: 6,
     // borderColor: "#009640",
     // borderWidth: 2,
+  },
+  menu: {
+    width: "100%",
+    position: "relative",
+    alignItems: "center",
+    // justifyContent: "space-evenly",
+    padding: 0,
+    gap: 12,
+    flexDirection: "row",
+  },
+  replacements: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 20,
+    gap: 12,
   },
 });
 

@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
@@ -17,9 +17,5 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     height: "100%",
-    // width: "100%",
-    // position: "relative",
-    // justifyContent: "center",
-    // alignItems: "center",
   },
 });

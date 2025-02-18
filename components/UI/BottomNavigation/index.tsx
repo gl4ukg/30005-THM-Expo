@@ -52,11 +52,11 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
                 },
                 {
                   title: "Update RFID",
-                  to: "/(tabs)/hoses",
+                  to: "/(tabs)/dashbord/hoses",
                 },
                 {
                   title: "Metering",
-                  to: "/(tabs)/hoses",
+                  to: "/(tabs)/dashbord/hoses",
                 },
               ],
             },
