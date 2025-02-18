@@ -14,7 +14,12 @@ import { Typography } from "@/components/typography";
 import { TessLines } from "@/components/decorative/tessLines";
 import { RequestAccess } from "@/components/login/requestAccess";
 import { colors } from "@/lib/tokens/colors";
+=========
+import { Icon } from "@/components/Icon/Icon";
+import { BottomNavigation } from "@/components/UI/BottomNavigation";
 import { Link } from "expo-router";
+import { Typography } from "@/components/typography";
+>>>>>>>>> Temporary merge branch 2
 
 const Login = () => {
   const [view, setView] = useState("Welcome");
