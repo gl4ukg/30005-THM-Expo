@@ -1,11 +1,14 @@
 import { mockedData } from "@/app/(tabs)/dashbord/hoses/[filter]/mocked";
 import { ListTable } from "@/components/dashboard/listTable";
+import { SelectedHoseCounter } from "@/components/dashboard/selectedHoseCounter";
 import { Typography } from "@/components/typography";
 import { Select } from "@/components/UI/Select";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {iconMapping, IconName} from "@/components/Icon/iconMapping";
+
 
 interface Props {
   slug: string;
@@ -52,6 +55,7 @@ const getFilteredHoses = (filter: string) => {
 };
 
 const Host: React.FC<Props> = (props) => {
+
   const options = [
     { value: "contactTessTeam", label: "Contact TESS Team" },
     { value: "requestForQuote", label: "Request for quote" },
@@ -59,12 +63,27 @@ const Host: React.FC<Props> = (props) => {
   ];
   const [action, setAction] = useState<string | null>(null);
   const { filter } = useLocalSearchParams();
+  const [selectedCount, setSelectedCount] = useState(0); 
+  const [icon, setIcon] = useState<IconName>("Cart");
+
   const { filteredList, listTitle, listLength } = getFilteredHoses(
     Array.isArray(filter) ? filter[0] : filter
   );
+
+  const actionIconMap: Record<string, IconName>  = {
+    contactTessTeam: "Email",
+    requestForQuote: "Cart",
+    scrapHoses: "Trash",
+  };
+
   const onChangeAction = (value: string) => {
     setAction(value);
+    setIcon(actionIconMap[value]);
   };
+  const handleSelectionChange = (count: number) => {
+    setSelectedCount(count);
+  };
+
   return (
     <SafeAreaView style={style.safeView}>
       <View style={style.header}>
@@ -75,8 +94,9 @@ const Host: React.FC<Props> = (props) => {
           onChange={onChangeAction}
           menuTitle="Actions"
         />
+        <SelectedHoseCounter icon={icon} counter={selectedCount}/>
       </View>
-      <ListTable data={[...getFilteredHoses("filter").filteredList]} />
+      <ListTable data={[...getFilteredHoses("filter").filteredList]} onSelectionChange={handleSelectionChange} />
     </SafeAreaView>
   );
 };
