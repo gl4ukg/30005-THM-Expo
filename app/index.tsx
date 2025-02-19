@@ -14,6 +14,7 @@ import { TessLines } from "@/components/decorative/tessLines";
 import { RequestAccess } from "@/components/login/requestAccess";
 import { colors } from "@/lib/tokens/colors";
 import { Link } from "expo-router";
+import { TessLogo } from "@/components/login/logo";
 
 const Login = () => {
   const [view, setView] = useState("Welcome");
@@ -36,6 +37,7 @@ const Login = () => {
           </Pressable>
         </Link>
         <ScrollView contentContainerStyle={styles.scrollView}>
+          <TessLogo width={180} color={colors.white} />
           {view === "Welcome" && <Welcome nextView={handlePress} />}
           {view === "Login" && <LoginScreen nextView={handlePress} />}
           {view === "RequestAccess" && <RequestAccess nextView={handlePress} />}
@@ -45,8 +47,8 @@ const Login = () => {
               text={"© 2025 Copyright TESS AS"}
               style={styles.whiteText}
             />
-            <TessLines />
           </View>
+          <TessLines />
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>
@@ -57,12 +59,12 @@ export default Login;
 
 const styles = StyleSheet.create({
   safeArea: {
-    // height: "100%",
     position: "relative",
   },
   scrollView: {
     width: "100%",
-    borderWidth: 2,
+    minHeight: "100%",
+    paddingTop: 36,
   },
   link: {
     shadowColor: "#000",
