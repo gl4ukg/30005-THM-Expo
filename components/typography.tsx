@@ -25,6 +25,7 @@ export const Typography: FC<Props> = ({ name, text ,children, style, ...restProp
 const styles = StyleSheet.create({
   button: {
     fontSize: 18,
+    lineHeight: 18,
     fontFamily: Platform.select({
       android: "OpenSans_400Regular",
       ios: "OpenSans-Regular",
@@ -32,6 +33,8 @@ const styles = StyleSheet.create({
   },
   buttonCapsLock: {
     fontSize: 18,
+    lineHeight: 20,
+    textTransform: "uppercase",
     fontFamily: Platform.select({
       android: "OpenSans_400Regular",
       ios: "OpenSans-Regular",

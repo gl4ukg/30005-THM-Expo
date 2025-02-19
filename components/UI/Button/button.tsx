@@ -1,5 +1,6 @@
 import { Typography } from "@/components/typography";
 import { colors } from "@/lib/tokens/colors";
+import { linkTo } from "expo-router/build/global-state/routing";
 import React, { ReactNode } from "react";
 
 import {
@@ -14,58 +15,79 @@ import {
 interface ButtonTHSProps extends PressableProps {
   title: string;
   children?: ReactNode | ReactNode[];
-  variant: "primary"|"secondary"|"link";
+  variant?: "primary"|"secondary"| "tertiary" ;
+  size?: "sm" | "lg";
   disabled?: boolean;
-
 }
 export const ButtonTHS: React.FC<ButtonTHSProps> = ({
   children,
   title,
   onPress,
-  variant,
+  variant = "primary",
+  size = "lg",
   disabled = false,
+  style
 }) => {
-  const variantstyle: Record<ButtonTHSProps["variant"], ViewStyle> = {
-    primary:{backgroundColor: colors.primary50},
-    secondary:{backgroundColor: colors.white},
-    link:{paddingLeft:0,marginLeft:0}
-  }
-  const textColorMap: Record<ButtonTHSProps["variant"], TextStyle> = {
-    primary:{color: colors.white},
-    secondary:{color: colors.black},
-    link: {color: colors.white, textAlign:"left"},
-  };
+  if( style !== undefined && typeof style !== "object"  ) throw new Error('style should be a type ViewStyle')
+  // const variantstyle: Record<ButtonTHSProps["variant"], ViewStyle> = {
+  //   primary:{backgroundColor: colors.primary50},
+  //   secondary:{backgroundColor: colors.white},
+  //   link:{paddingLeft:0,marginLeft:0}
+  // }
+  // const textColorMap: Record<ButtonTHSProps["variant"], TextStyle> = {
+  //   primary:{color: colors.white},
+  //   secondary:{color: colors.black},
+  //   link: {color: colors.white, textAlign:"left"},
+  // };
 
-  const typographyStyle: TextStyle = {
-    fontSize: variant === "link" ? 16 : 18,
-    ...textColorMap[variant],
-  };
+  // const typographyStyle: TextStyle = {
+  //   fontSize: variant === "link" ? 16 : 18,
+  //   ...textColorMap[variant],
+  // };
 
   return (
     <Pressable
+     disabled={disabled}
       onPress={disabled ? undefined : onPress}
       style={({ pressed }) => [
-        styles.container,
-        variantstyle[variant],
-        pressed && styles.containerPressed,
-        disabled && styles.containerDisabled
+        styles.base,
+        styles[variant],
+        styles[size],
+        (pressed && pressedStyles[variant] as ViewStyle),
+        disabled && styles.containerDisabled,
+        style,
       ]}
     >
       <View>
         {React.Children.map(children, (child) => child)}
-        <Typography name={"button"} text={title} style={typographyStyle}/>
+        <Typography 
+          name={ size === "lg" ? "buttonCapsLock" : "button"} 
+          numberOfLines={1}
+          style={buttonTextStyle[variant]} 
+          text={title} />
       </View>
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  base: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 4,
+    width:"100%",
+    borderRadius: 3,
+    borderWidth:1,
+    borderColor: "transparent",
+  },
+  containerPressed: {
+    borderColor:colors.white,
+  },
+  containerDisabled:{
+    opacity:0.5
+  },
+  primary: {
+    backgroundColor: colors.primary50,
+    color: colors.white,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -74,14 +96,43 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 3,
-    width:"80%",
-    margin:"auto"
   },
-  containerPressed: {
-    borderColor:colors.white,
+  secondary: {
+    backgroundColor: colors.white,
+    borderColor: colors.primary50,
   },
-  containerDisabled:{
-    opacity:0.5
-  }
+  tertiary: {
+    backgroundColor: "transparent",
+  },
+  sm: {
+    height: 40,
+  },
+  lg: {
+    height: 55
+  },
 
+});
+
+const buttonTextStyle = StyleSheet.create({
+  primary: {
+    color: colors.white,
+  },
+  secondary: {
+    color: colors.extended333,
+  },
+  tertiary: {
+    color: colors.extended333,
+  }
+});
+const pressedStyles = StyleSheet.create({
+  primary: {
+    borderColor: colors.white,
+  },
+  secondary: {
+    borderWidth: 2,
+  },
+  tertiary: {
+    borderColor: colors.primary50,
+    borderWidth: 1
+  }
 });
