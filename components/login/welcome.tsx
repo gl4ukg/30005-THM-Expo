@@ -15,11 +15,23 @@ const welcomeText =["to TESS Hose Management (THM).",
 
 export const Welcome: React.FC<Props> = ({nextView}) => {
     return <View style={styles.container}>
-       <LoginHeader header="WELCOME" subHeader={welcomeText}/>
-        <ButtonTHS title={"LOGIN"} onPress={() => nextView("Login")} variant={"primary"} />
-            <Pressable onPress={() => nextView("RequestAccess")}>
-                <Typography text="Request Access" name="sectionHeader" style={styles.whiteText}/>
-            </Pressable>
+       <LoginHeader header="WELCOME" style={styles.loginHeader} >
+            <View style={styles.paragraph}>
+                <Typography name="navigation" text="to TESS Hose Management (THM)." style={styles.whiteText} />
+                <Typography name="navigation" style={styles.whiteText} >
+                    <Typography name="navigationBold" text="Existing users: "  />
+                    <Typography name="navigation" text="sign in with your user login."  />
+                </Typography>
+                <Typography name="navigation" style={styles.whiteText} >
+                    <Typography name="navigationBold" text="New users: "  />
+                    <Typography name="navigation" text="request access and our team will revert to you with information needed to setup your account."  />
+                </Typography>
+            </View>
+       </LoginHeader>
+        <ButtonTHS title={"LOGIN"} onPress={() => nextView("Login")} variant={"primary"} style={{width: "100%"}} />
+        <Pressable onPress={() => nextView("RequestAccess")}>
+            <Typography text="Request Access" name="sectionHeader" style={styles.whiteText}/>
+        </Pressable>
         <View style={styles.semiFooter}>
             <Typography name={"button"} text={"We hose the world"} style={styles.whiteText}/>
             <Image source={require('../../assets/images/norway-flag.png')}/>
@@ -28,14 +40,17 @@ export const Welcome: React.FC<Props> = ({nextView}) => {
 }
 const styles = StyleSheet.create({
     container:{
-        flex: 1,
-        gap: 200,
-        height: "100%",
+        width: "100%",
         padding: 20,
+        justifyContent: "flex-start",
+        alignItems: "center",
+        // borderColor: colors.white,
+        // borderWidth: 1,
+    },
+    loginHeader:{
+        marginBottom: 50
     },
     paragraph:{
-        width:"80%",
-        margin:"auto",
         gap:5,
     },
     semiFooter:{
