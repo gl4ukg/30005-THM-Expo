@@ -17,6 +17,7 @@ export const colors = {
   error: "#E51C22",
   errorText: "#BC3442",
   extendedBlue: "#003e15",
+  extended333: "#333333",
   extended666: "#666666",
   extendedPurple: "#8E3A9E",
   dashbordRed: "#FFD5E3",
