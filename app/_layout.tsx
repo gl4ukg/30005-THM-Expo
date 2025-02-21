@@ -4,7 +4,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
   return (
-    <SafeAreaProvider style={styles.safeArea}>
+    <SafeAreaProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -13,9 +13,10 @@ export default function RootLayout() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    height: "100%",
-  },
-});
+// const styles = StyleSheet.create({
+//   safeArea: {
+//     // flex: 1,
+//     // height: "100%",
+//     backgroundColor: "yellow"
+//   },
+// });

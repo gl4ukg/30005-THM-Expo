@@ -10,55 +10,52 @@ interface Props {
 	nextView: (page: "login" | "requestAccess") => void;
 }
 
-export const LoginScreen: React.FC<Props> = () => {
-	const [email, setEmail] = useState('');
-	const [fullName, setFullName] = useState('');
+export const CreateNewPassword: React.FC<Props> = () => {
 	const [password, setPassword] = useState('');
 
-	const handleEmailBlur = () => {
-		if (!email.includes('@') && email !== '') {
-			Alert.alert('Invalid Email', 'Please enter a valid email address.');
-		}
-	};
 
-	const handleNameBlur = () => {
-		if (!/^[\p{L}\s]+$/u.test(fullName) && fullName !== '') {
-			Alert.alert('Invalid Name', 'Please enter a valid name.');
-		}
-	};
+
 
 	const handleLogin = () => {
-		console.log('Email:', email);
-		console.log('Full Name:', fullName);
 		console.log('Password:', password);
 	};
 
-    const isButtonDisabled = !email || !fullName || !password;
+    const isButtonDisabled = !password;
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.form}>
-			<LoginHeader header={'LOGIN'} />
+			<LoginHeader header={'CREATE NEW PASSWORD'}>
+				<View>
+					<Typography name="navigation" text="Password must have:" style={styles.whiteText} />
+					<View>
+						<Typography name="navigation" text="- 8-64 characters" style={styles.whiteText} />
+						<Typography name="navigation" text="- An upercase letter" style={styles.whiteText} />
+						<Typography name="navigation" text="- A lowercase letter" style={styles.whiteText} />
+						<Typography name="navigation" text="- A number" style={styles.whiteText} />
+						<Typography name="navigation" text="- A special character" style={styles.whiteText} />
+					</View>
+				</View>
+			</LoginHeader>
 				<Input
-					icon='Email'
-					label='Email'
-					placeHolder='ola@nordmann.no'
-					value={email}
-					onChangeText={setEmail}
+					icon='Password'
+					label='Temporary password'
+					value={password}
+					onChangeText={setPassword}
 					labelColor='white'
-					onBlur={handleEmailBlur}
-				/>
-				<Input
-					icon='User'
-					label='Your full name'
-					value={fullName}
-					onChangeText={setFullName}
-					labelColor='white'
-					onBlur={handleNameBlur}
+					type='password'
 				/>
 				<Input
 					icon='Password'
-					label='Password'
+					label='Create new password'
+					value={password}
+					onChangeText={setPassword}
+					labelColor='white'
+					type='password'
+				/>
+				<Input
+					icon='Password'
+					label='Confirm new password'
 					value={password}
 					onChangeText={setPassword}
 					labelColor='white'

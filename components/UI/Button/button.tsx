@@ -24,13 +24,12 @@ export const ButtonTHS: React.FC<ButtonTHSProps> = ({
   variant = "primary",
   size = "lg",
   disabled = false,
-  style
+  ...restProps
 }) => {
-  if( style !== undefined && typeof style !== "object"  ) throw new Error('style should be a type ViewStyle')
-
+  if( restProps.style !== undefined && typeof restProps.style !== "object"  ) throw new Error('style should be a type ViewStyle')
   return (
     <Pressable
-     disabled={disabled}
+      disabled={disabled}
       onPress={disabled ? undefined : onPress}
       style={({ pressed }) => [
         styles.base,
@@ -38,8 +37,8 @@ export const ButtonTHS: React.FC<ButtonTHSProps> = ({
         styles[size],
         (pressed && pressedStyles[variant] as ViewStyle),
         disabled && styles.containerDisabled,
-        style,
-      ]}
+        restProps.style as ViewStyle,]}
+      {...restProps}
     >
       <View>
         {React.Children.map(children, (child) => child)}

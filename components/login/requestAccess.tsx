@@ -5,9 +5,11 @@ import { useState } from "react";
 import { LoginHeader } from "./loginHeader";
 import { colors } from "@/lib/tokens/colors";
 import { HelpLinks } from "./helpLinks";
+import { LinkButton } from "@/components/UI/Button/linkButton";
+import { Typography } from "@/components/typography";
 
 interface Props{
-    nextView: (page:string) => void;
+    nextView: (page: "login" | "requestAccess") => void;
 }
 
 export const RequestAccess: React.FC<Props> = () => {
@@ -50,21 +52,32 @@ export const RequestAccess: React.FC<Props> = () => {
                     <Input key={index} icon="Task" label={index === 0 ?"Your unit (plant, vessel, rig)":`Unit ${index + 1}`} value={unit} onChangeText={(value) => updateUnitValue(index, value)} labelColor={colors.white}/>
                 ))}
                 <View style={styles.buttonPlacement}>
-                    <ButtonTHS title={"+ Add more units?"} variant={"link"} onPress={addUnitField}/>
+                    <LinkButton title={"+ Add more units?"} variant={"dark"} onPress={addUnitField}/>
                 </View>
             </View>
             <ButtonTHS title={"REQUEST ACCESS"} onPress={handleRequest} variant={"primary"} disabled={isButtonDisabled}/>
-            <HelpLinks header="Not sure what to do?"/>
-
+            <View style={styles.footer}>
+                <HelpLinks header="Not sure what to do?"/>
+                <Typography
+                    name={"navigation"}
+                    text={"© 2025 Copyright TESS AS"}
+                    style={styles.whiteText}
+                />  
+            </View>
         </View>
     )
 }
 const styles = StyleSheet.create({
     container:{
+        width: "100%",
         flex: 1,
-        gap: 50,
         height: "100%",
-        paddingVertical:20,
+        maxWidth: 340,
+        marginHorizontal: "auto",
+        padding: 20,
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: 50,
     },
     form:{
         width:"100%",
@@ -72,8 +85,16 @@ const styles = StyleSheet.create({
         alignItems:"center",
     },
     buttonPlacement:{
-        marginTop:-15,
-        marginLeft:-35,
-    }
+        alignSelf:"flex-start",
+        paddingLeft: 50
+    },
+    footer: {
+        width: "100%",
+        gap: 50
+    },
+    whiteText: {
+        color: colors.white,
+        textAlign: "center",
+    },
 
 })

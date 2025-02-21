@@ -19,15 +19,14 @@ export const LoginHeader: React.FC<Props> = ({header, children, style}) => {
 const styles = StyleSheet.create({
     container:{
         width:"100%",
-        backgroundColor:colors.black,
+        backgroundColor: `${colors.black}75`,
         paddingHorizontal:20,
         paddingVertical:10,
-        opacity: 0.75,
+        gap:5
     },
     header:{
         color:colors.white,
         textAlign: 'center',
-        marginBottom: 5
     },
     headerWithChildren: {
         textAlign: 'left',

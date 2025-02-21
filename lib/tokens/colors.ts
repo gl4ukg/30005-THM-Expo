@@ -16,7 +16,7 @@ export const colors = {
   secondary95: "#bebebe",
   error: "#E51C22",
   errorText: "#BC3442",
-  extendedBlue: "#003e15",
+  extendedBlue: "#1A4A77",
   extended333: "#333333",
   extended666: "#666666",
   extendedPurple: "#8E3A9E",
