@@ -5,9 +5,9 @@ import { Typography } from "@/components/typography";
 import { Select } from "@/components/UI/Select";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {iconMapping, IconName} from "@/components/Icon/iconMapping";
+import { IconName} from "@/components/Icon/iconMapping";
 
 
 interface Props {
@@ -87,14 +87,21 @@ const Host: React.FC<Props> = (props) => {
   return (
     <SafeAreaView style={style.safeView}>
       <View style={style.header}>
-        <Typography name="tableHeader" text={listTitle} />
+        <Typography name="tableHeader" text={listTitle} style={style.title}/>
         <Select
           selected={action}
           options={options}
           onChange={onChangeAction}
           menuTitle="Actions"
         />
-        <SelectedHoseCounter icon={icon} counter={selectedCount}/>
+        { action  &&
+          <View style={style.selectionCounter}>
+            <SelectedHoseCounter icon={icon} counter={selectedCount} handlePress={
+              function (): void {
+                console.log(`${selectedCount} items selected for ${action} `)
+            } }/>
+          </View>
+        }
       </View>
       <ListTable data={[...getFilteredHoses("filter").filteredList]} onSelectionChange={handleSelectionChange} />
     </SafeAreaView>
@@ -110,8 +117,8 @@ const style = StyleSheet.create({
   header: {
     width: "100%",
     alignItems: "center",
-    padding: 20,
-    gap: 6,
+    paddingVertical: 20,
+    paddingHorizontal:10,
   },
   menu: {
     width: "100%",
@@ -129,4 +136,11 @@ const style = StyleSheet.create({
     paddingTop: 20,
     gap: 12,
   },
+  title:{
+    marginBottom: 6,
+  },
+  selectionCounter:{
+    width:"100%",
+    alignItems:"flex-end",
+  }
 });

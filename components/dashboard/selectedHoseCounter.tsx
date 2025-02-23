@@ -2,29 +2,29 @@ import { View, StyleSheet, Pressable } from "react-native";
 import { IconName } from "../Icon/iconMapping";
 import { Icon } from "../Icon/Icon";
 import { Typography } from "../typography";
-import Svg, { Circle } from "react-native-svg";
 import { colors } from "@/lib/tokens/colors";
 
 interface Props {
     icon:IconName,
-    counter:Number,
+    counter:number,
+    handlePress: () => void,
 }
 
 export const SelectedHoseCounter: React.FC<Props> = ({
     icon,
-    counter
+    counter,
+    handlePress,
 }) => {
 
     return(
-        <Pressable>
+        <Pressable onPress={handlePress}>
         <View style={elementStyle.frame}>
             <View style={elementStyle.iconWrapper}>
                 <Icon name={icon} color={colors.primary} size="md"/>
             </View>
-            <Svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={elementStyle.svg}>
-                <Circle cx="11" cy="11" r="11" fill={colors.secondary25}/>
+            <View style={elementStyle.circle}>
                 <Typography name={"navigation"} text={counter.toString()}style={{color:colors.white, margin:"auto"}}/>
-            </Svg>
+            </View>
         </View>
         </Pressable>
     )
@@ -36,10 +36,16 @@ const elementStyle = StyleSheet.create({
         width:40,
         height:40,
     },
-    svg:{
-        position:"absolute",
-        top:2,
-        right:3,
+    circle: {
+        position: "absolute",
+        top: 2,
+        right: 3,
+        width: 22,
+        height: 22,
+        borderRadius: 11, 
+        backgroundColor: colors.secondary25,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     iconWrapper:{
         position:"absolute",
