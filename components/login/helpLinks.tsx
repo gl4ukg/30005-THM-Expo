@@ -1,6 +1,8 @@
 import { View, Linking, Alert,StyleSheet, Pressable } from "react-native"
 import { Typography } from "../typography";
 import { colors } from "@/lib/tokens/colors";
+import { Link } from "@react-navigation/native";
+import { LinkButton } from "@/components/UI/Button/linkButton";
 
 interface Props {
     header: string;
@@ -32,22 +34,18 @@ export const HelpLinks: React.FC<Props> = ({header}) => {
                 <Typography name={"navigationBold"} text={header} style={styles.whiteText}/>
                 <Typography name={"navigation"} text={"Please contact the THM team:"} style={styles.whiteText}/>
                 <Pressable onPress={handlePhonePress}>
-                    <Typography name={"button"} text={phoneNumber} style={styles.whiteText}/>
+                    <Typography name={"navigation"} text={phoneNumber} style={styles.whiteText}/>
                 </Pressable>
-                <Pressable onPress={handleEmailPress}>
-                    <Typography name={"navigationBold"} text={emailAddr} style={styles.linkColor}/>
-                </Pressable>
+                <LinkButton variant="dark" title={emailAddr} onPress={() => handleEmailPress()}  />
             </View>
         </View>
-
     )
 }
 const styles = StyleSheet.create({
     paragraph:{
         width:"100%",
-        margin:"auto",
-        justifyContent:"center",
-        alignItems:'center',
+        justifyContent:"flex-start",
+        alignItems:'flex-start',
     },
     whiteText:{
         color:colors.white,

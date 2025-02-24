@@ -2,22 +2,22 @@ import { FC } from 'react';
 import {
   Text,
   StyleSheet,
-  StyleProp,
-  TextStyle,
   TextProps,
 } from "react-native";
 import { Platform } from "react-native";
 
 interface Props extends TextProps {
   name: keyof typeof styles;
-  text: string;
-  style?: StyleProp<TextStyle>;
+  text?: string;
 }
 
-export const Typography: FC<Props> = ({ name, text, style, ...restProps }) => {
+export const Typography: FC<Props> = ({ name, text ,children, style, ...restProps }) => {
+  if (text && children) {
+    throw new Error('The Typography component cannot use both "text" and "children" props at the same time.');
+  }  
   return (
-    <Text style={[styles[name], style]} {...restProps}>
-      {text}
+    <Text  {...restProps} style={[styles[name], style]}>
+      {text ? text : children } 
     </Text>
   );
 };
@@ -25,6 +25,7 @@ export const Typography: FC<Props> = ({ name, text, style, ...restProps }) => {
 const styles = StyleSheet.create({
   button: {
     fontSize: 18,
+    lineHeight: 18,
     fontFamily: Platform.select({
       android: "OpenSans_400Regular",
       ios: "OpenSans-Regular",
@@ -32,6 +33,8 @@ const styles = StyleSheet.create({
   },
   buttonCapsLock: {
     fontSize: 18,
+    lineHeight: 20,
+    textTransform: "uppercase",
     fontFamily: Platform.select({
       android: "OpenSans_400Regular",
       ios: "OpenSans-Regular",
@@ -50,8 +53,8 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     fontWeight: "600",
     fontFamily: Platform.select({
-      android: "OpenSans_400Regular",
-      ios: "OpenSans-Regular",
+      android: "OpenSans_600SemiBold",
+      ios: "OpenSans-SemiBold",
     }),
   },
   sectionHeader: {
@@ -60,6 +63,15 @@ const styles = StyleSheet.create({
     fontFamily: Platform.select({
       android: "OpenSans_600SemiBold",
       ios: "OpenSans-SemiBold",
+    }),
+  },
+  sectionHeaderCapslock: {
+    fontSize: 22,
+    lineHeight: 22,
+    textTransform: "uppercase",
+    fontFamily: Platform.select({
+      android: "OpenSans_400Regular",
+      ios: "OpenSans-Regular",
     }),
   },
   numericalHighlight: {

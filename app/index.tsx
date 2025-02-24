@@ -1,4 +1,5 @@
 import {
+  Dimensions,
   ImageBackground,
   Pressable,
   SafeAreaView,
@@ -14,41 +15,65 @@ import { TessLines } from "@/components/decorative/tessLines";
 import { RequestAccess } from "@/components/login/requestAccess";
 import { colors } from "@/lib/tokens/colors";
 import { Link } from "expo-router";
+import { TessLogo } from "@/components/login/logo";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ResetPassword } from "@/components/login/resetPassword";
+import { CreateNewPassword } from "@/components/login/createPassword";
 
+type LoginViews = "welcome" | "login" | "requestAccess" | "resetPassword" | "createPassword";
+;
 const Login = () => {
-  const [view, setView] = useState("Welcome");
-  const handlePress = (page: string) => {
+  const [view, setView] = useState<LoginViews>("welcome");
+  const handlePress = (page: LoginViews) => {
     setView(page);
   };
+  const windowHeight = Dimensions.get("window").height;
+  const insets = useSafeAreaInsets();
 
   return (
     <ImageBackground
+      style={{flex: 1}}
       source={require("../assets/images/TESS-THM-inspector.png")}
     >
-      <SafeAreaView>
-        <Link href="/(tabs)/dashbord" asChild>
-          <Pressable style={styles.link}>
-            <Typography
-              name={"button"}
-              text={"Back to dashboard"}
-              style={styles.whiteText}
-            />
+      <SafeAreaView style={styles.safeArea}>
+        <View style={{flexDirection: "row", gap: 5}}>
+          <Pressable style={[styles.link, { flex: 1, backgroundColor: colors.dashbordGreen}]} onPress={() => {setView("welcome")}}>
+           <Typography name="navigation" text="welcome" numberOfLines={1}/>
           </Pressable>
-        </Link>
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          {view === "Welcome" && <Welcome nextView={handlePress} />}
-          {view === "Login" && <LoginScreen nextView={handlePress} />}
-          {view === "RequestAccess" && <RequestAccess nextView={handlePress} />}
-          <View style={styles.footerView}>
-            <Typography
-              name={"navigation"}
-              text={"© 2025 Copyright TESS AS"}
-              style={styles.whiteText}
-            />
-            <TessLines />
-          </View>
-        </ScrollView>
+          <Pressable style={[styles.link, { flex: 1, backgroundColor: colors.dashbordRed}]} onPress={() => {setView("resetPassword")}}>
+           <Typography name="navigation" text="reset" numberOfLines={1}/>
+          </Pressable>
+          <Pressable style={[styles.link, { flex: 1, backgroundColor: colors.dashbordYellow}]} onPress={() => {setView("requestAccess")}}>
+           <Typography name="navigation" text="request" numberOfLines={1}/>
+          </Pressable>
+          <Pressable style={[styles.link, { flex: 1, backgroundColor: colors.lightContrast25}]} onPress={() => {setView("login")}}>
+           <Typography name="navigation" text="login" numberOfLines={1}/>
+          </Pressable>
+          <Pressable style={[styles.link, { flex: 1, backgroundColor: colors.extendedBlue}]} onPress={() => {setView("createPassword")}}>
+           <Typography name="navigation" text="create" numberOfLines={1}/>
+          </Pressable>
+          <Link href={"/(tabs)/dashbord"} asChild  style={[styles.link, { flex: 1, backgroundColor: colors.dashbordGreen}]}>
+            <Pressable style={[styles.link, { flex: 1, backgroundColor: colors.extendedBlue}]} >
+            <Typography name="navigation" text="create" numberOfLines={1}/>
+            </Pressable>
+          </Link>
+        </View>
+        <View style={[styles.scrollViewWrapper, {height: windowHeight - insets.bottom}]}>
+          <ScrollView contentContainerStyle={[styles.scrollView]}>
+            <View style={[styles.viewContainer, {}]}>
+              <TessLogo width={180} color={colors.white} />
+              {view === "welcome" && <Welcome nextView={handlePress} />}
+              {view === "login" && <LoginScreen nextView={handlePress} />}
+              {view === "requestAccess" && <RequestAccess nextView={handlePress} />}
+              {view === "resetPassword" && <ResetPassword nextView={handlePress} />}
+              {view === "createPassword" && <CreateNewPassword nextView={handlePress} />}
+            </View>
+          </ScrollView>
+        </View>
       </SafeAreaView>
+      <View style={styles.lines}>
+          <TessLines />
+      </View>
     </ImageBackground>
   );
 };
@@ -57,30 +82,20 @@ export default Login;
 
 const styles = StyleSheet.create({
   safeArea: {
-    // height: "100%",
-    position: "relative",
+    flex: 1,
+  },
+  scrollViewWrapper: {
+    flex: 1,
   },
   scrollView: {
-    width: "100%",
-    borderWidth: 2,
+  },
+  viewContainer: {
+    paddingTop: 36,
   },
   link: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 3,
-    width: "100%",
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    flexDirection: "row",
     justifyContent: "center",
-    gap: 8,
-    backgroundColor: "#BDECB9",
+    alignItems: "center", 
+    backgroundColor: "hotpink"
   },
   footerView: {
     width: "100%",
@@ -90,4 +105,10 @@ const styles = StyleSheet.create({
   whiteText: {
     color: colors.white,
   },
+  lines: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    alignItems: "center",
+  }
 });
