@@ -46,7 +46,7 @@ const SubUnitSelect = () => {
           text={selectedSubUnit?.name}
           style={styles.selectText}
         />
-        <Icon name='Down' color={colors.white} size='sm' />
+        <Icon name='ChevronDown' color={colors.white} size='sm' />
       </TouchableOpacity>
 
       {isDropdownVisible && (
