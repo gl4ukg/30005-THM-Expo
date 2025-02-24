@@ -24,6 +24,9 @@ import TrendArrowUp from './icons/TrendArrowUp';
 import Alert from './icons/Alert';
 import CheckboxChecked from './icons/CheckboxChecked';
 import CaretDown from './icons/CaretDown';
+import CaretLeft from './icons/CaretLeft';
+import CaretRight from './icons/CaretRight';
+import CaretUp from './icons/CaretUp';
 
 export type IconName =
   | 'Alert'
@@ -51,7 +54,10 @@ export type IconName =
   | 'EyeOff'
   | 'Industry'
   | 'Phone'
-  | 'CaretDown';
+  | 'CaretDown'
+  | 'CaretLeft'
+  | 'CaretRight'
+  | 'CaretUp';
 
 export const iconMapping: Record<IconName, React.FC<any>> = {
   Alert,
@@ -80,4 +86,7 @@ export const iconMapping: Record<IconName, React.FC<any>> = {
   TrendArrowDown,
   TrendArrowUp,
   CaretDown,
+  CaretLeft,
+  CaretRight,
+  CaretUp,
 };
