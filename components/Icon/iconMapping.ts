@@ -23,6 +23,16 @@ import TrendArrowDown from './icons/TrendArrowDown';
 import TrendArrowUp from './icons/TrendArrowUp';
 import Alert from './icons/Alert';
 import CheckboxChecked from './icons/CheckboxChecked';
+import CaretDown from './icons/CaretDown';
+import CaretLeft from './icons/CaretLeft';
+import CaretRight from './icons/CaretRight';
+import CaretUp from './icons/CaretUp';
+import Camera from './icons/Camera';
+import Cross from './icons/Cross';
+import Inspect from './icons/Inspect';
+import ArrowLeft from './icons/ArrowLeft';
+import ArrowRight from './icons/ArrowRight';
+import Image from './icons/Image';
 
 export type IconName =
   | 'Alert'
@@ -49,7 +59,17 @@ export type IconName =
   | 'Eye'
   | 'EyeOff'
   | 'Industry'
-  | 'Phone';
+  | 'Phone'
+  | 'CaretDown'
+  | 'CaretLeft'
+  | 'CaretRight'
+  | 'CaretUp'
+  | 'Camera'
+  | 'Cross'
+  | 'Inspect'
+  | 'ArrowLeft'
+  | 'ArrowRight'
+  | 'Image';
 
 export const iconMapping: Record<IconName, React.FC<any>> = {
   Alert,
@@ -77,4 +97,14 @@ export const iconMapping: Record<IconName, React.FC<any>> = {
   ChevronRight,
   TrendArrowDown,
   TrendArrowUp,
+  CaretDown,
+  CaretLeft,
+  CaretRight,
+  CaretUp,
+  Camera,
+  Cross,
+  Inspect,
+  ArrowLeft,
+  ArrowRight,
+  Image,
 };
