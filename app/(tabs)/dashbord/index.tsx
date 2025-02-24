@@ -1,10 +1,159 @@
 import { BarChart, Primary, Secondary } from "@/components/dashboard";
+import { BarData } from "@/components/dashboard/barChart";
 import { Icon } from "@/components/Icon/Icon";
 import { Typography } from "@/components/typography";
 import { Select } from "@/components/UI/Select";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+
+const month: BarData = [
+    {
+      value: 72,
+      label: "Jan",
+    },
+    {
+      value: 138,
+      label: "Feb",
+    },
+    {
+      value: 91,
+      label: "Mar",
+    },
+    {
+      value: 125,
+      label: "Apr",
+    },
+    {
+      value: 141,
+      label: "May",
+    },
+    {
+      value: 68,
+      label: "Jun",
+    },
+    {
+      value: 68,
+      label: "Jul",
+    },
+  ];
+const day: BarData = [
+    {
+      value: 2,
+      label: "Mon",
+    },
+    {
+      value: 5,
+      label: "Tue",
+    },
+    {
+      value: 10,
+      label: "Wed",
+    },
+    {
+      value: 12,
+      label: "Thu",
+    },
+    {
+      value: 15,
+      label: "Fri",
+    },
+    {
+      value: 18,
+      label: "Sat",
+    },
+    {
+      value: 20,
+      label: "Sun",
+    },
+  ];
+
+  const week: BarData = [
+    {
+      value: 72,
+      label: "w46",
+    },
+    {
+      value: 138,
+      label: "w47",
+    },
+    {
+      value: 91,
+      label: "w48",    
+    },    
+    {
+      value: 125,
+      label: "w49",
+    },    
+    {
+      value: 141,
+      label: "w50",
+    },  
+    {
+      value: 68,
+      label: "w51",
+    },
+    {
+      value: 68,
+      label: "w52",
+    },
+  ]
+
+  const year: BarData = [
+    {
+      value: 2022,
+      label: "2020",
+    },
+    {
+      value: 3122,
+      label: "2021",
+    },
+    {
+      value: 2122,
+      label: "2022",
+    },
+    {
+      value: 5121,
+      label: "2023",
+    },
+    {
+      value: 1012,
+      label: "2024",
+    },
+    {
+      value: 1221,
+      label: "2025",
+    },
+
+  ]
+
+  const team: BarData = [
+    {
+      label: "Mar",
+      value: 41,
+    },
+    {
+      label: "Øyv",
+      value: 34,
+    },
+    {
+      label: "Hja",
+      value: 26,
+    },
+    {
+      label: "Arn",
+      value: 41,
+    },
+    {
+      label: "Fra",
+      value: 58,
+    },
+    {
+      label: "Eiv",
+      value: 27,
+    },
+  ]
+
 
 const options = [
   {
@@ -19,28 +168,40 @@ const options = [
     label: "pr Day",
     value: "day",
   },
-];
-const menuOptions = [
   {
-    label: "Scrap hoses",
-    value: "scrapHoses",
-    icon: () => <Icon name="Trash" color="#009640" />,
+    label: "pr Year",
+    value: "year",
   },
   {
-    label: "Request for quote",
-    value: "requestForQuote",
-    icon: () => <Icon name="Cart" color="#009640" />,
-  },
-  {
-    label: "Contact TESS team",
-    value: "contactTessTeam",
-    icon: () => <Icon name="Email" color="#009640" />,
+    label: "pr Team",
+    value: "team",
   },
 ];
+
 const Dashbord = () => {
   const [selected, setSelected] =
     useState<(typeof options)[0]["value"]>("month");
-
+  
+  const [barData, setBarData] = useState<BarData>(team);
+  useEffect(() => {
+    switch (selected) {
+      case "month":
+        setBarData(month);
+        break;
+      case "week":
+        setBarData(week);
+        break;
+      case "day":
+        setBarData(day);
+        break;
+      case "year":
+        setBarData(year);
+        break;
+      case "team":
+        setBarData(team);
+        break;
+    }
+  }, [selected]);
   const router = useRouter();
 
   const goToFilter = (filter: string) => {
@@ -57,7 +218,7 @@ const Dashbord = () => {
             onChange={setSelected}
           />
         </View>
-        <BarChart />
+        <BarChart barData={barData} />
         <View style={style.menu}>
           <Primary
             label="Failed"

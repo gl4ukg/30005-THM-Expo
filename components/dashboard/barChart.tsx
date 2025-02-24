@@ -1,66 +1,49 @@
 import { Typography } from "@/components/typography";
-import { tokens } from "@/lib/tokens";
 import { colors } from "@/lib/tokens/colors";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { FC } from "react";
+import { Platform, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { BarChart, type barDataItem } from "react-native-gifted-charts";
 
 const calculateAvg = (arr: { value: number }[]) => {
   return arr.reduce((a, b) => a + b.value, 0) / arr.length;
 };
 
-export const BarChartDashbord = () => {
-  const barData: barDataItem[] = [
-    {
-      value: 12855,
-      label: "Jan",
-    },
-    {
-      value: 12855,
-      label: "Feb",
-    },
-    {
-      value: 12855,
-      label: "Mar",
-    },
-    {
-      value: 1482,
-      label: "Apr",
-    },
-    {
-      value: 1282,
-      label: "May",
-    },
-    {
-      value: 1382,
-      label: "Jun",
-    },
-  ];
+export type BarData =  {
+  value: number;
+  label: string
+}[];
 
+interface Props {
+  barData: BarData
+}
+
+export const BarChartDashbord: FC<Props> = ({barData}) => {
+  const width = useWindowDimensions().width;
+  const height = (width - 20) / 2
+  const barWidth = 24/298 * (width - 20);
   return (
     <View style={styles.container}>
       {
         <BarChart
-          data={barData.map((d) => ({
-            ...d,
-          }))}
-          height={150}
-          barWidth={30}
-          spacing={10}
-          // initialSpacing={10}
+          data={barData}
+          height={height}
+          barWidth={barWidth}
+          spacing={5}
+          initialSpacing={10}
           yAxisThickness={0}
           xAxisThickness={0}
           yAxisTextStyle={{
-            color: tokens.colors.secondary75,
+            color: colors.secondary75,
             fontSize: 14,
             fontWeight: 400,
-            textAlign: "right",
+            textAlign: "left",
             fontFamily: Platform.select({
               android: "RobotoCondensed_400Regular",
               ios: "RobotoCondensed-Regular",
             }),
           }}
           xAxisLabelTextStyle={{
-            color: tokens.colors.secondary75,
+            color: colors.secondary75,
             fontSize: 14,
             fontWeight: 400,
             lineHeight: 20,
@@ -70,24 +53,25 @@ export const BarChartDashbord = () => {
             }),
           }}
           showReferenceLine1
-          referenceLine1Position={calculateAvg(barData as { value: number }[])}
+          referenceLine1Position={calculateAvg(barData)}
           referenceLine1Config={{
-            color: tokens.colors.extendedPurple + "90",
+            color: colors.extendedPurple + "90",
             thickness: 1,
             type: "solid",
             labelText: `Avg ${calculateAvg(
-              barData as { value: number }[]
+              barData
             ).toFixed(0)}`,
             labelTextStyle: {
-              color: tokens.colors.extendedPurple,
-              right: -70,
-              top: -12,
+              color: colors.extendedPurple,
+              right: -60,
+              top: -10,
             },
+            zIndex:1 
           }}
           hideRules
           disablePress
-          noOfSections={6}
-          stepValue={Math.max(...barData.map((d) => d.value ?? 0)) / 5}
+          noOfSections={5}
+          stepValue={Math.max(...barData.map((d) => d.value ?? 0)) / 4}
           showValuesAsTopLabel
           topLabelContainerStyle={{
             bottom: 0,
@@ -98,7 +82,7 @@ export const BarChartDashbord = () => {
             noWrap: true,
             left: -50,
             right: -50,
-            width: 50 + 30 + 50,
+            width: 50 + barWidth + 50,
             justifyContent: "center",
           }}
           topLabelTextStyle={{
@@ -116,7 +100,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    // backgroundColor: "hotpink",
     width: "100%",
   },
 });
