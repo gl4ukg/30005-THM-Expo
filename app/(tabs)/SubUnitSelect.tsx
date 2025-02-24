@@ -1,12 +1,6 @@
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
-import {
-  SafeAreaView,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useState } from 'react';
 
 type SubUnit = {
@@ -45,6 +39,7 @@ const SubUnitSelect = () => {
   return (
     <>
       <TouchableOpacity style={styles.selectContainer} onPress={toggleDropdown}>
+        <Icon name='Industry' color='white' size='sm' />
         <Typography
           name='navigation'
           text={selectedSubUnit?.name}
@@ -61,6 +56,7 @@ const SubUnitSelect = () => {
               style={styles.dropdownOption}
               onPress={() => selectSubUnit(subUnit)}
             >
+              <Icon name='Industry' color='white' size='sm' />
               <Text style={styles.dropdownOptionText}>{subUnit.name}</Text>
             </TouchableOpacity>
           ))}
@@ -101,9 +97,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#A2F0B8',
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   dropdownOptionText: {
     color: 'white',
     fontSize: 16,
+    marginLeft: 5,
   },
 });
