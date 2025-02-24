@@ -1,8 +1,8 @@
-import { Icon } from "@/components/Icon/Icon";
-import { Typography } from "@/components/typography";
-import { colors } from "@/lib/tokens/colors";
-import { FC, useState } from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Icon } from '@/components/Icon/Icon';
+import { Typography } from '@/components/typography';
+import { colors } from '@/lib/tokens/colors';
+import { FC, useState } from 'react';
+import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 
 type Option<T> = {
   icon?: FC<any>;
@@ -34,12 +34,12 @@ export const Select: FC<Props<string>> = ({
         <Text style={style.buttonText}>
           {selected
             ? options.find((o) => o.value === selected)?.label
-            : menuTitle || "Select"}
+            : menuTitle || 'Select'}
         </Text>
         {isOpen ? (
-          <Icon name="Up" color={colors.primary} />
+          <Icon name='ChevronUp' color={colors.primary} />
         ) : (
-          <Icon name="Down" color={colors.primary} />
+          <Icon name='ChevronDown' color={colors.primary} />
         )}
       </Pressable>
       <Modal visible={isOpen} transparent>
@@ -52,7 +52,7 @@ export const Select: FC<Props<string>> = ({
               >
                 <View key={option.value} style={style.option}>
                   {option.icon && <option.icon />}
-                  <Typography name="navigation" text={option.label} />
+                  <Typography name='navigation' text={option.label} />
                 </View>
               </Pressable>
             ))}
@@ -67,12 +67,12 @@ const style = StyleSheet.create({
   container: {},
   modal: {
     flex: 1,
-    position: "relative",
-    backgroundColor: colors.black + "75",
+    position: 'relative',
+    backgroundColor: colors.black + '75',
   },
   button: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 6,
   },
   buttonText: {
@@ -80,9 +80,9 @@ const style = StyleSheet.create({
   },
   options: {
     backgroundColor: colors.dashbordGreen,
-    width: "90%",
-    position: "absolute",
-    top: "20%",
+    width: '90%',
+    position: 'absolute',
+    top: '20%',
     left: 20,
     right: 20,
     padding: 20,
@@ -93,10 +93,10 @@ const style = StyleSheet.create({
     borderBottomColor: colors.primary,
   },
   option: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     gap: 10,
   },
 });
