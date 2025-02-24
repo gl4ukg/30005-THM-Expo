@@ -1,11 +1,14 @@
 import { mockedData } from "@/app/(tabs)/dashbord/hoses/[filter]/mocked";
 import { ListTable } from "@/components/dashboard/listTable";
+import { SelectedHoseCounter } from "@/components/dashboard/selectedHoseCounter";
 import { Typography } from "@/components/typography";
 import { Select } from "@/components/UI/Select";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { IconName} from "@/components/Icon/iconMapping";
+
 
 interface Props {
   slug: string;
@@ -52,6 +55,7 @@ const getFilteredHoses = (filter: string) => {
 };
 
 const Host: React.FC<Props> = (props) => {
+
   const options = [
     { value: "contactTessTeam", label: "Contact TESS Team" },
     { value: "requestForQuote", label: "Request for quote" },
@@ -59,24 +63,47 @@ const Host: React.FC<Props> = (props) => {
   ];
   const [action, setAction] = useState<string | null>(null);
   const { filter } = useLocalSearchParams();
+  const [selectedCount, setSelectedCount] = useState(0); 
+  const [icon, setIcon] = useState<IconName>("Cart");
+
   const { filteredList, listTitle, listLength } = getFilteredHoses(
     Array.isArray(filter) ? filter[0] : filter
   );
+
+  const actionIconMap: Record<string, IconName>  = {
+    contactTessTeam: "Email",
+    requestForQuote: "Cart",
+    scrapHoses: "Trash",
+  };
+
   const onChangeAction = (value: string) => {
     setAction(value);
+    setIcon(actionIconMap[value]);
   };
+  const handleSelectionChange = (count: number) => {
+    setSelectedCount(count);
+  };
+
   return (
     <SafeAreaView style={style.safeView}>
       <View style={style.header}>
-        <Typography name="tableHeader" text={listTitle} />
+        <Typography name="tableHeader" text={listTitle} style={style.title}/>
         <Select
           selected={action}
           options={options}
           onChange={onChangeAction}
           menuTitle="Actions"
         />
+        { action  &&
+          <View style={style.selectionCounter}>
+            <SelectedHoseCounter icon={icon} counter={selectedCount} handlePress={
+              function (): void {
+                console.log(`${selectedCount} items selected for ${action} `)
+            } }/>
+          </View>
+        }
       </View>
-      <ListTable data={[...getFilteredHoses("filter").filteredList]} />
+      <ListTable data={[...getFilteredHoses("filter").filteredList]} onSelectionChange={handleSelectionChange} />
     </SafeAreaView>
   );
 };
@@ -90,8 +117,8 @@ const style = StyleSheet.create({
   header: {
     width: "100%",
     alignItems: "center",
-    padding: 20,
-    gap: 6,
+    paddingVertical: 20,
+    paddingHorizontal:10,
   },
   menu: {
     width: "100%",
@@ -109,4 +136,11 @@ const style = StyleSheet.create({
     paddingTop: 20,
     gap: 12,
   },
+  title:{
+    marginBottom: 6,
+  },
+  selectionCounter:{
+    width:"100%",
+    alignItems:"flex-end",
+  }
 });

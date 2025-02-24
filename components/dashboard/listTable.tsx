@@ -2,7 +2,7 @@ import { Icon } from "@/components/Icon/Icon";
 import { Typography } from "@/components/typography";
 import { Checkbox } from "@/components/UI/Checkbox";
 import { colors } from "@/lib/tokens/colors";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 interface Props {
   data: {
@@ -17,8 +17,15 @@ interface Props {
 const spacing = {
   paddingBlock: 10,
 };
-export const ListTable: FC<Props> = ({ data }) => {
+export const ListTable: FC<Props & { onSelectionChange?: (count: number) => void }> = ({ data, onSelectionChange }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (onSelectionChange) {
+      onSelectionChange(selectedIds.length);
+    }
+  }, [selectedIds]); 
+
   return (
     <View style={style.container}>
       <View
@@ -60,7 +67,9 @@ export const ListTable: FC<Props> = ({ data }) => {
               selectedIds.includes(item.id)
                 ? () =>
                     setSelectedIds(selectedIds.filter((id) => id !== item.id))
-                : () => setSelectedIds([...selectedIds, item.id])
+                : () => {
+                  setSelectedIds([...selectedIds, item.id])
+                }
             }
             canBeSelected={true}
           />
