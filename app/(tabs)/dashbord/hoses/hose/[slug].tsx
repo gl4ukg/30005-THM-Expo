@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { mockedData } from '../[filter]/mocked';
 import React from 'react';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
+import GeneralInfo from '@/components/detailView/GeneralInfo';
 
 const HoseDetails = () => {
   const { id } = useLocalSearchParams();
@@ -20,6 +21,15 @@ const HoseDetails = () => {
         id={hoseData.id}
         date={hoseData.prodDate}
         missingData={hoseData.missingData}
+      />
+      <GeneralInfo
+        description={hoseData.Description}
+        customerId={hoseData.customerId}
+        s1PlantVesselUnit={hoseData.s1PlantVesselUnit}
+        S2Equipment={hoseData.S2Equipment}
+        equipmentSubunit={hoseData.equipmentSubunit}
+        otherInfo={hoseData.otherInfo}
+        RFid={hoseData.RFid}
       />
     </SafeAreaView>
   );
