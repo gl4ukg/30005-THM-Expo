@@ -3,11 +3,11 @@ import { colors } from '@/lib/tokens/colors';
 import { useLocalSearchParams } from 'expo-router';
 import { Text, View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { HostType } from '../[filter]';
+import { HoseType } from '../[filter]';
 
 const HoseDetails = () => {
   const { slug } = useLocalSearchParams();
-  const hoseData = JSON.parse(slug as string) as HostType;
+  const hoseData = JSON.parse(slug as string) as HoseType;
 
   const formatDate = (dateString: string | undefined): string => {
     if (!dateString) return 'N/A';

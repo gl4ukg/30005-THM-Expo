@@ -13,7 +13,7 @@ interface Props {
   slug: string;
 }
 
-export type HostType = {
+export type HoseType = {
   id: string;
   name: string;
   position: string;
@@ -35,7 +35,7 @@ const getFilteredHoses = (filter: string) => {
     const date = new Date(dateNum);
     return date.toLocaleDateString().replace(/\/20/g, '').replace(/\//g, '');
   };
-  const mockedList: HostType[] = mockedData.map((item) => ({
+  const mockedList: HoseType[] = mockedData.map((item) => ({
     id: item.id,
     name: item.Description,
     position: item.S2Equipment,
