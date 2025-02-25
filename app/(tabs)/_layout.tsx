@@ -1,15 +1,12 @@
-import { Icon } from '@/components/Icon/Icon';
-import { Typography } from '@/components/typography';
 import { BottomNavigation } from '@/components/UI/BottomNavigation';
 import { Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import SubUnitSelect from './SubUnitSelect';
+import SubUnitSelect from '../../components/UI/TopBarNavigation/SubUnitSelect';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
