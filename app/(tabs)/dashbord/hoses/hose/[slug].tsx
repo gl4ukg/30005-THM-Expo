@@ -1,27 +1,54 @@
+import { Icon } from '@/components/Icon/Icon';
+import { colors } from '@/lib/tokens/colors';
 import { useLocalSearchParams } from 'expo-router';
 import { Text, View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-interface HoseData {
-  id: string;
-  position: string;
-  condition: string;
-  lastInspection: string;
-  missingData?: boolean;
-}
+import { HostType } from '../[filter]';
 
 const HoseDetails = () => {
   const { slug } = useLocalSearchParams();
-  const hoseData = JSON.parse(slug as string) as HoseData;
+  const hoseData = JSON.parse(slug as string) as HostType;
+
+  const formatDate = (dateString: string | undefined): string => {
+    if (!dateString) return 'N/A';
+
+    try {
+      const [day, month, year] = dateString.split('/');
+
+      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      const formattedDay = date.getDate();
+      const formattedMonth = date
+        .toLocaleString('default', {
+          month: 'short',
+        })
+        .toUpperCase();
+      const formattedYear = date.getFullYear();
+
+      return `${formattedDay}-${formattedMonth}-${formattedYear}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'Invalid Date';
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Hose Details</Text>
-      <Text>ID: {hoseData.id}</Text>
-      <Text>Position: {hoseData.position}</Text>
-      <Text>Condition: {hoseData.condition}</Text>
-      <Text>Last Inspection: {hoseData.lastInspection}</Text>
-      {hoseData.missingData && <Text>Missing Data: Yes</Text>}
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <View style={styles.headerRow}>
+            {hoseData.missingData && (
+              <Icon name='Alert' color={colors.error} size='xsm' />
+            )}
+            <Text style={styles.hoseData}>
+              Hose ID: <Text style={styles.boldText}>{hoseData.id}</Text>
+            </Text>
+          </View>
+          <Text style={styles.hoseData}>
+            Production Date:{' '}
+            <Text style={styles.boldText}>{formatDate(hoseData.prodDate)}</Text>
+          </Text>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -31,10 +58,25 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  title: {
-    fontSize: 24,
+  header: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  headerContent: {
+    alignItems: 'center',
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 5,
+  },
+  hoseData: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  boldText: {
     fontWeight: 'bold',
-    marginBottom: 10,
   },
 });
 
