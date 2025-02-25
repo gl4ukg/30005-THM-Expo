@@ -26,8 +26,7 @@ export const ListTable: FC<
   }
 > = ({ data, onSelectionChange }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const navigation = useNavigation();
-
+  const router = useRouter();
   useEffect(() => {
     if (onSelectionChange) {
       onSelectionChange(selectedIds.length);
@@ -35,9 +34,7 @@ export const ListTable: FC<
   }, [selectedIds]);
 
   const handleRowPress = (item: (typeof data)[0]) => {
-    navigation.navigate('hoses/hose/[slug]' as never, {
-      slug: JSON.stringify(item),
-    });
+    router.push(`/(tabs)/dashbord/hoses/hose/${item.id}?id=${item.id}`);
   };
 
   return (

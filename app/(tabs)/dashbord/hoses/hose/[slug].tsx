@@ -3,11 +3,16 @@ import { colors } from '@/lib/tokens/colors';
 import { useLocalSearchParams } from 'expo-router';
 import { Text, View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { HoseType } from '../[filter]';
+import { mockedData } from '../[filter]/mocked';
 
 const HoseDetails = () => {
-  const { slug } = useLocalSearchParams();
-  const hoseData = JSON.parse(slug as string) as HoseType;
+  const { id } = useLocalSearchParams();
+
+  const hoseData = mockedData.find((hose) => hose.id === id);
+
+  if (!hoseData) {
+    return <Text>Hose not found</Text>;
+  }
 
   const formatDate = (dateString: string | undefined): string => {
     if (!dateString) return 'N/A';
