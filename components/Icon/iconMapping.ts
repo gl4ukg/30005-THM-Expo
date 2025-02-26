@@ -22,6 +22,7 @@ import Phone from './icons/Phone';
 import TrendArrowDown from './icons/TrendArrowDown';
 import TrendArrowUp from './icons/TrendArrowUp';
 import Alert from './icons/Alert';
+import Attachment from './icons/Attachment';
 import CheckboxChecked from './icons/CheckboxChecked';
 import CaretDown from './icons/CaretDown';
 import CaretLeft from './icons/CaretLeft';
@@ -33,9 +34,11 @@ import Inspect from './icons/Inspect';
 import ArrowLeft from './icons/ArrowLeft';
 import ArrowRight from './icons/ArrowRight';
 import Image from './icons/Image';
+import RFID from './icons/RFID';
 
 export type IconName =
   | 'Alert'
+  | 'Attachment'
   | 'CheckboxChecked'
   | 'Search'
   | 'Meter'
@@ -69,10 +72,12 @@ export type IconName =
   | 'Inspect'
   | 'ArrowLeft'
   | 'ArrowRight'
-  | 'Image';
+  | 'Image'
+  | 'RFID';
 
 export const iconMapping: Record<IconName, React.FC<any>> = {
   Alert,
+  Attachment,
   CheckboxChecked,
   Eye,
   EyeOff,
@@ -107,4 +112,5 @@ export const iconMapping: Record<IconName, React.FC<any>> = {
   ArrowLeft,
   ArrowRight,
   Image,
+  RFID,
 };
