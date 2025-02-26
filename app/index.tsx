@@ -1,6 +1,7 @@
 import {
   Dimensions,
   ImageBackground,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -20,6 +21,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ResetPassword } from "@/components/login/resetPassword";
 import { CreateNewPassword } from "@/components/login/createPassword";
 
+
+
 type LoginViews = "welcome" | "login" | "requestAccess" | "resetPassword" | "createPassword";
 ;
 const Login = () => {
@@ -29,6 +32,7 @@ const Login = () => {
   };
   const windowHeight = Dimensions.get("window").height;
   const insets = useSafeAreaInsets();
+  
 
   return (
     <ImageBackground
@@ -36,7 +40,7 @@ const Login = () => {
       source={require("../assets/images/TESS-THM-inspector.png")}
     >
       <SafeAreaView style={styles.safeArea}>
-        <View style={{flexDirection: "row", gap: 5}}>
+        <View style={{flexDirection: "row", gap: 5,  top: Platform.OS === "android" ? insets.top : 0, paddingBottom: Platform.OS === "android" ? 20 : 0, zIndex: 1,}}>
           <Pressable style={[styles.link, { flex: 1, backgroundColor: colors.dashbordGreen}]} onPress={() => {setView("welcome")}}>
            <Typography name="navigation" text="welcome" numberOfLines={1}/>
           </Pressable>

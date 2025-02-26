@@ -1,6 +1,5 @@
 import { BarChart, Primary, Secondary } from "@/components/dashboard";
 import { BarData } from "@/components/dashboard/barChart";
-import { Icon } from "@/components/Icon/Icon";
 import { Typography } from "@/components/typography";
 import { Select } from "@/components/UI/Select";
 import { useRouter } from "expo-router";
@@ -154,7 +153,6 @@ const day: BarData = [
     },
   ]
 
-
 const options = [
   {
     label: "pr Month",
@@ -207,6 +205,9 @@ const Dashbord = () => {
   const goToFilter = (filter: string) => {
     router.push(`/(tabs)/dashbord/hoses/${filter}`);
   };
+  const goToHost = (id: string) => {
+    router.push(`/(tabs)/dashbord/hoses/hose/[${id}]`);
+  };
   return (
     <SafeAreaView style={style.safeView}>
       <ScrollView contentContainerStyle={style.container}>
@@ -225,7 +226,7 @@ const Dashbord = () => {
             value={1129}
             trend={1}
             state="error"
-            onPress={() => goToFilter("failed")}
+            onPress={() => goToHost("failed")}
           />
           <Primary
             label="Overdue"
