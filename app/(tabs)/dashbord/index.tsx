@@ -205,7 +205,7 @@ const Dashbord = () => {
   const goToFilter = (filter: string) => {
     router.push(`/(tabs)/dashbord/hoses/${filter}`);
   };
-  const goToHost = (id: string) => {
+  const goToHose = (id: string) => {
     router.push(`/(tabs)/dashbord/hoses/hose/[${id}]`);
   };
   return (
@@ -226,7 +226,7 @@ const Dashbord = () => {
             value={1129}
             trend={1}
             state="error"
-            onPress={() => goToHost("failed")}
+            onPress={() => goToHose("failed")}
           />
           <Primary
             label="Overdue"
