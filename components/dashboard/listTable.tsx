@@ -130,7 +130,7 @@ const Element: FC<ElementProps> = ({
               height: 22,
             }}
           >
-            {item.isMissingData && (
+            {item.missingData && (
               <Icon name='Alert' color={colors.error} size='xsm' />
             )}
           </View>

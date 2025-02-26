@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { mockedData } from '../[filter]/mocked';
 import React from 'react';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
+import GeneralInfo from '@/components/detailView/GeneralInfo';
 
 const HoseDetails = () => {
   const { id } = useLocalSearchParams();
@@ -14,12 +15,27 @@ const HoseDetails = () => {
     return <Text>Hose not found</Text>;
   }
 
+  const checkMissingData = (hose: any): boolean => {
+    return Object.values(hose).some(
+      (value) => value === null || value === undefined || value === '',
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <DetailsHeader
         id={hoseData.id}
         date={hoseData.prodDate}
-        missingData={hoseData.missingData}
+        missingData={checkMissingData(hoseData)}
+      />
+      <GeneralInfo
+        description={hoseData.Description}
+        customerId={hoseData.customerId}
+        s1PlantVesselUnit={hoseData.s1PlantVesselUnit}
+        S2Equipment={hoseData.S2Equipment}
+        equipmentSubunit={hoseData.equipmentSubunit}
+        otherInfo={hoseData.otherInfo}
+        RFid={hoseData.RFid}
       />
     </SafeAreaView>
   );
