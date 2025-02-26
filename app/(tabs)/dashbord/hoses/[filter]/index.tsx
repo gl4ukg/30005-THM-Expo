@@ -56,9 +56,17 @@ const getFilteredHoses = (filter: string) => {
 
 const Hose: React.FC<Props> = (props) => {
   const options = [
-    { value: 'contactTessTeam', label: 'Contact TESS Team' },
-    { value: 'requestForQuote', label: 'Request for quote' },
-    { value: 'scrapHoses', label: 'Scrap hoses' },
+    {
+      value: 'contactTessTeam',
+      label: 'Contact TESS Team',
+      icon: 'Email' as IconName,
+    },
+    {
+      value: 'requestForQuote',
+      label: 'Request for quote',
+      icon: 'Cart' as IconName,
+    },
+    { value: 'scrapHoses', label: 'Scrap hoses', icon: 'Trash' as IconName },
   ];
   const [action, setAction] = useState<string | null>(null);
   const { filter } = useLocalSearchParams();
@@ -69,15 +77,10 @@ const Hose: React.FC<Props> = (props) => {
     Array.isArray(filter) ? filter[0] : filter,
   );
 
-  const actionIconMap: Record<string, IconName> = {
-    contactTessTeam: 'Email',
-    requestForQuote: 'Cart',
-    scrapHoses: 'Trash',
-  };
-
   const onChangeAction = (value: string) => {
     setAction(value);
-    setIcon(actionIconMap[value]);
+    const selectedOption = options.find((option) => option.value === value);
+    setIcon(selectedOption ? selectedOption.icon : 'Cart');
   };
   const handleSelectionChange = (count: number) => {
     setSelectedCount(count);

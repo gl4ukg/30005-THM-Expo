@@ -3,9 +3,10 @@ import { Typography } from '@/components/typography';
 import { colors } from '@/lib/tokens/colors';
 import { FC, useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { IconName } from '@/components/Icon/iconMapping';
 
 type Option<T> = {
-  icon?: FC<any>;
+  icon?: IconName;
   label: string;
   value: T;
 };
@@ -53,21 +54,75 @@ export const ActionMenu: FC<Props<string>> = ({
                 onPress={() => handleChange(option.value)}
               >
                 <View key={option.value} style={style.option}>
-                  {option.icon && <option.icon />}
+                  {option.icon && <Icon name={option.icon} size='sm' />}
                   <Typography name='navigation' text={option.label} />
                 </View>
               </Pressable>
             ))}
+            {detailPage && (
+              <>
+                <View style={style.divider} />
+                <Typography style={style.jumpToHeader} name='navigation'>
+                  Jump to:
+                </Typography>
+                <View style={style.jumpToContainer}>
+                  <Pressable
+                    onPress={() => setIsOpen(false)}
+                    style={style.jumpToItem}
+                  >
+                    <Typography name={'navigation'}>Photos</Typography>
+                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
+                  </Pressable>
+                  <Pressable
+                    onPress={() => setIsOpen(false)}
+                    style={style.jumpToItem}
+                  >
+                    <Typography name={'navigation'}>Hose module</Typography>
+                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
+                  </Pressable>
+                  <Pressable
+                    onPress={() => setIsOpen(false)}
+                    style={style.jumpToItem}
+                  >
+                    <Typography name={'navigation'}>
+                      TESS Part Numbers
+                    </Typography>
+                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
+                  </Pressable>
+                  <Pressable
+                    onPress={() => setIsOpen(false)}
+                    style={style.jumpToItem}
+                  >
+                    <Typography name={'navigation'}>
+                      Maintenance info
+                    </Typography>
+                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
+                  </Pressable>
+                  <Pressable
+                    onPress={() => setIsOpen(false)}
+                    style={style.jumpToItem}
+                  >
+                    <Typography name={'navigation'}>Documents</Typography>
+                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
+                  </Pressable>
+                  <Pressable
+                    onPress={() => setIsOpen(false)}
+                    style={style.jumpToItem}
+                  >
+                    <Typography name={'navigation'}>Structure</Typography>
+                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
+                  </Pressable>
+                  <Pressable
+                    onPress={() => setIsOpen(false)}
+                    style={style.jumpToItem}
+                  >
+                    <Typography name={'navigation'}>History</Typography>
+                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
+                  </Pressable>
+                </View>
+              </>
+            )}
           </View>
-          {detailPage && (
-            <Pressable onPress={() => setIsOpen(false)}>
-              <Typography name={'navigation'}>Photos</Typography>
-              <Typography name={'navigation'}>Photos</Typography>
-              <Typography name={'navigation'}>Photos</Typography>
-              <Typography name={'navigation'}>Photos</Typography>
-              <Typography name={'navigation'}>Photos</Typography>
-            </Pressable>
-          )}
         </Pressable>
       </Modal>
     </View>
@@ -109,5 +164,22 @@ const style = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     gap: 10,
+  },
+  jumpToHeader: {
+    marginLeft: 10,
+    fontWeight: 'bold',
+  },
+  divider: {
+    borderBottomWidth: 3,
+    borderBottomColor: colors.primary25,
+  },
+  jumpToContainer: {
+    marginLeft: 10,
+    gap: 8,
+  },
+  jumpToItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

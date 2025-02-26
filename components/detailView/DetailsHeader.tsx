@@ -4,6 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Icon } from '../Icon/Icon';
 import { Typography } from '../typography';
 import { ActionMenu } from '../UI/ActionMenu';
+import { useState } from 'react';
 
 type DetailsHeaderProps = {
   id: string;
@@ -16,6 +17,14 @@ const DetailsHeader: React.FC<DetailsHeaderProps> = ({
   date,
   missingData,
 }) => {
+  const [action, setAction] = useState<string | null>(null);
+
+  const options = [
+    { value: 'inspect', label: 'Inspect', icon: 'Inspect' },
+    { value: 'scrap', label: 'Scrap', icon: 'Trash' },
+    { value: 'requestForQuote', label: 'Request for quote', icon: 'Cart' },
+    { value: 'contactTessTeam', label: 'Contact TESS Team', icon: 'Email' },
+  ];
   return (
     <>
       <View style={styles.header}>
@@ -37,8 +46,14 @@ const DetailsHeader: React.FC<DetailsHeaderProps> = ({
               {formatDate(date)}
             </Typography>
           </Typography>
+          <ActionMenu
+            menuTitle='Actions'
+            selected={action}
+            options={options}
+            onChange={() => {}}
+            detailPage
+          />
         </View>
-        <ActionMenu selected={''} options={[]} onChange={() => {}} detailPage />
       </View>
     </>
   );

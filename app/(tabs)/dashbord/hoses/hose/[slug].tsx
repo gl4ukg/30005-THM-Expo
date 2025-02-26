@@ -2,9 +2,14 @@ import { useLocalSearchParams } from 'expo-router';
 import { Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { mockedData } from '../[filter]/mocked';
-import React from 'react';
+import React, { useState } from 'react';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
 import GeneralInfo from '@/components/detailView/GeneralInfo';
+import { ActionMenu } from '@/components/UI/ActionMenu';
+
+interface Props {
+  // Define your props here
+}
 
 const HoseDetails = () => {
   const { id } = useLocalSearchParams();
@@ -28,6 +33,7 @@ const HoseDetails = () => {
         date={hoseData.prodDate}
         missingData={checkMissingData(hoseData)}
       />
+
       <GeneralInfo
         description={hoseData.Description}
         customerId={hoseData.customerId}
