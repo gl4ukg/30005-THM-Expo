@@ -21,15 +21,20 @@ const DetailsHeader: React.FC<DetailsHeaderProps> = ({
         <View style={styles.headerContent}>
           <View style={styles.headerRow}>
             {missingData && (
-              <Icon name='Alert' color={colors.error} size='md' />
+              <Icon name='Alert' color={colors.error} size='sm' />
             )}
             <Typography style={styles.hoseData} name={'fieldLabel'}>
-              Hose ID: <Text style={styles.boldText}>{id}</Text>
+              Hose ID:{' '}
+              <Typography name={'fieldValue'} style={styles.boldText}>
+                {id}
+              </Typography>
             </Typography>
           </View>
           <Typography style={styles.hoseData} name={'fieldLabel'}>
             Production Date:
-            <Text style={styles.boldText}>{formatDate(date)}</Text>
+            <Typography name={'fieldValue'} style={styles.boldText}>
+              {formatDate(date)}
+            </Typography>
           </Typography>
         </View>
       </View>
@@ -50,6 +55,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     margin: 5,
+    gap: 5,
   },
   hoseData: {
     fontSize: 16,

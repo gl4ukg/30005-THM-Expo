@@ -30,10 +30,10 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
       <Datafield label='Equipment Subunit:' value={equipmentSubunit} />
       <Datafield label='Other Info:' value={otherInfo} />
       <Datafield label='RFID:' value={RFid} />
-      <Datafield label='Hose Medium/Temperature:' value={'N/A'} />
-      <Datafield label='Hose function:' value={'N/A'} />
-      <Datafield label='Polution exposure:' value={'N/A'} />
-      <Datafield label='UV exposure:' value={'N/A'} />
+      <Datafield label='Hose Medium/Temperature:' value={''} />
+      <Datafield label='Hose function:' value={''} />
+      <Datafield label='Polution exposure:' value={''} />
+      <Datafield label='UV exposure:' value={'aaa'} />
     </View>
   );
 };
