@@ -1,6 +1,7 @@
 import { colors } from '@/lib/tokens/colors';
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Typography } from '../typography';
 
 interface DataFieldProps {
   label: string;
@@ -10,10 +11,12 @@ interface DataFieldProps {
 const DataField: React.FC<DataFieldProps> = ({ label, value }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
-      <Text style={styles.value}>
+      <Typography style={styles.label} name={'fieldLabel'}>
+        {label}
+      </Typography>
+      <Typography style={styles.value} name={'fieldValue'}>
         {value !== undefined ? value.toString() : 'N/A'}
-      </Text>
+      </Typography>
     </View>
   );
 };
