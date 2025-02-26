@@ -3,6 +3,7 @@ import { formatDate } from '@/lib/util/formatDate';
 import { View, Text, StyleSheet } from 'react-native';
 import { Icon } from '../Icon/Icon';
 import { Typography } from '../typography';
+import { ActionMenu } from '../UI/ActionMenu';
 
 type DetailsHeaderProps = {
   id: string;
@@ -37,6 +38,7 @@ const DetailsHeader: React.FC<DetailsHeaderProps> = ({
             </Typography>
           </Typography>
         </View>
+        <ActionMenu selected={''} options={[]} onChange={() => {}} detailPage />
       </View>
     </>
   );

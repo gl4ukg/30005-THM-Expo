@@ -14,13 +14,15 @@ interface Props<T> {
   selected: T | null;
   options: Option<T>[];
   onChange: (value: T) => void;
+  detailPage?: boolean;
 }
 
-export const Select: FC<Props<string>> = ({
+export const ActionMenu: FC<Props<string>> = ({
   selected,
   options,
   onChange,
   menuTitle,
+  detailPage,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -57,6 +59,15 @@ export const Select: FC<Props<string>> = ({
               </Pressable>
             ))}
           </View>
+          {detailPage && (
+            <Pressable onPress={() => setIsOpen(false)}>
+              <Typography name={'navigation'}>Photos</Typography>
+              <Typography name={'navigation'}>Photos</Typography>
+              <Typography name={'navigation'}>Photos</Typography>
+              <Typography name={'navigation'}>Photos</Typography>
+              <Typography name={'navigation'}>Photos</Typography>
+            </Pressable>
+          )}
         </Pressable>
       </Modal>
     </View>
