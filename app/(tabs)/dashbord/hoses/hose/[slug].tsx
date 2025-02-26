@@ -15,12 +15,18 @@ const HoseDetails = () => {
     return <Text>Hose not found</Text>;
   }
 
+  const checkMissingData = (hose: any): boolean => {
+    return Object.values(hose).some(
+      (value) => value === null || value === undefined || value === '',
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <DetailsHeader
         id={hoseData.id}
         date={hoseData.prodDate}
-        missingData={hoseData.missingData}
+        missingData={checkMissingData(hoseData)}
       />
       <GeneralInfo
         description={hoseData.Description}
