@@ -2,6 +2,7 @@ import { colors } from '@/lib/tokens/colors';
 import { formatDate } from '@/lib/util/formatDate';
 import { View, Text, StyleSheet } from 'react-native';
 import { Icon } from '../Icon/Icon';
+import { Typography } from '../typography';
 
 type DetailsHeaderProps = {
   id: string;
@@ -20,16 +21,16 @@ const DetailsHeader: React.FC<DetailsHeaderProps> = ({
         <View style={styles.headerContent}>
           <View style={styles.headerRow}>
             {missingData && (
-              <Icon name='Alert' color={colors.error} size='xsm' />
+              <Icon name='Alert' color={colors.error} size='md' />
             )}
-            <Text style={styles.hoseData}>
+            <Typography style={styles.hoseData} name={'fieldLabel'}>
               Hose ID: <Text style={styles.boldText}>{id}</Text>
-            </Text>
+            </Typography>
           </View>
-          <Text style={styles.hoseData}>
+          <Typography style={styles.hoseData} name={'fieldLabel'}>
             Production Date:
             <Text style={styles.boldText}>{formatDate(date)}</Text>
-          </Text>
+          </Typography>
         </View>
       </View>
     </>
@@ -58,5 +59,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
 export default DetailsHeader;
