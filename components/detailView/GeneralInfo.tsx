@@ -33,7 +33,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
       <Datafield label='Hose Medium/Temperature:' value={''} />
       <Datafield label='Hose function:' value={''} />
       <Datafield label='Polution exposure:' value={''} />
-      <Datafield label='UV exposure:' value={'aaa'} />
+      <Datafield label='UV exposure:' value={''} />
     </View>
   );
 };

@@ -9,13 +9,17 @@ import { useState } from 'react';
 type DetailsHeaderProps = {
   id: string;
   date: string;
+  shortcuts?: any;
   missingData?: boolean;
+  scrollToSection?: (sectionId: string) => void;
 };
 
 const DetailsHeader: React.FC<DetailsHeaderProps> = ({
   id,
   date,
   missingData,
+  shortcuts,
+  scrollToSection,
 }) => {
   const [action, setAction] = useState<string | null>(null);
 
@@ -51,7 +55,9 @@ const DetailsHeader: React.FC<DetailsHeaderProps> = ({
             selected={action}
             options={options}
             onChange={() => {}}
+            scrollToSection={scrollToSection}
             detailPage
+            shortcuts={shortcuts}
           />
         </View>
       </View>

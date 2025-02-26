@@ -6,7 +6,12 @@ import React, { useRef } from 'react';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
 import GeneralInfo from '@/components/detailView/GeneralInfo';
 import Photos from '@/components/detailView/Photos';
-import Bookmark from '@/components/detailView/Bookmark';
+import HoseModule from '@/components/detailView/HoseModule';
+import TessPartNumbers from '@/components/detailView/TessPartNumbers';
+import MaintananceInfo from '@/components/detailView/MaintananceInfo';
+import Documents from '@/components/detailView/Documents';
+import Structure from '@/components/detailView/Structure';
+import HistoryView from '@/components/detailView/History';
 
 export type Section = {
   id: string;
@@ -101,10 +106,7 @@ const HoseDetails = () => {
       title: 'Hose module',
       content: (
         <View ref={hoseModuleRef}>
-          <Bookmark title='Hose module' />
-          <View>
-            <Text>Hose Module Content</Text>
-          </View>
+          <HoseModule />
         </View>
       ),
     },
@@ -113,10 +115,7 @@ const HoseDetails = () => {
       title: 'TESS Part Numbers',
       content: (
         <View ref={tessPartNumbersRef}>
-          <Bookmark title='TESS Part Numbers' />
-          <View>
-            <Text>TESS Part Numbers Content</Text>
-          </View>
+          <TessPartNumbers />
         </View>
       ),
     },
@@ -125,10 +124,7 @@ const HoseDetails = () => {
       title: 'Maintenance info',
       content: (
         <View ref={maintenanceInfoRef}>
-          <Bookmark title='Maintenance info' />
-          <View>
-            <Text>Maintenance Info Content</Text>
-          </View>
+          <MaintananceInfo />
         </View>
       ),
     },
@@ -137,10 +133,7 @@ const HoseDetails = () => {
       title: 'Documents',
       content: (
         <View ref={documentsRef}>
-          <Bookmark title='Documents' />
-          <View>
-            <Text>Documents Content</Text>
-          </View>
+          <Documents />
         </View>
       ),
     },
@@ -149,10 +142,7 @@ const HoseDetails = () => {
       title: 'Structure',
       content: (
         <View ref={structureRef}>
-          <Bookmark title='Structure' />
-          <View>
-            <Text>Structure Content</Text>
-          </View>
+          <Structure />
         </View>
       ),
     },
@@ -161,10 +151,7 @@ const HoseDetails = () => {
       title: 'History',
       content: (
         <View ref={historyRef}>
-          <Bookmark title='History' />
-          <View>
-            <Text>History Content</Text>
-          </View>
+          <HistoryView />
         </View>
       ),
     },
