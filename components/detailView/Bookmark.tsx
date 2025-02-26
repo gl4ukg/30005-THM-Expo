@@ -13,10 +13,10 @@ const Bookmark: React.FC<BookmarkProps> = ({ title }) => {
     <View style={styles.container}>
       <View style={styles.line} />
       <View style={styles.content}>
+        <Icon name='ArrowRight' size='sm' color={colors.primary} />
         <Typography name={'sectionHeader'} style={styles.title}>
           {title}
         </Typography>
-        <Icon name='ArrowRight' size='sm' color={colors.primary} />
       </View>
     </View>
   );
@@ -30,15 +30,18 @@ const styles = StyleSheet.create({
   },
   line: {
     width: '100%',
-    height: 1,
-    backgroundColor: colors.secondary95,
+    borderBottomWidth: 3,
+    borderBottomColor: colors.primary25,
   },
   content: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,
+    color: colors.primary25,
   },
   title: {
+    fontWeight: 'bold',
+    color: colors.primary25,
     marginTop: 5,
   },
 });
