@@ -2,7 +2,7 @@ import { mockedData } from '@/app/(tabs)/dashbord/hoses/[filter]/mocked';
 import { ListTable } from '@/components/dashboard/listTable';
 import { SelectedHoseCounter } from '@/components/dashboard/selectedHoseCounter';
 import { Typography } from '@/components/typography';
-import { Select } from '@/components/UI/Select';
+import { ActionMenu } from '@/components/UI/ActionMenu';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -26,7 +26,7 @@ export type HoseType = {
   prodDate: string;
 };
 const getFilteredHoses = (filter: string) => {
-  const random7DiggetString = (): string =>
+  const random7DigitString = (): string =>
     Array.from({ length: 7 }, () => Math.floor(Math.random() * 10)).join('');
   const randomDateString = () => {
     const dateNum =
@@ -54,7 +54,7 @@ const getFilteredHoses = (filter: string) => {
   };
 };
 
-const Host: React.FC<Props> = (props) => {
+const Hose: React.FC<Props> = (props) => {
   const options = [
     { value: 'contactTessTeam', label: 'Contact TESS Team' },
     { value: 'requestForQuote', label: 'Request for quote' },
@@ -87,7 +87,7 @@ const Host: React.FC<Props> = (props) => {
     <SafeAreaView style={style.safeView}>
       <View style={style.header}>
         <Typography name='tableHeader' text={listTitle} style={style.title} />
-        <Select
+        <ActionMenu
           selected={action}
           options={options}
           onChange={onChangeAction}
@@ -113,7 +113,7 @@ const Host: React.FC<Props> = (props) => {
   );
 };
 
-export default Host;
+export default Hose;
 
 const style = StyleSheet.create({
   safeView: {
