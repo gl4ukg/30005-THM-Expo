@@ -4,6 +4,7 @@ import { colors } from '@/lib/tokens/colors';
 import { FC, useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { IconName } from '@/components/Icon/iconMapping';
+import { Section } from '@/app/(tabs)/dashbord/hoses/hose/[slug]';
 
 type Option<T> = {
   icon?: IconName;
@@ -12,10 +13,12 @@ type Option<T> = {
 };
 interface Props<T> {
   menuTitle?: string;
-  selected: T | null;
+  selected?: T | null;
   options: Option<T>[];
   onChange: (value: T) => void;
   detailPage?: boolean;
+  scrollToSection?: (sectionId: string) => void;
+  shortcuts?: Section[];
 }
 
 export const ActionMenu: FC<Props<string>> = ({
@@ -24,6 +27,8 @@ export const ActionMenu: FC<Props<string>> = ({
   onChange,
   menuTitle,
   detailPage,
+  scrollToSection,
+  shortcuts,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -31,6 +36,12 @@ export const ActionMenu: FC<Props<string>> = ({
     onChange(value);
     setIsOpen(false);
   };
+
+  const handleShortcutPress = (sectionId: string) => {
+    setIsOpen(false);
+    scrollToSection?.(sectionId);
+  };
+
   return (
     <View>
       <Pressable onPress={() => setIsOpen(!isOpen)} style={style.button}>
@@ -59,66 +70,23 @@ export const ActionMenu: FC<Props<string>> = ({
                 </View>
               </Pressable>
             ))}
-            {detailPage && (
+            {detailPage && shortcuts !== undefined && (
               <>
                 <View style={style.divider} />
-                <Typography style={style.jumpToHeader} name='navigation'>
+                <Typography style={style.boldText} name='navigation'>
                   Jump to:
                 </Typography>
-                <View style={style.jumpToContainer}>
-                  <Pressable
-                    onPress={() => setIsOpen(false)}
-                    style={style.jumpToItem}
-                  >
-                    <Typography name={'navigation'}>Photos</Typography>
-                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
-                  </Pressable>
-                  <Pressable
-                    onPress={() => setIsOpen(false)}
-                    style={style.jumpToItem}
-                  >
-                    <Typography name={'navigation'}>Hose module</Typography>
-                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
-                  </Pressable>
-                  <Pressable
-                    onPress={() => setIsOpen(false)}
-                    style={style.jumpToItem}
-                  >
-                    <Typography name={'navigation'}>
-                      TESS Part Numbers
-                    </Typography>
-                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
-                  </Pressable>
-                  <Pressable
-                    onPress={() => setIsOpen(false)}
-                    style={style.jumpToItem}
-                  >
-                    <Typography name={'navigation'}>
-                      Maintenance info
-                    </Typography>
-                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
-                  </Pressable>
-                  <Pressable
-                    onPress={() => setIsOpen(false)}
-                    style={style.jumpToItem}
-                  >
-                    <Typography name={'navigation'}>Documents</Typography>
-                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
-                  </Pressable>
-                  <Pressable
-                    onPress={() => setIsOpen(false)}
-                    style={style.jumpToItem}
-                  >
-                    <Typography name={'navigation'}>Structure</Typography>
-                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
-                  </Pressable>
-                  <Pressable
-                    onPress={() => setIsOpen(false)}
-                    style={style.jumpToItem}
-                  >
-                    <Typography name={'navigation'}>History</Typography>
-                    <Icon name='ArrowRight' color={colors.primary} size='sm' />
-                  </Pressable>
+                <View style={style.jumpToContainer} key='jumpTo'>
+                  {shortcuts.map((section: any) => (
+                    <Pressable
+                      key={section.value}
+                      onPress={() => handleShortcutPress(section.id)}
+                      style={style.jumpToItem}
+                    >
+                      <Typography name='navigation' text={section.title} />
+                      <Icon name='ArrowRight' size='sm' />
+                    </Pressable>
+                  ))}
                 </View>
               </>
             )}
@@ -165,8 +133,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  jumpToHeader: {
-    marginLeft: 10,
+  boldText: {
     fontWeight: 'bold',
   },
   divider: {
