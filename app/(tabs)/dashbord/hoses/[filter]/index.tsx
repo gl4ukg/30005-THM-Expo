@@ -45,6 +45,8 @@ const getFilteredHoses = (filter: string) => {
     nextInspection: randomDateString(),
     nextInspectionDate: randomDateString(),
     missingData: Math.random() > 0.5,
+    hasRFID: Math.random() > 0.5,
+    hasAttachment: Math.random() > 0.5,
     prodDate: item.prodDate,
   }));
   return {
@@ -105,10 +107,7 @@ const Host: React.FC<Props> = (props) => {
           </View>
         )}
       </View>
-      <ListTable
-        data={[...getFilteredHoses('filter').filteredList]}
-        onSelectionChange={handleSelectionChange}
-      />
+      <ListTable items={[...getFilteredHoses("filter").filteredList]} onSelectionChange={handleSelectionChange} />
     </SafeAreaView>
   );
 };
