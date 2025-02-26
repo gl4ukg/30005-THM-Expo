@@ -1,25 +1,35 @@
-import { useLocalSearchParams } from "expo-router";
-import { Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useLocalSearchParams } from 'expo-router';
+import { Text, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { mockedData } from '../[filter]/mocked';
+import React from 'react';
+import DetailsHeader from '@/components/detailView/DetailsHeader';
 
-interface Props {
-  slug: string;
-}
+const HoseDetails = () => {
+  const { id } = useLocalSearchParams();
 
-const Host: React.FC<Props> = (props) => {
-  const { slug } = useLocalSearchParams();
-  console.log(slug);
+  const hoseData = mockedData.find((hose) => hose.id === id);
+
+  if (!hoseData) {
+    return <Text>Hose not found</Text>;
+  }
+
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Hoses nr {slug}</Text>
+    <SafeAreaView style={styles.container}>
+      <DetailsHeader
+        id={hoseData.id}
+        date={hoseData.prodDate}
+        missingData={hoseData.missingData}
+      />
     </SafeAreaView>
   );
 };
 
-export default Host;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+});
+
+export default HoseDetails;
