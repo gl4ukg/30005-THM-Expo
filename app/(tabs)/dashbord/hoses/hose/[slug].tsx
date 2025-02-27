@@ -160,15 +160,6 @@ const HoseDetails = () => {
           scrollToSection={scrollToSection}
         />
       </View>
-      <RadioGroup
-        label={'UV exposure'}
-        choices={[
-          { id: '1', label: 'internal, not exposed' },
-          { id: '2', label: 'Exposed' },
-        ]}
-        onChange={handleSelectionChange}
-        selected={selectedChoiceId}
-      />
       <ScrollView ref={scrollViewRef}>
         <GeneralInfo
           description={hoseData.Description}
