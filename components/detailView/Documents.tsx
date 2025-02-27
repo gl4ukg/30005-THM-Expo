@@ -15,7 +15,11 @@ const DocumentItem: React.FC<DocumentProps> = ({ id, name }) => {
     <View style={styles.documentItem}>
       <Icon name='Document' size='sm' color={colors.primary} />
       <View>
-        <Typography name='fieldValue' style={styles.documentText}>
+        <Typography
+          name='fieldValue'
+          numberOfLines={2}
+          style={styles.documentText}
+        >
           {id} - {name}
         </Typography>
       </View>
@@ -37,7 +41,7 @@ const Documents = () => {
         <DocumentItem key={doc.id} id={doc.id} name={doc.name} />
       ))}
       <TouchableOpacity style={styles.addDocumentButton}>
-        <Icon name='Plus' size='sm' color={colors.primary} />
+        <Icon name='Plus' size='xsm' color={colors.primary} />
         <Typography name='button' style={styles.addDocumentButtonText}>
           Add document
         </Typography>
@@ -58,7 +62,7 @@ const styles = StyleSheet.create({
   },
   addDocumentButton: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'stretch',
     marginLeft: 20,
   },
   addDocumentButtonText: {
