@@ -2,7 +2,7 @@ import { mockedData } from '@/app/(tabs)/dashbord/hoses/[filter]/mocked';
 import { ListTable } from '@/components/dashboard/listTable';
 import { SelectedHoseCounter } from '@/components/dashboard/selectedHoseCounter';
 import { Typography } from '@/components/typography';
-import { Select } from '@/components/UI/Select';
+import { ActionMenu } from '@/components/UI/ActionMenu';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -26,7 +26,7 @@ export type HoseType = {
   prodDate: string;
 };
 const getFilteredHoses = (filter: string) => {
-  const random7DiggetString = (): string =>
+  const random7DigitString = (): string =>
     Array.from({ length: 7 }, () => Math.floor(Math.random() * 10)).join('');
   const randomDateString = () => {
     const dateNum =
@@ -56,11 +56,19 @@ const getFilteredHoses = (filter: string) => {
   };
 };
 
-const Host: React.FC<Props> = (props) => {
+const Hose: React.FC<Props> = (props) => {
   const options = [
-    { value: 'contactTessTeam', label: 'Contact TESS Team' },
-    { value: 'requestForQuote', label: 'Request for quote' },
-    { value: 'scrapHoses', label: 'Scrap hoses' },
+    {
+      value: 'contactTessTeam',
+      label: 'Contact TESS Team',
+      icon: 'Email' as IconName,
+    },
+    {
+      value: 'requestForQuote',
+      label: 'Request for quote',
+      icon: 'Cart' as IconName,
+    },
+    { value: 'scrapHoses', label: 'Scrap hoses', icon: 'Trash' as IconName },
   ];
   const [action, setAction] = useState<string | null>(null);
   const { filter } = useLocalSearchParams();
@@ -71,15 +79,10 @@ const Host: React.FC<Props> = (props) => {
     Array.isArray(filter) ? filter[0] : filter,
   );
 
-  const actionIconMap: Record<string, IconName> = {
-    contactTessTeam: 'Email',
-    requestForQuote: 'Cart',
-    scrapHoses: 'Trash',
-  };
-
   const onChangeAction = (value: string) => {
     setAction(value);
-    setIcon(actionIconMap[value]);
+    const selectedOption = options.find((option) => option.value === value);
+    setIcon(selectedOption ? selectedOption.icon : 'Cart');
   };
   const handleSelectionChange = (count: number) => {
     setSelectedCount(count);
@@ -89,7 +92,7 @@ const Host: React.FC<Props> = (props) => {
     <SafeAreaView style={style.safeView}>
       <View style={style.header}>
         <Typography name='tableHeader' text={listTitle} style={style.title} />
-        <Select
+        <ActionMenu
           selected={action}
           options={options}
           onChange={onChangeAction}
@@ -112,7 +115,7 @@ const Host: React.FC<Props> = (props) => {
   );
 };
 
-export default Host;
+export default Hose;
 
 const style = StyleSheet.create({
   safeView: {
