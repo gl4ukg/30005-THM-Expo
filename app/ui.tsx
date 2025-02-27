@@ -1,5 +1,7 @@
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
+import { ButtonTHS } from '@/components/UI';
+import { LinkButton } from '@/components/UI/Button/linkButton';
 import { colors } from '@/lib/tokens/colors';
 import { Link } from 'expo-router';
 import { useState } from 'react';
@@ -287,8 +289,59 @@ const Ui = () => {
             )}
           </Pressable>
           <View style={{ display: buttonsExpanded ? 'flex' : 'none' }}>
-            <View style={styles.rowWrapper}>
-              <Typography text='Alert' name='fieldLabel' />
+            <View style={styles.group}>
+              <Typography name='sectionHeader' text='Light' />
+              <LinkButton variant='light' title='Forgot password?' />
+              <LinkButton variant='light' title='Forgot password?' disabled />
+            </View>
+            <View style={[styles.group, styles.groupDark]}>
+              <Typography
+                name='sectionHeader'
+                text='Dark'
+                style={styles.whiteText}
+              />
+              <LinkButton
+                variant='dark'
+                title='Request access'
+                vSpace={5}
+                hSpace={10}
+              />
+              <LinkButton variant='dark' title='Request access' disabled />
+            </View>
+            <View style={styles.group}>
+              <Typography name='sectionHeader' text='Primary' />
+              <ButtonTHS variant='primary' title='Button' />
+              <ButtonTHS variant='primary' title='Button' disabled />
+            </View>
+            <View style={styles.group}>
+              <Typography name='sectionHeader' text='Secondary' />
+              <ButtonTHS variant='secondary' title='Button' />
+              <ButtonTHS variant='secondary' title='Button' disabled />
+            </View>
+            <View style={styles.group}>
+              <Typography name='sectionHeader' text='Tertiary' />
+              <ButtonTHS variant='tertiary' title='Button' />
+              <ButtonTHS variant='tertiary' title='Button' disabled />
+            </View>
+            <View style={styles.group}>
+              <Typography name='sectionHeader' text='Primary Small' />
+              <ButtonTHS variant='primary' size='sm' title='Button' />
+              <ButtonTHS variant='primary' size='sm' title='Button' disabled />
+            </View>
+            <View style={styles.group}>
+              <Typography name='sectionHeader' text='Secondary Small' />
+              <ButtonTHS variant='secondary' size='sm' title='Button' />
+              <ButtonTHS
+                variant='secondary'
+                size='sm'
+                title='Button'
+                disabled
+              />
+            </View>
+            <View style={styles.group}>
+              <Typography name='sectionHeader' text='Tertiary Small' />
+              <ButtonTHS variant='tertiary' size='sm' title='Button' />
+              <ButtonTHS variant='tertiary' size='sm' title='Button' disabled />
             </View>
           </View>
           <Pressable
@@ -401,5 +454,21 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderTopColor: colors.primary,
     borderTopWidth: 2,
+  },
+  group: {
+    // width: "100%",
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    borderColor: colors.primary,
+    borderRadius: 10,
+    padding: 20,
+    gap: 20,
+    marginBottom: 30,
+  },
+  groupDark: {
+    backgroundColor: colors.primary95,
+  },
+  whiteText: {
+    color: colors.white,
   },
 });
