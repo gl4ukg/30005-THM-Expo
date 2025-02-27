@@ -11,14 +11,14 @@ interface Choice {
 interface RadioGroupProps {
   label: string;
   choices: Choice[];
-  selected: string | null;
-  onChange(selectedId: string): void;
+  selected: string;
+  onChange: (selectedId: string) => void;
 }
 
 export const RadioGroup: React.FC<RadioGroupProps> = ({
   label,
   choices,
-  selected = null,
+  selected = '',
   onChange,
 }) => {
   return (

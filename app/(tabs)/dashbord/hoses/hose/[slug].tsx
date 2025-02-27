@@ -22,7 +22,7 @@ const HoseDetails = () => {
     );
   };
 
-  const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
+  const [selectedChoiceId, setSelectedChoiceId] = useState<string>('');
 
   const handleSelectionChange = (id: string) => {
     setSelectedChoiceId(id);
