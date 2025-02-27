@@ -17,7 +17,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
   return (
     <Pressable
       onPress={onChange}
-      style={[styles.buttonBorder, isSelected && styles.selectedBorder]}
+      style={[styles.button, isSelected && styles.buttonSelected]}
     >
       <View style={styles.wrapper}>
         <View
@@ -55,14 +55,14 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: colors.primary25,
   },
-  buttonBorder: {
+  button: {
     paddingHorizontal: 8,
     flex: 1,
     minHeight: 48,
     borderWidth: 1,
     borderColor: colors.strokeInputField,
   },
-  selectedBorder: {
+  buttonSelected: {
     backgroundColor: colors.lightContrast25,
     borderColor: colors.primary25,
   },

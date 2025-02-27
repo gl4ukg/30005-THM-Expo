@@ -26,7 +26,6 @@ const HoseDetails = () => {
 
   const handleSelectionChange = (id: string) => {
     setSelectedChoiceId(id);
-    console.log(id);
   };
 
   return (
