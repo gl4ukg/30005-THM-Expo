@@ -60,7 +60,7 @@ export const Input: React.FC<Props> = ({
 						<Icon
 							name={isPasswordVisible ? 'EyeOff' : 'Eye'}
 							size='xsm'
-							color={colors.passwordEyeIcon}
+							color={colors.extended666}
 						/>
 					</Pressable>
 				)}

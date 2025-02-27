@@ -1,18 +1,22 @@
 import { View, StyleSheet, Alert } from 'react-native';
 import { ButtonTHS } from '../UI/Button/button';
 import { Input } from '../UI/Input/input';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { LoginHeader } from './loginHeader';
 import { colors } from '@/lib/tokens/colors';
 import { HelpLinks } from './helpLinks';
+import { Typography } from '@/components/typography';
+import { THSContext, useTHSContext } from '@/context/THScontextProvider';
+import { router } from 'expo-router';
 interface Props {
-	nextView: (page: string) => void;
+	nextView: (page: "login" | "requestAccess") => void;
 }
 
 export const LoginScreen: React.FC<Props> = () => {
 	const [email, setEmail] = useState('');
 	const [fullName, setFullName] = useState('');
 	const [password, setPassword] = useState('');
+	const { state, dispatch } = useTHSContext();
 
 	const handleEmailBlur = () => {
 		if (!email.includes('@') && email !== '') {
@@ -27,9 +31,13 @@ export const LoginScreen: React.FC<Props> = () => {
 	};
 
 	const handleLogin = () => {
-		console.log('Email:', email);
-		console.log('Full Name:', fullName);
-		console.log('Password:', password);
+		// check if valid. 
+		// if valid send request to api or do something else.
+		// update state
+		dispatch({type: "SET_USER", payload: {email, name: fullName, id: password}})
+		// login and navigate to dashboard
+		router.push('/(tabs)/dashbord');
+
 	};
 
     const isButtonDisabled = !email || !fullName || !password;
@@ -37,7 +45,7 @@ export const LoginScreen: React.FC<Props> = () => {
 	return (
 		<View style={styles.container}>
 			<View style={styles.form}>
-				<LoginHeader header={'LOGIN'} />
+			<LoginHeader header={'LOGIN'} />
 				<Input
 					icon='Email'
 					label='Email'
@@ -65,24 +73,40 @@ export const LoginScreen: React.FC<Props> = () => {
 				/>
 			</View>
 			<ButtonTHS title={'LOGIN'} onPress={handleLogin} variant={"primary"} disabled={isButtonDisabled}/>
-			<HelpLinks header='Unable to log in?' />
+			<View style={styles.footer}>
+				<HelpLinks header='Unable to log in?' />
+				<Typography
+					name={"navigation"}
+					text={"© 2025 Copyright TESS AS"}
+					style={styles.whiteText}
+				/>  
+			</View>
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		gap: 150,
-		height: '100%',
-		marginBottom: 50,
-	},
-	form: {
-		width: '100%',
-		gap: 15,
-		alignItems: 'center',
-	},
+	container:{
+        width: "100%",
+        flex: 1,
+        height: "100%",
+        maxWidth: 340,
+        marginHorizontal: "auto",
+        padding: 20,
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: 50,
+    },
+    form:{
+        width:"100%",
+        gap:15,
+        alignItems:"center",
+    },
 	whiteText: {
 		color: colors.white,
 	},
+	footer: {
+        width: "100%",
+        gap: 50
+    },
 });

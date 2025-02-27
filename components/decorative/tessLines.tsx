@@ -1,3 +1,4 @@
+import { colors } from "@/lib/tokens/colors";
 import { FC } from "react";
 import { View } from "react-native";
 import Svg, { G, Path, Rect, Defs, ClipPath } from "react-native-svg";
@@ -7,9 +8,11 @@ interface Props {
   width?: number;
   height?: number;
   style?: any;
+  opacity?: number;
 }
 export const TessLines: FC<Props> = ({
-  color = "#005F27",
+  color = colors.primary,
+  opacity = 1,
   width = 194,
   height,
   style,
@@ -22,7 +25,7 @@ export const TessLines: FC<Props> = ({
       viewBox="0 0 194 29"
       fill="none"
     >
-      <G opacity="0.6" clipPath="url(#clip0_271_1021)">
+      <G opacity={opacity} clipPath="url(#clip0_271_1021)">
         <Path
           d="M98.4074 0L81.9019 29H112.161L128.666 0H98.4074Z"
           fill={color}

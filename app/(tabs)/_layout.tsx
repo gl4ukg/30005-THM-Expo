@@ -1,20 +1,18 @@
-import { Icon } from "@/components/Icon/Icon";
-import { Typography } from "@/components/typography";
-import { BottomNavigation } from "@/components/UI/BottomNavigation";
-import { Tabs } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import { BottomNavigation } from '@/components/UI/BottomNavigation';
+import { Tabs } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
-} from "react-native-safe-area-context";
+} from 'react-native-safe-area-context';
+import SubUnitSelect from '../../components/UI/TopBarNavigation/SubUnitSelect';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
   return (
     <SafeAreaProvider style={[styles.safeArea]}>
-      <StatusBar backgroundColor="#004637" style="light" />
+      <StatusBar backgroundColor='#004637' style='light' />
       <View
         style={[
           styles.statusBarIOS,
@@ -23,22 +21,15 @@ export default function TabLayout() {
           },
         ]}
       />
-      <SafeAreaView style={{ height: "100%", flex: 1 }}>
-        <View style={styles.header}>
-          <Icon name="User" color="white" size="sm" />
-          <Typography
-            name="navigation"
-            text="Test Princess"
-            style={styles.headerText}
-          />
-        </View>
+      <SafeAreaView style={{ height: '100%', flex: 1 }}>
+        <SubUnitSelect />
         <Tabs
           screenOptions={{ headerShown: false }}
-          initialRouteName="dashbord"
+          initialRouteName='dashbord'
           tabBar={() => <></>}
         >
           <Tabs.Screen
-            name="user"
+            name='user'
             options={
               {
                 // tabBarShowLabel: false,
@@ -51,7 +42,7 @@ export default function TabLayout() {
             }
           />
           <Tabs.Screen
-            name="dashbord"
+            name='dashbord'
             options={
               {
                 // title: "Dashbord",
@@ -70,20 +61,20 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   safeArea: {
-    width: "100%",
-    position: "relative",
+    width: '100%',
+    position: 'relative',
   },
   statusBarIOS: {
-    width: "100%",
-    backgroundColor: "#004637",
+    width: '100%',
+    backgroundColor: '#004637',
   },
   header: {
     height: 50,
-    backgroundColor: "#004637",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#004637',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     gap: 10,
   },
-  headerText: { color: "white" },
+  headerText: { color: 'white' },
 });

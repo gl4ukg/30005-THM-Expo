@@ -16,7 +16,8 @@ export const colors = {
   secondary95: "#bebebe",
   error: "#E51C22",
   errorText: "#BC3442",
-  extendedBlue: "#003e15",
+  extendedBlue: "#1A4A77",
+  extended333: "#333333",
   extended666: "#666666",
   extendedPurple: "#8E3A9E",
   dashbordRed: "#FFD5E3",
@@ -25,7 +26,7 @@ export const colors = {
   dashbordGreenText: "#5FA570",
   dashbordYellow: "#FFEFCD",
   dashbordYellowText: "#C3A972",
-  passwordEyeIcon:"#666666",
+  strokeInputField:"#B9B9B9",
   inputBackground:"#C9C9C9",
   linkLightGreen:"#70FFAE"
 } as const;

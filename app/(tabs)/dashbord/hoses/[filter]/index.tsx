@@ -1,17 +1,19 @@
-import { mockedData } from "@/app/(tabs)/dashbord/hoses/[filter]/mocked";
-import { ListTable } from "@/components/dashboard/listTable";
-import { Typography } from "@/components/typography";
-import { Select } from "@/components/UI/Select";
-import { useLocalSearchParams } from "expo-router";
-import { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { mockedData } from '@/app/(tabs)/dashbord/hoses/[filter]/mocked';
+import { ListTable } from '@/components/dashboard/listTable';
+import { SelectedHoseCounter } from '@/components/dashboard/selectedHoseCounter';
+import { Typography } from '@/components/typography';
+import { ActionMenu } from '@/components/UI/ActionMenu';
+import { useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { IconName } from '@/components/Icon/iconMapping';
 
 interface Props {
   slug: string;
 }
 
-type HostType = {
+export type HoseType = {
   id: string;
   name: string;
   position: string;
@@ -21,19 +23,19 @@ type HostType = {
   nextInspection: string;
   nextInspectionDate: string;
   missingData: boolean;
+  prodDate: string;
 };
-
 const getFilteredHoses = (filter: string) => {
-  const random7DiggetString = (): string =>
-    Array.from({ length: 7 }, () => Math.floor(Math.random() * 10)).join("");
+  const random7DigitString = (): string =>
+    Array.from({ length: 7 }, () => Math.floor(Math.random() * 10)).join('');
   const randomDateString = () => {
     const dateNum =
-      Math.random() * (+new Date("01-01-2026") - +new Date("01-01-2000") + 1) +
-      +new Date("01-01-2026");
+      Math.random() * (+new Date('01-01-2026') - +new Date('01-01-2000') + 1) +
+      +new Date('01-01-2026');
     const date = new Date(dateNum);
-    return date.toLocaleDateString().replace(/\/20/g, "").replace(/\//g, "");
+    return date.toLocaleDateString().replace(/\/20/g, '').replace(/\//g, '');
   };
-  const mockedList: HostType[] = mockedData.map((item) => ({
+  const mockedList: HoseType[] = mockedData.map((item) => ({
     id: item.id,
     name: item.Description,
     position: item.S2Equipment,
@@ -43,6 +45,9 @@ const getFilteredHoses = (filter: string) => {
     nextInspection: randomDateString(),
     nextInspectionDate: randomDateString(),
     missingData: Math.random() > 0.5,
+    hasRFID: Math.random() > 0.5,
+    hasAttachment: Math.random() > 0.5,
+    prodDate: item.prodDate,
   }));
   return {
     listLength: mockedList.length,
@@ -51,62 +56,98 @@ const getFilteredHoses = (filter: string) => {
   };
 };
 
-const Host: React.FC<Props> = (props) => {
+const Hose: React.FC<Props> = (props) => {
   const options = [
-    { value: "contactTessTeam", label: "Contact TESS Team" },
-    { value: "requestForQuote", label: "Request for quote" },
-    { value: "scrapHoses", label: "Scrap hoses" },
+    {
+      value: 'contactTessTeam',
+      label: 'Contact TESS Team',
+      icon: 'Email' as IconName,
+    },
+    {
+      value: 'requestForQuote',
+      label: 'Request for quote',
+      icon: 'Cart' as IconName,
+    },
+    { value: 'scrapHoses', label: 'Scrap hoses', icon: 'Trash' as IconName },
   ];
   const [action, setAction] = useState<string | null>(null);
   const { filter } = useLocalSearchParams();
+  const [selectedCount, setSelectedCount] = useState(0);
+  const [icon, setIcon] = useState<IconName>('Cart');
+
   const { filteredList, listTitle, listLength } = getFilteredHoses(
-    Array.isArray(filter) ? filter[0] : filter
+    Array.isArray(filter) ? filter[0] : filter,
   );
+
   const onChangeAction = (value: string) => {
     setAction(value);
+    const selectedOption = options.find((option) => option.value === value);
+    setIcon(selectedOption ? selectedOption.icon : 'Cart');
   };
+  const handleSelectionChange = (count: number) => {
+    setSelectedCount(count);
+  };
+
   return (
     <SafeAreaView style={style.safeView}>
       <View style={style.header}>
-        <Typography name="tableHeader" text={listTitle} />
-        <Select
+        <Typography name='tableHeader' text={listTitle} style={style.title} />
+        <ActionMenu
           selected={action}
           options={options}
           onChange={onChangeAction}
-          menuTitle="Actions"
+          menuTitle='Actions'
         />
+        {action && (
+          <View style={style.selectionCounter}>
+            <SelectedHoseCounter
+              icon={icon}
+              counter={selectedCount}
+              handlePress={function (): void {
+                console.log(`${selectedCount} items selected for ${action} `);
+              }}
+            />
+          </View>
+        )}
       </View>
-      <ListTable data={[...getFilteredHoses("filter").filteredList]} />
+      <ListTable items={[...getFilteredHoses("filter").filteredList]} onSelectionChange={handleSelectionChange} />
     </SafeAreaView>
   );
 };
 
-export default Host;
+export default Hose;
 
 const style = StyleSheet.create({
   safeView: {
     flex: 1,
   },
   header: {
-    width: "100%",
-    alignItems: "center",
-    padding: 20,
-    gap: 6,
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 10,
   },
   menu: {
-    width: "100%",
-    position: "relative",
-    alignItems: "center",
+    width: '100%',
+    position: 'relative',
+    alignItems: 'center',
     // justifyContent: "space-evenly",
     padding: 0,
     gap: 12,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   replacements: {
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingTop: 20,
     gap: 12,
+  },
+  title: {
+    marginBottom: 6,
+  },
+  selectionCounter: {
+    width: '100%',
+    alignItems: 'flex-end',
   },
 });

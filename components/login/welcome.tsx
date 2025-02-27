@@ -1,48 +1,80 @@
-import { Pressable, StyleSheet, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { Typography } from "../typography"
 import { ButtonTHS } from "../UI/Button/button"
-import {Image} from 'react-native'
 import { LoginHeader } from "./loginHeader";
 import { colors } from "@/lib/tokens/colors";
+import { LinkButton } from "@/components/UI/Button/linkButton";
+import { NorwegianFlag } from "@/components/decorative/norwegianFlag";
 
 interface Props{
-    nextView: (page:string) => void;
+    nextView: (page: "login" | "requestAccess") => void;
 }
 
-const welcomeText =["to TESS Hose Management (THM).",
-    "Existing users: sign in with your user login.",
-    "New users: request access and our team will revert to you with information needed to setup your account."];
-
 export const Welcome: React.FC<Props> = ({nextView}) => {
+    
     return <View style={styles.container}>
-       <LoginHeader header="WELCOME" subHeader={welcomeText}/>
-        <ButtonTHS title={"LOGIN"} onPress={() => nextView("Login")} variant={"primary"} />
-            <Pressable onPress={() => nextView("RequestAccess")}>
-                <Typography text="Request Access" name="sectionHeader" style={styles.whiteText}/>
-            </Pressable>
-        <View style={styles.semiFooter}>
-            <Typography name={"button"} text={"We hose the world"} style={styles.whiteText}/>
-            <Image source={require('../../assets/images/norway-flag.png')}/>
-        </View>
+       <LoginHeader header="WELCOME" style={styles.loginHeader} >
+            <View style={styles.paragraph}>
+                <Typography name="navigation" text="to TESS Hose Management (THM)." style={styles.whiteText} />
+                <Typography name="navigation" style={styles.whiteText} >
+                    <Typography name="navigationBold" text="Existing users: "  />
+                    <Typography name="navigation" text="sign in with your user login."  />
+                </Typography>
+                <Typography name="navigation" style={styles.whiteText} >
+                    <Typography name="navigationBold" text="New users: "  />
+                    <Typography name="navigation" text="request access and our team will revert to you with information needed to setup your account."  />
+                </Typography>
+            </View>
+       </LoginHeader>
+       <View style={styles.content}>
+            <View style={styles.buttonWrapper}>
+                <ButtonTHS title={"LOGIN"} onPress={() => nextView("login")} variant={"primary"}  />
+                <LinkButton variant="dark" title="Request Access" onPress={() => nextView("requestAccess")} vSpace={7} hSpace={7} />
+            </View>
+            <View style={styles.semiFooter}>
+                <Typography name={"navigation"} text={"We hose the world"} style={styles.whiteText}/>
+                <NorwegianFlag width={32} />
+                <Typography
+                    name={"navigation"}
+                    text={"© 2025 Copyright TESS AS"}
+                    style={styles.whiteText}
+                />  
+            </View>
+       </View>
     </View>;
 }
 const styles = StyleSheet.create({
     container:{
-        flex: 1,
-        gap: 200,
-        height: "100%",
+        width: "100%",
+        maxWidth: 340,
+        marginHorizontal: "auto",
         padding: 20,
+        height: "100%",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    loginHeader:{
+        marginBottom: 50
     },
     paragraph:{
-        width:"80%",
-        margin:"auto",
         gap:5,
+    },
+    content: {
+        width: "100%",
+    },
+    buttonWrapper: {
+        width:"100%",
+        gap:25,
+        alignItems:"center",
+        justifyContent: "space-between",
+        marginBottom: 75
     },
     semiFooter:{
         width:"100%",
-        gap:5,
+        gap:15,
         alignItems:"center",
-      },
+        justifyContent: "space-between",
+    },
     whiteText:{
         color:colors.white,
     }

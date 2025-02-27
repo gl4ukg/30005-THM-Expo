@@ -1,24 +1,42 @@
-import { Icon } from "@/components/Icon/Icon";
-import { Typography } from "@/components/typography";
-import { Checkbox } from "@/components/UI/Checkbox";
-import { colors } from "@/lib/tokens/colors";
-import { FC, useState } from "react";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import { Icon } from '@/components/Icon/Icon';
+import { Typography } from '@/components/typography';
+import { Checkbox } from '@/components/UI/Checkbox';
+import { colors } from '@/lib/tokens/colors';
+import { FC, useEffect, useState } from 'react';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+
 interface Props {
-  data: {
+  items: {
     id: string;
     position: string;
     condition: string;
     lastInspection: string;
     missingData?: boolean;
+    hasRFID?: boolean;
+    hasAttachment?: boolean;
   }[];
 }
 
 const spacing = {
   paddingBlock: 10,
 };
-export const ListTable: FC<Props> = ({ data }) => {
+export const ListTable: FC<
+  Props & { onSelectionChange?: (count: number) => void }
+> = ({ items, onSelectionChange }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const router = useRouter();
+  useEffect(() => {
+    if (onSelectionChange) {
+      onSelectionChange(selectedIds.length);
+    }
+  }, [selectedIds]);
+
+  const handleRowPress = (item: (typeof items)[0]) => {
+    router.push(`/(tabs)/dashbord/hoses/hose/${item.id}?id=${item.id}`);
+  };
+
   return (
     <View style={style.container}>
       <View
@@ -31,38 +49,37 @@ export const ListTable: FC<Props> = ({ data }) => {
         ]}
       >
         <Typography
-          name="tableHeader"
-          text="Hose ID"
+          name='tableHeader'
+          text='Hose ID'
           style={[style.label, style.labelColumOne]}
         />
         <Typography
-          name="tableHeader"
-          text="Position/Condition"
+          name='tableHeader'
+          text='Position/Condition'
           style={[style.label, style.labelColumTwo]}
         />
         <Typography
-          name="tableHeader"
-          text="Inspected"
+          name='tableHeader'
+          text='Inspected'
           style={[style.label, style.labelColumThree]}
         />
       </View>
       <FlatList
-        data={data}
+        data={items}
         renderItem={({ item }) => (
           <Element
-            id={item.id}
-            position={item.position}
-            condition={item.condition}
-            lastInspection={item.lastInspection}
-            isMissingData={item.missingData}
+            item={item}
             isSelected={selectedIds.includes(item.id)}
             onSelectedChange={
               selectedIds.includes(item.id)
                 ? () =>
                     setSelectedIds(selectedIds.filter((id) => id !== item.id))
-                : () => setSelectedIds([...selectedIds, item.id])
+                : () => {
+                    setSelectedIds([...selectedIds, item.id]);
+                  }
             }
             canBeSelected={true}
+            onRowPress={() => handleRowPress(item)}
           />
         )}
         keyExtractor={(item) => item.id}
@@ -72,89 +89,112 @@ export const ListTable: FC<Props> = ({ data }) => {
 };
 
 interface ElementProps {
-  id: string;
-  position: string;
-  condition: string;
-  lastInspection: string;
-  isMissingData?: boolean;
+  item: {
+    id: string;
+    position: string;
+    condition: string;
+    lastInspection: string;
+    missingData?: boolean;
+    hasAttachment?: boolean;
+    hasRFID?: boolean;
+  };
   canBeSelected?: boolean;
   isSelected?: boolean;
   onSelectedChange?: () => void;
+  onRowPress: () => void;
 }
 const Element: FC<ElementProps> = ({
-  id,
-  position,
-  condition,
-  lastInspection,
-  isMissingData,
+  item,
   canBeSelected,
   isSelected,
   onSelectedChange,
+  onRowPress,
 }) => {
   const [selected, setSelected] = useState<boolean>(isSelected || false);
+  const {
+    id,
+    position,
+    condition,
+    lastInspection,
+    missingData,
+    hasAttachment,
+    hasRFID,
+  } = item;
   const handleSelect = () => {
     setSelected((selected) => !selected);
     onSelectedChange && onSelectedChange();
   };
   return (
-    <View
-      style={[
-        elementStyle.container,
-        selected && elementStyle.containerSelected,
-      ]}
-    >
-      <View style={elementStyle.columnOne}>
-        <Typography name="tableContentNumber" text={id} />
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            height: 22,
-          }}
-        >
-          {isMissingData && (
-            <Icon name="Alert" color={colors.error} size="xsm" />
+    <Pressable onPress={onRowPress}>
+      <View
+        style={[
+          elementStyle.container,
+          selected && elementStyle.containerSelected,
+        ]}
+      >
+        <View style={elementStyle.columnOne}>
+          <Typography name='tableContentNumber' text={id} />
+          <View style={elementStyle.iconsContainer}>
+            <View style={elementStyle.iconContainer}>
+              {hasRFID && (
+                <Icon
+                  name='RfidIdentificator'
+                  color={colors.black}
+                  size='xsm'
+                />
+              )}
+            </View>
+            <View style={elementStyle.iconContainer}>
+              {missingData && (
+                <Icon name='Alert' color={colors.error} size='xsm' />
+              )}
+            </View>
+            <View style={elementStyle.iconContainer}>
+              {hasAttachment && (
+                <Icon name='Attachment' color={colors.black} size='xsm' />
+              )}
+            </View>
+          </View>
+        </View>
+        <View style={elementStyle.columnTwo}>
+          <Typography
+            name='tableContent'
+            text={item.position}
+            numberOfLines={1}
+            ellipsizeMode='tail'
+          />
+          <View style={elementStyle.subtitleDateContainer}>
+            <Typography
+              name='tableContent'
+              text={
+                item.condition.length
+                  ? item.condition
+                  : '44-Visible leakage - and some more defects'
+              }
+              style={elementStyle.subtitle}
+              numberOfLines={1}
+            />
+            <Typography
+              name='tableContentNumber'
+              text={item.lastInspection.length ? item.lastInspection : 'N/A'}
+              style={elementStyle.date}
+            />
+          </View>
+        </View>
+        <View style={elementStyle.columnThree}>
+          {canBeSelected && (
+            <Checkbox isChecked={selected} onChange={handleSelect} />
           )}
         </View>
       </View>
-      <View style={elementStyle.columnTwo}>
-        <Typography
-          name="tableContent"
-          text={position}
-          numberOfLines={1}
-          ellipsizeMode="tail"
-        />
-        <View style={elementStyle.subtitleDateContainer}>
-          <Typography
-            name="tableContent"
-            text={
-              condition.length
-                ? condition
-                : "44-Visible leakage - and some more defects"
-            }
-            style={elementStyle.subtitle}
-            numberOfLines={1}
-          />
-          <Typography
-            name="tableContentNumber"
-            text={lastInspection.length ? lastInspection : "N/A"}
-            style={elementStyle.date}
-          />
-        </View>
-      </View>
-      <View style={elementStyle.columnThree}>
-        {canBeSelected && (
-          <Checkbox isChecked={selected} onChange={handleSelect} />
-        )}
-      </View>
-    </View>
+    </Pressable>
   );
 };
 
 const elementStyle = StyleSheet.create({
   container: {
-    width: "100%",
-    flexDirection: "row",
+    width: '100%',
+    flexDirection: 'row',
     gap: 5,
     paddingTop: 10,
     paddingBottom: 3,
@@ -174,10 +214,20 @@ const elementStyle = StyleSheet.create({
   },
   columnThree: {
     width: 40,
-    alignItems: "center",
+    alignItems: 'center',
+  },
+  iconsContainer: {
+    flexDirection: 'row',
+    gap: 3,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  iconContainer: {
+    width: 16,
+    height: 16,
   },
   subtitleDateContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 5,
     flex: 1,
   },
@@ -191,19 +241,19 @@ const elementStyle = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 3,
-    borderColor: "black",
+    borderColor: 'black',
     borderWidth: 1,
   },
 });
 
 const style = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
     flex: 1,
   },
   tableHeader: {
-    width: "100%",
-    flexDirection: "row",
+    width: '100%',
+    flexDirection: 'row',
     gap: 5,
     paddingTop: 20,
     paddingBottom: 2,
@@ -212,7 +262,7 @@ const style = StyleSheet.create({
     // flex: 1,
   },
   label: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     paddingTop: 20,
   },
   labelColumOne: { width: 70 },
