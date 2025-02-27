@@ -136,7 +136,13 @@ const Element: FC<ElementProps> = ({
           <Typography name='tableContentNumber' text={id} />
           <View style={elementStyle.iconsContainer}>
             <View style={elementStyle.iconContainer}>
-              {hasRFID && <Icon name='RFID' color={colors.black} size='xsm' />}
+              {hasRFID && (
+                <Icon
+                  name='RfidIdentificator'
+                  color={colors.black}
+                  size='xsm'
+                />
+              )}
             </View>
             <View style={elementStyle.iconContainer}>
               {missingData && (

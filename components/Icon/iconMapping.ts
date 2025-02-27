@@ -34,7 +34,10 @@ import Inspect from './icons/Inspect';
 import ArrowLeft from './icons/ArrowLeft';
 import ArrowRight from './icons/ArrowRight';
 import Image from './icons/Image';
+import RfidIdentificator from './icons/RfidIdentificator';
 import RFID from './icons/RFID';
+import RegisterHoses from './icons/RegisterHoses';
+import Barcode from './icons/Barcode';
 
 export type IconName =
   | 'Alert'
@@ -73,6 +76,9 @@ export type IconName =
   | 'ArrowLeft'
   | 'ArrowRight'
   | 'Image'
+  | 'RfidIdentificator'
+  | 'RegisterHoses'
+  | 'Barcode'
   | 'RFID';
 
 export const iconMapping: Record<IconName, React.FC<any>> = {
@@ -113,4 +119,7 @@ export const iconMapping: Record<IconName, React.FC<any>> = {
   ArrowRight,
   Image,
   RFID,
+  RfidIdentificator,
+  RegisterHoses,
+  Barcode,
 };
