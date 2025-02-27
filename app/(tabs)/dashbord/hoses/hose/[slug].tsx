@@ -1,8 +1,8 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Text, StyleSheet, View, ScrollView, Pressable } from 'react-native';
+import { Text, StyleSheet, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { mockedData } from '../[filter]/mocked';
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
 import GeneralInfo from '@/components/detailView/GeneralInfo';
 import Photos from '@/components/detailView/Photos';
@@ -28,9 +28,11 @@ const HoseDetails = () => {
   const documentsRef = useRef<View>(null);
   const structureRef = useRef<View>(null);
   const historyRef = useRef<View>(null);
+  const detailsHeaderRef = useRef<View>(null);
 
-  const router = useRouter();
   const { id } = useLocalSearchParams();
+  const [isFirstRender, setIsFirstRender] = useState(true);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   const hoseData = mockedData.find((hose) => hose.id === id);
 
@@ -44,50 +46,24 @@ const HoseDetails = () => {
     );
   };
 
+  const sectionRefs = {
+    photos: photosRef,
+    hoseModule: hoseModuleRef,
+    tessPartNumbers: tessPartNumbersRef,
+    maintenanceInfo: maintenanceInfoRef,
+    documents: documentsRef,
+    structure: structureRef,
+    history: historyRef,
+  };
+
   const scrollToSection = (sectionId: string) => {
-    setIsOpen(false);
-    switch (sectionId) {
-      case 'photos':
-        photosRef.current?.measure((x, y, width, height, pageX, pageY) => {
-          scrollViewRef.current?.scrollTo({ y: pageY, animated: true });
-        });
-        break;
-      case 'hoseModule':
-        hoseModuleRef.current?.measure((x, y, width, height, pageX, pageY) => {
-          scrollViewRef.current?.scrollTo({ y: pageY, animated: true });
-        });
-        break;
-      case 'tessPartNumbers':
-        tessPartNumbersRef.current?.measure(
-          (x, y, width, height, pageX, pageY) => {
-            scrollViewRef.current?.scrollTo({ y: pageY, animated: true });
-          },
-        );
-        break;
-      case 'maintenanceInfo':
-        maintenanceInfoRef.current?.measure(
-          (x, y, width, height, pageX, pageY) => {
-            scrollViewRef.current?.scrollTo({ y: pageY, animated: true });
-          },
-        );
-        break;
-      case 'documents':
-        documentsRef.current?.measure((x, y, width, height, pageX, pageY) => {
-          scrollViewRef.current?.scrollTo({ y: pageY, animated: true });
-        });
-        break;
-      case 'structure':
-        structureRef.current?.measure((x, y, width, height, pageX, pageY) => {
-          scrollViewRef.current?.scrollTo({ y: pageY, animated: true });
-        });
-        break;
-      case 'history':
-        historyRef.current?.measure((x, y, width, height, pageX, pageY) => {
-          scrollViewRef.current?.scrollTo({ y: pageY, animated: true });
-        });
-        break;
-      default:
-        break;
+    const ref = sectionRefs[sectionId as keyof typeof sectionRefs];
+
+    if (ref?.current) {
+      ref.current.measure((x, y, width, height, pageX, pageY) => {
+        const adjustedY = pageY - headerHeight; // Subtract header height
+        scrollViewRef.current?.scrollTo({ y: adjustedY, animated: true });
+      });
     }
   };
 
@@ -157,17 +133,26 @@ const HoseDetails = () => {
     },
   ];
 
-  const [isOpen, setIsOpen] = React.useState(false);
+  useEffect(() => {
+    setIsFirstRender(false);
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <DetailsHeader
-        id={hoseData.id}
-        date={hoseData.prodDate}
-        missingData={checkMissingData(hoseData)}
-        shortcuts={shortcuts}
-        scrollToSection={scrollToSection}
-      />
+      <View
+        ref={detailsHeaderRef}
+        onLayout={(event) => {
+          setHeaderHeight(event.nativeEvent.layout.height);
+        }}
+      >
+        <DetailsHeader
+          id={hoseData.id}
+          date={hoseData.prodDate}
+          missingData={checkMissingData(hoseData)}
+          shortcuts={shortcuts}
+          scrollToSection={scrollToSection}
+        />
+      </View>
       <ScrollView ref={scrollViewRef}>
         <GeneralInfo
           description={hoseData.Description}
