@@ -1,6 +1,7 @@
 import {
   Dimensions,
   ImageBackground,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -33,6 +34,7 @@ const Login = () => {
   };
   const windowHeight = Dimensions.get('window').height;
   const insets = useSafeAreaInsets();
+  
 
   return (
     <ImageBackground

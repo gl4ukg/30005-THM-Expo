@@ -1,11 +1,13 @@
 import { View, StyleSheet, Alert } from 'react-native';
 import { ButtonTHS } from '../UI/Button/button';
 import { Input } from '../UI/Input/input';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { LoginHeader } from './loginHeader';
 import { colors } from '@/lib/tokens/colors';
 import { HelpLinks } from './helpLinks';
 import { Typography } from '@/components/typography';
+import { THSContext, useTHSContext } from '@/context/THScontextProvider';
+import { router } from 'expo-router';
 interface Props {
 	nextView: (page: "login" | "requestAccess") => void;
 }
@@ -14,6 +16,7 @@ export const LoginScreen: React.FC<Props> = () => {
 	const [email, setEmail] = useState('');
 	const [fullName, setFullName] = useState('');
 	const [password, setPassword] = useState('');
+	const { state, dispatch } = useTHSContext();
 
 	const handleEmailBlur = () => {
 		if (!email.includes('@') && email !== '') {
@@ -28,9 +31,13 @@ export const LoginScreen: React.FC<Props> = () => {
 	};
 
 	const handleLogin = () => {
-		console.log('Email:', email);
-		console.log('Full Name:', fullName);
-		console.log('Password:', password);
+		// check if valid. 
+		// if valid send request to api or do something else.
+		// update state
+		dispatch({type: "SET_USER", payload: {email, name: fullName, id: password}})
+		// login and navigate to dashboard
+		router.push('/(tabs)/dashbord');
+
 	};
 
     const isButtonDisabled = !email || !fullName || !password;
