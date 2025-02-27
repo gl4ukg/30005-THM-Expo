@@ -21,12 +21,12 @@ const HoseDetails = () => {
       (value) => value === null || value === undefined || value === '',
     );
   };
-  
+
   const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
 
-  const handleSelectionChange = (id:string) => {
+  const handleSelectionChange = (id: string) => {
     setSelectedChoiceId(id);
-    console.log(id)
+    console.log(id);
   };
 
   return (
@@ -36,11 +36,15 @@ const HoseDetails = () => {
         date={hoseData.prodDate}
         missingData={checkMissingData(hoseData)}
       />
-      <RadioGroup label={'UV exposure'} choices={[
-        { id: '1', label: 'Low' },
-        { id: '2', label: 'Moderate, but not exposed' },
-        { id: '3', label: 'High' }
-      ]} onChange={handleSelectionChange} selected={selectedChoiceId}/>
+      <RadioGroup
+        label={'UV exposure'}
+        choices={[
+          { id: '1', label: 'internal, not exposed' },
+          { id: '2', label: 'Exposed' },
+        ]}
+        onChange={handleSelectionChange}
+        selected={selectedChoiceId}
+      />
       <GeneralInfo
         description={hoseData.Description}
         customerId={hoseData.customerId}
