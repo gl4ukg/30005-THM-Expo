@@ -2,9 +2,10 @@ import { useLocalSearchParams } from 'expo-router';
 import { Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { mockedData } from '../[filter]/mocked';
-import React from 'react';
+import React, { useState } from 'react';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
 import GeneralInfo from '@/components/detailView/GeneralInfo';
+import { RadioGroup } from '@/components/detailHose/radioGroup';
 
 const HoseDetails = () => {
   const { id } = useLocalSearchParams();
@@ -21,12 +22,27 @@ const HoseDetails = () => {
     );
   };
 
+  const [selectedChoiceId, setSelectedChoiceId] = useState<string>('');
+
+  const handleSelectionChange = (id: string) => {
+    setSelectedChoiceId(id);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <DetailsHeader
         id={hoseData.id}
         date={hoseData.prodDate}
         missingData={checkMissingData(hoseData)}
+      />
+      <RadioGroup
+        label={'UV exposure'}
+        choices={[
+          { id: '1', label: 'internal, not exposed' },
+          { id: '2', label: 'Exposed' },
+        ]}
+        onChange={handleSelectionChange}
+        selected={selectedChoiceId}
       />
       <GeneralInfo
         description={hoseData.Description}
