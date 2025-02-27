@@ -1,11 +1,10 @@
 import { BarChart, Primary, Secondary } from '@/components/dashboard';
 import { BarData } from '@/components/dashboard/barChart';
-import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
 import { ActionMenu } from '@/components/UI/ActionMenu';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 
 const month: BarData = [
   {
@@ -126,33 +125,6 @@ const year: BarData = [
   },
 ];
 
-const team: BarData = [
-  {
-    label: 'Mar',
-    value: 41,
-  },
-  {
-    label: 'Øyv',
-    value: 34,
-  },
-  {
-    label: 'Hja',
-    value: 26,
-  },
-  {
-    label: 'Arn',
-    value: 41,
-  },
-  {
-    label: 'Fra',
-    value: 58,
-  },
-  {
-    label: 'Eiv',
-    value: 27,
-  },
-];
-
 const options = [
   {
     label: 'pr Month',
@@ -170,17 +142,13 @@ const options = [
     label: 'pr Year',
     value: 'year',
   },
-  {
-    label: 'pr Team',
-    value: 'team',
-  },
 ];
 
 const Dashbord = () => {
   const [selected, setSelected] =
     useState<(typeof options)[0]['value']>('month');
 
-  const [barData, setBarData] = useState<BarData>(team);
+  const [barData, setBarData] = useState<BarData>(month);
   useEffect(() => {
     switch (selected) {
       case 'month':
@@ -195,15 +163,15 @@ const Dashbord = () => {
       case 'year':
         setBarData(year);
         break;
-      case 'team':
-        setBarData(team);
-        break;
     }
   }, [selected]);
   const router = useRouter();
 
   const goToFilter = (filter: string) => {
     router.push(`/(tabs)/dashbord/hoses/${filter}`);
+  };
+  const goToHose = (id: string) => {
+    router.push(`/(tabs)/dashbord/hoses/hose/[${id}]`);
   };
   return (
     <SafeAreaView style={style.safeView}>
@@ -223,7 +191,7 @@ const Dashbord = () => {
             value={1129}
             trend={1}
             state='error'
-            onPress={() => goToFilter('failed')}
+            onPress={() => goToHose('failed')}
           />
           <Primary
             label='Overdue'

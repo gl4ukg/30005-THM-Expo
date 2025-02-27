@@ -8,12 +8,14 @@ import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 
 interface Props {
-  data: {
+  items: {
     id: string;
     position: string;
     condition: string;
     lastInspection: string;
     missingData?: boolean;
+    hasRFID?: boolean;
+    hasAttachment?: boolean;
   }[];
 }
 
@@ -21,10 +23,8 @@ const spacing = {
   paddingBlock: 10,
 };
 export const ListTable: FC<
-  Props & {
-    onSelectionChange?: (count: number) => void;
-  }
-> = ({ data, onSelectionChange }) => {
+  Props & { onSelectionChange?: (count: number) => void }
+> = ({ items, onSelectionChange }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const router = useRouter();
   useEffect(() => {
@@ -33,7 +33,7 @@ export const ListTable: FC<
     }
   }, [selectedIds]);
 
-  const handleRowPress = (item: (typeof data)[0]) => {
+  const handleRowPress = (item: (typeof items)[0]) => {
     router.push(`/(tabs)/dashbord/hoses/hose/${item.id}?id=${item.id}`);
   };
 
@@ -65,7 +65,7 @@ export const ListTable: FC<
         />
       </View>
       <FlatList
-        data={data}
+        data={items}
         renderItem={({ item }) => (
           <Element
             item={item}
@@ -95,6 +95,8 @@ interface ElementProps {
     condition: string;
     lastInspection: string;
     missingData?: boolean;
+    hasAttachment?: boolean;
+    hasRFID?: boolean;
   };
   canBeSelected?: boolean;
   isSelected?: boolean;
@@ -109,6 +111,15 @@ const Element: FC<ElementProps> = ({
   onRowPress,
 }) => {
   const [selected, setSelected] = useState<boolean>(isSelected || false);
+  const {
+    id,
+    position,
+    condition,
+    lastInspection,
+    missingData,
+    hasAttachment,
+    hasRFID,
+  } = item;
   const handleSelect = () => {
     setSelected((selected) => !selected);
     onSelectedChange && onSelectedChange();
@@ -122,17 +133,27 @@ const Element: FC<ElementProps> = ({
         ]}
       >
         <View style={elementStyle.columnOne}>
-          <Typography name='tableContentNumber' text={item.id} />
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: 22,
-            }}
-          >
-            {item.missingData && (
-              <Icon name='Alert' color={colors.error} size='xsm' />
-            )}
+          <Typography name='tableContentNumber' text={id} />
+          <View style={elementStyle.iconsContainer}>
+            <View style={elementStyle.iconContainer}>
+              {hasRFID && (
+                <Icon
+                  name='RfidIdentificator'
+                  color={colors.black}
+                  size='xsm'
+                />
+              )}
+            </View>
+            <View style={elementStyle.iconContainer}>
+              {missingData && (
+                <Icon name='Alert' color={colors.error} size='xsm' />
+              )}
+            </View>
+            <View style={elementStyle.iconContainer}>
+              {hasAttachment && (
+                <Icon name='Attachment' color={colors.black} size='xsm' />
+              )}
+            </View>
           </View>
         </View>
         <View style={elementStyle.columnTwo}>
@@ -194,6 +215,16 @@ const elementStyle = StyleSheet.create({
   columnThree: {
     width: 40,
     alignItems: 'center',
+  },
+  iconsContainer: {
+    flexDirection: 'row',
+    gap: 3,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  iconContainer: {
+    width: 16,
+    height: 16,
   },
   subtitleDateContainer: {
     flexDirection: 'row',
