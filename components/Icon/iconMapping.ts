@@ -38,6 +38,8 @@ import RfidIdentificator from './icons/RfidIdentificator';
 import RFID from './icons/RFID';
 import RegisterHoses from './icons/RegisterHoses';
 import Barcode from './icons/Barcode';
+import Plus from './icons/Plus';
+import Document from './icons/Document';
 
 export type IconName =
   | 'Alert'
@@ -79,7 +81,9 @@ export type IconName =
   | 'RfidIdentificator'
   | 'RegisterHoses'
   | 'Barcode'
-  | 'RFID';
+  | 'RFID'
+  | 'Plus'
+  | 'Document';
 
 export const iconMapping: Record<IconName, React.FC<any>> = {
   Alert,
@@ -122,4 +126,6 @@ export const iconMapping: Record<IconName, React.FC<any>> = {
   RfidIdentificator,
   RegisterHoses,
   Barcode,
+  Plus,
+  Document,
 };
