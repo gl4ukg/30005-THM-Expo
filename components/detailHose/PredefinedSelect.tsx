@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
 import { colors } from '@/lib/tokens/colors';
 import { Typography } from '../typography';
 import { RadioButton } from './radioButton';
+import { Input } from '../UI/Input/input';
 
 interface PredefinedSelectProps {
   options: { id: string; label: string }[];
@@ -19,6 +20,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
 }) => {
   const [selectedValue, setSelectedValue] = useState(selected);
   const [initialValue, setInitialValue] = useState(selected);
+  const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
     setInitialValue(selected);
@@ -26,7 +28,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
   }, [selected]);
 
   const handleSave = () => {
-    onSelect(selectedValue);
+    setSelectedValue(inputValue);
     onClose();
   };
 
@@ -40,6 +42,10 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
     setSelectedValue(optionId);
     onSelect(optionId);
     onClose();
+  };
+
+  const handleNAPress = () => {
+    setSelectedValue('N/A');
   };
 
   return (
@@ -63,24 +69,58 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
             />
           </Pressable>
         ))}
+        <Pressable
+          key={'N/A'}
+          style={[
+            styles.option,
+            selectedValue === 'N/A' && styles.selectedOption,
+          ]}
+          onPress={() => handleNAPress()}
+        >
+          <RadioButton
+            isSelected={selectedValue === 'N/A'}
+            onChange={() => handleNAPress()}
+            id={''}
+            label={'N/A'}
+            menu
+          />
+        </Pressable>
+        {selectedValue === 'N/A' && (
+          <View style={styles.manualInput}>
+            <Input
+              placeHolder='Add comment'
+              value={inputValue}
+              onChangeText={(value) => setInputValue(value)}
+              multiline
+              label='Comment:'
+            />
+          </View>
+        )}
       </ScrollView>
+      <Pressable />
       <View style={styles.buttonContainer}>
         <Pressable style={styles.cancelButton} onPress={handleCancel}>
           <Typography name={'button'} style={styles.cancelButtonText}>
             Cancel
           </Typography>
         </Pressable>
-        <Pressable style={styles.saveButton} onPress={handleSave}>
-          <Typography name={'button'} style={styles.saveButtonText}>
-            Save & Close
-          </Typography>
-        </Pressable>
+        {selectedValue === 'N/A' && (
+          <Pressable style={styles.saveButton} onPress={handleSave}>
+            <Typography name={'button'} style={styles.saveButtonText}>
+              Save & Close
+            </Typography>
+          </Pressable>
+        )}
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  manualInput: {
+    width: '80%',
+    margin: 20,
+  },
   container: {
     width: '100%',
     maxHeight: '90%',

@@ -35,7 +35,6 @@ const HoseDetails = () => {
   const detailsHeaderRef = useRef<View>(null);
 
   const { id } = useLocalSearchParams();
-  const [isFirstRender, setIsFirstRender] = useState(true);
   const [headerHeight, setHeaderHeight] = useState(0);
 
   const hoseData = mockedData.find((hose) => hose.id === id);
@@ -144,10 +143,6 @@ const HoseDetails = () => {
     },
   ];
 
-  useEffect(() => {
-    setIsFirstRender(false);
-  }, []);
-
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -180,6 +175,7 @@ const HoseDetails = () => {
         ]}
         onChange={handleSelectionChange}
         selected={selectedChoiceId}
+        type={'horizontal'}
       />
       <Input
         label={'Comment:'}
