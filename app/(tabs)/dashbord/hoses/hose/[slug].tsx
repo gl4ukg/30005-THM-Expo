@@ -13,6 +13,8 @@ import Documents from '@/components/detailView/Documents';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 import { RadioGroup } from '@/components/detailHose/radioGroup';
+import { SelectField } from '@/components/detailHose/SelectField';
+import { condition } from '@/components/detailHose/data/lists';
 
 export type Section = {
   id: string;
@@ -152,6 +154,14 @@ const HoseDetails = () => {
           setHeaderHeight(event.nativeEvent.layout.height);
         }}
       >
+        <SelectField
+          label='Condition'
+          value={hoseData.condition}
+          onChange={() => {
+            return;
+          }}
+          options={condition.map((c) => ({ id: c, label: c }))}
+        />
         <DetailsHeader
           id={hoseData.id}
           date={hoseData.prodDate}
