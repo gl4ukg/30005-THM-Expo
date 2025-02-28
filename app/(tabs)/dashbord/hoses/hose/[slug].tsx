@@ -13,6 +13,7 @@ import Documents from '@/components/detailView/Documents';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 import { RadioGroup } from '@/components/detailHose/radioGroup';
+import { Input } from '@/components/UI/Input/input';
 
 export type Section = {
   id: string;
@@ -58,6 +59,7 @@ const HoseDetails = () => {
   };
 
   const [selectedChoiceId, setSelectedChoiceId] = useState<string>('');
+  const [comment, setComment] = useState('');
 
   const handleSelectionChange = (id: string) => {
     setSelectedChoiceId(id);
@@ -168,6 +170,12 @@ const HoseDetails = () => {
         ]}
         onChange={handleSelectionChange}
         selected={selectedChoiceId}
+      />
+      <Input
+        label={'Comment:'}
+        value={comment}
+        onChangeText={setComment}
+        multiline={true}
       />
       <ScrollView ref={scrollViewRef}>
         <GeneralInfo
