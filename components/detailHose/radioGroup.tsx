@@ -13,6 +13,7 @@ interface RadioGroupProps {
   choices: Choice[];
   selected: string;
   onChange: (selectedId: string) => void;
+  type: 'horizontal' | 'vertical' | 'menu';
 }
 
 export const RadioGroup: React.FC<RadioGroupProps> = ({
@@ -20,13 +21,19 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
   choices,
   selected = '',
   onChange,
+  type,
 }) => {
   return (
     <View style={styles.wrapper}>
       <Typography name={'button'} style={styles.label}>
         {label}
       </Typography>
-      <View style={styles.radioContainer}>
+      <View
+        style={[
+          styles.radioContainer,
+          type === 'horizontal' && { flexDirection: 'row' },
+        ]}
+      >
         {choices.map((choice) => (
           <RadioButton
             key={choice.id}
@@ -34,6 +41,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
             label={choice.label}
             isSelected={selected === choice.id}
             onChange={() => onChange(choice.id)}
+            menu={type === 'menu'}
           />
         ))}
       </View>
