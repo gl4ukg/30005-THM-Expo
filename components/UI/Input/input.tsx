@@ -14,6 +14,8 @@ interface Props {
   labelColor?: string;
   type?: string;
   multiline?: boolean;
+  errorMessage?: string;
+  lightMode?: boolean;
   onBlur?: () => void;
 }
 export const Input: React.FC<Props> = ({
@@ -25,6 +27,8 @@ export const Input: React.FC<Props> = ({
   labelColor = 'black',
   multiline = false,
   type,
+  errorMessage,
+  lightMode,
   onBlur,
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -34,47 +38,60 @@ export const Input: React.FC<Props> = ({
   };
 
   return (
-    <View style={styles.outerView}>
-      {icon && (
-        <View style={styles.iconWrapper}>
-          <Icon name={icon} size='md' color={labelColor} />
-        </View>
-      )}
-      <View style={styles.innerView}>
-        {label && (
-          <View>
-            <Typography
-              name='fieldLabel'
-              text={label}
-              style={{ color: labelColor }}
-            />
+    <View>
+      <View style={styles.outerView}>
+        {icon && (
+          <View style={styles.iconWrapper}>
+            <Icon name={icon} size='md' color={labelColor} />
           </View>
         )}
-        <View>
-          <TextInput
-            style={[styles.input, multiline && styles.multiline]}
-            value={value}
-            onChangeText={onChangeText}
-            placeholder={placeHolder}
-            multiline={multiline}
-            scrollEnabled={!multiline}
-            secureTextEntry={type === 'password' && !isPasswordVisible}
-            onBlur={onBlur}
-          />
-          {type === 'password' && (
-            <Pressable
-              onPress={togglePasswordVisibility}
-              style={styles.iconContainer}
-            >
-              <Icon
-                name={isPasswordVisible ? 'EyeOff' : 'Eye'}
-                size='xsm'
-                color={colors.extended666}
+        <View style={styles.innerView}>
+          {label && (
+            <View>
+              <Typography
+                name='fieldLabel'
+                text={label}
+                style={{ color: labelColor }}
               />
-            </Pressable>
+            </View>
           )}
+          <View>
+            <TextInput
+              style={[
+                styles.input,
+                errorMessage && styles.errorBorder,
+                lightMode && styles.lightMode,
+              ]}
+              value={value}
+              onChangeText={onChangeText}
+              placeholder={placeHolder}
+              multiline={multiline}
+              scrollEnabled={!multiline}
+              secureTextEntry={type === 'password' && !isPasswordVisible}
+              onBlur={onBlur}
+            />
+            {type === 'password' && (
+              <Pressable
+                onPress={togglePasswordVisibility}
+                style={styles.iconContainer}
+              >
+                <Icon
+                  name={isPasswordVisible ? 'EyeOff' : 'Eye'}
+                  size='xsm'
+                  color={colors.extended666}
+                />
+              </Pressable>
+            )}
+          </View>
         </View>
       </View>
+      {errorMessage && (
+        <Typography
+          name={'navigation'}
+          text={errorMessage}
+          style={[styles.error, icon && styles.errorPaddingIfIcon]}
+        />
+      )}
     </View>
   );
 };
@@ -82,15 +99,11 @@ export const Input: React.FC<Props> = ({
 const styles = StyleSheet.create({
   input: {
     paddingLeft: 10,
-    borderWidth: 0,
+    borderWidth: 1,
     paddingVertical: 10,
     backgroundColor: colors.inputBackground,
     position: 'relative',
     color: colors.extended333,
-  },
-  multiline: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
     borderColor: colors.extended666,
   },
   outerView: {
@@ -111,7 +124,20 @@ const styles = StyleSheet.create({
   iconContainer: {
     position: 'absolute',
     right: 10,
-    top: 10,
+    top: 11,
     justifyContent: 'center',
+  },
+  error: {
+    color: colors.error,
+    paddingTop: 9,
+  },
+  errorPaddingIfIcon: {
+    paddingLeft: 37,
+  },
+  errorBorder: {
+    borderColor: colors.error,
+  },
+  lightMode: {
+    backgroundColor: colors.white,
   },
 });

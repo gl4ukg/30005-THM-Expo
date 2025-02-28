@@ -2,6 +2,7 @@ import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
 import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/linkButton';
+import { Input } from '@/components/UI/Input/input';
 import { colors } from '@/lib/tokens/colors';
 import { Link } from 'expo-router';
 import { useState } from 'react';
@@ -16,8 +17,10 @@ import {
 
 const Ui = () => {
   const [iconsExpanded, setIconsExpanded] = useState(false);
-  const [typographyExpanded, setTypographyExpanded] = useState(true);
-  const [buttonsExpanded, setButtonsExpanded] = useState(true);
+  const [typographyExpanded, setTypographyExpanded] = useState(false);
+  const [buttonsExpanded, setButtonsExpanded] = useState(false);
+  const [inputsExpanded, setInputsExpanded] = useState(true);
+
   return (
     <SafeAreaView style={{ height: '100%', flex: 1 }}>
       <View
@@ -353,7 +356,7 @@ const Ui = () => {
               name='sectionHeaderCapslock'
               style={{ color: colors.black }}
             />
-            {iconsExpanded ? (
+            {typographyExpanded ? (
               <Icon name='ChevronDown' size='md' color={colors.black} />
             ) : (
               <Icon name='ChevronRight' size='md' color={colors.black} />
@@ -434,6 +437,51 @@ const Ui = () => {
               <Typography text=' - ' name='tableContentNumber' />
               <Typography text='tableContentNumber' name='tableContentNumber' />
             </View>
+          </View>
+          <Pressable
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
+            onPress={() => setInputsExpanded(!inputsExpanded)}
+          >
+            <Typography
+              text='Inputs'
+              name='sectionHeaderCapslock'
+              style={{ color: colors.black }}
+            />
+            {inputsExpanded ? (
+              <Icon name='ChevronDown' size='md' color={colors.black} />
+            ) : (
+              <Icon name='ChevronRight' size='md' color={colors.black} />
+            )}
+          </Pressable>
+          <View style={{ display: inputsExpanded ? 'flex' : 'none' }}>
+            <Input
+              label={'Your full name'}
+              value={''}
+              icon={'User'}
+              onChangeText={function (text: string): void {}}
+            />
+            <Input
+              label={'Your full name'}
+              value={''}
+              lightMode={true}
+              icon={'User'}
+              onChangeText={function (text: string): void {}}
+            />
+            <Input
+              label={'Password'}
+              value={''}
+              lightMode={true}
+              icon={'User'}
+              errorMessage='Password must be at least 8 characters long and include a number and a special character.'
+              onChangeText={function (text: string): void {}}
+            />
+            <Input
+              label={'TextArea'}
+              value={''}
+              lightMode={true}
+              multiline={true}
+              onChangeText={function (text: string): void {}}
+            />
           </View>
         </ScrollView>
       </View>
