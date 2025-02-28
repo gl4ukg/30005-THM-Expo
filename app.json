@@ -36,9 +36,10 @@
           "backgroundColor": "#000"
         }
       ],
-      ["expo-font",
-        {"fonts":
-          [
+      [
+        "expo-font",
+        {
+          "fonts": [
             "node_modules/@expo-google-fonts/open-sans/OpenSans_400Regular.ttf",
             "node_modules/@expo-google-fonts/open-sans/OpenSans_600SemiBold.ttf",
             "node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf",
@@ -51,6 +52,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "975f2122-d912-413d-a0a1-3371afd5e891"
+      }
     }
   }
 }
