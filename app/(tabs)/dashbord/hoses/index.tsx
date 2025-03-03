@@ -1,6 +1,5 @@
 import { Link } from 'expo-router';
 import { Text, FlatList } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Hoses = () => {
   return (

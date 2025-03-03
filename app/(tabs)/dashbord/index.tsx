@@ -150,7 +150,7 @@ const Dashbord = () => {
   const [selected, setSelected] =
     useState<(typeof options)[0]['value']>('month');
   const insets = useSafeAreaInsets();
-  console.log('sss:', insets);
+
   const [barData, setBarData] = useState<BarData>(month);
   useEffect(() => {
     switch (selected) {
@@ -261,18 +261,14 @@ const style = StyleSheet.create({
     padding: 20,
   },
   header: {
-    // width: "100%",
     alignItems: 'center',
     padding: 20,
     gap: 6,
-    // borderColor: "#009640",
-    // borderWidth: 2,
   },
   menu: {
     width: '100%',
     position: 'relative',
     alignItems: 'center',
-    // justifyContent: "space-evenly",
     padding: 0,
     gap: 12,
     flexDirection: 'row',

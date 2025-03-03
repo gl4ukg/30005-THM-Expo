@@ -210,12 +210,4 @@ const HoseDetails = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    position: 'relative',
-  },
-});
-
 export default HoseDetails;
