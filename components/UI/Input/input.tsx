@@ -2,8 +2,14 @@ import { Icon } from '@/components/Icon/Icon';
 import { IconName } from '@/components/Icon/iconMapping';
 import { Typography } from '@/components/typography';
 import { colors } from '@/lib/tokens/colors';
-import { useState } from 'react';
-import { TextInput, StyleSheet, View, Pressable } from 'react-native';
+import { useState, useRef } from 'react';
+import {
+  TextInput,
+  StyleSheet,
+  View,
+  Pressable,
+  TextInputProps,
+} from 'react-native';
 
 interface Props {
   icon?: IconName;
@@ -12,29 +18,36 @@ interface Props {
   value: string;
   onChangeText: (text: string) => void;
   labelColor?: string;
-  type?: string;
-  multiline?: boolean;
+  type?: TextInputProps['inputMode'] | 'password' | 'textArea';
   errorMessage?: string;
   darkmode?: boolean;
-  onBlur?: () => void;
 }
 export const Input: React.FC<Props> = ({
   icon,
   label,
-  placeHolder = '',
+  placeHolder,
   value,
   onChangeText,
-  labelColor = 'black',
-  multiline = false,
+  labelColor = colors.black,
   type,
   errorMessage,
   darkmode,
-  onBlur,
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prevState) => !prevState);
+  };
+
+  const inputMode = type === 'password' || type === 'textArea' ? 'text' : type;
+
+  const [displayError, setDisplayError] = useState(false);
+  const toggleUnfocused = () => {
+    if (errorMessage) {
+      setDisplayError(true);
+    } else {
+      setDisplayError(false);
+    }
   };
 
   return (
@@ -59,16 +72,17 @@ export const Input: React.FC<Props> = ({
             <TextInput
               style={[
                 styles.input,
-                errorMessage && styles.errorBorder,
+                displayError && styles.errorBorder,
                 darkmode && styles.darkmode,
               ]}
               value={value}
               onChangeText={onChangeText}
               placeholder={placeHolder}
-              multiline={multiline}
-              scrollEnabled={!multiline}
+              inputMode={inputMode}
+              multiline={type === 'textArea'}
+              scrollEnabled={type !== 'textArea'}
               secureTextEntry={type === 'password' && !isPasswordVisible}
-              onBlur={onBlur}
+              onBlur={toggleUnfocused}
             />
             {type === 'password' && (
               <Pressable
@@ -85,7 +99,7 @@ export const Input: React.FC<Props> = ({
           </View>
         </View>
       </View>
-      {errorMessage && (
+      {displayError && (
         <Typography
           name={'navigation'}
           text={errorMessage}

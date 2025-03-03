@@ -21,6 +21,22 @@ const Ui = () => {
   const [buttonsExpanded, setButtonsExpanded] = useState(false);
   const [inputsExpanded, setInputsExpanded] = useState(true);
 
+  const [name, setName] = useState('');
+  const [genericText, setGenericText] = useState('');
+  const [phone, setPhone] = useState('');
+
+  const [error, setError] = useState<undefined | string>(undefined);
+
+  function handleChangeName(input: string) {
+    setName(input);
+
+    if (input.length < 4) {
+      setError('too short');
+    } else {
+      setError(undefined);
+    }
+  }
+
   return (
     <SafeAreaView style={{ height: '100%', flex: 1 }}>
       <View
@@ -456,29 +472,42 @@ const Ui = () => {
           <View style={{ display: inputsExpanded ? 'flex' : 'none' }}>
             <Input
               label={'Your full name'}
-              value={''}
+              value={name}
               darkmode={true}
+              errorMessage={error}
               icon={'User'}
-              onChangeText={function (text: string): void {}}
+              onChangeText={handleChangeName}
             />
             <Input
-              label={'Your full name'}
-              value={''}
-              icon={'User'}
-              onChangeText={function (text: string): void {}}
+              label={'Your full email'}
+              value={genericText}
+              icon={'Email'}
+              type={'email'}
+              onChangeText={setGenericText}
             />
+            <View style={{ backgroundColor: colors.black, paddingVertical: 5 }}>
+              <Input
+                label={'Your phone number'}
+                value={phone}
+                labelColor={colors.white}
+                icon={'Phone'}
+                type={'tel'}
+                onChangeText={setPhone}
+              />
+            </View>
             <Input
               label={'Password'}
-              value={''}
+              value={genericText}
               icon={'User'}
+              type={'password'}
               errorMessage='Password must be at least 8 characters long and include a number and a special character.'
-              onChangeText={function (text: string): void {}}
+              onChangeText={setGenericText}
             />
             <Input
               label={'TextArea'}
-              value={''}
-              multiline={true}
-              onChangeText={function (text: string): void {}}
+              value={genericText}
+              type={'textArea'}
+              onChangeText={setGenericText}
             />
           </View>
         </ScrollView>
