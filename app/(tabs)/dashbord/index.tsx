@@ -178,7 +178,6 @@ const Dashbord = () => {
   };
   return (
     <>
-      <ActionsFab options={options} onChange={() => {}} selected={''} />
       <ScrollView contentContainerStyle={style.container}>
         <View style={style.header}>
           <Typography name='tableHeader' text='Inspections' />

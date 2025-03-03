@@ -2,12 +2,11 @@ import { mockedData } from '@/app/(tabs)/dashbord/hoses/[filter]/mocked';
 import { ListTable } from '@/components/dashboard/listTable';
 import { SelectedHoseCounter } from '@/components/dashboard/selectedHoseCounter';
 import { Typography } from '@/components/typography';
-import { ActionMenu } from '@/components/UI/ActionMenu';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconName } from '@/components/Icon/iconMapping';
+import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 
 interface Props {
   slug: string;
@@ -90,14 +89,14 @@ const Hose: React.FC<Props> = (props) => {
 
   return (
     <>
+      <ActionsFab
+        selected={action}
+        options={options}
+        onChange={onChangeAction}
+        menuTitle='Actions'
+      />
       <View style={style.header}>
         <Typography name='tableHeader' text={listTitle} style={style.title} />
-        <ActionMenu
-          selected={action}
-          options={options}
-          onChange={onChangeAction}
-          menuTitle='Actions'
-        />
         {action && (
           <View style={style.selectionCounter}>
             <SelectedHoseCounter
