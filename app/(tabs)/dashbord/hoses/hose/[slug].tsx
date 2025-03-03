@@ -162,7 +162,12 @@ const HoseDetails = () => {
   }, []);
   return (
     <>
-      <ActionsFab options={options} onChange={() => {}} selected={''} />
+      <ActionsFab
+        options={options}
+        onChange={() => {}}
+        selected={''}
+        // shortcuts={shortcuts}
+      />
       <View
         ref={detailsHeaderRef}
         onLayout={(event) => {
@@ -203,7 +208,9 @@ const HoseDetails = () => {
           RFid={hoseData.RFid}
         />
         {shortcuts.map((section) => (
-          <View key={section.id}>{section.content}</View>
+          <View key={section.id}>
+            {section.content} ref={}
+          </View>
         ))}
       </ScrollView>
     </>

@@ -2,14 +2,10 @@ import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
 import { colors } from '@/lib/tokens/colors';
 import { FC, useState } from 'react';
-import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { IconName } from '@/components/Icon/iconMapping';
 import { Section } from '@/app/(tabs)/dashbord/hoses/hose/[slug]';
-import {
-  SafeAreaProvider,
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Option<T> = {
   icon?: IconName;
@@ -50,6 +46,29 @@ export const ActionsFab: FC<Props<string>> = ({
       <Modal visible={isOpen} transparent style={{ zIndex: 1 }}>
         <Pressable onPress={() => setIsOpen(false)} style={style.modal}>
           <View style={[style.options, { bottom: 150 + insets.bottom }]}>
+            {shortcuts !== undefined && (
+              <View style={style.jumpToContainer} key='jumpTo'>
+                <Typography
+                  name='navigationBold'
+                  style={style.jumpToItem}
+                  text='Jump to:'
+                />
+                {shortcuts.map((section: any) => (
+                  <Pressable
+                    key={section.value}
+                    onPress={() => handleShortcutPress(section.id)}
+                    style={style.jumpToItem}
+                  >
+                    <Typography name='navigation' text={section.title} />
+                    <Icon
+                      name='ArrowRight'
+                      size='sm'
+                      color={colors.primary25}
+                    />
+                  </Pressable>
+                ))}
+              </View>
+            )}
             {options.map((option) => (
               <Pressable
                 key={option.value}
@@ -67,26 +86,6 @@ export const ActionsFab: FC<Props<string>> = ({
                 </View>
               </Pressable>
             ))}
-            {shortcuts !== undefined && (
-              <>
-                <View style={style.divider} />
-                <Typography style={style.boldText} name='navigation'>
-                  Jump to:
-                </Typography>
-                <View style={style.jumpToContainer} key='jumpTo'>
-                  {shortcuts.map((section: any) => (
-                    <Pressable
-                      key={section.value}
-                      onPress={() => handleShortcutPress(section.id)}
-                      style={style.jumpToItem}
-                    >
-                      <Typography name='navigation' text={section.title} />
-                      <Icon name='ArrowRight' size='sm' />
-                    </Pressable>
-                  ))}
-                </View>
-              </>
-            )}
           </View>
         </Pressable>
       </Modal>
@@ -154,17 +153,21 @@ const style = StyleSheet.create({
   boldText: {
     fontWeight: 'bold',
   },
-  divider: {
-    borderBottomWidth: 3,
-    borderBottomColor: colors.primary25,
-  },
+  divider: {},
   jumpToContainer: {
     marginLeft: 10,
-    gap: 8,
+    gap: 0,
+    borderBottomWidth: 3,
+    borderBottomColor: colors.primary25,
+    paddingBottom: 10,
   },
   jumpToItem: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
+    textAlign: 'right',
     alignItems: 'center',
+    width: '100%',
+    padding: 10,
+    gap: 10,
   },
 });
