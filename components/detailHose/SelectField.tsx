@@ -67,6 +67,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
             onSelect={handleSelect}
             selected={selectedValue}
             onClose={() => setModalOpen(false)}
+            title={label}
           />
         </SafeAreaView>
       </Modal>

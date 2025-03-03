@@ -16,6 +16,7 @@ interface PredefinedSelectProps {
   onSelect: (value: string) => void;
   selected: string;
   onClose: () => void;
+  title: string;
 }
 
 export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
@@ -23,10 +24,12 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
   onSelect,
   selected,
   onClose,
+  title,
 }) => {
   const [selectedValue, setSelectedValue] = useState(selected);
   const [initialValue, setInitialValue] = useState(selected);
   const [manualInput, setManualInput] = useState('');
+  const [searchText, setSearchText] = useState('');
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
 
@@ -79,14 +82,35 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
     setManualInput(text);
   };
 
-  const notStandardChoice = (selected: string) => {
-    return !options.some((option) => option.id === selected) && selected !== '';
-  };
+  const filteredOptions = options.filter((option) =>
+    option.label.toLowerCase().includes(searchText.toLowerCase()),
+  );
 
   return (
     <View style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Typography name='sectionHeader'>{title}</Typography>
+      </View>
+      {options.length > 0 && (
+        <View style={styles.helpTextContainer}>
+          <Typography name='navigationBold' text='Not sure what to choose?' />
+          <Typography
+            name='navigation'
+            text={
+              'Text, context-sensitive, for help or instructions/advice, related to what to chose in each spesific list.'
+            }
+          />
+          <Typography name='fieldLabel' text='Type to search:' />
+        </View>
+      )}
+      <TextInput
+        style={styles.searchInput}
+        placeholder='...'
+        value={searchText}
+        onChangeText={(text) => setSearchText(text)}
+      />
       <ScrollView ref={scrollViewRef}>
-        {options.map((option, i) => (
+        {filteredOptions.map((option, i) => (
           <Pressable
             key={i}
             style={[
@@ -192,5 +216,21 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 10,
     backgroundColor: colors.white,
+  },
+  searchInput: {
+    height: 40,
+    borderColor: colors.secondary95,
+    borderWidth: 1,
+    borderRadius: 5,
+    margin: 10,
+    paddingHorizontal: 20,
+    backgroundColor: colors.white,
+  },
+  titleContainer: {
+    paddingVertical: 30,
+    alignItems: 'center',
+  },
+  helpTextContainer: {
+    paddingHorizontal: 20,
   },
 });
