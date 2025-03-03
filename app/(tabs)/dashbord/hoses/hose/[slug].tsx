@@ -183,6 +183,12 @@ const HoseDetails = () => {
         onChangeText={setComment}
         multiline={true}
       />
+      <Input
+        label={'Comment:'}
+        value={comment}
+        onChangeText={setComment}
+        multiline={true}
+      />
       <ScrollView ref={scrollViewRef}>
         <GeneralInfo
           description={hoseData.Description}
