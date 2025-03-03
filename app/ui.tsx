@@ -457,20 +457,19 @@ const Ui = () => {
             <Input
               label={'Your full name'}
               value={''}
+              darkmode={true}
               icon={'User'}
               onChangeText={function (text: string): void {}}
             />
             <Input
               label={'Your full name'}
               value={''}
-              lightMode={true}
               icon={'User'}
               onChangeText={function (text: string): void {}}
             />
             <Input
               label={'Password'}
               value={''}
-              lightMode={true}
               icon={'User'}
               errorMessage='Password must be at least 8 characters long and include a number and a special character.'
               onChangeText={function (text: string): void {}}
@@ -478,7 +477,6 @@ const Ui = () => {
             <Input
               label={'TextArea'}
               value={''}
-              lightMode={true}
               multiline={true}
               onChangeText={function (text: string): void {}}
             />

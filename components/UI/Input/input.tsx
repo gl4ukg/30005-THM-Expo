@@ -15,7 +15,7 @@ interface Props {
   type?: string;
   multiline?: boolean;
   errorMessage?: string;
-  lightMode?: boolean;
+  darkmode?: boolean;
   onBlur?: () => void;
 }
 export const Input: React.FC<Props> = ({
@@ -28,7 +28,7 @@ export const Input: React.FC<Props> = ({
   multiline = false,
   type,
   errorMessage,
-  lightMode,
+  darkmode,
   onBlur,
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -60,7 +60,7 @@ export const Input: React.FC<Props> = ({
               style={[
                 styles.input,
                 errorMessage && styles.errorBorder,
-                lightMode && styles.lightMode,
+                darkmode && styles.darkmode,
               ]}
               value={value}
               onChangeText={onChangeText}
@@ -101,10 +101,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     borderWidth: 1,
     paddingVertical: 10,
-    backgroundColor: colors.inputBackground,
     position: 'relative',
     color: colors.extended333,
     borderColor: colors.extended666,
+    backgroundColor: colors.white,
   },
   outerView: {
     flexDirection: 'row',
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   errorBorder: {
     borderColor: colors.error,
   },
-  lightMode: {
-    backgroundColor: colors.white,
+  darkmode: {
+    backgroundColor: colors.inputBackground,
   },
 });

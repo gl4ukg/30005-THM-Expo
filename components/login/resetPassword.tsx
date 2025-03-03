@@ -31,7 +31,7 @@ export const ResetPassword: React.FC<Props> = () => {
 			</LoginHeader>
 		
             <View style={styles.form}>
-                <Input icon="Email" label="Your email (User ID)" placeHolder="ola@nordmann.no" value={email} onChangeText={setEmail} labelColor={colors.white}/>
+                <Input icon="Email" label="Your email (User ID)" placeHolder="ola@nordmann.no" value={email} onChangeText={setEmail} labelColor={colors.white} darkmode={true}/>
             </View>
             <ButtonTHS title={"RESET PASSWORD"} onPress={handleRequest} variant={"primary"} disabled={isButtonDisabled}/>
             <View style={styles.footer}>

@@ -42,6 +42,7 @@ export const CreateNewPassword: React.FC<Props> = () => {
 					label='Temporary password'
 					value={password}
 					onChangeText={setPassword}
+					darkmode={true}
 					labelColor='white'
 					type='password'
 				/>
@@ -50,6 +51,7 @@ export const CreateNewPassword: React.FC<Props> = () => {
 					label='Create new password'
 					value={password}
 					onChangeText={setPassword}
+					darkmode={true}
 					labelColor='white'
 					type='password'
 				/>
@@ -58,6 +60,7 @@ export const CreateNewPassword: React.FC<Props> = () => {
 					label='Confirm new password'
 					value={password}
 					onChangeText={setPassword}
+					darkmode={true}
 					labelColor='white'
 					type='password'
 				/>

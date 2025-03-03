@@ -44,12 +44,12 @@ export const RequestAccess: React.FC<Props> = () => {
         <View style={styles.container}>
             <LoginHeader header="REQUEST ACCESS"/>
             <View style={styles.form}>
-                <Input icon="Email" label="Your email (User ID)" placeHolder="ola@nordmann.no" value={email} onChangeText={setEmail} labelColor={colors.white}/>
-                <Input icon="User" label="Your full name" value={fullName} onChangeText={setFullName} labelColor={colors.white}/>
-                <Input icon="Phone" label="Your mobile number" value={mobileNumber} onChangeText={setMobileNumber} labelColor={colors.white}/>
-                <Input icon="Industry" label="Your company" value={company} onChangeText={setCompany} labelColor={colors.white}/>
+                <Input icon="Email" label="Your email (User ID)" placeHolder="ola@nordmann.no" value={email} onChangeText={setEmail} labelColor={colors.white} darkmode={true}/>
+                <Input icon="User" label="Your full name" value={fullName} onChangeText={setFullName} labelColor={colors.white} darkmode={true} />
+                <Input icon="Phone" label="Your mobile number" value={mobileNumber} onChangeText={setMobileNumber} labelColor={colors.white} darkmode={true}/>
+                <Input icon="Industry" label="Your company" value={company} onChangeText={setCompany} labelColor={colors.white} darkmode={true}/>
                 {units.map((unit, index) => (
-                    <Input key={index} icon="Task" label={index === 0 ?"Your unit (plant, vessel, rig)":`Unit ${index + 1}`} value={unit} onChangeText={(value) => updateUnitValue(index, value)} labelColor={colors.white}/>
+                    <Input key={index} icon="Task" label={index === 0 ?"Your unit (plant, vessel, rig)":`Unit ${index + 1}`} value={unit} onChangeText={(value) => updateUnitValue(index, value)} labelColor={colors.white} darkmode={true}/>
                 ))}
                 <View style={styles.buttonPlacement}>
                     <LinkButton title={"+ Add more units?"} variant={"dark"} onPress={addUnitField}/>

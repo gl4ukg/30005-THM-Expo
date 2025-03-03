@@ -52,6 +52,7 @@ export const LoginScreen: React.FC<Props> = () => {
 					placeHolder='ola@nordmann.no'
 					value={email}
 					onChangeText={setEmail}
+					darkmode={true}
 					labelColor='white'
 					onBlur={handleEmailBlur}
 				/>
@@ -60,6 +61,7 @@ export const LoginScreen: React.FC<Props> = () => {
 					label='Your full name'
 					value={fullName}
 					onChangeText={setFullName}
+					darkmode={true}
 					labelColor='white'
 					onBlur={handleNameBlur}
 				/>
@@ -68,6 +70,7 @@ export const LoginScreen: React.FC<Props> = () => {
 					label='Password'
 					value={password}
 					onChangeText={setPassword}
+					darkmode={true}
 					labelColor='white'
 					type='password'
 				/>
