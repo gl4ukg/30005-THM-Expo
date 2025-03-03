@@ -78,11 +78,11 @@ export const ActionMenu: FC<Props<string>> = ({
                 </Typography>
                 <View
                   style={style.jumpToContainer}
-                  key={`jumpTo${options.length}`}
+                  key={`jumpTo-${options.length}`}
                 >
-                  {shortcuts.map((section: any) => (
+                  {shortcuts.map((section: any, index: number) => (
                     <Pressable
-                      key={section.value}
+                      key={`${section.id}-${index}`}
                       onPress={() => handleShortcutPress(section.id)}
                       style={style.jumpToItem}
                     >

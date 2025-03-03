@@ -153,7 +153,7 @@ const HoseDetails = () => {
       >
         <SelectField
           label='Condition'
-          value={hoseData.condition}
+          value={''}
           onChange={() => {
             return;
           }}

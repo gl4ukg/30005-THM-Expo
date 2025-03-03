@@ -1,9 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  TextInput,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { colors } from '@/lib/tokens/colors';
 import { Typography } from '../typography';
 import { RadioButton } from './radioButton';
-import { Input } from '../UI/Input/input';
 
 interface PredefinedSelectProps {
   options: { id: string; label: string }[];
@@ -20,40 +26,69 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
 }) => {
   const [selectedValue, setSelectedValue] = useState(selected);
   const [initialValue, setInitialValue] = useState(selected);
-  const [inputValue, setInputValue] = useState('');
+  const [manualInput, setManualInput] = useState('');
+  const scrollViewRef = useRef<ScrollView>(null);
+  const textInputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     setInitialValue(selected);
     setSelectedValue(selected);
-  }, [selected]);
+    if (
+      !options.some((option) => option.id === selected) &&
+      selected !== 'N/A'
+    ) {
+      setManualInput(selected);
+      setSelectedValue('N/A');
+    } else {
+      setManualInput('');
+    }
+  }, [selected, options]);
 
   const handleSave = () => {
-    setSelectedValue(inputValue);
+    if (selectedValue === 'N/A' && manualInput.trim() !== '') {
+      onSelect(manualInput);
+    } else {
+      onSelect(selectedValue);
+    }
     onClose();
   };
 
   const handleCancel = () => {
     setSelectedValue(initialValue);
+    setManualInput('');
     onSelect(initialValue);
     onClose();
   };
 
   const handleOptionPress = (optionId: string) => {
     setSelectedValue(optionId);
+    setManualInput('');
     onSelect(optionId);
     onClose();
   };
 
   const handleNAPress = () => {
     setSelectedValue('N/A');
+    setTimeout(() => {
+      textInputRef.current?.focus();
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, 100);
+  };
+
+  const handleTextChange = (text: string) => {
+    setManualInput(text);
+  };
+
+  const notStandardChoice = (selected: string) => {
+    return !options.some((option) => option.id === selected) && selected !== '';
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        {options.map((option) => (
+      <ScrollView ref={scrollViewRef}>
+        {options.map((option, i) => (
           <Pressable
-            key={option.id}
+            key={i}
             style={[
               styles.option,
               selectedValue === option.id && styles.selectedOption,
@@ -80,47 +115,38 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
           <RadioButton
             isSelected={selectedValue === 'N/A'}
             onChange={() => handleNAPress()}
-            id={''}
+            id={'na'}
             label={'N/A'}
             menu
           />
         </Pressable>
         {selectedValue === 'N/A' && (
-          <View style={styles.manualInput}>
-            <Input
-              placeHolder='Add comment'
-              value={inputValue}
-              onChangeText={(value) => setInputValue(value)}
-              multiline
-              label='Comment:'
+          <KeyboardAvoidingView>
+            <TextInput
+              ref={textInputRef}
+              style={styles.manualInput}
+              placeholder='Enter manual option'
+              value={manualInput}
+              onChangeText={handleTextChange}
             />
-          </View>
+          </KeyboardAvoidingView>
         )}
       </ScrollView>
-      <Pressable />
       <View style={styles.buttonContainer}>
-        <Pressable style={styles.cancelButton} onPress={handleCancel}>
-          <Typography name={'button'} style={styles.cancelButtonText}>
-            Cancel
-          </Typography>
-        </Pressable>
         {selectedValue === 'N/A' && (
           <Pressable style={styles.saveButton} onPress={handleSave}>
-            <Typography name={'button'} style={styles.saveButtonText}>
-              Save & Close
-            </Typography>
+            <Typography name={'button'}>Save & Close</Typography>
           </Pressable>
         )}
+        <Pressable style={styles.cancelButton} onPress={handleCancel}>
+          <Typography name={'button'}>Cancel</Typography>
+        </Pressable>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  manualInput: {
-    width: '80%',
-    margin: 20,
-  },
   container: {
     width: '100%',
     maxHeight: '90%',
@@ -132,7 +158,6 @@ const styles = StyleSheet.create({
   option: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
     paddingHorizontal: 15,
   },
   optionText: {
@@ -140,26 +165,32 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   buttonContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-around',
+    alignItems: 'center',
     marginTop: 20,
   },
   saveButton: {
-    backgroundColor: colors.primary,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    borderColor: colors.primary,
+    paddingVertical: 14,
+    paddingHorizontal: 50,
     borderRadius: 5,
+    marginBottom: 10,
+    borderWidth: 2,
   },
-  saveButtonText: {
-    color: colors.white,
-  },
+
   cancelButton: {
-    backgroundColor: colors.secondary,
-    paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
-  cancelButtonText: {
-    color: colors.white,
+
+  manualInput: {
+    height: 40,
+    borderColor: colors.secondary95,
+    borderWidth: 1,
+    borderRadius: 5,
+    marginVertical: 10,
+    paddingHorizontal: 10,
+    backgroundColor: colors.white,
   },
 });
