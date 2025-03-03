@@ -16,8 +16,8 @@ import {
 
 const Ui = () => {
   const [iconsExpanded, setIconsExpanded] = useState(false);
-  const [typographyExpanded, setTypographyExpanded] = useState(true);
-  const [buttonsExpanded, setButtonsExpanded] = useState(true);
+  const [typographyExpanded, setTypographyExpanded] = useState(false);
+  const [buttonsExpanded, setButtonsExpanded] = useState(false);
   return (
     <SafeAreaView style={{ height: '100%', flex: 1 }}>
       <View

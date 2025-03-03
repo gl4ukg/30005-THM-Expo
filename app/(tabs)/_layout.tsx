@@ -11,7 +11,7 @@ import SubUnitSelect from '../../components/UI/TopBarNavigation/SubUnitSelect';
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
   return (
-    <SafeAreaProvider style={[styles.safeArea]}>
+    <>
       <StatusBar backgroundColor='#004637' style='light' />
       <View
         style={[
@@ -21,41 +21,22 @@ export default function TabLayout() {
           },
         ]}
       />
-      <SafeAreaView style={{ height: '100%', flex: 1 }}>
-        <SubUnitSelect />
-        <Tabs
-          screenOptions={{ headerShown: false }}
-          initialRouteName='dashbord'
-          tabBar={() => <></>}
-        >
-          <Tabs.Screen
-            name='user'
-            options={
-              {
-                // tabBarShowLabel: false,
-                // headerShadowVisible: false,
-                // headerShown: false,
-                // tabBarIcon: ({ color }) => (
-                //   <Icon name="User" color={color} size="md" />
-                // ),
-              }
-            }
-          />
-          <Tabs.Screen
-            name='dashbord'
-            options={
-              {
-                // title: "Dashbord",
-                // tabBarIcon: ({ color }) => (
-                //   <Icon name="Settings" color={color} size="md" />
-                // ),
-              }
-            }
-          ></Tabs.Screen>
-        </Tabs>
-      </SafeAreaView>
+      <SubUnitSelect />
+      <Tabs
+        screenOptions={{ headerShown: false }}
+        initialRouteName='dashbord'
+        tabBar={() => <></>}
+      >
+        <Tabs.Screen name='user' />
+        <Tabs.Screen
+          name='dashbord'
+          options={{
+            headerShown: false,
+          }}
+        ></Tabs.Screen>
+      </Tabs>
       <BottomNavigation />
-    </SafeAreaProvider>
+    </>
   );
 }
 

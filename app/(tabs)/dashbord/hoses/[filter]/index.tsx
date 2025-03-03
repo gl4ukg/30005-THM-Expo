@@ -89,7 +89,7 @@ const Hose: React.FC<Props> = (props) => {
   };
 
   return (
-    <SafeAreaView style={style.safeView}>
+    <>
       <View style={style.header}>
         <Typography name='tableHeader' text={listTitle} style={style.title} />
         <ActionMenu
@@ -110,8 +110,11 @@ const Hose: React.FC<Props> = (props) => {
           </View>
         )}
       </View>
-      <ListTable items={[...getFilteredHoses("filter").filteredList]} onSelectionChange={handleSelectionChange} />
-    </SafeAreaView>
+      <ListTable
+        items={[...getFilteredHoses('filter').filteredList]}
+        onSelectionChange={handleSelectionChange}
+      />
+    </>
   );
 };
 
