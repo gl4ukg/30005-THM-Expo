@@ -44,7 +44,6 @@ export const ActionsFab: FC<Props<string>> = ({
     scrollToSection?.(sectionId);
   };
   const insets = useSafeAreaInsets();
-  console.log(insets);
 
   return (
     <>
@@ -58,7 +57,13 @@ export const ActionsFab: FC<Props<string>> = ({
               >
                 <View key={option.value} style={style.option}>
                   <Typography name='navigation' text={option.label} />
-                  {option.icon && <Icon name={option.icon} size='sm' />}
+                  {option.icon && (
+                    <Icon
+                      name={option.icon}
+                      size='sm'
+                      color={colors.primary25}
+                    />
+                  )}
                 </View>
               </Pressable>
             ))}
@@ -94,11 +99,7 @@ export const ActionsFab: FC<Props<string>> = ({
           text={!!selected ? selected : 'Action'}
           style={style.buttonText}
         ></Typography>
-        {isOpen ? (
-          <Icon name='Cross' color={colors.white} />
-        ) : (
-          <Icon name='ChevronDown' color={colors.white} />
-        )}
+        {<Icon name={isOpen ? 'Cross' : 'ChevronDown'} color={colors.white} />}
       </Pressable>
     </>
   );
