@@ -2,9 +2,11 @@ import { BarChart, Primary, Secondary } from '@/components/dashboard';
 import { BarData } from '@/components/dashboard/barChart';
 import { Typography } from '@/components/typography';
 import { ActionMenu } from '@/components/UI/ActionMenu';
+import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const month: BarData = [
   {
@@ -147,7 +149,8 @@ const options = [
 const Dashbord = () => {
   const [selected, setSelected] =
     useState<(typeof options)[0]['value']>('month');
-
+  const insets = useSafeAreaInsets();
+  console.log('sss:', insets);
   const [barData, setBarData] = useState<BarData>(month);
   useEffect(() => {
     switch (selected) {
@@ -174,7 +177,8 @@ const Dashbord = () => {
     router.push(`/(tabs)/dashbord/hoses/hose/[${id}]`);
   };
   return (
-    <SafeAreaView style={style.safeView}>
+    <>
+      <ActionsFab options={options} onChange={() => {}} selected={''} />
       <ScrollView contentContainerStyle={style.container}>
         <View style={style.header}>
           <Typography name='tableHeader' text='Inspections' />
@@ -242,7 +246,7 @@ const Dashbord = () => {
           trend={1}
         />
       </ScrollView>
-    </SafeAreaView>
+    </>
   );
 };
 

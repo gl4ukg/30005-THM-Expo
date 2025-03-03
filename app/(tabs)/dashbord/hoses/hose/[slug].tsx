@@ -1,6 +1,9 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Text, StyleSheet, View, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import { mockedData } from '../[filter]/mocked';
 import React, { useRef, useState, useEffect } from 'react';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
@@ -13,6 +16,8 @@ import Documents from '@/components/detailView/Documents';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 import { RadioGroup } from '@/components/detailHose/radioGroup';
+import { ActionsFab } from '@/components/UI/ActionMenu/fab';
+import { IconName } from '@/components/Icon/iconMapping';
 
 export type Section = {
   id: string;
@@ -73,6 +78,16 @@ const HoseDetails = () => {
       });
     }
   };
+  const options: {
+    icon?: IconName;
+    label: string;
+    value: string;
+  }[] = [
+    { value: 'inspect', label: 'Inspect', icon: 'Inspect' },
+    { value: 'scrap', label: 'Scrap', icon: 'Trash' },
+    { value: 'requestForQuote', label: 'Request for quote', icon: 'Cart' },
+    { value: 'contactTessTeam', label: 'Contact TESS Team', icon: 'Email' },
+  ];
 
   const shortcuts: Section[] = [
     {
@@ -143,9 +158,9 @@ const HoseDetails = () => {
   useEffect(() => {
     setIsFirstRender(false);
   }, []);
-
   return (
-    <SafeAreaView style={styles.container}>
+    <>
+      <ActionsFab options={options} onChange={() => {}} selected={''} />
       <View
         ref={detailsHeaderRef}
         onLayout={(event) => {
@@ -160,15 +175,6 @@ const HoseDetails = () => {
           scrollToSection={scrollToSection}
         />
       </View>
-      <RadioGroup
-        label={'UV exposure'}
-        choices={[
-          { id: '1', label: 'internal, not exposed' },
-          { id: '2', label: 'Exposed' },
-        ]}
-        onChange={handleSelectionChange}
-        selected={selectedChoiceId}
-      />
       <ScrollView ref={scrollViewRef}>
         <GeneralInfo
           description={hoseData.Description}
@@ -183,14 +189,15 @@ const HoseDetails = () => {
           <View key={section.id}>{section.content}</View>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    position: 'relative',
   },
 });
 

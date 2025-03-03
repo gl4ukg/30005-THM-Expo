@@ -50,15 +50,6 @@ const DetailsHeader: React.FC<DetailsHeaderProps> = ({
               {formatDate(date)}
             </Typography>
           </Typography>
-          <ActionMenu
-            menuTitle='Actions'
-            selected={action}
-            options={options}
-            onChange={() => {}}
-            scrollToSection={scrollToSection}
-            detailPage
-            shortcuts={shortcuts}
-          />
         </View>
       </View>
     </>
