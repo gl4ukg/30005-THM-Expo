@@ -19,7 +19,7 @@ const Ui = () => {
   const [typographyExpanded, setTypographyExpanded] = useState(false);
   const [buttonsExpanded, setButtonsExpanded] = useState(false);
   return (
-    <SafeAreaView style={{ height: '100%', flex: 1 }}>
+    <>
       <View
         style={{
           padding: 20,
@@ -437,7 +437,7 @@ const Ui = () => {
           </View>
         </ScrollView>
       </View>
-    </SafeAreaView>
+    </>
   );
 };
 

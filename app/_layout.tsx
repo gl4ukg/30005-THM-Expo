@@ -12,6 +12,7 @@ export default function RootLayout() {
           <SafeAreaView style={styles.safeArea}>
             <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
             <Stack.Screen name='ui' options={{ headerShown: true }} />
+            <Stack.Screen name='scan' options={{ headerShown: true }} />
           </SafeAreaView>
         </Stack>
       </SafeAreaProvider>
