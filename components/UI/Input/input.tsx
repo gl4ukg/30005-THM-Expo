@@ -90,7 +90,7 @@ const InputInternal = forwardRef<TextInput, Props>(
                 style={[
                   styles.input,
                   isFocused && !disabled && styles.focusedBorder,
-                  displayError && styles.errorBorder,
+                  displayError && !isFocused && styles.errorBorder,
                   darkmode && styles.darkmode,
                   disabled && styles.disabled,
                 ]}
@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
   focusedBorder: {
     borderWidth: 2,
     borderColor: colors.primary,
+    paddingVertical: 9,
   },
   disabled: {
     opacity: 1 / 2,
