@@ -10,6 +10,7 @@ import {
 import { colors } from '@/lib/tokens/colors';
 import { Typography } from '../typography';
 import { RadioButton } from './radioButton';
+import { ButtonTHS } from '../UI';
 
 interface PredefinedSelectProps {
   options: { id: string; label: string }[];
@@ -111,24 +112,26 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
         onChangeText={(text) => setSearchText(text)}
       />
       <ScrollView ref={scrollViewRef}>
-        {filteredOptions.map((option, i) => (
-          <Pressable
-            key={i}
-            style={[
-              styles.option,
-              selectedValue === option.id && styles.selectedOption,
-            ]}
-            onPress={() => handleOptionPress(option.id)}
-          >
-            <RadioButton
-              isSelected={selectedValue === option.id}
-              onChange={() => handleOptionPress(option.id)}
-              id={''}
-              label={option.label}
-              menu
-            />
-          </Pressable>
-        ))}
+        {filteredOptions
+          .sort((a, b) => a.label.localeCompare(b.label))
+          .map((option, i) => (
+            <Pressable
+              key={i}
+              style={[
+                styles.option,
+                selectedValue === option.id && styles.selectedOption,
+              ]}
+              onPress={() => handleOptionPress(option.id)}
+            >
+              <RadioButton
+                isSelected={selectedValue === option.id}
+                onChange={() => handleOptionPress(option.id)}
+                id={''}
+                label={option.label}
+                menu
+              />
+            </Pressable>
+          ))}
         <Pressable
           key={'N/A'}
           style={[
@@ -159,13 +162,13 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
       </ScrollView>
       <View style={styles.buttonContainer}>
         {selectedValue === 'N/A' && (
-          <Pressable style={styles.saveButton} onPress={handleSave}>
-            <Typography name={'button'}>Save & Close</Typography>
-          </Pressable>
+          <ButtonTHS
+            title='Save & close'
+            onPress={handleSave}
+            variant='secondary'
+          />
         )}
-        <Pressable style={styles.cancelButton} onPress={handleCancel}>
-          <Typography name={'button'}>Cancel</Typography>
-        </Pressable>
+        <ButtonTHS title='cancel' onPress={handleCancel} variant='tertiary' />
       </View>
     </View>
   );
@@ -193,20 +196,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginTop: 20,
-  },
-  saveButton: {
-    borderColor: colors.primary,
-    paddingVertical: 14,
+    marginTop: 10,
     paddingHorizontal: 50,
-    borderRadius: 5,
-    marginBottom: 10,
-    borderWidth: 2,
-  },
-
-  cancelButton: {
-    paddingHorizontal: 20,
-    borderRadius: 5,
   },
 
   manualInput: {
