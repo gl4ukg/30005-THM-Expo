@@ -1,8 +1,8 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Text, StyleSheet, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { mockedData } from '../[filter]/mocked';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
 import GeneralInfo from '@/components/detailView/GeneralInfo';
 import Photos from '@/components/detailView/Photos';
