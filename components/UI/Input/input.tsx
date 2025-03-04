@@ -21,6 +21,7 @@ interface Props {
   type?: TextInputProps['inputMode'] | 'password' | 'textArea';
   errorMessage?: string;
   darkmode?: boolean;
+  disabled?: boolean;
 }
 export const Input: React.FC<Props> = ({
   icon,
@@ -32,8 +33,10 @@ export const Input: React.FC<Props> = ({
   type,
   errorMessage,
   darkmode,
+  disabled,
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prevState) => !prevState);
@@ -43,6 +46,7 @@ export const Input: React.FC<Props> = ({
 
   const [displayError, setDisplayError] = useState(false);
   const toggleUnfocused = () => {
+    setIsFocused(false);
     if (errorMessage) {
       setDisplayError(true);
     } else {
@@ -72,8 +76,10 @@ export const Input: React.FC<Props> = ({
             <TextInput
               style={[
                 styles.input,
-                displayError && styles.errorBorder,
+                isFocused && !disabled && styles.focusedBorder,
+                displayError && !disabled && styles.errorBorder,
                 darkmode && styles.darkmode,
+                disabled && styles.disabled,
               ]}
               value={value}
               onChangeText={onChangeText}
@@ -83,8 +89,10 @@ export const Input: React.FC<Props> = ({
               scrollEnabled={type !== 'textArea'}
               secureTextEntry={type === 'password' && !isPasswordVisible}
               onBlur={toggleUnfocused}
+              onFocus={() => setIsFocused(true)}
+              editable={!disabled}
             />
-            {type === 'password' && (
+            {type === 'password' && !disabled && (
               <Pressable
                 onPress={togglePasswordVisibility}
                 style={styles.iconContainer}
@@ -150,6 +158,13 @@ const styles = StyleSheet.create({
   },
   errorBorder: {
     borderColor: colors.error,
+  },
+  focusedBorder: {
+    borderWidth: 2,
+    borderColor: colors.primary,
+  },
+  disabled: {
+    backgroundColor: colors.secondary95,
   },
   darkmode: {
     backgroundColor: colors.inputBackground,

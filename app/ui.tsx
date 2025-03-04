@@ -496,6 +496,12 @@ const Ui = () => {
               />
             </View>
             <Input
+              label={'disabled'}
+              value={''}
+              onChangeText={() => {}}
+              disabled={true}
+            />
+            <Input
               label={'Password'}
               value={genericText}
               icon={'User'}
