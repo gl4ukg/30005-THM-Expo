@@ -5,13 +5,14 @@ import { LinkButton } from '@/components/UI/Button/linkButton';
 import { Input } from '@/components/UI/Input/input';
 import { colors } from '@/lib/tokens/colors';
 import { Link } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 
@@ -26,6 +27,7 @@ const Ui = () => {
   const [phone, setPhone] = useState('');
 
   const [error, setError] = useState<undefined | string>(undefined);
+  const inputRef = useRef<TextInput>(null);
 
   function handleChangeName(input: string) {
     setName(input);
@@ -489,9 +491,9 @@ const Ui = () => {
               <Input
                 label={'Your phone number'}
                 value={phone}
-                labelColor={colors.white}
                 icon={'Phone'}
                 type={'tel'}
+                darkmode={true}
                 onChangeText={setPhone}
               />
             </View>
@@ -502,12 +504,28 @@ const Ui = () => {
               disabled={true}
             />
             <Input
+              label={'disabled(dark)'}
+              value={phone}
+              disabled={true}
+              darkmode={true}
+              onChangeText={setPhone}
+            />
+            <ButtonTHS
+              title={'focus on password'}
+              onPress={() => {
+                if (inputRef.current) {
+                  inputRef.current?.focus();
+                }
+              }}
+            />
+            <Input
               label={'Password'}
               value={genericText}
               icon={'User'}
               type={'password'}
               errorMessage='Password must be at least 8 characters long and include a number and a special character.'
               onChangeText={setGenericText}
+              ref={inputRef}
             />
             <Input
               label={'TextArea'}

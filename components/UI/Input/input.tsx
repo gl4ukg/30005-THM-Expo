@@ -2,7 +2,7 @@ import { Icon } from '@/components/Icon/Icon';
 import { IconName } from '@/components/Icon/iconMapping';
 import { Typography } from '@/components/typography';
 import { colors } from '@/lib/tokens/colors';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, forwardRef, FC } from 'react';
 import {
   TextInput,
   StyleSheet,
@@ -17,106 +17,123 @@ interface Props {
   placeHolder?: string;
   value: string;
   onChangeText: (text: string) => void;
-  labelColor?: string;
   type?: TextInputProps['inputMode'] | 'password' | 'textArea';
   errorMessage?: string;
   darkmode?: boolean;
   disabled?: boolean;
 }
-export const Input: React.FC<Props> = ({
-  icon,
-  label,
-  placeHolder,
-  value,
-  onChangeText,
-  labelColor = colors.black,
-  type,
-  errorMessage,
-  darkmode,
-  disabled,
-}) => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
+const InputInternal = forwardRef<TextInput, Props>(
+  (
+    {
+      icon,
+      label,
+      placeHolder,
+      value,
+      onChangeText,
+      type,
+      errorMessage,
+      darkmode,
+      disabled,
+    },
+    ref: React.Ref<TextInput>,
+  ) => {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
 
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible((prevState) => !prevState);
-  };
+    const togglePasswordVisibility = () => {
+      setIsPasswordVisible((prevState) => !prevState);
+    };
 
-  const inputMode = type === 'password' || type === 'textArea' ? 'text' : type;
+    const inputMode =
+      type === 'password' || type === 'textArea' ? 'text' : type;
 
-  const [displayError, setDisplayError] = useState(false);
-  const toggleUnfocused = () => {
-    setIsFocused(false);
-    if (errorMessage) {
-      setDisplayError(true);
-    } else {
-      setDisplayError(false);
-    }
-  };
+    const [displayError, setDisplayError] = useState(false);
+    const toggleUnfocused = () => {
+      setIsFocused(false);
+      if (errorMessage) {
+        setDisplayError(true);
+      } else {
+        setDisplayError(false);
+      }
+    };
 
-  return (
-    <View>
-      <View style={styles.outerView}>
-        {icon && (
-          <View style={styles.iconWrapper}>
-            <Icon name={icon} size='md' color={labelColor} />
-          </View>
-        )}
-        <View style={styles.innerView}>
-          {label && (
-            <View>
-              <Typography
-                name='fieldLabel'
-                text={label}
-                style={{ color: labelColor }}
+    useEffect(() => {
+      if (ref && 'current' in ref && ref.current) {
+        ref.current.focus();
+      }
+    }, [ref]);
+
+    return (
+      <View>
+        <View style={styles.outerView}>
+          {icon && (
+            <View style={styles.iconWrapper}>
+              <Icon
+                name={icon}
+                size='md'
+                color={darkmode ? colors.white : colors.black}
               />
             </View>
           )}
-          <View>
-            <TextInput
-              style={[
-                styles.input,
-                isFocused && !disabled && styles.focusedBorder,
-                displayError && !disabled && styles.errorBorder,
-                darkmode && styles.darkmode,
-                disabled && styles.disabled,
-              ]}
-              value={value}
-              onChangeText={onChangeText}
-              placeholder={placeHolder}
-              inputMode={inputMode}
-              multiline={type === 'textArea'}
-              scrollEnabled={type !== 'textArea'}
-              secureTextEntry={type === 'password' && !isPasswordVisible}
-              onBlur={toggleUnfocused}
-              onFocus={() => setIsFocused(true)}
-              editable={!disabled}
-            />
-            {type === 'password' && !disabled && (
-              <Pressable
-                onPress={togglePasswordVisibility}
-                style={styles.iconContainer}
-              >
-                <Icon
-                  name={isPasswordVisible ? 'EyeOff' : 'Eye'}
-                  size='xsm'
-                  color={colors.extended666}
+          <View style={styles.innerView}>
+            {label && (
+              <View>
+                <Typography
+                  name='fieldLabel'
+                  text={label}
+                  style={{ color: darkmode ? colors.white : colors.black }}
                 />
-              </Pressable>
+              </View>
             )}
+            <View>
+              <TextInput
+                style={[
+                  styles.input,
+                  isFocused && !disabled && styles.focusedBorder,
+                  displayError && styles.errorBorder,
+                  darkmode && styles.darkmode,
+                  disabled && styles.disabled,
+                ]}
+                value={value}
+                onChangeText={onChangeText}
+                placeholder={placeHolder}
+                inputMode={inputMode}
+                multiline={type === 'textArea'}
+                scrollEnabled={type !== 'textArea'}
+                secureTextEntry={type === 'password' && !isPasswordVisible}
+                onBlur={toggleUnfocused}
+                onFocus={() => setIsFocused(true)}
+                editable={!disabled}
+                ref={ref}
+              />
+              {type === 'password' && !disabled && (
+                <Pressable
+                  onPress={togglePasswordVisibility}
+                  style={styles.iconContainer}
+                >
+                  <Icon
+                    name={isPasswordVisible ? 'EyeOff' : 'Eye'}
+                    size='xsm'
+                    color={colors.extended666}
+                  />
+                </Pressable>
+              )}
+            </View>
           </View>
         </View>
+        {displayError && (
+          <Typography
+            name={'navigation'}
+            text={errorMessage}
+            style={[styles.error, icon && styles.errorPaddingIfIcon]}
+          />
+        )}
       </View>
-      {displayError && (
-        <Typography
-          name={'navigation'}
-          text={errorMessage}
-          style={[styles.error, icon && styles.errorPaddingIfIcon]}
-        />
-      )}
-    </View>
-  );
-};
+    );
+  },
+);
+
+export const Input = InputInternal;
 
 const styles = StyleSheet.create({
   input: {
@@ -164,7 +181,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   disabled: {
-    backgroundColor: colors.secondary95,
+    opacity: 1 / 2,
   },
   darkmode: {
     backgroundColor: colors.inputBackground,
