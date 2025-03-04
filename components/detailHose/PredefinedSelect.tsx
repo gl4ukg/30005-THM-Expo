@@ -38,7 +38,8 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
     setSelectedValue(selected);
     if (
       !options.some((option) => option.id === selected) &&
-      selected !== 'N/A'
+      selected !== 'N/A' &&
+      selected !== ''
     ) {
       setManualInput(selected);
       setSelectedValue('N/A');
@@ -89,7 +90,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Typography name='sectionHeader'>{title}</Typography>
+        <Typography name='navigation'>{title}</Typography>
       </View>
       {options.length > 0 && (
         <View style={styles.helpTextContainer}>
