@@ -55,8 +55,6 @@ export const LoginScreen: React.FC<Props> = () => {
           value={email}
           onChangeText={setEmail}
           darkMode={true}
-          labelColor='white'
-          onBlur={handleEmailBlur}
         />
         <Input
           icon='User'
@@ -64,8 +62,6 @@ export const LoginScreen: React.FC<Props> = () => {
           value={fullName}
           onChangeText={setFullName}
           darkMode={true}
-          labelColor='white'
-          onBlur={handleNameBlur}
         />
         <Input
           icon='Password'
@@ -73,7 +69,6 @@ export const LoginScreen: React.FC<Props> = () => {
           value={password}
           onChangeText={setPassword}
           darkMode={true}
-          labelColor='white'
           type='password'
         />
       </View>

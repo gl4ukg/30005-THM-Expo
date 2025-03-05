@@ -50,7 +50,6 @@ export const RequestAccess: React.FC<Props> = () => {
           placeHolder='ola@nordmann.no'
           value={email}
           onChangeText={setEmail}
-          labelColor={colors.white}
           darkMode={true}
         />
         <Input
@@ -58,7 +57,6 @@ export const RequestAccess: React.FC<Props> = () => {
           label='Your full name'
           value={fullName}
           onChangeText={setFullName}
-          labelColor={colors.white}
           darkMode={true}
         />
         <Input
@@ -66,7 +64,6 @@ export const RequestAccess: React.FC<Props> = () => {
           label='Your mobile number'
           value={mobileNumber}
           onChangeText={setMobileNumber}
-          labelColor={colors.white}
           darkMode={true}
         />
         <Input
@@ -74,7 +71,6 @@ export const RequestAccess: React.FC<Props> = () => {
           label='Your company'
           value={company}
           onChangeText={setCompany}
-          labelColor={colors.white}
           darkMode={true}
         />
         {units.map((unit, index) => (
@@ -88,7 +84,6 @@ export const RequestAccess: React.FC<Props> = () => {
             }
             value={unit}
             onChangeText={(value) => updateUnitValue(index, value)}
-            labelColor={colors.white}
             darkMode={true}
           />
         ))}

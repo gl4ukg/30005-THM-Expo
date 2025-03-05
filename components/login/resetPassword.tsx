@@ -38,7 +38,6 @@ export const ResetPassword: React.FC<Props> = () => {
           placeHolder='ola@nordmann.no'
           value={email}
           onChangeText={setEmail}
-          labelColor={colors.white}
           darkMode={true}
         />
       </View>

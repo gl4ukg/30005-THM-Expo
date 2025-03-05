@@ -22,7 +22,7 @@ interface Props {
   darkMode?: boolean;
   disabled?: boolean;
 }
-const InputInternal = forwardRef<TextInput, Props>(
+export const Input = forwardRef<TextInput, Props>(
   (
     {
       icon,
@@ -136,8 +136,6 @@ const InputInternal = forwardRef<TextInput, Props>(
     );
   },
 );
-
-export const Input = InputInternal;
 
 const styles = StyleSheet.create({
   input: {

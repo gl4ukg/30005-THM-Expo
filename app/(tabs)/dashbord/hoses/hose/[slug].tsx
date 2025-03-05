@@ -14,6 +14,8 @@ import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 import { IconName } from '@/components/Icon/iconMapping';
+import { SelectField } from '@/components/detailHose/SelectField';
+import { condition } from '@/components/detailHose/data/lists';
 
 export type Section = {
   id: string;
