@@ -2,99 +2,191 @@ import { Icon } from '@/components/Icon/Icon';
 import { IconName } from '@/components/Icon/iconMapping';
 import { Typography } from '@/components/typography';
 import { colors } from '@/lib/tokens/colors';
-import { useState } from 'react';
-import { TextInput, StyleSheet, View, Pressable } from 'react-native';
+import { useState, useRef, useEffect, forwardRef, FC } from 'react';
+import {
+  TextInput,
+  StyleSheet,
+  View,
+  Pressable,
+  TextInputProps,
+} from 'react-native';
 
 interface Props {
-	icon: IconName;
-	label: string;
-	placeHolder?: string;
-	value: string;
-	onChangeText: (text: string) => void;
-	labelColor?: string;
-	type?: string;
-	onBlur?: () => void;
+  icon?: IconName;
+  label: string;
+  placeHolder?: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  type?: TextInputProps['inputMode'] | 'password' | 'textArea';
+  errorMessage?: string;
+  darkMode?: boolean;
+  disabled?: boolean;
 }
-export const Input: React.FC<Props> = ({
-	icon,
-	label,
-	placeHolder = '',
-	value,
-	onChangeText,
-	labelColor = 'black',
-	type,
-	onBlur,
-}) => {
-	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+export const Input = forwardRef<TextInput, Props>(
+  (
+    {
+      icon,
+      label,
+      placeHolder,
+      value,
+      onChangeText,
+      type,
+      errorMessage,
+      darkMode,
+      disabled,
+    },
+    ref: React.Ref<TextInput>,
+  ) => {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
 
-	const togglePasswordVisibility = () => {
-		setIsPasswordVisible((prevState) => !prevState);
-	};
+    const togglePasswordVisibility = () => {
+      setIsPasswordVisible((prevState) => !prevState);
+    };
 
-	return (
-		<View style={styles.outerView}>
-			{label && (
-				<View style={styles.labelView}>
-					<Typography
-						name='fieldLabel'
-						text={label}
-						style={{ color: labelColor }}
-					/>
-				</View>
-			)}
-			<View style={styles.innerView}>
-				{icon && <Icon name={icon} size='md' color={labelColor}/>}
-				<TextInput
-					style={styles.input}
-					value={value}
-					onChangeText={onChangeText}
-					placeholder={placeHolder}
-					secureTextEntry={type === 'password' && !isPasswordVisible}
-					onBlur={onBlur}
-				/>
-				{type === 'password' && (
-					<Pressable
-						onPress={togglePasswordVisibility}
-						style={styles.iconContainer}
-					>
-						<Icon
-							name={isPasswordVisible ? 'EyeOff' : 'Eye'}
-							size='xsm'
-							color={colors.passwordEyeIcon}
-						/>
-					</Pressable>
-				)}
-			</View>
-		</View>
-	);
-};
+    const inputMode =
+      type === 'password' || type === 'textArea' ? 'text' : type;
+
+    const [displayError, setDisplayError] = useState(false);
+    const toggleUnfocused = () => {
+      setIsFocused(false);
+      if (errorMessage) {
+        setDisplayError(true);
+      } else {
+        setDisplayError(false);
+      }
+    };
+
+    useEffect(() => {
+      if (ref && 'current' in ref && ref.current) {
+        ref.current.focus();
+      }
+    }, [ref]);
+
+    return (
+      <View>
+        <View style={styles.outerView}>
+          {icon && (
+            <View style={styles.iconWrapper}>
+              <Icon
+                name={icon}
+                size='md'
+                color={darkMode ? colors.white : colors.black}
+                styles={{ opacity: disabled ? 0.5 : 1 }}
+              />
+            </View>
+          )}
+          <View style={styles.innerView}>
+            {label && (
+              <View>
+                <Typography
+                  name='fieldLabel'
+                  text={label}
+                  style={{
+                    color: darkMode ? colors.white : colors.black,
+                    opacity: disabled ? 0.5 : 1,
+                  }}
+                />
+              </View>
+            )}
+            <View>
+              <TextInput
+                style={[
+                  styles.input,
+                  isFocused && !disabled && styles.focusedBorder,
+                  displayError && !isFocused && styles.errorBorder,
+                  darkMode && styles.darkMode,
+                  disabled && styles.disabled,
+                ]}
+                value={value}
+                onChangeText={onChangeText}
+                placeholder={placeHolder}
+                inputMode={inputMode}
+                multiline={type === 'textArea'}
+                scrollEnabled={type !== 'textArea'}
+                secureTextEntry={type === 'password' && !isPasswordVisible}
+                onBlur={toggleUnfocused}
+                onFocus={() => setIsFocused(true)}
+                editable={!disabled}
+                ref={ref}
+              />
+              {type === 'password' && !disabled && (
+                <Pressable
+                  onPress={togglePasswordVisibility}
+                  style={styles.iconContainer}
+                >
+                  <Icon
+                    name={isPasswordVisible ? 'EyeOff' : 'Eye'}
+                    size='xsm'
+                    color={colors.extended666}
+                  />
+                </Pressable>
+              )}
+            </View>
+          </View>
+        </View>
+        {displayError && (
+          <Typography
+            name={'navigation'}
+            text={errorMessage}
+            style={[styles.error, icon && styles.errorPaddingIfIcon]}
+          />
+        )}
+      </View>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
-	input: {
-		height: 38,
-		width: 245,
-		marginLeft: 2,
-		borderWidth: 0,
-		padding: 10,
-		backgroundColor: colors.inputBackground,
-		position: 'relative',
-	},
-	outerView: {
-		flexDirection: 'column',
-	},
-	innerView: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		gap:3
-	},
-	labelView: {
-		marginLeft: 37,
-		marginBottom:1,
-	},
-	iconContainer: {
-		position: 'absolute',
-		right: 10,
-		top: 10,
-		justifyContent: 'center',
-	},
+  input: {
+    paddingLeft: 10,
+    borderWidth: 1,
+    paddingVertical: 10,
+    position: 'relative',
+    color: colors.extended333,
+    borderColor: colors.extended666,
+    backgroundColor: colors.white,
+  },
+  outerView: {
+    flexDirection: 'row',
+    gap: 5,
+    width: '100%',
+  },
+  iconWrapper: {
+    justifyContent: 'flex-end',
+  },
+  innerView: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    flex: 1,
+    gap: 3,
+    position: 'relative',
+  },
+  iconContainer: {
+    position: 'absolute',
+    right: 10,
+    top: 11,
+    justifyContent: 'center',
+  },
+  error: {
+    color: colors.error,
+    paddingTop: 9,
+  },
+  errorPaddingIfIcon: {
+    paddingLeft: 37,
+  },
+  errorBorder: {
+    borderColor: colors.error,
+  },
+  focusedBorder: {
+    borderWidth: 2,
+    borderColor: colors.primary,
+    paddingVertical: 9,
+  },
+  disabled: {
+    opacity: 1 / 2,
+  },
+  darkMode: {
+    backgroundColor: colors.inputBackground,
+  },
 });

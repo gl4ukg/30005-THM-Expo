@@ -3,18 +3,32 @@ import { formatDate } from '@/lib/util/formatDate';
 import { View, Text, StyleSheet } from 'react-native';
 import { Icon } from '../Icon/Icon';
 import { Typography } from '../typography';
+import { ActionMenu } from '../UI/ActionMenu';
+import { useState } from 'react';
 
 type DetailsHeaderProps = {
   id: string;
   date: string;
+  shortcuts?: any;
   missingData?: boolean;
+  scrollToSection?: (sectionId: string) => void;
 };
 
 const DetailsHeader: React.FC<DetailsHeaderProps> = ({
   id,
   date,
   missingData,
+  shortcuts,
+  scrollToSection,
 }) => {
+  const [action, setAction] = useState<string | null>(null);
+
+  const options = [
+    { value: 'inspect', label: 'Inspect', icon: 'Inspect' },
+    { value: 'scrap', label: 'Scrap', icon: 'Trash' },
+    { value: 'requestForQuote', label: 'Request for quote', icon: 'Cart' },
+    { value: 'contactTessTeam', label: 'Contact TESS Team', icon: 'Email' },
+  ];
   return (
     <>
       <View style={styles.header}>
