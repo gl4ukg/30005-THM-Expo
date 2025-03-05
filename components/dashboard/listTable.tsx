@@ -2,9 +2,8 @@ import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { colors } from '@/lib/tokens/colors';
-import { FC, useEffect, useState } from 'react';
+import { FC, PureComponent, useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 
 interface Props {
@@ -17,28 +16,45 @@ interface Props {
     hasRFID?: boolean;
     hasAttachment?: boolean;
   }[];
+  selectedIds: string[];
+  canSelect?: boolean;
+  onSelectionChange?: (id: string) => void;
+  onSelectAll: () => void;
 }
 
 const spacing = {
   paddingBlock: 10,
 };
-export const ListTable: FC<
-  Props & { onSelectionChange?: (count: number) => void }
-> = ({ items, onSelectionChange }) => {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+export const ListTable: FC<Props> = ({
+  items,
+  selectedIds,
+  onSelectionChange,
+  canSelect,
+  onSelectAll,
+}) => {
   const router = useRouter();
-  useEffect(() => {
-    if (onSelectionChange) {
-      onSelectionChange(selectedIds.length);
-    }
-  }, [selectedIds]);
-
   const handleRowPress = (item: (typeof items)[0]) => {
     router.push(`/(tabs)/dashbord/hoses/hose/${item.id}?id=${item.id}`);
   };
 
   return (
     <View style={style.container}>
+      {canSelect && (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <Typography name='tableHeader' text='Select all:' />
+          <Checkbox
+            isChecked={selectedIds.length === items.length}
+            onChange={onSelectAll}
+          />
+        </View>
+      )}
+
       <View
         style={[
           style.tableHeader,
@@ -70,15 +86,8 @@ export const ListTable: FC<
           <Element
             item={item}
             isSelected={selectedIds.includes(item.id)}
-            onSelectedChange={
-              selectedIds.includes(item.id)
-                ? () =>
-                    setSelectedIds(selectedIds.filter((id) => id !== item.id))
-                : () => {
-                    setSelectedIds([...selectedIds, item.id]);
-                  }
-            }
-            canBeSelected={true}
+            onSelectedChange={onSelectionChange}
+            canBeSelected={canSelect}
             onRowPress={() => handleRowPress(item)}
           />
         )}
@@ -100,7 +109,7 @@ interface ElementProps {
   };
   canBeSelected?: boolean;
   isSelected?: boolean;
-  onSelectedChange?: () => void;
+  onSelectedChange?: (id: string) => void;
   onRowPress: () => void;
 }
 const Element: FC<ElementProps> = ({
@@ -110,7 +119,6 @@ const Element: FC<ElementProps> = ({
   onSelectedChange,
   onRowPress,
 }) => {
-  const [selected, setSelected] = useState<boolean>(isSelected || false);
   const {
     id,
     position,
@@ -121,15 +129,15 @@ const Element: FC<ElementProps> = ({
     hasRFID,
   } = item;
   const handleSelect = () => {
-    setSelected((selected) => !selected);
-    onSelectedChange && onSelectedChange();
+    if (!canBeSelected || !onSelectedChange) return;
+    onSelectedChange(id);
   };
   return (
     <Pressable onPress={onRowPress}>
       <View
         style={[
           elementStyle.container,
-          selected && elementStyle.containerSelected,
+          isSelected && elementStyle.containerSelected,
         ]}
       >
         <View style={elementStyle.columnOne}>
@@ -159,7 +167,7 @@ const Element: FC<ElementProps> = ({
         <View style={elementStyle.columnTwo}>
           <Typography
             name='tableContent'
-            text={item.position}
+            text={position}
             numberOfLines={1}
             ellipsizeMode='tail'
           />
@@ -167,8 +175,8 @@ const Element: FC<ElementProps> = ({
             <Typography
               name='tableContent'
               text={
-                item.condition.length
-                  ? item.condition
+                condition.length
+                  ? condition
                   : '44-Visible leakage - and some more defects'
               }
               style={elementStyle.subtitle}
@@ -176,14 +184,14 @@ const Element: FC<ElementProps> = ({
             />
             <Typography
               name='tableContentNumber'
-              text={item.lastInspection.length ? item.lastInspection : 'N/A'}
+              text={lastInspection.length ? lastInspection : 'N/A'}
               style={elementStyle.date}
             />
           </View>
         </View>
         <View style={elementStyle.columnThree}>
           {canBeSelected && (
-            <Checkbox isChecked={selected} onChange={handleSelect} />
+            <Checkbox isChecked={!!isSelected} onChange={handleSelect} />
           )}
         </View>
       </View>
@@ -236,6 +244,7 @@ const elementStyle = StyleSheet.create({
   },
   date: {
     width: 70,
+    textAlign: 'right',
   },
   checkbox: {
     width: 20,
@@ -255,7 +264,6 @@ const style = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     gap: 5,
-    paddingTop: 20,
     paddingBottom: 2,
     borderBottomColor: colors.black,
     borderBottomWidth: 1,
@@ -263,7 +271,6 @@ const style = StyleSheet.create({
   },
   label: {
     alignSelf: 'flex-start',
-    paddingTop: 20,
   },
   labelColumOne: { width: 70 },
   labelColumTwo: { flex: 1 },
