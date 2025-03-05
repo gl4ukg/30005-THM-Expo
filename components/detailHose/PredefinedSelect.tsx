@@ -11,6 +11,7 @@ import { colors } from '@/lib/tokens/colors';
 import { Typography } from '../typography';
 import { RadioButton } from './radioButton';
 import { ButtonTHS } from '../UI';
+import { Input } from '@/components/UI/Input/input';
 
 interface PredefinedSelectProps {
   options: { id: string; label: string }[];
@@ -90,11 +91,9 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Typography name='navigation'>{title}</Typography>
-      </View>
-      {options.length > 0 && (
-        <View style={styles.helpTextContainer}>
+      <View style={styles.headerContainer}>
+        <Typography name='navigation' text={title} style={styles.title} />
+        <View>
           <Typography name='navigationBold' text='Not sure what to choose?' />
           <Typography
             name='navigation'
@@ -102,21 +101,20 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
               'Text, context-sensitive, for help or instructions/advice, related to what to chose in each spesific list.'
             }
           />
-          <Typography name='fieldLabel' text='Type to search:' />
         </View>
-      )}
-      <TextInput
-        style={styles.searchInput}
-        placeholder='...'
-        value={searchText}
-        onChangeText={(text) => setSearchText(text)}
-      />
-      <ScrollView ref={scrollViewRef}>
+        <Input
+          value={searchText}
+          onChangeText={setSearchText}
+          label='Type to search:'
+          placeHolder='...'
+        />
+      </View>
+      <ScrollView ref={scrollViewRef} style={styles.optionsContainer}>
         {filteredOptions
           .sort((a, b) => a.label.localeCompare(b.label))
-          .map((option, i) => (
+          .map((option) => (
             <Pressable
-              key={i}
+              key={option.id}
               style={[
                 styles.option,
                 selectedValue === option.id && styles.selectedOption,
@@ -150,25 +148,34 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
         </Pressable>
         {selectedValue === 'N/A' && (
           <KeyboardAvoidingView>
-            <TextInput
-              ref={textInputRef}
-              style={styles.manualInput}
-              placeholder='Enter manual option'
+            <Input
+              // ref={textInputRef}
+              label='Comment:'
+              // style={styles.manualInput}
+              placeHolder='Enter manual option'
               value={manualInput}
               onChangeText={handleTextChange}
             />
           </KeyboardAvoidingView>
         )}
       </ScrollView>
-      <View style={styles.buttonContainer}>
+      <View style={styles.buttonsContainer}>
         {selectedValue === 'N/A' && (
           <ButtonTHS
             title='Save & close'
             onPress={handleSave}
             variant='secondary'
+            size='sm'
+            style={styles.button}
           />
         )}
-        <ButtonTHS title='cancel' onPress={handleCancel} variant='tertiary' />
+        <ButtonTHS
+          title='Cancel'
+          onPress={handleCancel}
+          variant='tertiary'
+          size='sm'
+          style={styles.button}
+        />
       </View>
     </View>
   );
@@ -176,9 +183,22 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 50,
+    gap: 20,
     width: '100%',
-    maxHeight: '90%',
   },
+  headerContainer: {
+    alignItems: 'stretch',
+    width: '100%',
+    gap: 20,
+  },
+  title: {
+    textAlign: 'center',
+    width: '100%',
+  },
+  optionsContainer: {},
   selectedOption: {
     borderRadius: 10,
     borderColor: colors.primary,
@@ -186,18 +206,11 @@ const styles = StyleSheet.create({
   option: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 15,
+    // paddingHorizontal: 15,
   },
   optionText: {
     fontSize: 16,
     marginLeft: 16,
-  },
-  buttonContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    marginTop: 10,
-    paddingHorizontal: 50,
   },
 
   manualInput: {
@@ -222,7 +235,14 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     alignItems: 'center',
   },
-  helpTextContainer: {
-    paddingHorizontal: 20,
+  buttonsContainer: {
+    paddingTop: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    gap: 20,
+  },
+  button: {
+    maxWidth: 220,
   },
 });
