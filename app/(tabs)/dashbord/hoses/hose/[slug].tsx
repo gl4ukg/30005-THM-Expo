@@ -12,10 +12,8 @@ import MaintananceInfo from '@/components/detailView/MaintananceInfo';
 import Documents from '@/components/detailView/Documents';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
-import { RadioGroup } from '@/components/detailHose/radioGroup';
-import { SelectField } from '@/components/detailHose/SelectField';
-import { condition } from '@/components/detailHose/data/lists';
-import { Input } from '@/components/UI/Input/input';
+import { ActionsFab } from '@/components/UI/ActionMenu/fab';
+import { IconName } from '@/components/Icon/iconMapping';
 
 export type Section = {
   id: string;
@@ -167,28 +165,6 @@ const HoseDetails = () => {
           scrollToSection={scrollToSection}
         />
       </View>
-      <RadioGroup
-        label={'UV exposure'}
-        choices={[
-          { id: '1', label: 'internal, not exposed' },
-          { id: '2', label: 'Exposed' },
-        ]}
-        onChange={handleSelectionChange}
-        selected={selectedChoiceId}
-        type={'horizontal'}
-      />
-      <Input
-        label={'Comment:'}
-        value={comment}
-        onChangeText={setComment}
-        multiline={true}
-      />
-      <Input
-        label={'Comment:'}
-        value={comment}
-        onChangeText={setComment}
-        multiline={true}
-      />
       <ScrollView ref={scrollViewRef}>
         <GeneralInfo
           description={hoseData.Description}
