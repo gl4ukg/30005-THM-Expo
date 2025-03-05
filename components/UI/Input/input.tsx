@@ -71,7 +71,7 @@ export const Input = forwardRef<TextInput, Props>(
               <Icon
                 name={icon}
                 size='md'
-                color={darkMode ? colors.white : colors.black}
+                color={darkMode ? colors.white : colors.extended333}
                 styles={{ opacity: disabled ? 0.5 : 1 }}
               />
             </View>
@@ -83,7 +83,7 @@ export const Input = forwardRef<TextInput, Props>(
                   name='fieldLabel'
                   text={label}
                   style={{
-                    color: darkMode ? colors.white : colors.black,
+                    color: darkMode ? colors.white : colors.extended333,
                     opacity: disabled ? 0.5 : 1,
                   }}
                 />
