@@ -12,10 +12,6 @@ import MaintananceInfo from '@/components/detailView/MaintananceInfo';
 import Documents from '@/components/detailView/Documents';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
-import { ActionsFab } from '@/components/UI/ActionMenu/fab';
-import { IconName } from '@/components/Icon/iconMapping';
-import { SelectField } from '@/components/detailHose/SelectField';
-import { condition } from '@/components/detailHose/data/lists';
 
 export type Section = {
   id: string;
@@ -57,13 +53,6 @@ const HoseDetails = () => {
     documents: documentsRef,
     structure: structureRef,
     history: historyRef,
-  };
-
-  const [selectedChoiceId, setSelectedChoiceId] = useState<string>('');
-  const [comment, setComment] = useState('');
-
-  const handleSelectionChange = (id: string) => {
-    setSelectedChoiceId(id);
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -150,15 +139,8 @@ const HoseDetails = () => {
         onLayout={(event) => {
           setHeaderHeight(event.nativeEvent.layout.height);
         }}
+        style={styles.header}
       >
-        <SelectField
-          label='Condition'
-          value={''}
-          onChange={() => {
-            return;
-          }}
-          options={condition.map((c) => ({ id: c, label: c }))}
-        />
         <DetailsHeader
           id={hoseData.id}
           date={hoseData.prodDate}
@@ -189,6 +171,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+  },
+  header: {
+    marginTop: -70,
   },
 });
 
