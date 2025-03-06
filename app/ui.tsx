@@ -1,3 +1,4 @@
+import { RadioGroup } from '@/components/detailHose/radioGroup';
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
 import { ButtonTHS } from '@/components/UI';
@@ -20,13 +21,16 @@ const Ui = () => {
   const [iconsExpanded, setIconsExpanded] = useState(false);
   const [typographyExpanded, setTypographyExpanded] = useState(false);
   const [buttonsExpanded, setButtonsExpanded] = useState(false);
-  const [inputsExpanded, setInputsExpanded] = useState(true);
+  const [inputsExpanded, setInputsExpanded] = useState(false);
+  const [radioBtnExpanded, setRadioBtnExpanded] = useState(true);
 
   const [name, setName] = useState('');
   const [genericText, setGenericText] = useState('');
   const [phone, setPhone] = useState('');
 
   const [error, setError] = useState<undefined | string>(undefined);
+  const [selectedChoiceId, setSelectedChoiceId] = useState<string>('');
+
   const inputRef = useRef<TextInput>(null);
 
   function handleChangeName(input: string) {
@@ -532,6 +536,32 @@ const Ui = () => {
               value={genericText}
               type={'textArea'}
               onChangeText={setGenericText}
+            />
+          </View>
+          <Pressable
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
+            onPress={() => setRadioBtnExpanded(!radioBtnExpanded)}
+          >
+            <Typography
+              text='Radio buttons'
+              name='sectionHeaderCapslock'
+              style={{ color: colors.black }}
+            />
+            {radioBtnExpanded ? (
+              <Icon name='ChevronDown' size='md' color={colors.black} />
+            ) : (
+              <Icon name='ChevronRight' size='md' color={colors.black} />
+            )}
+          </Pressable>
+          <View style={{ display: radioBtnExpanded ? 'flex' : 'none' }}>
+            <RadioGroup
+              label={'UV exposure'}
+              choices={[
+                { id: '1', label: 'internal, not exposed' },
+                { id: '2', label: 'Exposed' },
+              ]}
+              selected={selectedChoiceId}
+              onChange={setSelectedChoiceId}
             />
           </View>
         </ScrollView>
