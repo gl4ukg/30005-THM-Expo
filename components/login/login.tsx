@@ -12,11 +12,6 @@ import { emailValidation } from '@/lib/util/validation';
 interface Props {
   nextView: (page: 'login' | 'requestAccess') => void;
 }
-// check if inputs are valid
-// send a call to backend
-// respond to respond from backend
-// if success save user and responded token to context navigate to dashboard
-// else show error
 export const LoginScreen: React.FC<Props> = () => {
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
