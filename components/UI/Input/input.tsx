@@ -19,10 +19,10 @@ interface Props {
   onChangeText: (text: string) => void;
   type?: TextInputProps['inputMode'] | 'password' | 'textArea';
   errorMessage?: string;
-  darkmode?: boolean;
+  darkMode?: boolean;
   disabled?: boolean;
 }
-const InputInternal = forwardRef<TextInput, Props>(
+export const Input = forwardRef<TextInput, Props>(
   (
     {
       icon,
@@ -32,7 +32,7 @@ const InputInternal = forwardRef<TextInput, Props>(
       onChangeText,
       type,
       errorMessage,
-      darkmode,
+      darkMode,
       disabled,
     },
     ref: React.Ref<TextInput>,
@@ -71,7 +71,8 @@ const InputInternal = forwardRef<TextInput, Props>(
               <Icon
                 name={icon}
                 size='md'
-                color={darkmode ? colors.white : colors.black}
+                color={darkMode ? colors.white : colors.extended333}
+                styles={{ opacity: disabled ? 0.5 : 1 }}
               />
             </View>
           )}
@@ -81,7 +82,10 @@ const InputInternal = forwardRef<TextInput, Props>(
                 <Typography
                   name='fieldLabel'
                   text={label}
-                  style={{ color: darkmode ? colors.white : colors.black }}
+                  style={{
+                    color: darkMode ? colors.white : colors.extended333,
+                    opacity: disabled ? 0.5 : 1,
+                  }}
                 />
               </View>
             )}
@@ -91,7 +95,7 @@ const InputInternal = forwardRef<TextInput, Props>(
                   styles.input,
                   isFocused && !disabled && styles.focusedBorder,
                   displayError && !isFocused && styles.errorBorder,
-                  darkmode && styles.darkmode,
+                  darkMode && styles.darkMode,
                   disabled && styles.disabled,
                 ]}
                 value={value}
@@ -132,8 +136,6 @@ const InputInternal = forwardRef<TextInput, Props>(
     );
   },
 );
-
-export const Input = InputInternal;
 
 const styles = StyleSheet.create({
   input: {
@@ -184,7 +186,7 @@ const styles = StyleSheet.create({
   disabled: {
     opacity: 1 / 2,
   },
-  darkmode: {
+  darkMode: {
     backgroundColor: colors.inputBackground,
   },
 });

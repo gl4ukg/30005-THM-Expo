@@ -1,11 +1,8 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Text, StyleSheet, View, ScrollView } from 'react-native';
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { mockedData } from '../[filter]/mocked';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
 import GeneralInfo from '@/components/detailView/GeneralInfo';
 import Photos from '@/components/detailView/Photos';
@@ -17,6 +14,8 @@ import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 import { IconName } from '@/components/Icon/iconMapping';
+import { SelectField } from '@/components/detailHose/SelectField';
+import { condition } from '@/components/detailHose/data/lists';
 
 export type Section = {
   id: string;
@@ -36,7 +35,6 @@ const HoseDetails = () => {
   const detailsHeaderRef = useRef<View>(null);
 
   const { id } = useLocalSearchParams();
-  const [isFirstRender, setIsFirstRender] = useState(true);
   const [headerHeight, setHeaderHeight] = useState(0);
 
   const hoseData = mockedData.find((hose) => hose.id === id);
@@ -78,16 +76,6 @@ const HoseDetails = () => {
       });
     }
   };
-  const options: {
-    icon?: IconName;
-    label: string;
-    value: string;
-  }[] = [
-    { value: 'inspect', label: 'Inspect', icon: 'Inspect' },
-    { value: 'scrap', label: 'Scrap', icon: 'Trash' },
-    { value: 'requestForQuote', label: 'Request for quote', icon: 'Cart' },
-    { value: 'contactTessTeam', label: 'Contact TESS Team', icon: 'Email' },
-  ];
 
   const shortcuts: Section[] = [
     {
@@ -155,23 +143,22 @@ const HoseDetails = () => {
     },
   ];
 
-  useEffect(() => {
-    setIsFirstRender(false);
-  }, []);
   return (
-    <>
-      <ActionsFab
-        options={options}
-        onChange={() => {}}
-        selected={''}
-        // shortcuts={shortcuts}
-      />
+    <SafeAreaView style={styles.container}>
       <View
         ref={detailsHeaderRef}
         onLayout={(event) => {
           setHeaderHeight(event.nativeEvent.layout.height);
         }}
       >
+        <SelectField
+          label='Condition'
+          value={''}
+          onChange={() => {
+            return;
+          }}
+          options={condition.map((c) => ({ id: c, label: c }))}
+        />
         <DetailsHeader
           id={hoseData.id}
           date={hoseData.prodDate}
@@ -191,13 +178,18 @@ const HoseDetails = () => {
           RFid={hoseData.RFid}
         />
         {shortcuts.map((section) => (
-          <View key={section.id}>
-            {section.content} ref={}
-          </View>
+          <View key={section.id}>{section.content}</View>
         ))}
       </ScrollView>
-    </>
+    </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+});
 
 export default HoseDetails;

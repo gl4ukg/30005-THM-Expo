@@ -129,4 +129,27 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: 50,
   },
+  container: {
+    width: '100%',
+    flex: 1,
+    height: '100%',
+    maxWidth: 340,
+    marginHorizontal: 'auto',
+    padding: 20,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 50,
+  },
+  form: {
+    width: '100%',
+    gap: 15,
+    alignItems: 'center',
+  },
+  whiteText: {
+    color: colors.white,
+  },
+  footer: {
+    width: '100%',
+    gap: 50,
+  },
 });

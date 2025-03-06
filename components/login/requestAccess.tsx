@@ -111,6 +111,8 @@ export const RequestAccess: React.FC<Props> = () => {
 
   const isButtonDisabled =
     !email || !fullName || !mobileNumber || !company || !units;
+  const isButtonDisabled =
+    !email || !fullName || !mobileNumber || !company || !units;
 
   return (
     <View style={styles.container}>
@@ -121,23 +123,24 @@ export const RequestAccess: React.FC<Props> = () => {
           label='Your email (User ID)'
           placeHolder='ola@nordmann.no'
           value={email}
-          onChangeText={handleEmail}
+          onChangeText={setEmail}
+          labelColor={colors.white}
           darkmode={true}
-          errorMessage={emailError}
         />
         <Input
           icon='User'
           label='Your full name'
           value={fullName}
-          onChangeText={handleName}
+          onChangeText={setFullName}
+          labelColor={colors.white}
           darkmode={true}
-          errorMessage={nameError}
         />
         <Input
           icon='Phone'
           label='Your mobile number'
           value={mobileNumber}
           onChangeText={setMobileNumber}
+          labelColor={colors.white}
           darkmode={true}
         />
         <Input
@@ -145,6 +148,7 @@ export const RequestAccess: React.FC<Props> = () => {
           label='Your company'
           value={company}
           onChangeText={setCompany}
+          labelColor={colors.white}
           darkmode={true}
         />
         {units.map((unit, index) => (
@@ -158,6 +162,7 @@ export const RequestAccess: React.FC<Props> = () => {
             }
             value={unit}
             onChangeText={(value) => updateUnitValue(index, value)}
+            labelColor={colors.white}
             darkmode={true}
           />
         ))}

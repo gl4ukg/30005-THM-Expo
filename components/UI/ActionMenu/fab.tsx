@@ -14,7 +14,7 @@ type Option<T> = {
 };
 interface Props<T> {
   menuTitle?: string;
-  selected?: T | null;
+  selected: T | null;
   options: Option<T>[];
   onChange: (value: T) => void;
   scrollToSection?: (sectionId: string) => void;
@@ -95,7 +95,7 @@ export const ActionsFab: FC<Props<string>> = ({
       >
         <Typography
           name='navigation'
-          text={!!selected ? selected : 'Action'}
+          text={'Action'}
           style={style.buttonText}
         ></Typography>
         {<Icon name={isOpen ? 'Cross' : 'ChevronDown'} color={colors.white} />}
