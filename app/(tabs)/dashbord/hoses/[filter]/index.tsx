@@ -2,12 +2,12 @@ import { mockedData } from '@/app/(tabs)/dashbord/hoses/[filter]/mocked';
 import { ListTable } from '@/components/dashboard/listTable';
 import { SelectedHoseCounter } from '@/components/dashboard/selectedHoseCounter';
 import { Typography } from '@/components/typography';
-import { ActionMenu } from '@/components/UI/ActionMenu';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconName } from '@/components/Icon/iconMapping';
+import { ActionsFab } from '@/components/UI/ActionMenu/fab';
+import { colors } from '@/lib/tokens/colors';
 
 interface Props {
   slug: string;
@@ -55,63 +55,117 @@ const getFilteredHoses = (filter: string) => {
     filteredList: mockedList,
   };
 };
+const list = getFilteredHoses('all').filteredList;
 
 const Hose: React.FC<Props> = (props) => {
   const options = [
     {
       value: 'contactTessTeam',
       label: 'Contact TESS Team',
+      subtitle: '(add hoses to message)',
       icon: 'Email' as IconName,
     },
     {
       value: 'requestForQuote',
       label: 'Request for quote',
+      subtitle: '(add hoses to quote)',
       icon: 'Cart' as IconName,
     },
-    { value: 'scrapHoses', label: 'Scrap hoses', icon: 'Trash' as IconName },
+    {
+      value: 'scrapHoses',
+      label: 'Scrap hoses',
+      subtitle: '(add hoses to bin)',
+      icon: 'Trash' as IconName,
+    },
+    {
+      value: 'callToYourMother',
+      label: 'Call to your mother',
+      subtitle: '(add hoses for your mother)',
+      icon: 'Phone' as IconName,
+    },
   ];
-  const [action, setAction] = useState<string | null>(null);
+  const [action, setAction] = useState<{
+    value: string;
+    label: string;
+    subtitle: string;
+    icon: IconName;
+    actionSelectedItems: string[];
+  } | null>(null);
   const { filter } = useLocalSearchParams();
-  const [selectedCount, setSelectedCount] = useState(0);
-  const [icon, setIcon] = useState<IconName>('Cart');
 
   const { filteredList, listTitle, listLength } = getFilteredHoses(
     Array.isArray(filter) ? filter[0] : filter,
   );
 
   const onChangeAction = (value: string) => {
-    setAction(value);
-    const selectedOption = options.find((option) => option.value === value);
-    setIcon(selectedOption ? selectedOption.icon : 'Cart');
+    setAction({
+      value,
+      label: options.find((option) => option.value === value)?.label || '',
+      subtitle:
+        options.find((option) => option.value === value)?.subtitle || '',
+      icon: options.find((option) => option.value === value)?.icon || 'Cart',
+      actionSelectedItems: [],
+    });
   };
-  const handleSelectionChange = (count: number) => {
-    setSelectedCount(count);
+  const handleSelectionChange = (id: string) => {
+    if (action) {
+      setAction({
+        ...action,
+        actionSelectedItems: action.actionSelectedItems.includes(id)
+          ? action.actionSelectedItems.filter((item) => item !== id)
+          : [...action.actionSelectedItems, id],
+      });
+    }
   };
 
   return (
-    <SafeAreaView style={style.safeView}>
+    <>
+      <ActionsFab
+        selected={action?.value || null}
+        options={options}
+        onChange={onChangeAction}
+        menuTitle='Actions'
+      />
       <View style={style.header}>
-        <Typography name='tableHeader' text={listTitle} style={style.title} />
-        <ActionMenu
-          selected={action}
-          options={options}
-          onChange={onChangeAction}
-          menuTitle='Actions'
-        />
+        <Typography name='sectionHeader' text={listTitle} style={style.title} />
         {action && (
-          <View style={style.selectionCounter}>
-            <SelectedHoseCounter
-              icon={icon}
-              counter={selectedCount}
-              handlePress={function (): void {
-                console.log(`${selectedCount} items selected for ${action} `);
-              }}
-            />
+          <View style={style.selectedCounterContainer}>
+            <View style={style.selectedCounterTitle}>
+              <Typography name='navigation' text={action.label} />
+              <Typography
+                name='navigation'
+                text={action.subtitle || ''}
+                style={style.selectedCounterTitle}
+              />
+            </View>
+            <View style={style.selectionCounter}>
+              <SelectedHoseCounter
+                icon={action.icon}
+                counter={action.actionSelectedItems.length}
+                handlePress={() => {}}
+              />
+            </View>
           </View>
         )}
       </View>
-      <ListTable items={[...getFilteredHoses("filter").filteredList]} onSelectionChange={handleSelectionChange} />
-    </SafeAreaView>
+      <ListTable
+        items={list}
+        selectedIds={action?.actionSelectedItems || []}
+        onSelectionChange={handleSelectionChange}
+        canSelect={action !== null}
+        onSelectAll={() => {
+          if (action) {
+            setAction({
+              ...action,
+              actionSelectedItems:
+                action.actionSelectedItems.length === listLength
+                  ? []
+                  : [...filteredList.map((item) => item.id)],
+            });
+          }
+        }}
+      />
+    </>
   );
 };
 
@@ -131,7 +185,6 @@ const style = StyleSheet.create({
     width: '100%',
     position: 'relative',
     alignItems: 'center',
-    // justifyContent: "space-evenly",
     padding: 0,
     gap: 12,
     flexDirection: 'row',
@@ -146,8 +199,22 @@ const style = StyleSheet.create({
   title: {
     marginBottom: 6,
   },
-  selectionCounter: {
+  selectedCounterContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
     width: '100%',
+  },
+  selectedCounterTitle: {
+    alignItems: 'center',
+  },
+  selectedCounterSubtitle: {
+    color: colors.extended666,
+  },
+  selectionCounter: {
     alignItems: 'flex-end',
+    position: 'absolute',
+    right: 0,
   },
 });

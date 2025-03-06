@@ -59,7 +59,7 @@ export const ActionMenu: FC<Props<string>> = ({
       <Modal visible={isOpen} transparent>
         <Pressable onPress={() => setIsOpen(false)} style={style.modal}>
           <View style={style.options}>
-            {options.map((option) => (
+            {options.map((option, i) => (
               <Pressable
                 key={option.value}
                 onPress={() => handleChange(option.value)}
@@ -76,10 +76,13 @@ export const ActionMenu: FC<Props<string>> = ({
                 <Typography style={style.boldText} name='navigation'>
                   Jump to:
                 </Typography>
-                <View style={style.jumpToContainer} key='jumpTo'>
-                  {shortcuts.map((section: any) => (
+                <View
+                  style={style.jumpToContainer}
+                  key={`jumpTo-${options.length}`}
+                >
+                  {shortcuts.map((section: any, index: number) => (
                     <Pressable
-                      key={section.value}
+                      key={`${section.id}-${index}`}
                       onPress={() => handleShortcutPress(section.id)}
                       style={style.jumpToItem}
                     >

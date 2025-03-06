@@ -1,8 +1,8 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Text, StyleSheet, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { mockedData } from '../[filter]/mocked';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
 import GeneralInfo from '@/components/detailView/GeneralInfo';
 import Photos from '@/components/detailView/Photos';
@@ -12,7 +12,10 @@ import MaintananceInfo from '@/components/detailView/MaintananceInfo';
 import Documents from '@/components/detailView/Documents';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
-import { RadioGroup } from '@/components/detailHose/radioGroup';
+import { ActionsFab } from '@/components/UI/ActionMenu/fab';
+import { IconName } from '@/components/Icon/iconMapping';
+import { SelectField } from '@/components/detailHose/SelectField';
+import { condition } from '@/components/detailHose/data/lists';
 
 export type Section = {
   id: string;
@@ -32,7 +35,6 @@ const HoseDetails = () => {
   const detailsHeaderRef = useRef<View>(null);
 
   const { id } = useLocalSearchParams();
-  const [isFirstRender, setIsFirstRender] = useState(true);
   const [headerHeight, setHeaderHeight] = useState(0);
 
   const hoseData = mockedData.find((hose) => hose.id === id);
@@ -58,6 +60,7 @@ const HoseDetails = () => {
   };
 
   const [selectedChoiceId, setSelectedChoiceId] = useState<string>('');
+  const [comment, setComment] = useState('');
 
   const handleSelectionChange = (id: string) => {
     setSelectedChoiceId(id);
@@ -140,10 +143,6 @@ const HoseDetails = () => {
     },
   ];
 
-  useEffect(() => {
-    setIsFirstRender(false);
-  }, []);
-
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -152,6 +151,14 @@ const HoseDetails = () => {
           setHeaderHeight(event.nativeEvent.layout.height);
         }}
       >
+        <SelectField
+          label='Condition'
+          value={''}
+          onChange={() => {
+            return;
+          }}
+          options={condition.map((c) => ({ id: c, label: c }))}
+        />
         <DetailsHeader
           id={hoseData.id}
           date={hoseData.prodDate}

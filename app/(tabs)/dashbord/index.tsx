@@ -2,9 +2,11 @@ import { BarChart, Primary, Secondary } from '@/components/dashboard';
 import { BarData } from '@/components/dashboard/barChart';
 import { Typography } from '@/components/typography';
 import { ActionMenu } from '@/components/UI/ActionMenu';
+import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const month: BarData = [
   {
@@ -147,6 +149,7 @@ const options = [
 const Dashbord = () => {
   const [selected, setSelected] =
     useState<(typeof options)[0]['value']>('month');
+  const insets = useSafeAreaInsets();
 
   const [barData, setBarData] = useState<BarData>(month);
   useEffect(() => {
@@ -174,7 +177,7 @@ const Dashbord = () => {
     router.push(`/(tabs)/dashbord/hoses/hose/[${id}]`);
   };
   return (
-    <SafeAreaView style={style.safeView}>
+    <>
       <ScrollView contentContainerStyle={style.container}>
         <View style={style.header}>
           <Typography name='tableHeader' text='Inspections' />
@@ -242,7 +245,7 @@ const Dashbord = () => {
           trend={1}
         />
       </ScrollView>
-    </SafeAreaView>
+    </>
   );
 };
 
@@ -257,18 +260,14 @@ const style = StyleSheet.create({
     padding: 20,
   },
   header: {
-    // width: "100%",
     alignItems: 'center',
     padding: 20,
     gap: 6,
-    // borderColor: "#009640",
-    // borderWidth: 2,
   },
   menu: {
     width: '100%',
     position: 'relative',
     alignItems: 'center',
-    // justifyContent: "space-evenly",
     padding: 0,
     gap: 12,
     flexDirection: 'row',
