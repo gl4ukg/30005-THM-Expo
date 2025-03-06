@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { colors } from '@/lib/tokens/colors';
 import { Icon } from '../Icon/Icon';
 import { Typography } from '../typography';
@@ -40,12 +40,12 @@ const Documents = () => {
       {documents.map((doc) => (
         <DocumentItem key={doc.id} id={doc.id} name={doc.name} />
       ))}
-      <TouchableOpacity style={styles.addDocumentButton}>
+      <Pressable style={styles.addDocumentButton}>
         <Icon name='Plus' size='xsm' color={colors.primary} />
         <Typography name='button' style={styles.addDocumentButtonText}>
           Add document
         </Typography>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };
