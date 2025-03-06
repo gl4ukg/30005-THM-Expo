@@ -9,7 +9,6 @@ type DetailsHeaderProps = {
   date: string;
   shortcuts?: any;
   missingData?: boolean;
-  scrollToSection?: (sectionId: string) => void;
 };
 
 const DetailsHeader: React.FC<DetailsHeaderProps> = ({

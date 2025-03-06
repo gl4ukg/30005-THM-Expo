@@ -1,116 +1,89 @@
-import { useLocalSearchParams } from 'expo-router';
-import { Text, StyleSheet, View, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { mockedData } from '../[filter]/mocked';
 import React, { useRef, useState } from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
 import GeneralInfo from '@/components/detailView/GeneralInfo';
-import Photos from '@/components/detailView/Photos';
-import HoseModule from '@/components/detailView/HoseModule';
-import TessPartNumbers from '@/components/detailView/TessPartNumbers';
-import MaintananceInfo from '@/components/detailView/MaintananceInfo';
-import Documents from '@/components/detailView/Documents';
+import { ButtonTHS } from '@/components/UI';
+import { useLocalSearchParams } from 'expo-router';
+import { mockedData } from '../[filter]/mocked';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 
-export type Section = {
-  id: string;
-  title: string;
-  content: React.ReactNode;
-};
-
 const HoseDetails = () => {
-  const scrollViewRef = useRef<ScrollView>(null);
-  const photosRef = useRef<View>(null);
-  const hoseModuleRef = useRef<View>(null);
-  const tessPartNumbersRef = useRef<View>(null);
-  const maintenanceInfoRef = useRef<View>(null);
-  const documentsRef = useRef<View>(null);
-  const structureRef = useRef<View>(null);
-  const historyRef = useRef<View>(null);
-  const detailsHeaderRef = useRef<View>(null);
-
-  const { id } = useLocalSearchParams();
+  const { slug } = useLocalSearchParams();
+  const hoseData = mockedData.find((hose) => hose.id === slug);
   const [headerHeight, setHeaderHeight] = useState(0);
+  const detailsHeaderRef = useRef(null);
+  const scrollViewRef = useRef(null);
+  const structureRef = useRef(null);
+  const historyRef = useRef(null);
 
-  const hoseData = mockedData.find((hose) => hose.id === id);
+  const [editMode, setEditMode] = useState(false);
+  const [editedHoseData, setEditedHoseData] = useState({
+    Description: hoseData?.Description || '',
+    customerId: hoseData?.customerId || '',
+    s1PlantVesselUnit: hoseData?.s1PlantVesselUnit || '',
+    S2Equipment: hoseData?.S2Equipment || '',
+    equipmentSubunit: hoseData?.equipmentSubunit || '',
+    otherInfo: hoseData?.otherInfo || '',
+    RFid: hoseData?.RFid || '',
+    pollutionExposure: hoseData?.pollutionExposure || 'internal',
+    uvExposure: hoseData?.uvExposure || 'internal',
+  });
 
-  if (!hoseData) {
-    return <Text>Hose not found</Text>;
-  }
+  const handleInputChange = (field, value) => {
+    setEditedHoseData({
+      ...editedHoseData,
+      [field]: value,
+    });
+  };
 
-  const checkMissingData = (hose: any): boolean => {
-    return Object.values(hose).some(
-      (value) => value === null || value === undefined || value === '',
+  const toggleEditMode = () => {
+    setEditMode(!editMode);
+  };
+
+  const handleSave = () => {
+    console.log('Saving data:', editedHoseData);
+    setEditMode(false);
+  };
+
+  const checkMissingData = (hoseData) => {
+    return (
+      !hoseData.Description ||
+      !hoseData.customerId ||
+      !hoseData.s1PlantVesselUnit ||
+      !hoseData.S2Equipment ||
+      !hoseData.equipmentSubunit ||
+      !hoseData.otherInfo ||
+      !hoseData.RFid
     );
   };
 
-  const sectionRefs = {
-    photos: photosRef,
-    hoseModule: hoseModuleRef,
-    tessPartNumbers: tessPartNumbersRef,
-    maintenanceInfo: maintenanceInfoRef,
-    documents: documentsRef,
-    structure: structureRef,
-    history: historyRef,
-  };
-
-  const scrollToSection = (sectionId: string) => {
-    const ref = sectionRefs[sectionId as keyof typeof sectionRefs];
-
-    if (ref?.current) {
-      ref.current.measure((x, y, width, height, pageX, pageY) => {
-        const adjustedY = pageY - headerHeight; // Subtract header height
-        scrollViewRef.current?.scrollTo({ y: adjustedY, animated: true });
-      });
-    }
-  };
-
-  const shortcuts: Section[] = [
+  const shortcuts = [
     {
       id: 'photos',
       title: 'Photos',
-      content: (
-        <View ref={photosRef}>
-          <Photos />
-        </View>
-      ),
+      content: <View></View>,
     },
     {
       id: 'hoseModule',
       title: 'Hose module',
-      content: (
-        <View ref={hoseModuleRef}>
-          <HoseModule />
-        </View>
-      ),
+      content: <View></View>,
     },
     {
       id: 'tessPartNumbers',
       title: 'TESS Part Numbers',
-      content: (
-        <View ref={tessPartNumbersRef}>
-          <TessPartNumbers />
-        </View>
-      ),
+      content: <View></View>,
     },
     {
       id: 'maintenanceInfo',
       title: 'Maintenance info',
-      content: (
-        <View ref={maintenanceInfoRef}>
-          <MaintananceInfo />
-        </View>
-      ),
+      content: <View></View>,
     },
     {
       id: 'documents',
       title: 'Documents',
-      content: (
-        <View ref={documentsRef}>
-          <Documents />
-        </View>
-      ),
+      content: <View></View>,
     },
     {
       id: 'structure',
@@ -146,18 +119,35 @@ const HoseDetails = () => {
           date={hoseData.prodDate}
           missingData={checkMissingData(hoseData)}
           shortcuts={shortcuts}
-          scrollToSection={scrollToSection}
         />
+        <ButtonTHS
+          title={editMode ? 'Cancel Edit' : 'Edit'}
+          onPress={toggleEditMode}
+          variant='primary'
+          size='sm'
+        />
+        {editMode && (
+          <ButtonTHS
+            title='Save'
+            onPress={handleSave}
+            variant='secondary'
+            size='sm'
+          />
+        )}
       </View>
       <ScrollView ref={scrollViewRef}>
         <GeneralInfo
-          description={hoseData.Description}
-          customerId={hoseData.customerId}
-          s1PlantVesselUnit={hoseData.s1PlantVesselUnit}
-          S2Equipment={hoseData.S2Equipment}
-          equipmentSubunit={hoseData.equipmentSubunit}
-          otherInfo={hoseData.otherInfo}
-          RFid={hoseData.RFid}
+          description={editedHoseData.Description}
+          customerId={editedHoseData.customerId}
+          s1PlantVesselUnit={editedHoseData.s1PlantVesselUnit}
+          S2Equipment={editedHoseData.S2Equipment}
+          equipmentSubunit={editedHoseData.equipmentSubunit}
+          otherInfo={editedHoseData.otherInfo}
+          RFid={editedHoseData.RFid}
+          editMode={editMode}
+          onInputChange={handleInputChange}
+          pollutionExposure={editedHoseData.pollutionExposure}
+          uvExposure={editedHoseData.uvExposure}
         />
         {shortcuts.map((section) => (
           <View key={section.id}>{section.content}</View>
