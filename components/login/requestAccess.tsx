@@ -111,8 +111,6 @@ export const RequestAccess: React.FC<Props> = () => {
 
   const isButtonDisabled =
     !email || !fullName || !mobileNumber || !company || !units;
-  const isButtonDisabled =
-    !email || !fullName || !mobileNumber || !company || !units;
 
   return (
     <View style={styles.container}>
@@ -123,33 +121,31 @@ export const RequestAccess: React.FC<Props> = () => {
           label='Your email (User ID)'
           placeHolder='ola@nordmann.no'
           value={email}
-          onChangeText={setEmail}
-          labelColor={colors.white}
-          darkmode={true}
+          onChangeText={handleEmail}
+          errorMessage={emailError}
+          darkMode={true}
         />
         <Input
           icon='User'
           label='Your full name'
           value={fullName}
-          onChangeText={setFullName}
-          labelColor={colors.white}
-          darkmode={true}
+          onChangeText={handleName}
+          errorMessage={nameError}
+          darkMode={true}
         />
         <Input
           icon='Phone'
           label='Your mobile number'
           value={mobileNumber}
           onChangeText={setMobileNumber}
-          labelColor={colors.white}
-          darkmode={true}
+          darkMode={true}
         />
         <Input
           icon='Industry'
           label='Your company'
           value={company}
           onChangeText={setCompany}
-          labelColor={colors.white}
-          darkmode={true}
+          darkMode={true}
         />
         {units.map((unit, index) => (
           <Input
@@ -162,8 +158,7 @@ export const RequestAccess: React.FC<Props> = () => {
             }
             value={unit}
             onChangeText={(value) => updateUnitValue(index, value)}
-            labelColor={colors.white}
-            darkmode={true}
+            darkMode={true}
           />
         ))}
         <View style={styles.buttonPlacement}>

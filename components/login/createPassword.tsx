@@ -86,7 +86,7 @@ export const CreateNewPassword: React.FC<Props> = () => {
           label='Temporary password'
           value={tempPassword}
           onChangeText={setTempPassword}
-          darkmode={true}
+          darkMode={true}
           type='password'
         />
         <Input
@@ -95,7 +95,7 @@ export const CreateNewPassword: React.FC<Props> = () => {
           value={newPassword}
           onChangeText={handleNewPassword}
           errorMessage={newError}
-          darkmode={true}
+          darkMode={true}
           type='password'
         />
         <Input
@@ -104,7 +104,7 @@ export const CreateNewPassword: React.FC<Props> = () => {
           value={confirmPassword}
           onChangeText={comparePasswords}
           errorMessage={confirmError}
-          darkmode={true}
+          darkMode={true}
           type='password'
         />
       </View>

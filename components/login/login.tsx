@@ -67,7 +67,7 @@ export const LoginScreen: React.FC<Props> = () => {
           placeHolder='ola@nordmann.no'
           value={email}
           onChangeText={handleEmail}
-          darkmode={true}
+          darkMode={true}
           errorMessage={emailError}
         />
         <Input
@@ -75,7 +75,7 @@ export const LoginScreen: React.FC<Props> = () => {
           label='Your full name'
           value={fullName}
           onChangeText={handleName}
-          darkmode={true}
+          darkMode={true}
           errorMessage={nameError}
         />
         <Input
@@ -83,7 +83,7 @@ export const LoginScreen: React.FC<Props> = () => {
           label='Password'
           value={password}
           onChangeText={setPassword}
-          darkmode={true}
+          darkMode={true}
           type='password'
         />
       </View>
@@ -106,29 +106,6 @@ export const LoginScreen: React.FC<Props> = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    flex: 1,
-    height: '100%',
-    maxWidth: 340,
-    marginHorizontal: 'auto',
-    padding: 20,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 50,
-  },
-  form: {
-    width: '100%',
-    gap: 15,
-    alignItems: 'center',
-  },
-  whiteText: {
-    color: colors.white,
-  },
-  footer: {
-    width: '100%',
-    gap: 50,
-  },
   container: {
     width: '100%',
     flex: 1,

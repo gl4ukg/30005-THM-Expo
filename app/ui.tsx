@@ -595,6 +595,7 @@ const Ui = () => {
                 ]}
                 selected={selectedChoiceId}
                 onChange={setSelectedChoiceId}
+                type={'horizontal'}
               />
             </View>
           </ScrollView>
