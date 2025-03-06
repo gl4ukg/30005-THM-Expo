@@ -2,7 +2,7 @@ import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { colors } from '@/lib/tokens/colors';
-import { FC, PureComponent, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
@@ -82,6 +82,7 @@ export const ListTable: FC<Props> = ({
       </View>
       <FlatList
         data={items}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <Element
             item={item}
@@ -91,7 +92,6 @@ export const ListTable: FC<Props> = ({
             onRowPress={() => handleRowPress(item)}
           />
         )}
-        keyExtractor={(item) => item.id}
       />
     </View>
   );

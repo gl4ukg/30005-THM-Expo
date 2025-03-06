@@ -7,7 +7,6 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconName } from '@/components/Icon/iconMapping';
 import { ActionsFab } from '@/components/UI/ActionMenu/fab';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { colors } from '@/lib/tokens/colors';
 
 interface Props {
