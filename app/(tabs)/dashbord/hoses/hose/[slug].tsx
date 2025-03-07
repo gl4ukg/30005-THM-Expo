@@ -9,9 +9,38 @@ import { mockedData } from '../[filter]/mocked';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 
+type HoseData = {
+  customerId: string;
+  id: string;
+  prodDate: string;
+  Department: string;
+  Description: string;
+  Status: string;
+  Customer: string;
+  RFid: string;
+  s1PlantVesselUnit: string;
+  S2Equipment: string;
+  equipmentSubunit: string;
+  otherInfo: string;
+  tempClass: string;
+  pressureClass: string;
+  dimID: string;
+  lengthID: string;
+  connection1Type: string;
+  connection2Type: string;
+  connection1Dim: string;
+  connection2Dim: string;
+  batchNo: string;
+  certificateNo: string;
+  pollutionExposure: string;
+  uvExposure: string;
+};
+
 const HoseDetails = () => {
   const { slug } = useLocalSearchParams();
-  const hoseData = mockedData.find((hose) => hose.id === slug);
+  const hoseData = mockedData.find(
+    (hose) => hose.id === slug,
+  ) as unknown as HoseData;
   const [headerHeight, setHeaderHeight] = useState(0);
   const detailsHeaderRef = useRef(null);
   const scrollViewRef = useRef(null);

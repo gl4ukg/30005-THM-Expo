@@ -37,12 +37,12 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
     onInputChange(field, value);
   };
 
-  const handlePollutionExposureChange = (selectedId: string) => {
-    onInputChange('pollutionExposure', selectedId);
+  const handlePollutionExposureChange = (selectedLabel: string) => {
+    onInputChange('pollutionExposure', selectedLabel);
   };
 
-  const handleUVExposureChange = (selectedId: string) => {
-    onInputChange('uvExposure', selectedId);
+  const handleUVExposureChange = (selectedLabel: string) => {
+    onInputChange('uvExposure', selectedLabel);
   };
 
   return (
@@ -139,8 +139,8 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
           <Datafield label='RFID:' value={RFid} />
           <Datafield label='Hose Medium/Temperature:' value={''} />
           <Datafield label='Hose function:' value={''} />
-          <Datafield label='Polution exposure:' value={''} />
-          <Datafield label='UV exposure:' value={''} />
+          <Datafield label='Polution exposure:' value={pollutionExposure} />
+          <Datafield label='UV exposure:' value={uvExposure} />
         </>
       )}
       <Datafield label='RFID:' value={RFid} />
