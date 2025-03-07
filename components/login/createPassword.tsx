@@ -6,18 +6,41 @@ import { LoginHeader } from './loginHeader';
 import { colors } from '@/lib/tokens/colors';
 import { HelpLinks } from './helpLinks';
 import { Typography } from '@/components/typography';
+import { passwordRequirements, validatePassword } from '@/lib/util/validation';
 interface Props {
   nextView: (page: 'login' | 'requestAccess') => void;
 }
 
 export const CreateNewPassword: React.FC<Props> = () => {
-  const [password, setPassword] = useState('');
+  const [tempPassword, setTempPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const [newError, setNewError] = useState<undefined | string>(undefined);
+  const [confirmError, setConfirmError] = useState<undefined | string>(
+    undefined,
+  );
+
+  function handleNewPassword(password: string) {
+    setNewPassword(password);
+    const validation = passwordRequirements(password);
+    if (validation === true) {
+      setNewError(undefined);
+    } else setNewError(validation);
+  }
+  function comparePasswords(password: string) {
+    setConfirmPassword(password);
+    const validation = validatePassword(password, newPassword);
+    if (validation === true) {
+      setConfirmError(undefined);
+    } else setConfirmError(validation);
+  }
 
   const handleLogin = () => {
-    console.log('Password:', password);
+    console.log('Password:', newPassword);
   };
 
-  const isButtonDisabled = !password;
+  const isButtonDisabled = !tempPassword || !newPassword || !confirmPassword;
 
   return (
     <View style={styles.container}>
@@ -61,24 +84,26 @@ export const CreateNewPassword: React.FC<Props> = () => {
         <Input
           icon='Password'
           label='Temporary password'
-          value={password}
-          onChangeText={setPassword}
+          value={tempPassword}
+          onChangeText={setTempPassword}
           darkMode={true}
           type='password'
         />
         <Input
           icon='Password'
           label='Create new password'
-          value={password}
-          onChangeText={setPassword}
+          value={newPassword}
+          onChangeText={handleNewPassword}
+          errorMessage={newError}
           darkMode={true}
           type='password'
         />
         <Input
           icon='Password'
           label='Confirm new password'
-          value={password}
-          onChangeText={setPassword}
+          value={confirmPassword}
+          onChangeText={comparePasswords}
+          errorMessage={confirmError}
           darkMode={true}
           type='password'
         />
