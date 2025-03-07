@@ -1,21 +1,11 @@
 export const emailValidation =(email:string):true|string =>{
-    if (!email.includes('@')) {
-        return "@ is missing.";
-    }
-    const [name, domain] = email.split('@');
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!name) {
-        return "email cannot start with @";
-    } else if (!/^[a-zA-Z0-9._%+-æøåÆØÅ]+$/.test(name)) {
-        return "Local part contains invalid characters.";
-    }
-    if (!domain) {
-        return "Domain is missing.";
-    } else if (!/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(domain)) {
-        return "Domain is invalid.";
-    }
-    
+  if (emailRegex.test(email)) {
     return true;
+  } else {
+    return "Invalid email address. Please enter a valid email in the format: example@example.com";
+  }
 }
 
 export const passwordRequirements =(password:string):true|string =>{
