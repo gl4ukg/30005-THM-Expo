@@ -7,17 +7,23 @@ interface RadioButtonProps {
   onChange: () => void;
   id: string;
   label: string;
+  menu?: boolean;
 }
 
 export const RadioButton: React.FC<RadioButtonProps> = ({
   isSelected,
   onChange,
   label,
+  menu,
 }) => {
   return (
     <Pressable
       onPress={onChange}
-      style={[styles.button, isSelected && styles.buttonSelected]}
+      style={[
+        styles.button,
+        isSelected && styles.buttonSelected,
+        menu && styles.menu,
+      ]}
     >
       <View style={styles.wrapper}>
         <View
@@ -43,7 +49,7 @@ const styles = StyleSheet.create({
   circle: {
     width: 14,
     height: 14,
-    borderRadius: 10,
+    borderRadius: '50%',
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -52,7 +58,7 @@ const styles = StyleSheet.create({
   innerCircle: {
     width: 6,
     height: 6,
-    borderRadius: 4,
+    borderRadius: '50%',
     backgroundColor: colors.primary25,
   },
   button: {
@@ -78,5 +84,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     gap: 7,
+  },
+  menu: {
+    borderColor: 'transparent',
+    justifyContent: 'center',
   },
 });

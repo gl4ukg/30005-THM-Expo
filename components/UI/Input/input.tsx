@@ -2,8 +2,14 @@ import { Icon } from '@/components/Icon/Icon';
 import { IconName } from '@/components/Icon/iconMapping';
 import { Typography } from '@/components/typography';
 import { colors } from '@/lib/tokens/colors';
-import { useState } from 'react';
-import { TextInput, StyleSheet, View, Pressable } from 'react-native';
+import { useState, useRef, useEffect, forwardRef, FC } from 'react';
+import {
+  TextInput,
+  StyleSheet,
+  View,
+  Pressable,
+  TextInputProps,
+} from 'react-native';
 
 interface Props {
   icon?: IconName;
@@ -11,87 +17,135 @@ interface Props {
   placeHolder?: string;
   value: string;
   onChangeText: (text: string) => void;
-  labelColor?: string;
-  type?: string;
-  multiline?: boolean;
-  onBlur?: () => void;
+  type?: TextInputProps['inputMode'] | 'password' | 'textArea';
+  errorMessage?: string;
+  darkMode?: boolean;
+  disabled?: boolean;
 }
-export const Input: React.FC<Props> = ({
-  icon,
-  label,
-  placeHolder = '',
-  value,
-  onChangeText,
-  labelColor = 'black',
-  multiline = false,
-  type,
-  onBlur,
-}) => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+export const Input = forwardRef<TextInput, Props>(
+  (
+    {
+      icon,
+      label,
+      placeHolder,
+      value,
+      onChangeText,
+      type,
+      errorMessage,
+      darkMode,
+      disabled,
+    },
+    ref: React.Ref<TextInput>,
+  ) => {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
 
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible((prevState) => !prevState);
-  };
+    const togglePasswordVisibility = () => {
+      setIsPasswordVisible((prevState) => !prevState);
+    };
 
-  return (
-    <View style={styles.outerView}>
-      {icon && (
-        <View style={styles.iconWrapper}>
-          <Icon name={icon} size='md' color={labelColor} />
-        </View>
-      )}
-      <View style={styles.innerView}>
-        {label && (
-          <View>
-            <Typography
-              name='fieldLabel'
-              text={label}
-              style={{ color: labelColor }}
-            />
-          </View>
-        )}
-        <View>
-          <TextInput
-            style={[styles.input, multiline && styles.multiline]}
-            value={value}
-            onChangeText={onChangeText}
-            placeholder={placeHolder}
-            multiline={multiline}
-            scrollEnabled={!multiline}
-            secureTextEntry={type === 'password' && !isPasswordVisible}
-            onBlur={onBlur}
-          />
-          {type === 'password' && (
-            <Pressable
-              onPress={togglePasswordVisibility}
-              style={styles.iconContainer}
-            >
+    const inputMode =
+      type === 'password' || type === 'textArea' ? 'text' : type;
+
+    const [displayError, setDisplayError] = useState(false);
+    const toggleUnfocused = () => {
+      setIsFocused(false);
+      if (errorMessage) {
+        setDisplayError(true);
+      } else {
+        setDisplayError(false);
+      }
+    };
+
+    useEffect(() => {
+      if (ref && 'current' in ref && ref.current) {
+        ref.current.focus();
+      }
+    }, [ref]);
+
+    return (
+      <View>
+        <View style={styles.outerView}>
+          {icon && (
+            <View style={styles.iconWrapper}>
               <Icon
-                name={isPasswordVisible ? 'EyeOff' : 'Eye'}
-                size='xsm'
-                color={colors.extended666}
+                name={icon}
+                size='md'
+                color={darkMode ? colors.white : colors.extended333}
+                styles={{ opacity: disabled ? 0.5 : 1 }}
               />
-            </Pressable>
+            </View>
           )}
+          <View style={styles.innerView}>
+            {label && (
+              <View>
+                <Typography
+                  name='fieldLabel'
+                  text={label}
+                  style={{
+                    color: darkMode ? colors.white : colors.extended333,
+                    opacity: disabled ? 0.5 : 1,
+                  }}
+                />
+              </View>
+            )}
+            <View>
+              <TextInput
+                style={[
+                  styles.input,
+                  isFocused && !disabled && styles.focusedBorder,
+                  displayError && !isFocused && styles.errorBorder,
+                  darkMode && styles.darkMode,
+                  disabled && styles.disabled,
+                ]}
+                value={value}
+                onChangeText={onChangeText}
+                placeholder={placeHolder}
+                inputMode={inputMode}
+                multiline={type === 'textArea'}
+                scrollEnabled={type !== 'textArea'}
+                secureTextEntry={type === 'password' && !isPasswordVisible}
+                onBlur={toggleUnfocused}
+                onFocus={() => setIsFocused(true)}
+                editable={!disabled}
+                ref={ref}
+              />
+              {type === 'password' && !disabled && (
+                <Pressable
+                  onPress={togglePasswordVisibility}
+                  style={styles.iconContainer}
+                >
+                  <Icon
+                    name={isPasswordVisible ? 'EyeOff' : 'Eye'}
+                    size='xsm'
+                    color={colors.extended666}
+                  />
+                </Pressable>
+              )}
+            </View>
+          </View>
         </View>
+        {displayError && (
+          <Typography
+            name={'navigation'}
+            text={errorMessage}
+            style={[styles.error, icon && styles.errorPaddingIfIcon]}
+          />
+        )}
       </View>
-    </View>
-  );
-};
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   input: {
     paddingLeft: 10,
-    borderWidth: 0,
+    borderWidth: 1,
     paddingVertical: 10,
-    backgroundColor: colors.inputBackground,
     position: 'relative',
     color: colors.extended333,
-  },
-  multiline: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
     borderColor: colors.extended666,
+    backgroundColor: colors.white,
   },
   outerView: {
     flexDirection: 'row',
@@ -111,7 +165,28 @@ const styles = StyleSheet.create({
   iconContainer: {
     position: 'absolute',
     right: 10,
-    top: 10,
+    top: 11,
     justifyContent: 'center',
+  },
+  error: {
+    color: colors.error,
+    paddingTop: 9,
+  },
+  errorPaddingIfIcon: {
+    paddingLeft: 37,
+  },
+  errorBorder: {
+    borderColor: colors.error,
+  },
+  focusedBorder: {
+    borderWidth: 2,
+    borderColor: colors.primary,
+    paddingVertical: 9,
+  },
+  disabled: {
+    opacity: 1 / 2,
+  },
+  darkMode: {
+    backgroundColor: colors.inputBackground,
   },
 });
