@@ -1,9 +1,14 @@
 import { Stack } from 'expo-router';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { THSContextProvider } from '@/context/THScontextProvider';
+import {
+  THSContextProvider,
+  useAppContext,
+} from '@/context/THScontextProvider';
 
 export default function RootLayout() {
+  const { state } = useAppContext();
+  console.log(state.auth.user);
   return (
     <THSContextProvider>
       <SafeAreaProvider>

@@ -1,29 +1,26 @@
-import { THSInitialState, THSStateType } from '@/context/THSInitialState';
-import { Action, THSReducer } from '@/context/THSReducer';
-import React, { createContext,type Dispatch, useContext, useReducer } from 'react';
+import { AppState, initialState } from '@/context/state';
+import { AppAction, AppContext, rootReducer } from '@/context/THSReducer';
+import React, { useContext, useReducer } from 'react';
 
-type THSContextType = {
-    state: THSStateType;
-    dispatch: Dispatch<Action>;
-  };
+const THSContextProvider = ({ children }: { children: React.ReactNode }) => {
+  const [state, dispatch] = useReducer<React.Reducer<AppState, AppAction>>(
+    rootReducer,
+    initialState,
+  );
 
-export const THSContext = createContext<THSContextType | undefined>(undefined);
- const THSContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const [state, dispatch] = useReducer(THSReducer, THSInitialState);
-
-    return (
-        <THSContext.Provider value={{ state, dispatch }}>
-            {children}
-        </THSContext.Provider>
-    );
+  return (
+    <AppContext.Provider value={{ state, dispatch }}>
+      {children}
+    </AppContext.Provider>
+  );
 };
 
- const useTHSContext = () => {
-    const context = useContext(THSContext);
-    if (context === undefined) {
-        throw new Error('useCount must be used within a THSContextProvider')
-      }
-    return context;
-}
+const useAppContext = () => {
+  const context = useContext(AppContext);
+  if (context === undefined) {
+    throw new Error('useCount must be used within a THSContextProvider');
+  }
+  return context;
+};
 
-export { THSContextProvider, useTHSContext };
+export { THSContextProvider, useAppContext };

@@ -1,12 +1,12 @@
 import { View, StyleSheet, Alert } from 'react-native';
 import { ButtonTHS } from '../UI/Button/button';
 import { Input } from '../UI/Input/input';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { LoginHeader } from './loginHeader';
 import { colors } from '@/lib/tokens/colors';
 import { HelpLinks } from './helpLinks';
 import { Typography } from '@/components/typography';
-import { THSContext, useTHSContext } from '@/context/THScontextProvider';
+import { useAppContext } from '@/context/THScontextProvider';
 import { router } from 'expo-router';
 interface Props {
   nextView: (page: 'login' | 'requestAccess') => void;
@@ -16,7 +16,7 @@ export const LoginScreen: React.FC<Props> = () => {
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
-  const { state, dispatch } = useTHSContext();
+  const { state, dispatch } = useAppContext();
 
   const handleEmailBlur = () => {
     if (!email.includes('@') && email !== '') {
@@ -31,14 +31,21 @@ export const LoginScreen: React.FC<Props> = () => {
   };
 
   const handleLogin = () => {
+    dispatch({
+      type: 'TOGGLE_LOADING',
+    });
     // check if valid.
     // if valid send request to api or do something else.
     // update state
     dispatch({
-      type: 'SET_USER',
+      type: 'LOGIN',
       payload: { email, name: fullName, id: password },
     });
+
     // login and navigate to dashboard
+    dispatch({
+      type: 'TOGGLE_LOADING',
+    });
     router.push('/(tabs)/dashbord');
   };
 
