@@ -8,27 +8,35 @@ import { HelpLinks } from './helpLinks';
 import { Typography } from '@/components/typography';
 import { THSContext, useTHSContext } from '@/context/THScontextProvider';
 import { router } from 'expo-router';
+import { emailValidation } from '@/lib/util/validation';
 interface Props {
   nextView: (page: 'login' | 'requestAccess') => void;
 }
-
 export const LoginScreen: React.FC<Props> = () => {
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
+  const [nameError, setNameError] = useState<undefined | string>(undefined);
+  const [emailError, setEmailError] = useState<undefined | string>(undefined);
+
   const { state, dispatch } = useTHSContext();
 
-  const handleEmailBlur = () => {
-    if (!email.includes('@') && email !== '') {
-      Alert.alert('Invalid Email', 'Please enter a valid email address.');
-    }
-  };
+  function handleEmail(email: string) {
+    setEmail(email);
+    const validation = emailValidation(email);
+    if (validation === true) {
+      setEmailError(undefined);
+    } else setEmailError(validation);
+  }
 
-  const handleNameBlur = () => {
+  function handleName(name: string) {
+    setFullName(name);
     if (!/^[\p{L}\s]+$/u.test(fullName) && fullName !== '') {
-      Alert.alert('Invalid Name', 'Please enter a valid name.');
-    }
-  };
+      setNameError('Invalid Name: Please enter a valid name.');
+    } else if (name.length < 4) {
+      setNameError('too short');
+    } else setNameError(undefined);
+  }
 
   const handleLogin = () => {
     // check if valid.
@@ -53,15 +61,17 @@ export const LoginScreen: React.FC<Props> = () => {
           label='Email'
           placeHolder='ola@nordmann.no'
           value={email}
-          onChangeText={setEmail}
+          onChangeText={handleEmail}
           darkMode={true}
+          errorMessage={emailError}
         />
         <Input
           icon='User'
           label='Your full name'
           value={fullName}
-          onChangeText={setFullName}
+          onChangeText={handleName}
           darkMode={true}
+          errorMessage={nameError}
         />
         <Input
           icon='Password'
