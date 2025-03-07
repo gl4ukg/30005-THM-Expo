@@ -1,12 +1,17 @@
 import { Typography } from '@/components/typography';
 import { ButtonTHS } from '@/components/UI';
-import { useAppContext } from '@/context/THScontextProvider';
-import { Link, useRouter } from 'expo-router';
+import { useAppContext } from '@/context/ContextProvider';
+import { useRouter } from 'expo-router';
 import { SafeAreaView, Text, View } from 'react-native';
 
 const User = () => {
   const { state, dispatch } = useAppContext();
   const router = useRouter();
+
+  const handleLogout = () => {
+    dispatch({ type: 'LOGOUT' });
+    router.push('/');
+  };
   return (
     <SafeAreaView
       style={{
@@ -40,7 +45,7 @@ const User = () => {
             variant='primary'
             size='sm'
             title='Log out'
-            onPress={() => dispatch({ type: 'LOGOUT' })}
+            onPress={handleLogout}
           />
         </View>
       )}

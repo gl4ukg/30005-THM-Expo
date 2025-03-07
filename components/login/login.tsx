@@ -6,7 +6,7 @@ import { LoginHeader } from './loginHeader';
 import { colors } from '@/lib/tokens/colors';
 import { HelpLinks } from './helpLinks';
 import { Typography } from '@/components/typography';
-import { useAppContext } from '@/context/THScontextProvider';
+import { useAppContext } from '@/context/ContextProvider';
 import { router } from 'expo-router';
 interface Props {
   nextView: (page: 'login' | 'requestAccess') => void;
@@ -46,7 +46,7 @@ export const LoginScreen: React.FC<Props> = () => {
     dispatch({
       type: 'TOGGLE_LOADING',
     });
-    router.push('/(tabs)/dashbord');
+    router.push('/(app)/dashbord');
   };
 
   const isButtonDisabled = !email || !fullName || !password;

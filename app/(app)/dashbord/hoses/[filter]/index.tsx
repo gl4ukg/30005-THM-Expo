@@ -1,4 +1,4 @@
-import { mockedData } from '@/app/(tabs)/dashbord/hoses/[filter]/mocked';
+import { mockedData } from '@/context/mocked';
 import { ListTable } from '@/components/dashboard/listTable';
 import { SelectedHoseCounter } from '@/components/dashboard/selectedHoseCounter';
 import { Typography } from '@/components/typography';

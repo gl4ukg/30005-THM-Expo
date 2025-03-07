@@ -34,7 +34,7 @@ export const ListTable: FC<Props> = ({
 }) => {
   const router = useRouter();
   const handleRowPress = (item: (typeof items)[0]) => {
-    router.push(`/(tabs)/dashbord/hoses/hose/${item.id}?id=${item.id}`);
+    router.push(`/(app)/dashbord/hoses/hose/${item.id}?id=${item.id}`);
   };
 
   return (

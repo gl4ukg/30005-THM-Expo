@@ -1,8 +1,8 @@
 import { AppState, initialState } from '@/context/state';
-import { AppAction, AppContext, rootReducer } from '@/context/THSReducer';
+import { AppAction, AppContext, rootReducer } from '@/context/Reducer';
 import React, { useContext, useReducer } from 'react';
 
-const THSContextProvider = ({ children }: { children: React.ReactNode }) => {
+const ContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer<React.Reducer<AppState, AppAction>>(
     rootReducer,
     initialState,
@@ -18,9 +18,9 @@ const THSContextProvider = ({ children }: { children: React.ReactNode }) => {
 const useAppContext = () => {
   const context = useContext(AppContext);
   if (context === undefined) {
-    throw new Error('useCount must be used within a THSContextProvider');
+    throw new Error('useCount must be used within a ContextProvider');
   }
   return context;
 };
 
-export { THSContextProvider, useAppContext };
+export { ContextProvider, useAppContext };
