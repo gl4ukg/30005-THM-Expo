@@ -157,6 +157,7 @@ const HoseDetails = () => {
           onChange={() => {
             return;
           }}
+          required={true}
           options={condition.map((c) => ({ id: c, label: c }))}
         />
         <DetailsHeader
