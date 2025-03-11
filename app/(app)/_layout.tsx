@@ -1,17 +1,14 @@
 import { BottomNavigation } from '@/components/UI/BottomNavigation';
 import { Redirect, Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SubUnitSelect from '../../components/UI/TopBarNavigation/SubUnitSelect';
 import { useAppContext } from '@/context/ContextProvider';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
-  const { state } = useAppContext();
+  const { state, dispatch } = useAppContext();
   if (!state.auth.user) {
     // in the headless Node process that the pages are rendered in.
     return <Redirect href='/' />;
@@ -27,7 +24,23 @@ export default function TabLayout() {
           },
         ]}
       />
-      <SubUnitSelect />
+      {Object.keys(state.data.assignedUnits).length > 0 && (
+        <SubUnitSelect
+          selectedUnit={state.data.selectedUnitId}
+          optionalUnits={Object.keys(state.data.assignedUnits).map((unitId) => {
+            return {
+              id: unitId,
+              name: state.data.assignedUnits[unitId].unitName,
+            };
+          })}
+          onSelectUnit={(unit) => {
+            dispatch({
+              type: 'SET_SELECTED_UNIT',
+              payload: unit,
+            });
+          }}
+        />
+      )}
       <Tabs
         screenOptions={{ headerShown: false }}
         initialRouteName='dashbord'

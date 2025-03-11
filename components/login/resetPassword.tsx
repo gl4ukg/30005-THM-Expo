@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { LoginHeader } from './loginHeader';
 import { colors } from '@/lib/tokens/colors';
 import { HelpLinks } from './helpLinks';
-import { LinkButton } from '@/components/UI/Button/linkButton';
 import { Typography } from '@/components/typography';
 
 interface Props {

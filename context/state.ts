@@ -1,26 +1,26 @@
-export const THSInitialState = {
-  user: null,
-  units: {
-    availableUnits: [],
-    chosenUnitId: null,
-  },
-};
+// export const THSInitialState = {
+//   user: null,
+//   units: {
+//     availableUnits: [],
+//     chosenUnitId: null,
+//   },
+// };
 
-export type THSStateType = {
-  user: null | {
-    email: string;
-    name: string;
-    id: string;
-  };
-  units: {
-    availableUnits: {
-      name: string;
-      id: string;
-      hoses: any[];
-    }[];
-    chosenUnitId: string | null;
-  };
-};
+// export type THSStateType = {
+//   user: null | {
+//     email: string;
+//     name: string;
+//     id: string;
+//   };
+//   units: {
+//     availableUnits: {
+//       name: string;
+//       id: string;
+//       hoses: any[];
+//     }[];
+//     chosenUnitId: string | null;
+//   };
+// };
 
 interface AppState {
   auth: AuthState;
@@ -40,8 +40,35 @@ interface AuthState {
   token: null | string;
 }
 
+interface Hose extends Record<string, string | boolean | number> {
+  id: string;
+  name: string;
+  position: string;
+  condition: string;
+  lastInspection: string;
+  lastInspectionDate: string;
+  nextInspection: string;
+  nextInspectionDate: string;
+  missingData: boolean;
+  prodDate: string;
+}
+
 interface DataState {
   // define data state properties
+  assignedUnits: {
+    [unitId: string]: {
+      unitName: string;
+      hoses: Hose[];
+    };
+  };
+  selectedUnitId: null | string;
+  drafts: {
+    [type: string]: {
+      draftListId: string;
+      draftList: Hose[];
+    };
+  };
+  aktiveDraftsListId: null | string;
 }
 
 interface SettingsState {
@@ -58,6 +85,10 @@ const initialAuthState: AuthState = {
 
 const initialDataState: DataState = {
   // initial data state values
+  assignedUnits: {},
+  selectedUnitId: null,
+  drafts: {},
+  aktiveDraftsListId: null,
 };
 
 const initialSettingsState: SettingsState = {

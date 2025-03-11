@@ -4,8 +4,6 @@ import {
   DataState,
   initialState,
   SettingsState,
-  THSInitialState,
-  THSStateType,
 } from '@/context/state';
 import { createContext } from 'react';
 
@@ -39,7 +37,9 @@ type AuthAction =
   | ActionWithoutPayload<'LOGOUT'>
   | ActionWithPayload<'SET_TOKEN', string>
   | ActionWithoutPayload<'TOGGLE_LOADING'>;
-type DataAction = ActionWithPayload<'SET_DATA', any>;
+type DataAction =
+  | ActionWithPayload<'SET_DATA', any>
+  | ActionWithPayload<'SET_SELECTED_UNIT', string>;
 type SettingsAction = ActionWithPayload<'UPDATE_SETTINGS', any>;
 
 // Reducers for each slice of the app state (these should be defined elsewhere)
@@ -75,7 +75,13 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
   switch (action.type) {
     case 'SET_DATA':
       return {
-        /*new setdata*/
+        ...state,
+        assignedUnits: action.payload,
+      };
+    case 'SET_SELECTED_UNIT':
+      return {
+        ...state,
+        selectedUnitId: action.payload,
       };
     default:
       return state;

@@ -9,6 +9,7 @@ import { Typography } from '@/components/typography';
 import { useAppContext } from '@/context/ContextProvider';
 import { router } from 'expo-router';
 import { emailValidation } from '@/lib/util/validation';
+import { mockedData } from '@/context/mocked';
 interface Props {
   nextView: (page: 'login' | 'requestAccess') => void;
 }
@@ -19,7 +20,7 @@ export const LoginScreen: React.FC<Props> = () => {
   const [nameError, setNameError] = useState<undefined | string>(undefined);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
 
-  const { state, dispatch } = useTHSContext();
+  const { state, dispatch } = useAppContext();
 
   function handleEmail(email: string) {
     setEmail(email);
@@ -48,6 +49,20 @@ export const LoginScreen: React.FC<Props> = () => {
     dispatch({
       type: 'LOGIN',
       payload: { email, name: fullName, id: password },
+    });
+    let units: { [key: string]: { unitName: string; hoses: any[] } } = {};
+    mockedData.forEach((unit) => {
+      units[unit.equipmentSubunit] !== undefined
+        ? units[unit.equipmentSubunit].hoses.push(unit)
+        : (units[unit.equipmentSubunit] = {
+            unitName: unit.equipmentSubunit,
+            hoses: [unit],
+          });
+    });
+
+    dispatch({
+      type: 'SET_DATA',
+      payload: units,
     });
 
     // login and navigate to dashboard

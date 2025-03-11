@@ -175,7 +175,7 @@ const Element: FC<ElementProps> = ({
             <Typography
               name='tableContent'
               text={
-                condition.length
+                condition?.length
                   ? condition
                   : '44-Visible leakage - and some more defects'
               }
@@ -184,7 +184,7 @@ const Element: FC<ElementProps> = ({
             />
             <Typography
               name='tableContentNumber'
-              text={lastInspection.length ? lastInspection : 'N/A'}
+              text={lastInspection?.length ? lastInspection : 'N/A'}
               style={elementStyle.date}
             />
           </View>
