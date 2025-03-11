@@ -8,6 +8,10 @@ import { useLocalSearchParams } from 'expo-router';
 import { mockedData } from '../[filter]/mocked';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
+import { GHD as GeneralInfoType } from '@/components/detailView/types';
+import UVH from '@/components/detailView/UniversalHoseData';
+import { UVH as UniversalHoseDataType } from '@/components/detailView/types';
+import UniversalHoseData from '@/components/detailView/UniversalHoseData';
 
 type HoseData = {
   customerId: string;
@@ -34,6 +38,17 @@ type HoseData = {
   certificateNo: string;
   pollutionExposure: string;
   uvExposure: string;
+  hoseStandard: string;
+  innerDiameter: string;
+  totalLength: string;
+  wpBar: string;
+  wpPsi: string;
+  materialQuality: string;
+  typeFitting: string;
+  innerDiameter2: string;
+  gender: string;
+  angle: string;
+  commentEnd1: string;
 };
 
 const HoseDetails = () => {
@@ -48,23 +63,57 @@ const HoseDetails = () => {
   const historyRef = useRef(null);
 
   const [editMode, setEditMode] = useState(false);
-  const [editedHoseData, setEditedHoseData] = useState({
-    Description: hoseData?.Description || '',
+
+  const mapHoseDataToGeneralInfo = (hoseData: HoseData): GeneralInfoType => ({
+    description: hoseData?.Description || '',
     customerId: hoseData?.customerId || '',
     s1PlantVesselUnit: hoseData?.s1PlantVesselUnit || '',
     S2Equipment: hoseData?.S2Equipment || '',
     equipmentSubunit: hoseData?.equipmentSubunit || '',
     otherInfo: hoseData?.otherInfo || '',
     RFid: hoseData?.RFid || '',
+    hoseMediumTemperature: '',
+    hoseFunction: '',
     pollutionExposure: hoseData?.pollutionExposure || 'internal',
     uvExposure: hoseData?.uvExposure || 'internal',
   });
 
-  const handleInputChange = (field, value) => {
-    setEditedHoseData({
-      ...editedHoseData,
-      [field]: value,
-    });
+  const mapHoseDataToUniversalHoseData = (
+    hoseData: HoseData,
+  ): UniversalHoseDataType => ({
+    hoseStandard: hoseData?.hoseStandard || '',
+    innerDiameter: hoseData?.innerDiameter || '',
+    totalLength: hoseData?.totalLength || '',
+    wpBar: hoseData?.wpBar || '',
+    wpPsi: hoseData?.wpPsi || '',
+    materialQuality: hoseData?.materialQuality || '',
+    typeFitting: hoseData?.typeFitting || '',
+    innerDiameter2: hoseData?.innerDiameter2 || '',
+    gender: hoseData?.gender || '',
+    angle: hoseData?.angle || '',
+    commentEnd1: hoseData?.commentEnd1 || '',
+  });
+
+  const [editedGeneralInfo, setEditedGeneralInfo] = useState(
+    mapHoseDataToGeneralInfo(hoseData),
+  );
+
+  const [editedUniversalHoseData, setEditedUniversalHoseData] = useState(
+    mapHoseDataToUniversalHoseData(hoseData),
+  );
+
+  const handleInputChange = (field: string, value: string) => {
+    if (editedGeneralInfo.hasOwnProperty(field)) {
+      setEditedGeneralInfo((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    } else if (editedUniversalHoseData.hasOwnProperty(field)) {
+      setEditedUniversalHoseData((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    }
   };
 
   const toggleEditMode = () => {
@@ -72,13 +121,14 @@ const HoseDetails = () => {
   };
 
   const handleSave = () => {
-    console.log('Saving data:', editedHoseData);
+    console.log('Saving General Info data:', editedGeneralInfo);
+    console.log('Saving Universal Hose Data:', editedUniversalHoseData);
     setEditMode(false);
   };
 
-  const checkMissingData = (hoseData) => {
+  const checkMissingData = (hoseData: GeneralInfoType) => {
     return (
-      !hoseData.Description ||
+      !hoseData.description ||
       !hoseData.customerId ||
       !hoseData.s1PlantVesselUnit ||
       !hoseData.S2Equipment ||
@@ -146,7 +196,7 @@ const HoseDetails = () => {
         <DetailsHeader
           id={hoseData.id}
           date={hoseData.prodDate}
-          missingData={checkMissingData(hoseData)}
+          missingData={checkMissingData(editedGeneralInfo)}
           shortcuts={shortcuts}
         />
         <ButtonTHS
@@ -165,18 +215,11 @@ const HoseDetails = () => {
         )}
       </View>
       <ScrollView ref={scrollViewRef}>
-        <GeneralInfo
-          description={editedHoseData.Description}
-          customerId={editedHoseData.customerId}
-          s1PlantVesselUnit={editedHoseData.s1PlantVesselUnit}
-          S2Equipment={editedHoseData.S2Equipment}
-          equipmentSubunit={editedHoseData.equipmentSubunit}
-          otherInfo={editedHoseData.otherInfo}
-          RFid={editedHoseData.RFid}
+        <GeneralInfo generalInfo={editedGeneralInfo} editMode={editMode} />
+        <UniversalHoseData
+          universalHoseData={editedUniversalHoseData}
           editMode={editMode}
           onInputChange={handleInputChange}
-          pollutionExposure={editedHoseData.pollutionExposure}
-          uvExposure={editedHoseData.uvExposure}
         />
         {shortcuts.map((section) => (
           <View key={section.id}>{section.content}</View>

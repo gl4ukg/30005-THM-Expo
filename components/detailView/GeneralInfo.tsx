@@ -7,32 +7,11 @@ import { RadioButton } from '../detailHose/radioButton';
 import { RadioGroup } from '../detailHose/radioGroup';
 
 type GeneralInfoProps = {
-  description: string;
-  customerId: string;
-  s1PlantVesselUnit: string;
-  S2Equipment: string;
-  equipmentSubunit: string;
-  otherInfo: string;
-  RFid: string;
+  generalInfo: GeneralInfo;
   editMode: boolean;
-  onInputChange: (field: string, value: string) => void;
-  pollutionExposure: string;
-  uvExposure: string;
 };
 
-const GeneralInfo: React.FC<GeneralInfoProps> = ({
-  description,
-  customerId,
-  s1PlantVesselUnit,
-  S2Equipment,
-  equipmentSubunit,
-  otherInfo,
-  RFid,
-  editMode,
-  onInputChange,
-  pollutionExposure,
-  uvExposure,
-}) => {
+const GeneralInfo: React.FC<GeneralInfoProps> = ({ generalInfo, editMode }) => {
   const handleSelectChange = (field: string, value: string) => {
     onInputChange(field, value);
   };
@@ -52,27 +31,27 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
           <View style={styles.inputContainer}>
             <Input
               label='Description:'
-              value={description}
+              value={generalInfo.description}
               onChangeText={(text) => onInputChange('Description', text)}
             />
           </View>
           <View style={styles.inputContainer}>
             <Input
               label='Customer ID:'
-              value={customerId}
+              value={generalInfo.customerId}
               onChangeText={(text) => onInputChange('customerId', text)}
             />
           </View>
           <SelectField
             label='S1 Plant, Vessel, Unit:'
-            value={s1PlantVesselUnit}
+            value={generalInfo.s1PlantVesselUnit}
             onChange={(value) => handleSelectChange('s1PlantVesselUnit', value)}
             options={[]}
           />
 
           <SelectField
             label='S2 Equipment:'
-            value={S2Equipment}
+            value={generalInfo.S2Equipment}
             onChange={(value) => handleSelectChange('S2Equipment', value)}
             options={[]}
           />
@@ -80,27 +59,27 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
           <View style={styles.inputContainer}>
             <Input
               label='Equipment Subunit:'
-              value={equipmentSubunit}
+              value={generalInfo.equipmentSubunit}
               onChangeText={(text) => onInputChange('equipmentSubunit', text)}
             />
           </View>
           <View style={styles.inputContainer}>
             <Input
               label='Other Info:'
-              value={otherInfo}
+              value={generalInfo.otherInfo}
               onChangeText={(text) => onInputChange('otherInfo', text)}
             />
           </View>
           <SelectField
             label='Hose Medium/Temperature:'
-            value={s1PlantVesselUnit}
+            value={generalInfo.s1PlantVesselUnit}
             onChange={(value) => handleSelectChange('s1PlantVesselUnit', value)}
             options={[]}
           />
           <View style={styles.inputContainer}>
             <Input
               label='Hose function:'
-              value={otherInfo}
+              value={generalInfo.otherInfo}
               onChangeText={(text) => onInputChange('hoseFunction', text)}
             />
           </View>
@@ -110,7 +89,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
               { id: 'internal', label: 'internal, not exposed' },
               { id: 'exposed', label: 'exposed' },
             ]}
-            selected={pollutionExposure}
+            selected={generalInfo.pollutionExposure}
             onChange={handlePollutionExposureChange}
             type={'horizontal'}
           />
@@ -120,30 +99,39 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
               { id: 'internal', label: 'internal, not exposed' },
               { id: 'exposed', label: 'exposed' },
             ]}
-            selected={uvExposure}
+            selected={generalInfo.uvExposure}
             onChange={handleUVExposureChange}
             type={'horizontal'}
           />
         </>
       ) : (
         <>
-          <Datafield label='Description:' value={description} />
-          <Datafield label='Customer ID:' value={customerId} />
+          <Datafield label='Description:' value={generalInfo.description} />
+          <Datafield label='Customer ID:' value={generalInfo.customerId} />
           <Datafield
             label='S1 Plant, Vessel, Unit:'
-            value={s1PlantVesselUnit}
+            value={generalInfo.s1PlantVesselUnit}
           />
-          <Datafield label='S2 Equipment:' value={S2Equipment} />
-          <Datafield label='Equipment Subunit:' value={equipmentSubunit} />
-          <Datafield label='Other Info:' value={otherInfo} />
-          <Datafield label='RFID:' value={RFid} />
-          <Datafield label='Hose Medium/Temperature:' value={''} />
-          <Datafield label='Hose function:' value={''} />
-          <Datafield label='Polution exposure:' value={pollutionExposure} />
-          <Datafield label='UV exposure:' value={uvExposure} />
+          <Datafield label='S2 Equipment:' value={generalInfo.S2Equipment} />
+          <Datafield
+            label='Equipment Subunit:'
+            value={generalInfo.equipmentSubunit}
+          />
+          <Datafield label='Other Info:' value={generalInfo.otherInfo} />
+          <Datafield label='RFID:' value={generalInfo.RFid} />
+          <Datafield
+            label='Hose Medium/Temperature:'
+            value={generalInfo.hoseMediumTemperature}
+          />
+          <Datafield label='Hose function:' value={generalInfo.hoseFunction} />
+          <Datafield
+            label='Polution exposure:'
+            value={generalInfo.pollutionExposure}
+          />
+          <Datafield label='UV exposure:' value={generalInfo.uvExposure} />
         </>
       )}
-      <Datafield label='RFID:' value={RFid} />
+      <Datafield label='RFID:' value={generalInfo.RFid} />
     </View>
   );
 };
