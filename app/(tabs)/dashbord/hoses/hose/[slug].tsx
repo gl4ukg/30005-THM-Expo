@@ -59,13 +59,6 @@ const HoseDetails = () => {
     history: historyRef,
   };
 
-  const [selectedChoiceId, setSelectedChoiceId] = useState<string>('');
-  const [comment, setComment] = useState('');
-
-  const handleSelectionChange = (id: string) => {
-    setSelectedChoiceId(id);
-  };
-
   const scrollToSection = (sectionId: string) => {
     const ref = sectionRefs[sectionId as keyof typeof sectionRefs];
 
@@ -150,15 +143,8 @@ const HoseDetails = () => {
         onLayout={(event) => {
           setHeaderHeight(event.nativeEvent.layout.height);
         }}
-      >
-        <SelectField
-          label='Condition'
-          value={''}
-          onChange={() => {
-            return;
-          }}
-          options={condition.map((c) => ({ id: c, label: c }))}
-        />
+      ></View>
+      <ScrollView ref={scrollViewRef}>
         <DetailsHeader
           id={hoseData.id}
           date={hoseData.prodDate}
@@ -166,8 +152,6 @@ const HoseDetails = () => {
           shortcuts={shortcuts}
           scrollToSection={scrollToSection}
         />
-      </View>
-      <ScrollView ref={scrollViewRef}>
         <GeneralInfo
           description={hoseData.Description}
           customerId={hoseData.customerId}
