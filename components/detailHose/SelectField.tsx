@@ -77,8 +77,13 @@ export const SelectField: React.FC<SelectFieldProps> = ({
           />
         )}
       </View>
-      <View style={styles.tooltipContainer}>
-        <Icon name='Tooltip' size='md' color={colors.primary} />
+      <View
+        style={[
+          styles.tooltipContainer,
+          hasError && styles.tooltipStylingIfError,
+        ]}
+      >
+        <Icon name='Tooltip' size='lg' color={colors.primary} />
       </View>
       <Modal
         animationType='slide'
@@ -118,7 +123,7 @@ const styles = StyleSheet.create({
   },
   tooltipContainer: {
     width: '15%',
-    marginTop: 15,
+    paddingTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -154,5 +159,8 @@ const styles = StyleSheet.create({
   },
   errorBorder: {
     borderColor: colors.error,
+  },
+  tooltipStylingIfError: {
+    paddingBottom: 22,
   },
 });
