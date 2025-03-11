@@ -6,6 +6,7 @@ import { LoginHeader } from './loginHeader';
 import { colors } from '@/lib/tokens/colors';
 import { HelpLinks } from './helpLinks';
 import { Typography } from '@/components/typography';
+import { emailValidation } from '@/lib/util/validation';
 
 interface Props {
   nextView: (page: 'login' | 'requestAccess') => void;
@@ -13,12 +14,21 @@ interface Props {
 
 export const ResetPassword: React.FC<Props> = () => {
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState<undefined | string>(undefined);
 
-  const handleRequest = () => {
-    console.log('Email:', email);
+  const handleEmailChange = (email: string) => {
+    const validation = emailValidation(email);
+    if (validation === true) {
+      setEmailError(undefined);
+    } else setEmailError(validation);
+    setEmail(email);
   };
-
-  const isButtonDisabled = !email;
+  const handleRequest = () => {
+    const validation = emailValidation(email);
+    if (validation === true) {
+      setEmailError(undefined);
+    } else setEmailError(validation);
+  };
 
   return (
     <View style={styles.container}>
@@ -36,7 +46,9 @@ export const ResetPassword: React.FC<Props> = () => {
           label='Your email (User ID)'
           placeHolder='ola@nordmann.no'
           value={email}
-          onChangeText={setEmail}
+          type='email'
+          onChangeText={handleEmailChange}
+          errorMessage={emailError}
           darkMode={true}
         />
       </View>
@@ -44,7 +56,7 @@ export const ResetPassword: React.FC<Props> = () => {
         title={'RESET PASSWORD'}
         onPress={handleRequest}
         variant={'primary'}
-        disabled={isButtonDisabled}
+        disabled={emailError !== undefined}
       />
       <View style={styles.footer}>
         <HelpLinks header='Not sure what to do?' />

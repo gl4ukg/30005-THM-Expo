@@ -85,6 +85,7 @@ export const LoginScreen: React.FC<Props> = () => {
           value={email}
           onChangeText={handleEmail}
           darkMode={true}
+          type='email'
           errorMessage={emailError}
         />
         <Input
