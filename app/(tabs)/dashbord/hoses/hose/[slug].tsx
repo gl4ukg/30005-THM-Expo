@@ -9,7 +9,6 @@ import { mockedData } from '../[filter]/mocked';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 import { GHD as GeneralInfoType } from '@/components/detailView/types';
-import UVH from '@/components/detailView/UniversalHoseData';
 import { UVH as UniversalHoseDataType } from '@/components/detailView/types';
 import UniversalHoseData from '@/components/detailView/UniversalHoseData';
 
@@ -215,7 +214,11 @@ const HoseDetails = () => {
         )}
       </View>
       <ScrollView ref={scrollViewRef}>
-        <GeneralInfo generalInfo={editedGeneralInfo} editMode={editMode} />
+        <GeneralInfo
+          generalInfo={editedGeneralInfo}
+          editMode={editMode}
+          onInputChange={handleInputChange}
+        />
         <UniversalHoseData
           universalHoseData={editedUniversalHoseData}
           editMode={editMode}

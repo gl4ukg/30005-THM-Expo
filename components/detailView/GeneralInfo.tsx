@@ -3,15 +3,20 @@ import { View, StyleSheet } from 'react-native';
 import Datafield from './Datafield';
 import { Input } from '../UI/Input/input';
 import { SelectField } from '../detailHose/SelectField';
-import { RadioButton } from '../detailHose/radioButton';
 import { RadioGroup } from '../detailHose/radioGroup';
+import { GHD } from './types';
 
 type GeneralInfoProps = {
-  generalInfo: GeneralInfo;
+  generalInfo: GHD;
   editMode: boolean;
+  onInputChange: (field: string, value: string) => void;
 };
 
-const GeneralInfo: React.FC<GeneralInfoProps> = ({ generalInfo, editMode }) => {
+const GeneralInfo: React.FC<GeneralInfoProps> = ({
+  generalInfo,
+  editMode,
+  onInputChange,
+}) => {
   const handleSelectChange = (field: string, value: string) => {
     onInputChange(field, value);
   };
