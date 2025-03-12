@@ -7,25 +7,14 @@ import { Input } from '../UI/Input/input';
 import { SelectField } from '../detailHose/SelectField';
 import { Typography } from '../typography';
 import { Checkbox } from '../UI/Checkbox';
+import { Icon } from '../Icon/Icon';
+import { colors } from '@/lib/tokens/colors';
 
 interface UniversalHoseDataProps {
   universalHoseData: UVH;
   editMode: boolean;
   onInputChange: (field: string, value: string) => void;
 }
-
-const Section = ({ children, title }) => (
-  <View style={styles.sectionContainer}>
-    {title && (
-      <Typography
-        name='navigationBold'
-        style={styles.sectionTitle}
-        text={title}
-      />
-    )}
-    {children}
-  </View>
-);
 
 const CouplingSection = ({ universalHoseData }) => (
   <>
@@ -146,37 +135,33 @@ const UniversalHoseData = ({
               onChangeText={(text) => onInputChange('wpPsi', text)}
             />
           </View>
-          <Section title='Coupling end 1'>
+          <EditCouplingSection
+            universalHoseData={universalHoseData}
+            onInputChange={onInputChange}
+          />
+          <View style={styles.sectionTitleContainer}>
+            <Typography
+              name='navigationBold'
+              style={styles.sectionTitle}
+              text='Coupling end 2'
+            />
+            <View style={styles.checkboxContainer}>
+              <Checkbox
+                isChecked={sameAsEnd1}
+                onChange={handleCheckboxChange}
+              />
+              <Typography name='button' text='Same as end 1' />
+              <View style={{ ...styles.tooltipContainer, marginLeft: 10 }}>
+                <Icon name='Tooltip' size='md' color={colors.primary} />
+              </View>
+            </View>
+          </View>
+          {!sameAsEnd1 && (
             <EditCouplingSection
               universalHoseData={universalHoseData}
               onInputChange={onInputChange}
             />
-          </Section>
-          <Section
-            title={
-              <View style={styles.sectionTitleContainer}>
-                <Typography
-                  name='navigationBold'
-                  style={styles.sectionTitle}
-                  text='Coupling end 2'
-                />
-                <View style={styles.checkboxContainer}>
-                  <Checkbox
-                    isChecked={sameAsEnd1}
-                    onChange={handleCheckboxChange}
-                  />
-                  <Typography name='button' text='Same as end 1' />
-                </View>
-              </View>
-            }
-          >
-            {!sameAsEnd1 && (
-              <EditCouplingSection
-                universalHoseData={universalHoseData}
-                onInputChange={onInputChange}
-              />
-            )}
-          </Section>
+          )}
         </>
       ) : (
         <>
@@ -194,12 +179,16 @@ const UniversalHoseData = ({
           />
           <Datafield label='WP Bar' value={universalHoseData.wpBar} />
           <Datafield label='WP Psi' value={universalHoseData.wpPsi} />
-          <Section title='Coupling end 1'>
-            <CouplingSection universalHoseData={universalHoseData} />
-          </Section>
-          <Section title='Coupling end 2'>
-            <CouplingSection universalHoseData={universalHoseData} />
-          </Section>
+          <Typography name='navigationBold' text='Coupling end 1' />
+          <CouplingSection universalHoseData={universalHoseData} />
+          <View style={styles.sectionTitleContainer}>
+            <Typography name='navigationBold' text='Coupling end 2' />
+            <View style={styles.sectionTitleContainer}>
+              <Checkbox isChecked={sameAsEnd1} onChange={() => {}} disabled />
+              <Typography name='button' text='Same as end 1' />
+            </View>
+          </View>
+          <CouplingSection universalHoseData={universalHoseData} />
         </>
       )}
     </View>
@@ -229,9 +218,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 0,
+    marginLeft: 25,
   },
   checkbox: {
     marginRight: 8,
+  },
+  tooltipContainer: {
+    marginRight: 'auto',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

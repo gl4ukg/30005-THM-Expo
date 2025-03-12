@@ -6,6 +6,7 @@ import {
   Modal,
   Pressable,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 import { colors } from '@/lib/tokens/colors';
 import { Icon } from '../Icon/Icon';
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
   },
   tooltipContainer: {
     width: '15%',
-    marginTop: 15,
+    marginTop: Platform.OS === 'ios' ? 15 : 18,
     justifyContent: 'center',
     alignItems: 'center',
   },
