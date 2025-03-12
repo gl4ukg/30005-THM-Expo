@@ -17,6 +17,7 @@ export const iconSize = {
   xsm: 16,
   sm: 24,
   md: 32,
+  lg: 36,
 };
 
 export const Icon: React.FC<IconProps> = ({

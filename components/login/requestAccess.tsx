@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { ButtonTHS } from '../UI/Button/button';
 import { Input } from '../UI/Input/input';
 import { useState } from 'react';
@@ -7,24 +7,96 @@ import { colors } from '@/lib/tokens/colors';
 import { HelpLinks } from './helpLinks';
 import { LinkButton } from '@/components/UI/Button/linkButton';
 import { Typography } from '@/components/typography';
+import { useTHSContext } from '@/context/THScontextProvider';
+import { router } from 'expo-router';
+import { emailValidation } from '@/lib/util/validation';
 
 interface Props {
   nextView: (page: 'login' | 'requestAccess') => void;
 }
 
+interface RequestData {
+  email: string;
+  fullName: string;
+  mobileNumber: string;
+  company: string;
+  units: string[];
+}
+
+interface ApiResponse {
+  success: boolean;
+}
+
+interface ApiError {
+  success: boolean;
+  message: string;
+}
+
+const mockApiCall = (data: RequestData): Promise<ApiResponse> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (data.email && data.fullName && data.company != 'Ecorp') {
+        resolve({ success: true });
+      } else {
+        reject({ success: false, message: 'Invalid data' } as ApiError);
+      }
+    }, 1000);
+  });
+};
+
 export const RequestAccess: React.FC<Props> = () => {
+  const { state, dispatch } = useTHSContext();
+
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
   const [company, setCompany] = useState('');
   const [units, setUnits] = useState(['']);
 
-  const handleRequest = () => {
-    console.log('Email:', email);
-    console.log('Full Name:', fullName);
-    console.log('Mobile Number:', mobileNumber);
-    console.log('Company:', company);
-    console.log('Unit:', units);
+  const [nameError, setNameError] = useState<undefined | string>(undefined);
+  const [emailError, setEmailError] = useState<undefined | string>(undefined);
+
+  function handleEmail(email: string) {
+    setEmail(email);
+    const validation = emailValidation(email);
+    if (validation === true) {
+      setEmailError(undefined);
+    } else setEmailError(validation);
+  }
+
+  function handleName(name: string) {
+    setFullName(name);
+    if (!/^[\p{L}\s]+$/u.test(fullName) && fullName !== '') {
+      setNameError('Invalid Name: Please enter a valid name.');
+    } else if (name.length < 4) {
+      setNameError('too short');
+    } else setNameError(undefined);
+  }
+
+  const handleRequest = async () => {
+    try {
+      const response = await mockApiCall({
+        email,
+        fullName,
+        mobileNumber,
+        company,
+        units,
+      });
+
+      if (response.success) {
+        console.log('Request successful:', response);
+
+        dispatch({
+          type: 'SET_USER',
+          payload: { email, name: fullName, id: mobileNumber },
+        });
+
+        router.push('/(tabs)/dashbord');
+      }
+    } catch (error) {
+      const { message } = error as ApiError;
+      Alert.alert('Request failed:', message);
+    }
   };
 
   const addUnitField = () => {
@@ -49,20 +121,24 @@ export const RequestAccess: React.FC<Props> = () => {
           label='Your email (User ID)'
           placeHolder='ola@nordmann.no'
           value={email}
-          onChangeText={setEmail}
+          type='email'
+          onChangeText={handleEmail}
+          errorMessage={emailError}
           darkMode={true}
         />
         <Input
           icon='User'
           label='Your full name'
           value={fullName}
-          onChangeText={setFullName}
+          onChangeText={handleName}
+          errorMessage={nameError}
           darkMode={true}
         />
         <Input
           icon='Phone'
           label='Your mobile number'
           value={mobileNumber}
+          type='tel'
           onChangeText={setMobileNumber}
           darkMode={true}
         />

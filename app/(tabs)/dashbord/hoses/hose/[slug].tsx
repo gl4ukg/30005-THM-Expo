@@ -12,6 +12,8 @@ import { GHD as GeneralInfoType } from '@/components/detailView/types';
 import { UHD as UniversalHoseDataType } from '@/components/detailView/types';
 import UniversalHoseData from '@/components/detailView/UniversalHoseData';
 import TessPartNumbers from '@/components/detailView/TessPartNumbers';
+import { ActionsFab } from '@/components/UI/ActionMenu/fab';
+import { IconName } from '@/components/Icon/iconMapping';
 
 type HoseData = {
   customerId: string;
@@ -140,6 +142,8 @@ const HoseDetails = () => {
   const [editedTPNData, setEditedTPNData] = useState(
     mapHoseDataToTPN(hoseData),
   );
+  const scrollToSection = (sectionId: string) => {
+    const ref = sectionRefs[sectionId as keyof typeof sectionRefs];
 
   const handleInputChange = (field: string, value: string) => {
     if (editedGeneralInfo.hasOwnProperty(field)) {
@@ -235,8 +239,8 @@ const HoseDetails = () => {
         onLayout={(event) => {
           setHeaderHeight(event.nativeEvent.layout.height);
         }}
-        style={styles.header}
-      >
+      ></View>
+      <ScrollView ref={scrollViewRef}>
         <DetailsHeader
           id={hoseData.id}
           date={hoseData.prodDate}

@@ -1,3 +1,5 @@
+import { RadioGroup } from '@/components/detailHose/radioGroup';
+import { SelectField } from '@/components/detailHose/SelectField';
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
 import { ButtonTHS } from '@/components/UI';
@@ -5,6 +7,7 @@ import { LinkButton } from '@/components/UI/Button/linkButton';
 import { Input } from '@/components/UI/Input/input';
 import { colors } from '@/lib/tokens/colors';
 import { Link } from 'expo-router';
+import { condition } from '@/components/detailHose/data/lists';
 import { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -21,13 +24,17 @@ const Ui = () => {
   const [iconsExpanded, setIconsExpanded] = useState(false);
   const [typographyExpanded, setTypographyExpanded] = useState(false);
   const [buttonsExpanded, setButtonsExpanded] = useState(false);
-  const [inputsExpanded, setInputsExpanded] = useState(true);
+  const [inputsExpanded, setInputsExpanded] = useState(false);
+  const [radioBtnExpanded, setRadioBtnExpanded] = useState(false);
+  const [selectExpanded, setSelectExpanded] = useState(true);
 
   const [name, setName] = useState('');
   const [genericText, setGenericText] = useState('');
   const [phone, setPhone] = useState('');
 
   const [error, setError] = useState<undefined | string>(undefined);
+  const [selectedChoiceId, setSelectedChoiceId] = useState<string>('');
+
   const inputRef = useRef<TextInput>(null);
 
   function handleChangeName(input: string) {
@@ -565,6 +572,59 @@ const Ui = () => {
                 value={genericText}
                 type={'textArea'}
                 onChangeText={setGenericText}
+              />
+            </View>
+            <Pressable
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
+              onPress={() => setRadioBtnExpanded(!radioBtnExpanded)}
+            >
+              <Typography
+                text='Radio buttons'
+                name='sectionHeaderCapslock'
+                style={{ color: colors.black }}
+              />
+              {radioBtnExpanded ? (
+                <Icon name='ChevronDown' size='md' color={colors.black} />
+              ) : (
+                <Icon name='ChevronRight' size='md' color={colors.black} />
+              )}
+            </Pressable>
+            <View style={{ display: radioBtnExpanded ? 'flex' : 'none' }}>
+              <RadioGroup
+                label={'UV exposure'}
+                choices={[
+                  { id: '1', label: 'internal, not exposed' },
+                  { id: '2', label: 'Exposed' },
+                ]}
+                selected={selectedChoiceId}
+                onChange={setSelectedChoiceId}
+                type={'horizontal'}
+              />
+            </View>
+            <Pressable
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
+              onPress={() => setSelectExpanded(!selectExpanded)}
+            >
+              <Typography
+                text='Select'
+                name='sectionHeaderCapslock'
+                style={{ color: colors.black }}
+              />
+              {selectExpanded ? (
+                <Icon name='ChevronDown' size='md' color={colors.black} />
+              ) : (
+                <Icon name='ChevronRight' size='md' color={colors.black} />
+              )}
+            </Pressable>
+            <View style={{ display: selectExpanded ? 'flex' : 'none' }}>
+              <SelectField
+                label='Condition'
+                value={''}
+                onChange={() => {
+                  return;
+                }}
+                required={true}
+                options={condition.map((c) => ({ id: c, label: c }))}
               />
             </View>
           </ScrollView>
