@@ -5,7 +5,6 @@ import { ContextProvider, useAppContext } from '@/context/ContextProvider';
 
 export default function RootLayout() {
   const { state } = useAppContext();
-  console.log(state.auth.user);
 
   return (
     <ContextProvider>

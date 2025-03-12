@@ -69,7 +69,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Order hoses',
-                to: '/(app)/user',
+                to: '/(app)/dashbord/actions',
                 icon: () => <Icon name='Cart' color='#009640' />,
               },
               {
