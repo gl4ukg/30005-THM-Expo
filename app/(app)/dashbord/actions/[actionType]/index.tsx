@@ -1,3 +1,4 @@
+import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
@@ -110,69 +111,111 @@ const ActionElement: React.FC<ActionElementProps> = ({
   onRowPress,
   onRemove,
 }) => {
+  const { id } = item;
   return (
-    <Pressable onPress={onRowPress}>
-      <View style={[actionElementStyle.container]}>
+    <View style={[actionElementStyle.rowContainer]}>
+      <Pressable onPress={onRowPress} style={actionElementStyle.pressableRow}>
         <View style={actionElementStyle.columnOne}>
-          <Typography name='tableContentNumber' text={id} />
-          <View style={actionElementStyle.iconsContainer}>
-            <View style={actionElementStyle.iconContainer}>
-              {hasRFID && (
-                <Icon
-                  name='RfidIdentificator'
-                  color={colors.black}
-                  size='xsm'
-                />
-              )}
-            </View>
-            <View style={actionElementStyle.iconContainer}>
-              {missingData && (
-                <Icon name='Alert' color={colors.error} size='xsm' />
-              )}
-            </View>
-            <View style={actionElementStyle.iconContainer}>
-              {hasAttachment && (
-                <Icon name='Attachment' color={colors.black} size='xsm' />
-              )}
-            </View>
-          </View>
+          <Typography
+            name='tableContentNumber'
+            text={id}
+            style={actionElementStyle.number}
+          />
         </View>
         <View style={actionElementStyle.columnTwo}>
-          <Typography
-            name='tableContent'
-            text={position}
-            numberOfLines={1}
-            ellipsizeMode='tail'
-          />
-          <View style={actionElementStyle.subtitleDateContainer}>
+          <View style={actionElementStyle.columnTwoUp}>
             <Typography
-              name='tableContent'
-              text={
-                condition?.length
-                  ? condition
-                  : '44-Visible leakage - and some more defects'
-              }
-              style={actionElementStyle.subtitle}
               numberOfLines={1}
+              name='tableContent'
+              text={'Draft'}
+              style={actionElementStyle.columnThree}
             />
             <Typography
-              name='tableContentNumber'
-              text={lastInspection?.length ? lastInspection : 'N/A'}
-              style={actionElementStyle.date}
+              numberOfLines={1}
+              name='tableContent'
+              text={'Yes'}
+              style={actionElementStyle.columnFour}
+            />
+            <Typography
+              numberOfLines={1}
+              name='tableContent'
+              text={'311224'}
+              style={[actionElementStyle.number, actionElementStyle.columnFive]}
+            />
+          </View>
+          <View style={actionElementStyle.columnTwoDown}>
+            <Typography
+              numberOfLines={1}
+              name='tableContent'
+              text={'4 hoses on Deck crane'}
             />
           </View>
         </View>
-        <View style={actionElementStyle.columnThree}>
-          {item && (
-            <Checkbox isChecked={!!isSelected} onChange={handleSelect} />
-          )}
-        </View>
+      </Pressable>
+      <View style={actionElementStyle.removeWrapper}>
+        <Pressable onPress={onRemove} style={actionElementStyle.removeButton}>
+          <Icon name='Cross' color={colors.errorText} size='lg' />
+        </Pressable>
       </View>
-    </Pressable>
+    </View>
   );
 };
 
-const actionElementStyle = StyleSheet.create({});
+const columns = StyleSheet.create({
+  one: {
+    width: 100,
+  },
+  two: {
+    width: 100,
+  },
+  three: {},
+});
+
+const actionElementStyle = StyleSheet.create({
+  rowContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 5,
+    borderBottomColor: colors.secondary95,
+    borderBottomWidth: 1,
+  },
+  pressableRow: {
+    height: '100%',
+    flex: 1,
+    gap: 10,
+    flexDirection: 'row',
+  },
+  columnOne: {
+    paddingLeft: 10,
+    width: 90,
+  },
+  columnTwo: {
+    backgroundColor: 'pink',
+    height: '100%',
+    flex: 1,
+  },
+  columnTwoUp: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  columnTwoDown: {
+    flex: 1,
+  },
+  columnThree: { width: 100 },
+  columnFour: { width: 100 },
+  columnFive: { width: 100, justifyContent: 'flex-end' },
+  removeWrapper: {
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  number: {
+    color: colors.extended666,
+  },
+  removeButton: {},
+});
 
 const style = StyleSheet.create({
   header: {
@@ -196,7 +239,7 @@ const style = StyleSheet.create({
   label: {
     alignSelf: 'flex-start',
   },
-  labelColumOne: { width: 80 },
+  labelColumOne: { width: 90 },
   labelColumTwo: { flex: 1 },
   labelColumThree: { flex: 1 },
   labelColumFour: { width: 80 },
