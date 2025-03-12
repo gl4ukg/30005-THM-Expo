@@ -9,7 +9,7 @@ import { mockedData } from '../[filter]/mocked';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 import { GHD as GeneralInfoType } from '@/components/detailView/types';
-import { UVH as UniversalHoseDataType } from '@/components/detailView/types';
+import { UHD as UniversalHoseDataType } from '@/components/detailView/types';
 import UniversalHoseData from '@/components/detailView/UniversalHoseData';
 import TessPartNumbers from '@/components/detailView/TessPartNumbers';
 

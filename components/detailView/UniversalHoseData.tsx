@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Datafield from './Datafield';
-import { UVH } from './types';
+import { UHD } from './types';
 import Bookmark from './Bookmark';
 import { Input } from '../UI/Input/input';
 import { SelectField } from '../detailHose/SelectField';
@@ -11,7 +11,7 @@ import { Icon } from '../Icon/Icon';
 import { colors } from '@/lib/tokens/colors';
 
 interface UniversalHoseDataProps {
-  universalHoseData: UVH;
+  universalHoseData: UHD;
   editMode: boolean;
   onInputChange: (field: string, value: string) => void;
 }

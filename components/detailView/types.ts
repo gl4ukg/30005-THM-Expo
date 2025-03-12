@@ -12,7 +12,7 @@ export type GHD = {
   uvExposure: string;
 };
 
-export type UVH = {
+export type UHD = {
   hoseStandard: string;
   innerDiameter: string;
   totalLength: string;
