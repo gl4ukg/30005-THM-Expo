@@ -121,6 +121,7 @@ export const RequestAccess: React.FC<Props> = () => {
           label='Your email (User ID)'
           placeHolder='ola@nordmann.no'
           value={email}
+          type='email'
           onChangeText={handleEmail}
           errorMessage={emailError}
           darkMode={true}
@@ -137,6 +138,7 @@ export const RequestAccess: React.FC<Props> = () => {
           icon='Phone'
           label='Your mobile number'
           value={mobileNumber}
+          type='tel'
           onChangeText={setMobileNumber}
           darkMode={true}
         />
