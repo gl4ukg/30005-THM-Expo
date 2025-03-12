@@ -52,7 +52,14 @@ interface Hose extends Record<string, string | boolean | number> {
   missingData: boolean;
   prodDate: string;
 }
-
+type ActionsType = 'RFQ' | 'SCRAP' | 'CONTACT';
+interface Action {
+  type: ActionsType;
+  createdAt: string; // TODO: change to timestamp
+  actionId: string;
+  actionHoseList: Hose[];
+  status: 'DRAFT' | 'SENDT';
+}
 interface DataState {
   // define data state properties
   assignedUnits: {
@@ -62,13 +69,10 @@ interface DataState {
     };
   };
   selectedUnitId: null | string;
-  drafts: {
-    [type: string]: {
-      draftListId: string;
-      draftList: Hose[];
-    };
+  actions: {
+    [T in ActionsType]: Action[];
   };
-  aktiveDraftsListId: null | string;
+  aktiveDraft: null | (Omit<Action, 'status'> & { status: 'DRAFT' });
 }
 
 interface SettingsState {
@@ -87,8 +91,12 @@ const initialDataState: DataState = {
   // initial data state values
   assignedUnits: {},
   selectedUnitId: null,
-  drafts: {},
-  aktiveDraftsListId: null,
+  actions: {
+    RFQ: [],
+    SCRAP: [],
+    CONTACT: [],
+  },
+  aktiveDraft: null,
 };
 
 const initialSettingsState: SettingsState = {
