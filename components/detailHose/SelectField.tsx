@@ -60,9 +60,12 @@ export const SelectField: React.FC<SelectFieldProps> = ({
           style={[styles.inputContainer, hasError && styles.errorBorder]}
           onPress={() => setModalOpen(true)}
         >
-          <Text style={[styles.valueText, hasError && styles.errorStyle]}>
-            {selectedValue || 'Select...'}
-          </Text>
+          <Typography
+            name='navigation'
+            style={[hasError && styles.errorStyle]}
+            text={selectedValue || 'Select...'}
+          />
+
           <View style={styles.iconContainer}>
             <Icon
               name='CaretRight'
@@ -143,9 +146,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: colors.white,
     width: '100%',
-  },
-  valueText: {
-    fontSize: 16,
   },
   fullScreenModal: {
     flex: 1,
