@@ -16,25 +16,25 @@ export const SelectedHoseCounter: React.FC<Props> = ({
   handlePress,
 }) => {
   return (
-    <Pressable onPress={handlePress}>
-      <View style={elementStyle.frame}>
-        <Typography
-          name={'navigation'}
-          text={'(' + counter.toString() + ')'}
-          style={elementStyle.counter}
-        />
-        <Icon name={icon} color={colors.primary} size='md' />
-      </View>
+    <Pressable onPress={handlePress} style={elementStyle.button}>
+      <Typography
+        name={'navigation'}
+        text={'(' + counter.toString() + ')'}
+        style={elementStyle.counter}
+      />
+      <Icon name={icon} color={colors.primary} size='md' />
     </Pressable>
   );
 };
 
 const elementStyle = StyleSheet.create({
-  frame: {
+  button: {
     width: 50,
     height: 50,
     alignItems: 'center',
     marginBottom: 20,
   },
-  counter: { color: colors.secondary25, textAlign: 'right', paddingLeft: 2 },
+  counter: {
+    color: colors.secondary25,
+  },
 });
