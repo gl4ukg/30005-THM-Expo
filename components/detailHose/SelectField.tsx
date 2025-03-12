@@ -60,7 +60,9 @@ export const SelectField: React.FC<SelectFieldProps> = ({
           style={[styles.inputContainer, hasError && styles.errorBorder]}
           onPress={() => setModalOpen(true)}
         >
-          <Text style={styles.valueText}>{selectedValue || 'Select...'}</Text>
+          <Text style={[styles.valueText, hasError && styles.errorStyle]}>
+            {selectedValue || 'Select...'}
+          </Text>
           <View style={styles.iconContainer}>
             <Icon
               name='CaretRight'
