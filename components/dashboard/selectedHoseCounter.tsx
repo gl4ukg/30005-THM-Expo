@@ -19,7 +19,7 @@ export const SelectedHoseCounter: React.FC<Props> = ({
     <Pressable onPress={handlePress} style={elementStyle.button}>
       <Typography
         name={'navigation'}
-        text={'(' + counter.toString() + ')'}
+        text={`(${counter})`}
         style={elementStyle.counter}
       />
       <Icon name={icon} color={colors.primary} size='md' />
@@ -31,7 +31,7 @@ const elementStyle = StyleSheet.create({
   button: {
     width: 50,
     height: 50,
-    alignItems: 'center',
+    alignItems: 'flex-end',
     marginBottom: 20,
   },
   counter: {
