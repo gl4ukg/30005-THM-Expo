@@ -1,4 +1,5 @@
 import { RadioGroup } from '@/components/detailHose/radioGroup';
+import { SelectField } from '@/components/detailHose/SelectField';
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
 import { ButtonTHS } from '@/components/UI';
@@ -6,6 +7,7 @@ import { LinkButton } from '@/components/UI/Button/linkButton';
 import { Input } from '@/components/UI/Input/input';
 import { colors } from '@/lib/tokens/colors';
 import { Link } from 'expo-router';
+import { condition } from '@/components/detailHose/data/lists';
 import { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -23,7 +25,8 @@ const Ui = () => {
   const [typographyExpanded, setTypographyExpanded] = useState(false);
   const [buttonsExpanded, setButtonsExpanded] = useState(false);
   const [inputsExpanded, setInputsExpanded] = useState(false);
-  const [radioBtnExpanded, setRadioBtnExpanded] = useState(true);
+  const [radioBtnExpanded, setRadioBtnExpanded] = useState(false);
+  const [selectExpanded, setSelectExpanded] = useState(true);
 
   const [name, setName] = useState('');
   const [genericText, setGenericText] = useState('');
@@ -596,6 +599,32 @@ const Ui = () => {
                 selected={selectedChoiceId}
                 onChange={setSelectedChoiceId}
                 type={'horizontal'}
+              />
+            </View>
+            <Pressable
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
+              onPress={() => setSelectExpanded(!selectExpanded)}
+            >
+              <Typography
+                text='Select'
+                name='sectionHeaderCapslock'
+                style={{ color: colors.black }}
+              />
+              {selectExpanded ? (
+                <Icon name='ChevronDown' size='md' color={colors.black} />
+              ) : (
+                <Icon name='ChevronRight' size='md' color={colors.black} />
+              )}
+            </Pressable>
+            <View style={{ display: selectExpanded ? 'flex' : 'none' }}>
+              <SelectField
+                label='Condition'
+                value={''}
+                onChange={() => {
+                  return;
+                }}
+                required={true}
+                options={condition.map((c) => ({ id: c, label: c }))}
               />
             </View>
           </ScrollView>
