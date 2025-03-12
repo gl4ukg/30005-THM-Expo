@@ -11,6 +11,7 @@ import HistoryView from '@/components/detailView/History';
 import { GHD as GeneralInfoType } from '@/components/detailView/types';
 import { UVH as UniversalHoseDataType } from '@/components/detailView/types';
 import UniversalHoseData from '@/components/detailView/UniversalHoseData';
+import TessPartNumbers from '@/components/detailView/TessPartNumbers';
 
 type HoseData = {
   customerId: string;
@@ -48,6 +49,22 @@ type HoseData = {
   gender: string;
   angle: string;
   commentEnd1: string;
+  hoseType: string;
+  ferrule1: string;
+  ferrule2: string;
+  insert1: string;
+  insert2: string;
+  addAEnd1: string;
+  addBEnd1: string;
+  addCEnd1: string;
+  addAEnd2: string;
+  addBEnd2: string;
+  addCEnd2: string;
+  spiralGuard: string;
+  hookie: string;
+  whipcheck: string;
+  hoseProtection: string;
+  breakAwayWeakLink: string;
 };
 
 const HoseDetails = () => {
@@ -93,12 +110,35 @@ const HoseDetails = () => {
     commentEnd1: hoseData?.commentEnd1 || '',
   });
 
+  const mapHoseDataToTPN = (hoseData: HoseData) => ({
+    hoseType: hoseData?.hoseType || '',
+    ferrule1: hoseData?.ferrule1 || '',
+    ferrule2: hoseData?.ferrule2 || '',
+    insert1: hoseData?.insert1 || '',
+    insert2: hoseData?.insert2 || '',
+    addAEnd1: hoseData?.addAEnd1 || '',
+    addBEnd1: hoseData?.addBEnd1 || '',
+    addCEnd1: hoseData?.addCEnd1 || '',
+    addAEnd2: hoseData?.addAEnd2 || '',
+    addBEnd2: hoseData?.addBEnd2 || '',
+    addCEnd2: hoseData?.addCEnd2 || '',
+    spiralGuard: hoseData?.spiralGuard || '',
+    hookie: hoseData?.hookie || '',
+    whipcheck: hoseData?.whipcheck || '',
+    hoseProtection: hoseData?.hoseProtection || '',
+    breakAwayWeakLink: hoseData?.breakAwayWeakLink || '',
+  });
+
   const [editedGeneralInfo, setEditedGeneralInfo] = useState(
     mapHoseDataToGeneralInfo(hoseData),
   );
 
   const [editedUniversalHoseData, setEditedUniversalHoseData] = useState(
     mapHoseDataToUniversalHoseData(hoseData),
+  );
+
+  const [editedTPNData, setEditedTPNData] = useState(
+    mapHoseDataToTPN(hoseData),
   );
 
   const handleInputChange = (field: string, value: string) => {
@@ -109,6 +149,11 @@ const HoseDetails = () => {
       }));
     } else if (editedUniversalHoseData.hasOwnProperty(field)) {
       setEditedUniversalHoseData((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    } else if (editedTPNData.hasOwnProperty(field)) {
+      setEditedTPNData((prev) => ({
         ...prev,
         [field]: value,
       }));
@@ -221,6 +266,11 @@ const HoseDetails = () => {
         />
         <UniversalHoseData
           universalHoseData={editedUniversalHoseData}
+          editMode={editMode}
+          onInputChange={handleInputChange}
+        />
+        <TessPartNumbers
+          tessPartNumbersData={editedTPNData}
           editMode={editMode}
           onInputChange={handleInputChange}
         />

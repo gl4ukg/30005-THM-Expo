@@ -3,26 +3,11 @@ import { View, StyleSheet } from 'react-native';
 import Datafield from './Datafield';
 import Bookmark from './Bookmark';
 import { SelectField } from '../detailHose/SelectField';
+import { TPN } from './types';
+import { Typography } from '../typography';
 
 interface TessPartNumbersProps {
-  tessPartNumbersData: {
-    hoseType: string;
-    ferrule1: string;
-    ferrule2: string;
-    insert1: string;
-    insert2: string;
-    addAEnd1: string;
-    addBEnd1: string;
-    addCEnd1: string;
-    addAEnd2: string;
-    addBEnd2: string;
-    addCEnd2: string;
-    spiralGuard: string;
-    hookie: string;
-    whipcheck: string;
-    hoseProtection: string;
-    breakAwayWeakLink: string;
-  };
+  tessPartNumbersData: TPN;
   editMode: boolean;
   onInputChange: (field: string, value: string) => void;
 }
@@ -67,6 +52,10 @@ const TessPartNumbers: React.FC<TessPartNumbersProps> = ({
             onChange={(value) => onInputChange('insert2', value)}
             options={[]}
           />
+          <Typography
+            name='navigationBold'
+            text='Additional Parts Mounted On Hose'
+          />
           <SelectField
             label='Add A End 1'
             value={tessPartNumbersData.addAEnd1}
@@ -103,6 +92,8 @@ const TessPartNumbers: React.FC<TessPartNumbersProps> = ({
             onChange={(value) => onInputChange('addCEnd2', value)}
             options={[]}
           />
+          <Typography name='navigationBold' text='Safety & Protection' />
+
           <SelectField
             label='Spiral Guard'
             value={tessPartNumbersData.spiralGuard}
@@ -141,12 +132,17 @@ const TessPartNumbers: React.FC<TessPartNumbersProps> = ({
           <Datafield label='Ferrule 2' value={tessPartNumbersData.ferrule2} />
           <Datafield label='Insert 1' value={tessPartNumbersData.insert1} />
           <Datafield label='Insert 2' value={tessPartNumbersData.insert2} />
+          <Typography
+            name='navigationBold'
+            text='Additional Parts Mounted On Hose'
+          />
           <Datafield label='Add A End 1' value={tessPartNumbersData.addAEnd1} />
           <Datafield label='Add B End 1' value={tessPartNumbersData.addBEnd1} />
           <Datafield label='Add C End 1' value={tessPartNumbersData.addCEnd1} />
           <Datafield label='Add A End 2' value={tessPartNumbersData.addAEnd2} />
           <Datafield label='Add B End 2' value={tessPartNumbersData.addBEnd2} />
           <Datafield label='Add C End 2' value={tessPartNumbersData.addCEnd2} />
+          <Typography name='navigationBold' text='Safety & Protection' />
           <Datafield
             label='Spiral Guard'
             value={tessPartNumbersData.spiralGuard}
