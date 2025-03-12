@@ -162,6 +162,20 @@ const UniversalHoseData = ({
               onInputChange={onInputChange}
             />
           )}
+          {sameAsEnd1 && (
+            <EditCouplingSection
+              universalHoseData={{
+                ...universalHoseData,
+                materialQuality: universalHoseData.materialQuality,
+                typeFitting: universalHoseData.typeFitting,
+                innerDiameter2: universalHoseData.innerDiameter2,
+                gender: universalHoseData.gender,
+                angle: universalHoseData.angle,
+                commentEnd1: universalHoseData.commentEnd1,
+              }}
+              onInputChange={onInputChange}
+            />
+          )}
         </>
       ) : (
         <>
@@ -200,10 +214,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   inputContainer: {
-    marginBottom: 10,
-  },
-  sectionContainer: {
-    marginTop: 20,
     marginBottom: 10,
   },
   sectionTitleContainer: {
