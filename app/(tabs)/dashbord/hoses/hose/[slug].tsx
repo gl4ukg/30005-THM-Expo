@@ -12,8 +12,6 @@ import { GHD as GeneralInfoType } from '@/components/detailView/types';
 import { UHD as UniversalHoseDataType } from '@/components/detailView/types';
 import UniversalHoseData from '@/components/detailView/UniversalHoseData';
 import TessPartNumbers from '@/components/detailView/TessPartNumbers';
-import { ActionsFab } from '@/components/UI/ActionMenu/fab';
-import { IconName } from '@/components/Icon/iconMapping';
 
 type HoseData = {
   customerId: string;
@@ -142,8 +140,6 @@ const HoseDetails = () => {
   const [editedTPNData, setEditedTPNData] = useState(
     mapHoseDataToTPN(hoseData),
   );
-  const scrollToSection = (sectionId: string) => {
-    const ref = sectionRefs[sectionId as keyof typeof sectionRefs];
 
   const handleInputChange = (field: string, value: string) => {
     if (editedGeneralInfo.hasOwnProperty(field)) {
@@ -240,28 +236,26 @@ const HoseDetails = () => {
           setHeaderHeight(event.nativeEvent.layout.height);
         }}
       ></View>
-      <ScrollView ref={scrollViewRef}>
-        <DetailsHeader
-          id={hoseData.id}
-          date={hoseData.prodDate}
-          missingData={checkMissingData(editedGeneralInfo)}
-          shortcuts={shortcuts}
-        />
+      <DetailsHeader
+        id={hoseData.id}
+        date={hoseData.prodDate}
+        missingData={checkMissingData(editedGeneralInfo)}
+        shortcuts={shortcuts}
+      />
+      <ButtonTHS
+        title={editMode ? 'Cancel Edit' : 'Edit'}
+        onPress={toggleEditMode}
+        variant='primary'
+        size='sm'
+      />
+      {editMode && (
         <ButtonTHS
-          title={editMode ? 'Cancel Edit' : 'Edit'}
-          onPress={toggleEditMode}
-          variant='primary'
+          title='Save'
+          onPress={handleSave}
+          variant='secondary'
           size='sm'
         />
-        {editMode && (
-          <ButtonTHS
-            title='Save'
-            onPress={handleSave}
-            variant='secondary'
-            size='sm'
-          />
-        )}
-      </View>
+      )}
       <ScrollView ref={scrollViewRef}>
         <GeneralInfo
           generalInfo={editedGeneralInfo}

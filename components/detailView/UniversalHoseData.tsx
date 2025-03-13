@@ -16,7 +16,7 @@ interface UniversalHoseDataProps {
   onInputChange: (field: string, value: string) => void;
 }
 
-const CouplingSection = ({ universalHoseData }) => (
+const CouplingSection = ({ universalHoseData }: { universalHoseData: UHD }) => (
   <>
     <Datafield
       label='Material Quality'
@@ -33,7 +33,13 @@ const CouplingSection = ({ universalHoseData }) => (
   </>
 );
 
-const EditCouplingSection = ({ universalHoseData, onInputChange }) => (
+const EditCouplingSection = ({
+  universalHoseData,
+  onInputChange,
+}: {
+  universalHoseData: UHD;
+  onInputChange: () => {};
+}) => (
   <>
     <SelectField
       label='Material Quality'
@@ -135,6 +141,7 @@ const UniversalHoseData = ({
               onChangeText={(text) => onInputChange('wpPsi', text)}
             />
           </View>
+          <Typography name='navigationBold' text='Coupling end 1' />
           <EditCouplingSection
             universalHoseData={universalHoseData}
             onInputChange={onInputChange}
@@ -202,7 +209,9 @@ const UniversalHoseData = ({
               <Typography name='button' text='Same as end 1' />
             </View>
           </View>
-          <CouplingSection universalHoseData={universalHoseData} />
+          {!sameAsEnd1 && (
+            <CouplingSection universalHoseData={universalHoseData} />
+          )}
         </>
       )}
     </View>
