@@ -52,10 +52,12 @@ const TessPartNumbers: React.FC<TessPartNumbersProps> = ({
             onChange={(value) => onInputChange('insert2', value)}
             options={[]}
           />
-          <Typography
-            name='navigationBold'
-            text='Additional Parts Mounted On Hose'
-          />
+          <View style={styles.section}>
+            <Typography
+              name='navigationBold'
+              text='Additional Parts Mounted On Hose'
+            />
+          </View>
           <SelectField
             label='Add A End 1'
             value={tessPartNumbersData.addAEnd1}
@@ -92,8 +94,9 @@ const TessPartNumbers: React.FC<TessPartNumbersProps> = ({
             onChange={(value) => onInputChange('addCEnd2', value)}
             options={[]}
           />
-          <Typography name='navigationBold' text='Safety & Protection' />
-
+          <View style={styles.section}>
+            <Typography name='navigationBold' text='Safety & Protection' />
+          </View>
           <SelectField
             label='Spiral Guard'
             value={tessPartNumbersData.spiralGuard}
@@ -132,17 +135,21 @@ const TessPartNumbers: React.FC<TessPartNumbersProps> = ({
           <Datafield label='Ferrule 2' value={tessPartNumbersData.ferrule2} />
           <Datafield label='Insert 1' value={tessPartNumbersData.insert1} />
           <Datafield label='Insert 2' value={tessPartNumbersData.insert2} />
-          <Typography
-            name='navigationBold'
-            text='Additional Parts Mounted On Hose'
-          />
+          <View style={styles.section}>
+            <Typography
+              name='navigationBold'
+              text='Additional Parts Mounted On Hose'
+            />
+          </View>
           <Datafield label='Add A End 1' value={tessPartNumbersData.addAEnd1} />
           <Datafield label='Add B End 1' value={tessPartNumbersData.addBEnd1} />
           <Datafield label='Add C End 1' value={tessPartNumbersData.addCEnd1} />
           <Datafield label='Add A End 2' value={tessPartNumbersData.addAEnd2} />
           <Datafield label='Add B End 2' value={tessPartNumbersData.addBEnd2} />
           <Datafield label='Add C End 2' value={tessPartNumbersData.addCEnd2} />
-          <Typography name='navigationBold' text='Safety & Protection' />
+          <View style={styles.section}>
+            <Typography name='navigationBold' text='Safety & Protection' />
+          </View>
           <Datafield
             label='Spiral Guard'
             value={tessPartNumbersData.spiralGuard}
@@ -166,6 +173,9 @@ const TessPartNumbers: React.FC<TessPartNumbersProps> = ({
 const styles = StyleSheet.create({
   container: {
     padding: 10,
+  },
+  section: {
+    marginBottom: 10,
   },
 });
 
