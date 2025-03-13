@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Modal,
-  Pressable,
-  SafeAreaView,
-  Platform,
-} from 'react-native';
+import { View, StyleSheet, Modal, Pressable, SafeAreaView } from 'react-native';
 import { colors } from '@/lib/tokens/colors';
 import { Icon } from '../Icon/Icon';
 import { Typography } from '../typography';
