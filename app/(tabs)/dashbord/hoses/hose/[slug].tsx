@@ -229,13 +229,7 @@ const HoseDetails = () => {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View
-        ref={detailsHeaderRef}
-        onLayout={(event) => {
-          setHeaderHeight(event.nativeEvent.layout.height);
-        }}
-      ></View>
+    <>
       <DetailsHeader
         id={hoseData.id}
         date={hoseData.prodDate}
@@ -276,18 +270,8 @@ const HoseDetails = () => {
           <View key={section.id}>{section.content}</View>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  header: {
-    marginTop: -70,
-  },
-});
 
 export default HoseDetails;
