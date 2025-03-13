@@ -72,8 +72,7 @@ const HoseDetails = () => {
   const hoseData = mockedData.find(
     (hose) => hose.id === slug,
   ) as unknown as HoseData;
-  const [headerHeight, setHeaderHeight] = useState(0);
-  const detailsHeaderRef = useRef(null);
+
   const scrollViewRef = useRef(null);
   const structureRef = useRef(null);
   const historyRef = useRef(null);
