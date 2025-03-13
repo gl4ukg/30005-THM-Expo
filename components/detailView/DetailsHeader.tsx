@@ -1,62 +1,48 @@
 import { colors } from '@/lib/tokens/colors';
 import { formatDate } from '@/lib/util/formatDate';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 import { Icon } from '../Icon/Icon';
 import { Typography } from '../typography';
-import { ActionMenu } from '../UI/ActionMenu';
-import { useState } from 'react';
 
 type DetailsHeaderProps = {
   id: string;
   date: string;
   shortcuts?: any;
   missingData?: boolean;
-  scrollToSection?: (sectionId: string) => void;
 };
 
 const DetailsHeader: React.FC<DetailsHeaderProps> = ({
   id,
   date,
   missingData,
-  shortcuts,
-  scrollToSection,
 }) => {
-  const [action, setAction] = useState<string | null>(null);
-
-  const options = [
-    { value: 'inspect', label: 'Inspect', icon: 'Inspect' },
-    { value: 'scrap', label: 'Scrap', icon: 'Trash' },
-    { value: 'requestForQuote', label: 'Request for quote', icon: 'Cart' },
-    { value: 'contactTessTeam', label: 'Contact TESS Team', icon: 'Email' },
-  ];
   return (
-    <>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <View style={styles.headerRow}>
-            {missingData && (
-              <Icon name='Alert' color={colors.error} size='sm' />
-            )}
-            <Typography style={styles.hoseData} name={'fieldLabel'}>
-              Hose ID:{' '}
-              <Typography name={'fieldValue'} style={styles.boldText}>
-                {id}
-              </Typography>
-            </Typography>
-          </View>
+        <View style={styles.headerRow}>
+          {missingData && <Icon name='Alert' color={colors.error} size='sm' />}
           <Typography style={styles.hoseData} name={'fieldLabel'}>
-            Production Date:
+            Hose ID:{' '}
             <Typography name={'fieldValue'} style={styles.boldText}>
-              {formatDate(date)}
+              {id}
             </Typography>
           </Typography>
         </View>
+        <Typography style={styles.hoseData} name={'fieldLabel'}>
+          Production Date:
+          <Typography name={'fieldValue'} style={styles.boldText}>
+            {formatDate(date)}
+          </Typography>
+        </Typography>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    marginTop: 20,
+  },
   header: {
     marginBottom: 20,
     alignItems: 'center',
@@ -79,4 +65,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
 export default DetailsHeader;
