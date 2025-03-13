@@ -119,7 +119,14 @@ const HoseDetails = () => {
       title: 'Structure',
       content: (
         <View ref={structureRef}>
-          <Structure />
+          <Structure
+            structure={[
+              'Customer WEB DEMO',
+              'Test Princess',
+              'This structure is really long and should hopefully wrap',
+            ]}
+            name={'5254-04 x 250 mm'}
+          />
         </View>
       ),
     },
