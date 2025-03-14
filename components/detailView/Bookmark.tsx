@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   content: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    gap: 6,
     color: colors.primary25,
   },
   title: {

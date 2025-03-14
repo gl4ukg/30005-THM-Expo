@@ -48,7 +48,8 @@
             "node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_400Regular.ttf"
           ]
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

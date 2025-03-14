@@ -7,7 +7,7 @@ import { colors } from '@/lib/tokens/colors';
 import { HelpLinks } from './helpLinks';
 import { LinkButton } from '@/components/UI/Button/linkButton';
 import { Typography } from '@/components/typography';
-import { useTHSContext } from '@/context/THScontextProvider';
+import { useAppContext } from '@/context/ContextProvider';
 import { router } from 'expo-router';
 import { emailValidation } from '@/lib/util/validation';
 
@@ -45,7 +45,7 @@ const mockApiCall = (data: RequestData): Promise<ApiResponse> => {
 };
 
 export const RequestAccess: React.FC<Props> = () => {
-  const { state, dispatch } = useTHSContext();
+  const { state, dispatch } = useAppContext();
 
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
@@ -64,7 +64,7 @@ export const RequestAccess: React.FC<Props> = () => {
     } else setEmailError(validation);
   }
 
-  function handleName(name: string) {
+  function handleNameChange(name: string) {
     setFullName(name);
     if (!/^[\p{L}\s]+$/u.test(fullName) && fullName !== '') {
       setNameError('Invalid Name: Please enter a valid name.');
@@ -87,11 +87,11 @@ export const RequestAccess: React.FC<Props> = () => {
         console.log('Request successful:', response);
 
         dispatch({
-          type: 'SET_USER',
+          type: 'LOGIN',
           payload: { email, name: fullName, id: mobileNumber },
         });
 
-        router.push('/(tabs)/dashbord');
+        router.push('/(app)/dashbord');
       }
     } catch (error) {
       const { message } = error as ApiError;
@@ -121,6 +121,7 @@ export const RequestAccess: React.FC<Props> = () => {
           label='Your email (User ID)'
           placeHolder='ola@nordmann.no'
           value={email}
+          type='email'
           onChangeText={handleEmail}
           errorMessage={emailError}
           darkMode={true}
@@ -129,7 +130,7 @@ export const RequestAccess: React.FC<Props> = () => {
           icon='User'
           label='Your full name'
           value={fullName}
-          onChangeText={handleName}
+          onChangeText={handleNameChange}
           errorMessage={nameError}
           darkMode={true}
         />
@@ -137,6 +138,7 @@ export const RequestAccess: React.FC<Props> = () => {
           icon='Phone'
           label='Your mobile number'
           value={mobileNumber}
+          type='tel'
           onChangeText={setMobileNumber}
           darkMode={true}
         />

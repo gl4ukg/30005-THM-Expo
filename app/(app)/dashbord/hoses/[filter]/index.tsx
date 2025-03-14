@@ -1,4 +1,4 @@
-import { mockedData } from '@/app/(tabs)/dashbord/hoses/[filter]/mocked';
+import { mockedData } from '@/context/mocked';
 import { ListTable } from '@/components/dashboard/listTable';
 import { SelectedHoseCounter } from '@/components/dashboard/selectedHoseCounter';
 import { Typography } from '@/components/typography';
@@ -8,6 +8,7 @@ import { StyleSheet, View } from 'react-native';
 import { IconName } from '@/components/Icon/iconMapping';
 import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 import { colors } from '@/lib/tokens/colors';
+import { useAppContext } from '@/context/ContextProvider';
 
 interface Props {
   slug: string;
@@ -55,9 +56,18 @@ const getFilteredHoses = (filter: string) => {
     filteredList: mockedList,
   };
 };
-const list = getFilteredHoses('all').filteredList;
+// const list = getFilteredHoses('all').filteredList;
 
 const Hose: React.FC<Props> = (props) => {
+  const { state, dispatch } = useAppContext();
+  const [action, setAction] = useState<{
+    value: string;
+    label: string;
+    subtitle: string;
+    icon: IconName;
+    actionSelectedItems: string[];
+  } | null>(null);
+  const { filter } = useLocalSearchParams();
   const options = [
     {
       value: 'contactTessTeam',
@@ -84,19 +94,20 @@ const Hose: React.FC<Props> = (props) => {
       icon: 'Phone' as IconName,
     },
   ];
-  const [action, setAction] = useState<{
-    value: string;
-    label: string;
-    subtitle: string;
-    icon: IconName;
-    actionSelectedItems: string[];
-  } | null>(null);
-  const { filter } = useLocalSearchParams();
 
-  const { filteredList, listTitle, listLength } = getFilteredHoses(
-    Array.isArray(filter) ? filter[0] : filter,
-  );
+  // const { listLength } = getFilteredHoses(
+  //   Array.isArray(filter) ? filter[0] : filter,
+  // );
 
+  const filteredList =
+    state.data.selectedUnitId !== null
+      ? state.data.assignedUnits[state.data.selectedUnitId].hoses
+      : [];
+  const listTitle =
+    state.data.selectedUnitId !== null
+      ? state.data.assignedUnits[state.data.selectedUnitId].unitName
+      : 'All Hoses';
+  const listLength = filteredList.length;
   const onChangeAction = (value: string) => {
     setAction({
       value,
@@ -149,7 +160,7 @@ const Hose: React.FC<Props> = (props) => {
         )}
       </View>
       <ListTable
-        items={list}
+        items={filteredList}
         selectedIds={action?.actionSelectedItems || []}
         onSelectionChange={handleSelectionChange}
         canSelect={action !== null}
