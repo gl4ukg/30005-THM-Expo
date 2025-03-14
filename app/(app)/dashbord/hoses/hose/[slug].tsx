@@ -1,11 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, ScrollView } from 'react-native';
+import { mockedData } from '../../../../../context/mocked';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
 import GeneralInfo from '@/components/detailView/GeneralInfo';
 import { ButtonTHS } from '@/components/UI';
 import { useLocalSearchParams } from 'expo-router';
-import { mockedData } from '../[filter]/mocked';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 import { GHD as GeneralInfoType } from '@/components/detailView/types';

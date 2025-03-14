@@ -34,7 +34,7 @@ export const ListTable: FC<Props> = ({
 }) => {
   const router = useRouter();
   const handleRowPress = (item: (typeof items)[0]) => {
-    router.push(`/(tabs)/dashbord/hoses/hose/${item.id}?id=${item.id}`);
+    router.push(`/(app)/dashbord/hoses/hose/${item.id}?id=${item.id}`);
   };
 
   return (
@@ -175,7 +175,7 @@ const Element: FC<ElementProps> = ({
             <Typography
               name='tableContent'
               text={
-                condition.length
+                condition?.length
                   ? condition
                   : '44-Visible leakage - and some more defects'
               }
@@ -184,7 +184,7 @@ const Element: FC<ElementProps> = ({
             />
             <Typography
               name='tableContentNumber'
-              text={lastInspection.length ? lastInspection : 'N/A'}
+              text={lastInspection?.length ? lastInspection : 'N/A'}
               style={elementStyle.date}
             />
           </View>

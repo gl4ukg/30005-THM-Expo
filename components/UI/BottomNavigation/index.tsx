@@ -31,12 +31,12 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
             elements={[
               {
                 title: 'Download / sync data',
-                to: '/(tabs)/dashbord/hoses',
+                to: '/(app)/dashbord/hoses',
                 icon: () => <Icon name='Download' color='#009640' />,
               },
               {
                 title: 'Upload your data',
-                to: '/(tabs)/dashbord',
+                to: '/(app)/dashbord',
                 icon: () => <Icon name='Upload' color='#009640' />,
               },
               {
@@ -50,46 +50,46 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
                   },
                   {
                     title: 'Edit hose data',
-                    to: '/(tabs)/user',
+                    to: '/(app)/user',
                   },
                   {
                     title: 'Update RFID',
-                    to: '/(tabs)/dashbord/hoses',
+                    to: '/(app)/dashbord/hoses',
                   },
                   {
                     title: 'Metering',
-                    to: '/(tabs)/dashbord/hoses',
+                    to: '/(app)/dashbord/hoses',
                   },
                 ],
               },
               {
                 title: 'Alerts /KPIs',
-                to: '/(tabs)/user',
+                to: '/(app)/user',
                 icon: () => <Icon name='Meter' color='#009640' />,
               },
               {
                 title: 'Order hoses',
-                to: '/(tabs)/user',
+                to: '/(app)/dashbord/actions',
                 icon: () => <Icon name='Cart' color='#009640' />,
               },
               {
                 title: 'Hose replacement & pressure testing',
-                to: '/(tabs)/user',
+                to: '/(app)/user',
                 icon: () => <Icon name='Task' color='#009640' />,
               },
               {
                 title: 'Report ID as scrapped',
-                to: '/(tabs)/user',
+                to: '/(app)/user',
                 icon: () => <Icon name='Trash' color='#009640' />,
               },
               {
                 title: 'Send mail',
-                to: '/(tabs)/user',
+                to: '/(app)/user',
                 icon: () => <Icon name='Email' color='#009640' />,
               },
               {
                 title: 'Settings',
-                to: '/(tabs)/user',
+                to: '/(app)/user',
                 icon: () => <Icon name='Settings' color='#009640' />,
               },
             ]}
@@ -101,7 +101,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
           <TessLines width={Dimensions.get('window').width * 0.6} />
         </View>
         <View style={styles.buttonsWrapper}>
-          <Link asChild href='/(tabs)/user' style={styles.button}>
+          <Link asChild href='/(app)/user' style={styles.button}>
             <Pressable
               style={({ pressed }) => [pressed && {}]}
               onPress={() => setIsOpen(false)}
