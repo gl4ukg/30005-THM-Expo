@@ -3,7 +3,7 @@ import { Typography } from '../typography';
 import { RadioButton } from './radioButton';
 import { colors } from '@/lib/tokens/colors';
 
-interface Choice {
+export interface Choice {
   id: string;
   label: string;
 }
