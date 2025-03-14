@@ -3,8 +3,9 @@ import { Redirect, Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import SubUnitSelect from '../../components/UI/TopBarNavigation/SubUnitSelect';
+// import SubUnitSelect from '../../components/UI/TopBarNavigation/SubUnitSelect';
 import { useAppContext } from '@/context/ContextProvider';
+import { Typography } from '@/components/typography';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
@@ -24,7 +25,7 @@ export default function TabLayout() {
           },
         ]}
       />
-      {Object.keys(state.data.assignedUnits).length > 0 && (
+      {/* {
         <SubUnitSelect
           selectedUnit={state.data.selectedUnitId}
           optionalUnits={Object.keys(state.data.assignedUnits).map((unitId) => {
@@ -40,7 +41,8 @@ export default function TabLayout() {
             });
           }}
         />
-      )}
+      } */}
+      <Typography name='navigation' text={state.data.selectedUnitId ?? 'tes'} />
       <Tabs
         screenOptions={{ headerShown: false }}
         initialRouteName='dashbord'

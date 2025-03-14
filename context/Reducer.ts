@@ -1,4 +1,9 @@
 import {
+  Action,
+  ActionCONTACT,
+  ActionRFQ,
+  ActionSCRAP,
+  ActionsType,
   AppState,
   AuthState,
   DataState,
@@ -39,7 +44,15 @@ type AuthAction =
   | ActionWithoutPayload<'TOGGLE_LOADING'>;
 type DataAction =
   | ActionWithPayload<'SET_DATA', any>
-  | ActionWithPayload<'SET_SELECTED_UNIT', string>;
+  | ActionWithPayload<'SET_SELECTED_UNIT', string>
+  | ActionWithPayload<'REMOVE_ACTION', { id: string; actionType: ActionsType }>
+  | ActionWithPayload<
+      'ADD_ACTION',
+      {
+        action: Action & (ActionRFQ | ActionCONTACT | ActionSCRAP);
+        actionType: ActionsType;
+      }
+    >;
 type SettingsAction = ActionWithPayload<'UPDATE_SETTINGS', any>;
 
 // Reducers for each slice of the app state (these should be defined elsewhere)
@@ -82,6 +95,16 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
       return {
         ...state,
         selectedUnitId: action.payload,
+      };
+    case 'REMOVE_ACTION':
+      return {
+        ...state,
+        actions: {
+          ...state.actions,
+          [action.payload.actionType]: state.actions[
+            action.payload.actionType
+          ].filter((a) => a.id === action.payload.id),
+        },
       };
     default:
       return state;

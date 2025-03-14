@@ -21,7 +21,7 @@ const ActionsView = () => {
           variant='primary'
           size='lg'
           title='Request for quote'
-          onPress={() => router.push('/dashbord/actions/quote')}
+          onPress={() => router.push('/dashbord/actions/rfq')}
         />
         <ButtonTHS
           variant='primary'

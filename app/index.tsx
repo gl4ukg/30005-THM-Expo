@@ -1,7 +1,6 @@
 import {
   Dimensions,
   ImageBackground,
-  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,

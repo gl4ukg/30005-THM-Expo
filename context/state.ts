@@ -1,3 +1,5 @@
+import { mockedData } from '@/context/mocked';
+
 interface AppState {
   auth: AuthState;
   data: DataState;
@@ -28,14 +30,27 @@ interface Hose extends Record<string, string | boolean | number> {
   missingData: boolean;
   prodDate: string;
 }
-type ActionsType = 'RFQ' | 'SCRAP' | 'CONTACT';
-interface Action {
-  type: ActionsType;
+
+export interface Action {
+  id: string;
   createdAt: string; // TODO: change to timestamp
   actionId: string;
-  actionHoseList: Hose[];
+  actionHoseIdList: Hose[];
   status: 'DRAFT' | 'SENDT';
+  position: string;
 }
+export type ActionRFQ = Action & {
+  pressureTested: boolean;
+  type: 'RFQ';
+};
+export interface ActionSCRAP extends Action {
+  type: 'SCRAP';
+}
+
+export interface ActionCONTACT extends Action {
+  type: 'CONTACT';
+}
+export type ActionsType = 'RFQ' | 'SCRAP' | 'CONTACT';
 interface DataState {
   // define data state properties
   assignedUnits: {
@@ -46,7 +61,9 @@ interface DataState {
   };
   selectedUnitId: null | string;
   actions: {
-    [T in ActionsType]: Action[];
+    RFQ: ActionRFQ[];
+    SCRAP: ActionSCRAP[];
+    CONTACT: ActionCONTACT[];
   };
   aktiveDraft: null | (Omit<Action, 'status'> & { status: 'DRAFT' });
 }
@@ -69,10 +86,36 @@ const initialAuthState: AuthState = {
 
 const initialDataState: DataState = {
   // initial data state values
-  assignedUnits: {},
-  selectedUnitId: null,
+  assignedUnits: {
+    testPrinces: {
+      unitName: 'Test Princes',
+      hoses: mockedData as any,
+    },
+  },
+  selectedUnitId: 'testPrinces',
   actions: {
-    RFQ: [],
+    RFQ: [
+      {
+        id: '3027725',
+        createdAt: '311224',
+        actionId: '1',
+        actionHoseIdList: [],
+        status: 'DRAFT',
+        position: 'Test Princes',
+        pressureTested: false,
+        type: 'RFQ',
+      },
+      {
+        id: '3027122',
+        createdAt: '311224',
+        actionId: '1',
+        actionHoseIdList: [],
+        status: 'SENDT',
+        position: 'Test Princes',
+        pressureTested: true,
+        type: 'RFQ',
+      },
+    ],
     SCRAP: [],
     CONTACT: [],
   },

@@ -1,6 +1,7 @@
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
 import { useAppContext } from '@/context/ContextProvider';
+import { ActionRFQ, ActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { useLocalSearchParams } from 'expo-router';
 import {
@@ -14,34 +15,21 @@ const spacing = {
   paddingBlock: 10,
 };
 
-const items = [
-  {
-    id: '30277254',
-    status: 'Draft',
-    pressureTested: true,
-    createdAt: '311224',
-    noOfHoses: 24,
-    position: 'Deck crane',
-  },
-  {
-    id: '30277254',
-    status: 'Sent',
-    pressureTested: false,
-    createdAt: '011223',
-    noOfHoses: 24,
-    position: 'Deck crane',
-  },
-];
 interface Props {}
 const Action: React.FC<Props> = (props) => {
+  const { actionType: actType } = useLocalSearchParams();
   const { state, dispatch } = useAppContext();
+  console.log('asd', actType);
+  if (Array.isArray(actType)) throw new Error('To many parameters');
+  const actionType = actType.toUpperCase() as ActionsType;
 
-  const { actionType } = useLocalSearchParams();
+  const handleRemove = (id: string, actionType: ActionsType) =>
+    dispatch({ type: 'REMOVE_ACTION', payload: { id, actionType } });
 
   const actionsMap = {
-    contact: 'Contact TESS Team',
-    quote: 'Order hoses - RFQ',
-    scrap: 'Scrap',
+    CONTACT: 'Contact TESS Team',
+    RFQ: 'Order hoses - RFQ',
+    SCRAP: 'Scrap',
   } as const;
 
   return (
@@ -49,11 +37,11 @@ const Action: React.FC<Props> = (props) => {
       <View style={style.header}>
         <Typography
           name='sectionHeader'
-          text={actionsMap[actionType as keyof typeof actionsMap] || 'Actions'}
+          text={actionsMap[actionType] || 'Actions'}
         />
         <Typography name='navigation' text='Overview' />
       </View>
-      (
+
       <View style={style.table}>
         <View
           style={[
@@ -67,42 +55,46 @@ const Action: React.FC<Props> = (props) => {
           <Typography
             name='tableHeader'
             text='ID#'
-            style={[style.label, style.labelColumOne]}
+            style={[style.label, columns.one]}
           />
-          <Typography
-            name='tableHeader'
-            text='Status'
-            style={[style.label, style.labelColumTwo]}
-          />
-          <Typography
-            name='tableHeader'
-            text='Pressure test'
-            style={[style.label, style.labelColumThree]}
-          />
-          <Typography
-            name='tableHeader'
-            text='Created'
-            style={[style.label, style.labelColumFour]}
-          />
+          <View style={columns.two}>
+            <View style={columns.twoUp}>
+              <Typography
+                name='tableHeader'
+                text='Status'
+                style={[style.label, columns.twoUpOne]}
+              />
+              <Typography
+                name='tableHeader'
+                text='Pressure test'
+                style={[style.label, columns.twoUpTwo]}
+              />
+              <Typography
+                name='tableHeader'
+                text='Created'
+                style={[style.label, columns.twoUpThree]}
+              />
+            </View>
+          </View>
+          <View style={columns.three} />
         </View>
         <FlatList
-          data={items}
+          data={state.data.actions['RFQ']}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <ActionElement
-              item={item}
-              onRemove={() => console.log('remove')}
+              item={{ ...item }}
+              onRemove={() => handleRemove(item.id, actionType)}
               onRowPress={() => console.log('row press')}
             />
           )}
         />
       </View>
-      );
     </>
   );
 };
 interface ActionElementProps {
-  item: (typeof items)[0];
+  item: ActionRFQ;
   onRowPress: () => void;
   onRemove: () => void;
 }
@@ -111,48 +103,57 @@ const ActionElement: React.FC<ActionElementProps> = ({
   onRowPress,
   onRemove,
 }) => {
-  const { id } = item;
+  const { id, status, pressureTested, createdAt, actionHoseIdList, position } =
+    item;
   return (
-    <View style={[actionElementStyle.rowContainer]}>
+    <View
+      style={[
+        actionElementStyle.rowContainer,
+        {
+          paddingLeft: spacing.paddingBlock,
+          paddingRight: spacing.paddingBlock,
+        },
+      ]}
+    >
       <Pressable onPress={onRowPress} style={actionElementStyle.pressableRow}>
-        <View style={actionElementStyle.columnOne}>
+        <View style={columns.one}>
           <Typography
             name='tableContentNumber'
             text={id}
             style={actionElementStyle.number}
           />
         </View>
-        <View style={actionElementStyle.columnTwo}>
-          <View style={actionElementStyle.columnTwoUp}>
+        <View style={columns.two}>
+          <View style={columns.twoUp}>
             <Typography
               numberOfLines={1}
               name='tableContent'
-              text={'Draft'}
-              style={actionElementStyle.columnThree}
+              text={status}
+              style={columns.twoUpOne}
             />
             <Typography
               numberOfLines={1}
               name='tableContent'
-              text={'Yes'}
-              style={actionElementStyle.columnFour}
+              text={pressureTested ? 'Yes' : 'No'}
+              style={columns.twoUpTwo}
             />
             <Typography
               numberOfLines={1}
               name='tableContent'
-              text={'311224'}
-              style={[actionElementStyle.number, actionElementStyle.columnFive]}
+              text={createdAt}
+              style={[actionElementStyle.number, columns.twoUpThree]}
             />
           </View>
-          <View style={actionElementStyle.columnTwoDown}>
+          <View style={columns.twoDown}>
             <Typography
               numberOfLines={1}
               name='tableContent'
-              text={'4 hoses on Deck crane'}
+              text={`${actionHoseIdList?.length} on ${position}`}
             />
           </View>
         </View>
       </Pressable>
-      <View style={actionElementStyle.removeWrapper}>
+      <View style={columns.three}>
         <Pressable onPress={onRemove} style={actionElementStyle.removeButton}>
           <Icon name='Cross' color={colors.errorText} size='lg' />
         </Pressable>
@@ -163,12 +164,29 @@ const ActionElement: React.FC<ActionElementProps> = ({
 
 const columns = StyleSheet.create({
   one: {
-    width: 100,
+    width: 80,
   },
   two: {
-    width: 100,
+    flex: 1,
   },
-  three: {},
+  twoUp: {
+    flex: 1,
+    justifyContent: 'space-between',
+    gap: 10,
+    flexDirection: 'row',
+  },
+  twoUpOne: { flex: 1 },
+  twoUpTwo: { flex: 1 },
+  twoUpThree: {
+    textAlign: 'right',
+    width: 50,
+  },
+  twoDown: {},
+  three: {
+    width: 40,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+  },
 });
 
 const actionElementStyle = StyleSheet.create({
@@ -180,32 +198,13 @@ const actionElementStyle = StyleSheet.create({
     paddingBottom: 5,
     borderBottomColor: colors.secondary95,
     borderBottomWidth: 1,
+    gap: 5,
   },
   pressableRow: {
-    height: '100%',
     flex: 1,
-    gap: 10,
+    gap: 5,
     flexDirection: 'row',
   },
-  columnOne: {
-    paddingLeft: 10,
-    width: 90,
-  },
-  columnTwo: {
-    backgroundColor: 'pink',
-    height: '100%',
-    flex: 1,
-  },
-  columnTwoUp: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  columnTwoDown: {
-    flex: 1,
-  },
-  columnThree: { width: 100 },
-  columnFour: { width: 100 },
-  columnFive: { width: 100, justifyContent: 'flex-end' },
   removeWrapper: {
     height: '100%',
     alignItems: 'center',
@@ -214,7 +213,9 @@ const actionElementStyle = StyleSheet.create({
   number: {
     color: colors.extended666,
   },
-  removeButton: {},
+  removeButton: {
+    width: 'auto',
+  },
 });
 
 const style = StyleSheet.create({
@@ -223,6 +224,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
     paddingHorizontal: 10,
+    marginBottom: 50,
   },
   table: {
     width: '100%',
@@ -239,10 +241,6 @@ const style = StyleSheet.create({
   label: {
     alignSelf: 'flex-start',
   },
-  labelColumOne: { width: 90 },
-  labelColumTwo: { flex: 1 },
-  labelColumThree: { flex: 1 },
-  labelColumFour: { width: 80 },
 });
 
 export default Action;

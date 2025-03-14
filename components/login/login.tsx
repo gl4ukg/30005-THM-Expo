@@ -50,20 +50,6 @@ export const LoginScreen: React.FC<Props> = () => {
       type: 'LOGIN',
       payload: { email, name: fullName, id: password },
     });
-    let units: { [key: string]: { unitName: string; hoses: any[] } } = {};
-    mockedData.forEach((unit) => {
-      units[unit.equipmentSubunit] !== undefined
-        ? units[unit.equipmentSubunit].hoses.push(unit)
-        : (units[unit.equipmentSubunit] = {
-            unitName: unit.equipmentSubunit,
-            hoses: [unit],
-          });
-    });
-
-    dispatch({
-      type: 'SET_DATA',
-      payload: units,
-    });
 
     // login and navigate to dashboard
     dispatch({
