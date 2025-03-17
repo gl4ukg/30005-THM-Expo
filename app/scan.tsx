@@ -1,23 +1,48 @@
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
-import { ButtonTHS } from '@/components/UI';
-import { LinkButton } from '@/components/UI/Button/linkButton';
 import { colors } from '@/lib/tokens/colors';
-import { Link } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from 'react-native';
+import {
+  Camera,
+  useCameraDevice,
+  useCameraPermission,
+  useCodeScanner,
+} from 'react-native-vision-camera';
 
 const Ui = () => {
-  const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode'>('Barcode');
+  const device = useCameraDevice('back');
+  const { hasPermission, requestPermission } = useCameraPermission();
+  const codeScanner = useCodeScanner({
+    codeTypes: ['code-128', 'code-39', 'code-93', 'ean-13'],
+    regionOfInterest: { x: 0, y: 0, width: 100, height: 50 },
+    onCodeScanned: (codes) => {
+      if (typeof codes[0].value === 'string') {
+        setId(codes[0].value);
+        setScanMethod(null);
+      } else {
+        setId(null);
+      }
+      console.log(`Scanned ${codes[0].type} ${codes[0].value} !`);
+    },
+  });
 
+  if (!hasPermission) requestPermission();
+  const cameraRef = useRef<Camera>(null);
+
+  // return <Typography name='navigation' text='Missing Permission' />;
+  if (device == null)
+    return (
+      <Typography name='navigation' text='Missing back camera on device' />
+    );
+  const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(null);
+  const [id, setId] = useState<null | string>(null);
   const handleRFIDPress = () => {
     setScanMethod('RFID');
   };
@@ -52,6 +77,8 @@ const Ui = () => {
                 borderColor: colors.primary25,
                 borderWidth: 1,
               }}
+              value={id || ''}
+              onChange={(value) => setId(value.nativeEvent.text ?? null)}
             />
             <Icon name='Search' color={colors.primary25} size='sm' />
           </View>
@@ -109,7 +136,23 @@ const Ui = () => {
           </View>
         </View>
       </View>
-      <ScrollView contentContainerStyle={styles.scrollView}></ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        {device !== null && scanMethod === 'Barcode' && (
+          <Camera
+            ref={cameraRef}
+            style={{
+              width: '100%',
+              height: 300,
+              borderWidth: 1,
+              borderColor: colors.black,
+            }}
+            focusable={true}
+            device={device}
+            codeScanner={codeScanner}
+            isActive={scanMethod === 'Barcode'}
+          />
+        )}
+      </ScrollView>
     </>
   );
 };
