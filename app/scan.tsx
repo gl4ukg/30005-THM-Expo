@@ -1,9 +1,12 @@
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
+import { ButtonTHS } from '@/components/UI';
 import { colors } from '@/lib/tokens/colors';
 import { useRef, useState } from 'react';
 import {
+  Alert,
   Pressable,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -35,22 +38,33 @@ const Ui = () => {
 
   if (!hasPermission) requestPermission();
   const cameraRef = useRef<Camera>(null);
-
-  // return <Typography name='navigation' text='Missing Permission' />;
-  if (device == null)
-    return (
-      <Typography name='navigation' text='Missing back camera on device' />
-    );
   const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(null);
   const [id, setId] = useState<null | string>(null);
+  // return <Typography name='navigation' text='Missing Permission' />;
+  if (device === undefined && scanMethod === 'Barcode')
+    Alert.alert(
+      'Your device does not have a camera.',
+      'Please use a device with a camera or use other scan methods.',
+      [
+        {
+          text: 'OK',
+          style: 'default',
+        },
+      ],
+      {
+        cancelable: false,
+      },
+    );
+
   const handleRFIDPress = () => {
     setScanMethod('RFID');
   };
   const handleBarcodePress = () => {
     setScanMethod('Barcode');
   };
+
   return (
-    <>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.headerContainer}>
         <View style={styles.header}>
           <Typography
@@ -137,7 +151,7 @@ const Ui = () => {
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.scrollView}>
-        {device !== null && scanMethod === 'Barcode' && (
+        {device !== undefined && scanMethod === 'Barcode' && (
           <Camera
             ref={cameraRef}
             style={{
@@ -153,13 +167,16 @@ const Ui = () => {
           />
         )}
       </ScrollView>
-    </>
+    </SafeAreaView>
   );
 };
 
 export default Ui;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   headerContainer: {
     position: 'fixed',
     top: 0,
