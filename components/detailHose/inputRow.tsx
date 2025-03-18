@@ -1,44 +1,42 @@
 import { Input } from '../UI/Input/input';
-import { View, StyleSheet, TextInputProps } from 'react-native';
+import { View, StyleSheet, TextInputProps, Alert } from 'react-native';
 import { IconButton } from './iconButton';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { colors } from '@/lib/tokens/colors';
 
 interface InputRowProps {
-  label: string;
-  value: string;
-  onChangeText: (value: string) => void;
-  type?: TextInputProps['inputMode'] | 'password' | 'textArea';
+  // label: string;
+  // value: string;
+  // onChangeText: (value: string) => void;
+  // type?: TextInputProps['inputMode'] | 'password' | 'textArea';
+  tooltipData?: { title: string; message: string };
+  components?: React.ReactNode;
 }
 
-export const InputRow: React.FC<InputRowProps> = ({
-  label,
-  value,
-  type,
-  onChangeText,
+export const InputRow: React.FC<React.PropsWithChildren<InputRowProps>> = ({
+  // label,
+  // value,
+  tooltipData,
+  components,
+  children,
+  // type,
+  // onChangeText,
 }) => {
   const [tooltip, setTooltip] = useState(false);
 
   return (
     <View style={styles.container}>
-      <View style={styles.fieldContainer}>
-        <Input
-          label={label}
-          value={value}
-          onChangeText={(text) => onChangeText(text)}
-          type={type}
-        />
-      </View>
-
+      <View style={styles.fieldContainer}>{components}</View>
       <View style={styles.iconContainer}>
-        <IconButton
-          icon={'Tooltip'}
-          handlePress={() => {
-            setTooltip(!tooltip);
-            console.log(tooltip);
-          }}
-          color={colors.primary}
-        />
+        {tooltipData && (
+          <IconButton
+            icon='Tooltip'
+            color={colors.primary}
+            handlePress={() =>
+              Alert.alert(tooltipData.title, tooltipData.message)
+            }
+          />
+        )}
       </View>
     </View>
   );
