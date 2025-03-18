@@ -81,26 +81,29 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
             value={generalInfo.otherInfo}
             onChangeText={(text) => onInputChange('hoseFunction', text)}
           />
-          <RadioGroup
-            label='Pollution exposure:'
-            choices={[
-              { id: 'internal', label: 'internal, not exposed' },
-              { id: 'exposed', label: 'exposed' },
-            ]}
-            selected={generalInfo.pollutionExposure}
-            onChange={handlePollutionExposureChange}
-            type={'horizontal'}
-          />
-          <RadioGroup
-            label='UV exposure:'
-            choices={[
-              { id: 'internal', label: 'internal, not exposed' },
-              { id: 'exposed', label: 'exposed' },
-            ]}
-            selected={generalInfo.uvExposure}
-            onChange={handleUVExposureChange}
-            type={'horizontal'}
-          />
+          <View style={styles.radioContainer}>
+            <RadioGroup
+              label='Pollution exposure:'
+              choices={[
+                { id: 'internal', label: 'internal, not exposed' },
+                { id: 'exposed', label: 'exposed' },
+              ]}
+              selected={generalInfo.pollutionExposure}
+              onChange={handlePollutionExposureChange}
+              type={'horizontal'}
+            />
+
+            <RadioGroup
+              label='UV exposure:'
+              choices={[
+                { id: 'internal', label: 'internal, not exposed' },
+                { id: 'exposed', label: 'exposed' },
+              ]}
+              selected={generalInfo.uvExposure}
+              onChange={handleUVExposureChange}
+              type={'horizontal'}
+            />
+          </View>
         </>
       ) : (
         <>
@@ -137,6 +140,10 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
 const styles = StyleSheet.create({
   container: {
     padding: 10,
+  },
+  radioContainer: {
+    marginBottom: 20,
+    gap: 20,
   },
 });
 

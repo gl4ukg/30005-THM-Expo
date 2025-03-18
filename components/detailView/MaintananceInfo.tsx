@@ -6,9 +6,9 @@ import { formatDate } from '@/lib/util/formatDate';
 import Datafield from './Datafield';
 import React from 'react';
 import { SelectField } from '../detailHose/SelectField';
-import { Input } from '../UI/Input/input';
 import { RadioGroup } from '../detailHose/radioGroup';
 import { HID } from './types';
+import { InputRow } from '../detailHose/inputRow';
 
 type MaintananceProps = {
   hoseData: HID;
@@ -38,13 +38,12 @@ const MaintananceInfo: React.FC<MaintananceProps> = ({
 
       {editMode ? (
         <>
-          <View style={styles.inputContainer}>
-            <Input
-              label='Inspected By:'
-              value={hoseData.inspectedBy}
-              onChangeText={(text) => onInputChange('inspectedBy', text)}
-            />
-          </View>
+          <InputRow
+            label='Inspected By:'
+            value={hoseData.inspectedBy}
+            onChangeText={(text) => onInputChange('inspectedBy', text)}
+            type={'text'}
+          />
           <SelectField
             label='Condition:'
             value={hoseData.hoseCondition}
@@ -52,18 +51,20 @@ const MaintananceInfo: React.FC<MaintananceProps> = ({
             options={[]}
           />
 
-          <RadioGroup
-            label={'Approved:'}
-            choices={[
-              { id: 'Yes', label: 'YES' },
-              { id: 'No', label: 'NO' },
-              { id: 'NotInsepcted', label: 'Not inspected' },
-            ]}
-            selected={hoseData.approved}
-            onChange={handleApprovalChange}
-            type={'horizontal'}
-          />
-          <Input
+          <View style={styles.inputContainer}>
+            <RadioGroup
+              label={'Approved:'}
+              choices={[
+                { id: 'Yes', label: 'YES' },
+                { id: 'No', label: 'NO' },
+                { id: 'NotInsepcted', label: 'Not inspected' },
+              ]}
+              selected={hoseData.approved}
+              onChange={handleApprovalChange}
+              type={'horizontal'}
+            />
+          </View>
+          <InputRow
             label={'Comment:'}
             value={hoseData.comment}
             onChangeText={(text) => onInputChange('comment', text)}
@@ -81,13 +82,13 @@ const MaintananceInfo: React.FC<MaintananceProps> = ({
             value={hoseData.criticality}
             onChange={(value) => onInputChange('criticality', value)}
             options={[
-              { id: '0', label: 'Not set' },
-              { id: '1', label: '1 - None' },
-              { id: '2', label: '2 - Very low' },
-              { id: '3', label: '3 - Low' },
-              { id: '4', label: '4 - Medium' },
-              { id: '5', label: '5 - High' },
-              { id: '6', label: '6 - Very high' },
+              { id: 'Not set', label: 'Not set' },
+              { id: '1 - None', label: '1 - None' },
+              { id: '2 - Very low', label: '2 - Very low' },
+              { id: '3 - Low', label: '3 - Low' },
+              { id: '4 - Medium', label: '4 - Medium' },
+              { id: '5 - High', label: '5 - High' },
+              { id: '6 - Very high', label: '6 - Very high' },
             ]}
           />
         </>
@@ -113,30 +114,29 @@ const MaintananceInfo: React.FC<MaintananceProps> = ({
           />
 
           <Datafield label={'Criticality:'} value={hoseData.criticality} />
-
-          <View style={styles.inspectionDetails}>
-            <Datafield
-              label={'Inspection Interval:'}
-              value={hoseData.inspectionInterval}
-            />
-
-            <Datafield
-              label={'Next Inspection:'}
-              value={formatDate(hoseData.nextInspection)}
-            />
-
-            <Datafield
-              label={'Replacement Interval:'}
-              value={hoseData.replacementInterval}
-            />
-
-            <Datafield
-              label={'Replacement Date:'}
-              value={formatDate(hoseData.replacementDate)}
-            />
-          </View>
         </>
       )}
+      <View style={styles.inspectionDetails}>
+        <Datafield
+          label={'Inspection Interval:'}
+          value={hoseData.inspectionInterval}
+        />
+
+        <Datafield
+          label={'Next Inspection:'}
+          value={formatDate(hoseData.nextInspection)}
+        />
+
+        <Datafield
+          label={'Replacement Interval:'}
+          value={hoseData.replacementInterval}
+        />
+
+        <Datafield
+          label={'Replacement Date:'}
+          value={formatDate(hoseData.replacementDate)}
+        />
+      </View>
     </View>
   );
 };

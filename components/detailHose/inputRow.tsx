@@ -1,5 +1,5 @@
 import { Input } from '../UI/Input/input';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TextInputProps } from 'react-native';
 import { IconButton } from './iconButton';
 import { useState } from 'react';
 import { colors } from '@/lib/tokens/colors';
@@ -8,11 +8,13 @@ interface InputRowProps {
   label: string;
   value: string;
   onChangeText: (value: string) => void;
+  type?: TextInputProps['inputMode'] | 'password' | 'textArea';
 }
 
 export const InputRow: React.FC<InputRowProps> = ({
   label,
   value,
+  type,
   onChangeText,
 }) => {
   const [tooltip, setTooltip] = useState(false);
@@ -24,6 +26,7 @@ export const InputRow: React.FC<InputRowProps> = ({
           label={label}
           value={value}
           onChangeText={(text) => onChangeText(text)}
+          type={type}
         />
       </View>
 
