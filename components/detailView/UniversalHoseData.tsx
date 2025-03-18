@@ -136,7 +136,9 @@ const UniversalHoseData = ({
             onBarChange={(value) => onInputChange('wpBar', value)}
             onPsiChange={(value) => onInputChange('wpPsi', value)}
           />
-          <Typography name='navigationBold' text='Coupling end 1' />
+          <View style={styles.sectionSpacer}>
+            <Typography name='navigationBold' text='Coupling end 1' />
+          </View>
           <EditCouplingSection
             universalHoseData={universalHoseData}
             onInputChange={onInputChange}
@@ -195,7 +197,9 @@ const UniversalHoseData = ({
           />
           <Datafield label='WP BAR' value={universalHoseData.wpBar} />
           <Datafield label='WP PSI' value={universalHoseData.wpPsi} />
-          <Typography name='navigationBold' text='Coupling end 1' />
+          <View style={styles.sectionSpacer}>
+            <Typography name='navigationBold' text='Coupling end 1' />
+          </View>
           <CouplingSection universalHoseData={universalHoseData} />
           <View style={styles.sectionTitleContainer}>
             <Typography name='navigationBold' text='Coupling end 2' />
@@ -224,10 +228,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
   },
-  sectionTitle: {
-    marginBottom: 0,
-  },
+
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -241,6 +245,10 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  sectionSpacer: {
+    marginTop: 10,
+    marginBottom: 10,
   },
 });
 
