@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   tooltipContainer: {
     marginLeft: 7,
-    marginTop: 20,
+    marginRight: -7,
     justifyContent: 'center',
     alignItems: 'center',
   },

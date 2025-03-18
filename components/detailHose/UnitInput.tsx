@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { Typography } from '../typography';
 import { colors } from '@/lib/tokens/colors';
@@ -18,16 +18,29 @@ const UnitInput = ({
   onBlur,
   label,
 }: UnitInputProps) => {
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleFocus = useCallback(() => {
+    setIsFocused(true);
+  }, [setIsFocused]);
+
+  const handleBlur = useCallback(() => {
+    setIsFocused(false);
+    onBlur?.();
+  }, [setIsFocused, onBlur]);
+
   return (
     <View>
       {label && <Typography name='fieldLabel' text={label} />}
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, isFocused && styles.inputFocused]}
           keyboardType='numeric'
           value={value}
           onChangeText={onChangeText}
-          onBlur={onBlur}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          selectionColor={colors.primary}
         />
         <Typography name='fieldLabel' text={unit} />
       </View>
@@ -50,6 +63,9 @@ const styles = StyleSheet.create({
     padding: 8,
     flex: 1,
     maxWidth: 120,
+  },
+  inputFocused: {
+    borderColor: colors.primary,
   },
 });
 
