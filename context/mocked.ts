@@ -62,7 +62,7 @@ export const mockedData = [
     inspectionInterval: "2 years",
     replacementInterval: "8 years",
     replacementDate: "11/09/2032",
-    nextInspection: "11/09/2026",
+    nextInspection: "11/09/2022",
     certificateNo: "",
   },
   {

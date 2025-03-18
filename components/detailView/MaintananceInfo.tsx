@@ -2,7 +2,7 @@ import { View, StyleSheet } from 'react-native';
 import Bookmark from './Bookmark';
 import { Typography } from '../typography';
 import { colors } from '@/lib/tokens/colors';
-import { formatDate } from '@/lib/util/formatDate';
+import { stringToDate, formatDate } from '@/lib/util/formatDate';
 import Datafield from './Datafield';
 import React from 'react';
 import { SelectField } from '../detailHose/SelectField';
@@ -23,6 +23,10 @@ const MaintananceInfo: React.FC<MaintananceProps> = ({
   const handleApprovalChange = (selectedLabel: string) => {
     onInputChange('approved', selectedLabel);
   };
+  const today = new Date();
+
+  const nextInspectionError = stringToDate(hoseData.nextInspection) < today;
+
   return (
     <View style={styles.container}>
       <Bookmark title='Maintanance Info' />
@@ -125,6 +129,7 @@ const MaintananceInfo: React.FC<MaintananceProps> = ({
         <Datafield
           label={'Next Inspection:'}
           value={formatDate(hoseData.nextInspection)}
+          error={nextInspectionError}
         />
 
         <Datafield
