@@ -5,6 +5,7 @@ import { Input } from '../UI/Input/input';
 import { SelectField } from '../detailHose/SelectField';
 import { RadioGroup } from '../detailHose/radioGroup';
 import { GHD } from './types';
+import { InputRow } from '../detailHose/inputRow';
 
 type GeneralInfoProps = {
   generalInfo: GHD;
@@ -33,20 +34,18 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
     <View style={styles.container}>
       {editMode ? (
         <>
-          <View style={styles.inputContainer}>
-            <Input
-              label='Description:'
-              value={generalInfo.description}
-              onChangeText={(text) => onInputChange('Description', text)}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Input
-              label='Customer ID:'
-              value={generalInfo.customerId}
-              onChangeText={(text) => onInputChange('customerId', text)}
-            />
-          </View>
+          <InputRow
+            label={'Description:'}
+            value={generalInfo.description}
+            onChangeText={(text) => onInputChange('description', text)}
+          />
+
+          <InputRow
+            label='Customer ID:'
+            value={generalInfo.customerId}
+            onChangeText={(text) => onInputChange('customerId', text)}
+          />
+
           <SelectField
             label='S1 Plant, Vessel, Unit:'
             value={generalInfo.s1PlantVesselUnit}
@@ -61,33 +60,27 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
             options={[]}
           />
 
-          <View style={styles.inputContainer}>
-            <Input
-              label='Equipment Subunit:'
-              value={generalInfo.equipmentSubunit}
-              onChangeText={(text) => onInputChange('equipmentSubunit', text)}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Input
-              label='Other Info:'
-              value={generalInfo.otherInfo}
-              onChangeText={(text) => onInputChange('otherInfo', text)}
-            />
-          </View>
+          <InputRow
+            label='Equipment Subunit:'
+            value={generalInfo.equipmentSubunit}
+            onChangeText={(text) => onInputChange('equipmentSubunit', text)}
+          />
+          <InputRow
+            label='Other Info:'
+            value={generalInfo.otherInfo}
+            onChangeText={(text) => onInputChange('otherInfo', text)}
+          />
           <SelectField
             label='Hose Medium/Temperature:'
             value={generalInfo.s1PlantVesselUnit}
             onChange={(value) => handleSelectChange('s1PlantVesselUnit', value)}
             options={[]}
           />
-          <View style={styles.inputContainer}>
-            <Input
-              label='Hose function:'
-              value={generalInfo.otherInfo}
-              onChangeText={(text) => onInputChange('hoseFunction', text)}
-            />
-          </View>
+          <InputRow
+            label='Hose function:'
+            value={generalInfo.otherInfo}
+            onChangeText={(text) => onInputChange('hoseFunction', text)}
+          />
           <RadioGroup
             label='Pollution exposure:'
             choices={[
@@ -144,9 +137,6 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
 const styles = StyleSheet.create({
   container: {
     padding: 10,
-  },
-  inputContainer: {
-    marginBottom: 10,
   },
 });
 

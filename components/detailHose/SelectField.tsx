@@ -42,11 +42,10 @@ export const SelectField: React.FC<SelectFieldProps> = ({
       <View style={styles.fieldContainer}>
         <View style={styles.labelContainer}>
           <Typography
-            name={'fieldLabel'}
-            style={(styles.label, hasError && styles.errorStyle)}
-          >
-            {label}
-          </Typography>
+            name={'navigation'}
+            style={[styles.label, hasError && styles.errorStyle]}
+            text={label}
+          />
           {hasError && <Icon name='Alert' color={colors.error} size='xsm' />}
         </View>
         <Pressable
@@ -127,6 +126,7 @@ const styles = StyleSheet.create({
   },
   label: {
     marginBottom: 5,
+    color: colors.extended666,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: colors.secondary95,
-    borderRadius: 5,
+    borderRadius: 1,
     backgroundColor: colors.white,
     width: '100%',
   },
