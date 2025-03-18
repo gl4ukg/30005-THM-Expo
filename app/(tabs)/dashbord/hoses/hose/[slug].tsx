@@ -164,8 +164,6 @@ const HoseDetails = () => {
   };
 
   const handleSave = () => {
-    console.log('Saving General Info data:', editedGeneralInfo);
-    console.log('Saving Universal Hose Data:', editedUniversalHoseData);
     setEditMode(false);
   };
 

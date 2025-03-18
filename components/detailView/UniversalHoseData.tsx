@@ -131,10 +131,11 @@ const UniversalHoseData = ({
             />
           </View>
           <BarToPsiInput
-            bar={universalHoseData.wpBar}
-            psi={universalHoseData.wpPsi}
-            onBarChange={(value) => onInputChange('wpBar', value)}
-            onPsiChange={(value) => onInputChange('wpPsi', value)}
+            pressureInBars={universalHoseData.wpBar}
+            onChange={(pressure) => {
+              onInputChange('wpBar', pressure.bar);
+              onInputChange('wpPsi', pressure.psi);
+            }}
           />
           <View style={styles.sectionSpacer}>
             <Typography name='navigationBold' text='Coupling end 1' />

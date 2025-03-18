@@ -6,67 +6,39 @@ import { colors } from '@/lib/tokens/colors';
 import { Typography } from '../typography';
 
 type BarToPsiInputProps = {
-  bar: string;
-  psi: string;
-  onBarChange: (value: string) => void;
-  onPsiChange: (value: string) => void;
+  pressureInBars: string;
+  onChange: (pressure: { bar: string; psi: string }) => void;
 };
 
+const barToPsi = (bar: number): number => bar * 14.5038;
+const psiToBar = (psi: number): number => psi / 14.5038;
+
 const BarToPsiInput = (props: BarToPsiInputProps) => {
-  const [bar, setBar] = useState(props.bar);
-  const [psi, setPsi] = useState(props.psi);
-
-  const barToPsi = 14.5038;
-  const psiToBar = 0.0689476;
-
-  useEffect(() => {
-    setBar(props.bar);
-  }, [props.bar]);
-
-  useEffect(() => {
-    setPsi(props.psi);
-  }, [props.psi]);
-
-  const updatePsi = (barValue: string) => {
-    const newPsiValue = barValue
-      ? (parseFloat(barValue) * barToPsi).toFixed(2)
-      : '';
-    setPsi(newPsiValue);
-    props.onPsiChange(newPsiValue);
-  };
-
-  const updateBar = (psiValue: string) => {
-    const newBarValue = psiValue
-      ? (parseFloat(psiValue) * psiToBar).toFixed(2)
-      : '';
-    setBar(newBarValue);
-    props.onBarChange(newBarValue);
-  };
+  const [bar, setBar] = useState<string>(props.pressureInBars);
+  const [psi, setPsi] = useState<string>(
+    barToPsi(parseFloat(props.pressureInBars)).toFixed(2),
+  );
 
   const handleBarChange = (text: string) => {
     setBar(text);
+    const barValue = parseFloat(text);
+    if (!isNaN(barValue)) {
+      setPsi(barToPsi(barValue).toFixed(2));
+    } else {
+      setPsi('');
+    }
+    props.onChange({ bar: text, psi: barToPsi(barValue).toFixed(2) });
   };
 
   const handlePsiChange = (text: string) => {
     setPsi(text);
-  };
-
-  const handleBarBlur = () => {
-    if (bar !== '') {
-      updatePsi(bar);
-    } else {
-      setPsi('');
-      props.onPsiChange('');
-    }
-  };
-
-  const handlePsiBlur = () => {
-    if (psi !== '') {
-      updateBar(psi);
+    const psiValue = parseFloat(text);
+    if (!isNaN(psiValue)) {
+      setBar(psiToBar(psiValue).toFixed(2));
     } else {
       setBar('');
-      props.onBarChange('');
     }
+    props.onChange({ bar: psiToBar(psiValue).toFixed(2), psi: text });
   };
 
   return (
@@ -74,20 +46,10 @@ const BarToPsiInput = (props: BarToPsiInputProps) => {
       <Typography name='fieldLabel' text='Working Pressure (BAR or PSI)' />
       <View style={styles.container}>
         <View style={styles.inputWrapper}>
-          <UnitInput
-            unit='BAR'
-            value={bar}
-            onChangeText={handleBarChange}
-            onBlur={handleBarBlur}
-          />
+          <UnitInput unit='BAR' value={bar} onChangeText={handleBarChange} />
         </View>
         <View style={styles.inputWrapper}>
-          <UnitInput
-            unit='PSI'
-            value={psi}
-            onChangeText={handlePsiChange}
-            onBlur={handlePsiBlur}
-          />
+          <UnitInput unit='PSI' value={psi} onChangeText={handlePsiChange} />
         </View>
         <View style={styles.tooltipContainer}>
           <Icon name='Tooltip' size='lg' color={colors.primary} />
