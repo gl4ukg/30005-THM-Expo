@@ -9,6 +9,8 @@ import { Typography } from '../typography';
 import { Checkbox } from '../UI/Checkbox';
 import { Icon } from '../Icon/Icon';
 import { colors } from '@/lib/tokens/colors';
+import BarToPsiInput from '../detailHose/BarToPsiInput';
+import UnitInput from '../detailHose/UnitInput';
 
 interface UniversalHoseDataProps {
   universalHoseData: UHD;
@@ -38,7 +40,7 @@ const EditCouplingSection = ({
   onInputChange,
 }: {
   universalHoseData: UHD;
-  onInputChange: () => {};
+  onInputChange: (field: string, value: string) => {};
 }) => (
   <>
     <SelectField
@@ -121,26 +123,19 @@ const UniversalHoseData = ({
             options={[]}
           />
           <View style={styles.inputContainer}>
-            <Input
+            <UnitInput
               label='Total Length'
               value={universalHoseData.totalLength}
               onChangeText={(text) => onInputChange('totalLength', text)}
+              unit={'mm'}
             />
           </View>
-          <View style={styles.inputContainer}>
-            <Input
-              label='WP Bar'
-              value={universalHoseData.wpBar}
-              onChangeText={(text) => onInputChange('wpBar', text)}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Input
-              label='WP Psi'
-              value={universalHoseData.wpPsi}
-              onChangeText={(text) => onInputChange('wpPsi', text)}
-            />
-          </View>
+          <BarToPsiInput
+            bar={universalHoseData.wpBar}
+            psi={universalHoseData.wpPsi}
+            onBarChange={(value) => onInputChange('wpBar', value)}
+            onPsiChange={(value) => onInputChange('wpPsi', value)}
+          />
           <Typography name='navigationBold' text='Coupling end 1' />
           <EditCouplingSection
             universalHoseData={universalHoseData}
@@ -158,7 +153,7 @@ const UniversalHoseData = ({
                 onChange={handleCheckboxChange}
               />
               <Typography name='button' text='Same as end 1' />
-              <View style={{ ...styles.tooltipContainer, marginLeft: 10 }}>
+              <View style={styles.tooltipContainer}>
                 <Icon name='Tooltip' size='md' color={colors.primary} />
               </View>
             </View>
@@ -198,8 +193,8 @@ const UniversalHoseData = ({
             label='Total Length'
             value={universalHoseData.totalLength}
           />
-          <Datafield label='WP Bar' value={universalHoseData.wpBar} />
-          <Datafield label='WP Psi' value={universalHoseData.wpPsi} />
+          <Datafield label='WP BAR' value={universalHoseData.wpBar} />
+          <Datafield label='WP PSI' value={universalHoseData.wpPsi} />
           <Typography name='navigationBold' text='Coupling end 1' />
           <CouplingSection universalHoseData={universalHoseData} />
           <View style={styles.sectionTitleContainer}>
