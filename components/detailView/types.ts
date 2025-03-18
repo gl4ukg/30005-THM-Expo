@@ -44,3 +44,18 @@ export type TPN = {
   hoseProtection: string;
   breakAwayWeakLink: string;
 };
+
+export type HID = {
+  inspectedDate: string,
+  inspectedBy:string,
+  hoseCondition:string,
+  approved:string,
+  comment:string,
+  prodDate:string,
+  criticality:string,
+  inspectionInterval:string,
+  nextInspection:string,
+  replacementInterval:string,
+  replacementDate:string,
+
+}
