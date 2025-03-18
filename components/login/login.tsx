@@ -87,7 +87,6 @@ export const LoginScreen: React.FC<Props> = () => {
   const isButtonDisabled =
     !email || !fullName || !password || state.auth.isLoingLoading;
 
-  console.log(state.auth.isLoingLoading);
   return (
     <View style={styles.container}>
       <View style={styles.form}>
