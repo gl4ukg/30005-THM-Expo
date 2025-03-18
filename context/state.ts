@@ -14,7 +14,7 @@ interface AuthState {
     name: string;
     id: string;
   };
-  isLoggingIn: boolean;
+  isLoingLoading: boolean;
   token: null | string;
 }
 
@@ -80,7 +80,7 @@ const initialAuthState: AuthState = {
     name: 'User',
     id: 'id',
   },
-  isLoggingIn: false,
+  isLoingLoading: false,
   token: null,
 };
 
