@@ -39,7 +39,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.fieldContainer}>
+      <View>
         <View style={styles.labelContainer}>
           <Typography
             name={'navigation'}
@@ -74,14 +74,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
           />
         )}
       </View>
-      <View
-        style={[
-          styles.tooltipContainer,
-          hasError && styles.tooltipStylingIfError,
-        ]}
-      >
-        <Icon name='Tooltip' size='lg' color={colors.primary} />
-      </View>
+
       <Modal
         animationType='slide'
         transparent={false}
@@ -110,20 +103,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  fieldContainer: {
-    marginBottom: 15,
-    width: '90%',
-  },
+
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  tooltipContainer: {
-    width: '15%',
-    paddingTop: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
   label: {
     marginBottom: 5,
     color: colors.extended666,
@@ -132,7 +117,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: colors.secondary95,

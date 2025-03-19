@@ -1,32 +1,18 @@
-import { Input } from '../UI/Input/input';
-import { View, StyleSheet, TextInputProps, Alert } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { IconButton } from './iconButton';
-import React, { useState } from 'react';
 import { colors } from '@/lib/tokens/colors';
 
-interface InputRowProps {
-  // label: string;
-  // value: string;
-  // onChangeText: (value: string) => void;
-  // type?: TextInputProps['inputMode'] | 'password' | 'textArea';
+interface TooltipWrapperProps {
   tooltipData?: { title: string; message: string };
-  components?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
-export const InputRow: React.FC<React.PropsWithChildren<InputRowProps>> = ({
-  // label,
-  // value,
-  tooltipData,
-  components,
-  children,
-  // type,
-  // onChangeText,
-}) => {
-  const [tooltip, setTooltip] = useState(false);
-
+export const TooltipWrapper: React.FC<
+  React.PropsWithChildren<TooltipWrapperProps>
+> = ({ tooltipData, children }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.fieldContainer}>{components}</View>
+      <View style={styles.fieldContainer}>{children}</View>
       <View style={styles.iconContainer}>
         {tooltipData && (
           <IconButton

@@ -42,6 +42,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
             isSelected={selected === choice.id}
             onChange={() => onChange(choice.id)}
             menu={type === 'menu'}
+            choiceCount={choices.length}
           />
         ))}
       </View>

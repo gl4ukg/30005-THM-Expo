@@ -8,7 +8,8 @@ import React from 'react';
 import { SelectField } from '../detailHose/SelectField';
 import { RadioGroup } from '../detailHose/radioGroup';
 import { HID } from './types';
-import { InputRow } from '../detailHose/inputRow';
+import { Input } from '../UI/Input/input';
+import { TooltipWrapper } from '../detailHose/tooltipWrapper';
 
 type MaintananceProps = {
   hoseData: HID;
@@ -42,20 +43,23 @@ const MaintananceInfo: React.FC<MaintananceProps> = ({
 
       {editMode ? (
         <>
-          <InputRow
-            label='Inspected By:'
-            value={hoseData.inspectedBy}
-            onChangeText={(text) => onInputChange('inspectedBy', text)}
-            type={'text'}
-          />
-          <SelectField
-            label='Condition:'
-            value={hoseData.hoseCondition}
-            onChange={(value) => onInputChange('hoseCondition', value)}
-            options={[]}
-          />
-
-          <View style={styles.inputContainer}>
+          <TooltipWrapper>
+            <Input
+              label='Inspected By:'
+              value={hoseData.inspectedBy}
+              onChangeText={(text) => onInputChange('inspectedBy', text)}
+              type={'text'}
+            />
+          </TooltipWrapper>
+          <TooltipWrapper tooltipData={{ title: 'Condition', message: '' }}>
+            <SelectField
+              label='Condition:'
+              value={hoseData.hoseCondition}
+              onChange={(value) => onInputChange('hoseCondition', value)}
+              options={[]}
+            />
+          </TooltipWrapper>
+          <TooltipWrapper>
             <RadioGroup
               label={'Approved:'}
               choices={[
@@ -67,34 +71,37 @@ const MaintananceInfo: React.FC<MaintananceProps> = ({
               onChange={handleApprovalChange}
               type={'horizontal'}
             />
-          </View>
-          <InputRow
-            label={'Comment:'}
-            value={hoseData.comment}
-            onChangeText={(text) => onInputChange('comment', text)}
-            type='textArea'
-          />
+          </TooltipWrapper>
+          <TooltipWrapper>
+            <Input
+              label={'Comment:'}
+              value={hoseData.comment}
+              onChangeText={(text) => onInputChange('comment', text)}
+              type='textArea'
+            />
+          </TooltipWrapper>
 
           <Typography
             name={'navigationBold'}
             text='Criticality / Intervals'
             style={styles.subTitle}
           />
-
-          <SelectField
-            label='Criticality'
-            value={hoseData.criticality}
-            onChange={(value) => onInputChange('criticality', value)}
-            options={[
-              { id: 'Not set', label: 'Not set' },
-              { id: '1 - None', label: '1 - None' },
-              { id: '2 - Very low', label: '2 - Very low' },
-              { id: '3 - Low', label: '3 - Low' },
-              { id: '4 - Medium', label: '4 - Medium' },
-              { id: '5 - High', label: '5 - High' },
-              { id: '6 - Very high', label: '6 - Very high' },
-            ]}
-          />
+          <TooltipWrapper>
+            <SelectField
+              label='Criticality'
+              value={hoseData.criticality}
+              onChange={(value) => onInputChange('criticality', value)}
+              options={[
+                { id: 'Not set', label: 'Not set' },
+                { id: '1 - None', label: '1 - None' },
+                { id: '2 - Very low', label: '2 - Very low' },
+                { id: '3 - Low', label: '3 - Low' },
+                { id: '4 - Medium', label: '4 - Medium' },
+                { id: '5 - High', label: '5 - High' },
+                { id: '6 - Very high', label: '6 - Very high' },
+              ]}
+            />
+          </TooltipWrapper>
         </>
       ) : (
         <>
