@@ -1,17 +1,20 @@
 import React, { useRef, useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, ScrollView } from 'react-native';
+import { mockedData } from '../../../../../context/mocked';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
 import GeneralInfo from '@/components/detailView/GeneralInfo';
 import { ButtonTHS } from '@/components/UI';
 import { useLocalSearchParams } from 'expo-router';
-import { mockedData } from '../[filter]/mocked';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 import { GHD as GeneralInfoType } from '@/components/detailView/types';
-import { UHD as UniversalHoseDataType } from '@/components/detailView/types';
+import {
+  UHD as UniversalHoseDataType,
+  HID,
+} from '@/components/detailView/types';
 import UniversalHoseData from '@/components/detailView/UniversalHoseData';
 import TessPartNumbers from '@/components/detailView/TessPartNumbers';
+import MaintananceInfo from '@/components/detailView/MaintananceInfo';
 
 type HoseData = {
   customerId: string;
@@ -65,6 +68,16 @@ type HoseData = {
   whipcheck: string;
   hoseProtection: string;
   breakAwayWeakLink: string;
+  inspectedDate: string;
+  inspectedBy: string;
+  hoseCondition: string;
+  Approved: string;
+  comment: string;
+  criticality: string;
+  inspectionInterval: string;
+  nextInspection: string;
+  replacementInterval: string;
+  replacementDate: string;
 };
 
 const HoseDetails = () => {
@@ -128,6 +141,20 @@ const HoseDetails = () => {
     breakAwayWeakLink: hoseData?.breakAwayWeakLink || '',
   });
 
+  const mapHoseDataToHID = (hoseData: HoseData): HID => ({
+    inspectedDate: hoseData?.inspectedDate || '',
+    inspectedBy: hoseData?.inspectedBy || '',
+    hoseCondition: hoseData?.hoseCondition || '',
+    approved: hoseData?.Approved || '',
+    comment: hoseData?.comment || '',
+    prodDate: hoseData?.prodDate || '',
+    criticality: hoseData?.criticality || '',
+    inspectionInterval: hoseData?.inspectionInterval || '',
+    nextInspection: hoseData?.nextInspection || '',
+    replacementInterval: hoseData?.replacementInterval || '',
+    replacementDate: hoseData?.replacementDate || '',
+  });
+
   const [editedGeneralInfo, setEditedGeneralInfo] = useState(
     mapHoseDataToGeneralInfo(hoseData),
   );
@@ -139,6 +166,7 @@ const HoseDetails = () => {
   const [editedTPNData, setEditedTPNData] = useState(
     mapHoseDataToTPN(hoseData),
   );
+  const [editedHID, setEditedHID] = useState(mapHoseDataToHID(hoseData));
 
   const handleInputChange = (field: string, value: string) => {
     if (editedGeneralInfo.hasOwnProperty(field)) {
@@ -153,6 +181,11 @@ const HoseDetails = () => {
       }));
     } else if (editedTPNData.hasOwnProperty(field)) {
       setEditedTPNData((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    } else if (editedHID.hasOwnProperty(field)) {
+      setEditedHID((prev) => ({
         ...prev,
         [field]: value,
       }));
@@ -267,6 +300,11 @@ const HoseDetails = () => {
         />
         <TessPartNumbers
           tessPartNumbersData={editedTPNData}
+          editMode={editMode}
+          onInputChange={handleInputChange}
+        />
+        <MaintananceInfo
+          hoseData={editedHID}
           editMode={editMode}
           onInputChange={handleInputChange}
         />

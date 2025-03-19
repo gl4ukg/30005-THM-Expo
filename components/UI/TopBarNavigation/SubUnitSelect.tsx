@@ -4,36 +4,45 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useState } from 'react';
 import { colors } from '@/lib/tokens/colors';
 
-type SubUnit = {
-  id: number;
-  name: string;
-};
+// type SubUnit = {
+//   id: number;
+//   name: string;
+// };
 
-const mockSubUnits = [
-  {
-    id: 1,
-    name: 'SubUnit 1',
-  },
-  {
-    id: 2,
-    name: 'SubUnit 2',
-  },
-  {
-    id: 3,
-    name: 'SubUnit 3',
-  },
-];
+// const mockSubUnits = [
+//   {
+//     id: 1,
+//     name: 'SubUnit 1',
+//   },
+//   {
+//     id: 2,
+//     name: 'SubUnit 2',
+//   },
+//   {
+//     id: 3,
+//     name: 'SubUnit 3',
+//   },
+// ];
 
-const SubUnitSelect = () => {
-  const [selectedSubUnit, setSelectedSubUnit] = useState(mockSubUnits[0]);
+interface Props {
+  selectedUnit: string | null;
+  optionalUnits: { id: string; name: string }[];
+  onSelectUnit: (unit: string) => void;
+}
+
+const SubUnitSelect: React.FC<Props> = ({
+  onSelectUnit,
+  selectedUnit,
+  optionalUnits,
+}) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
   };
 
-  const selectSubUnit = (subUnit: SubUnit) => {
-    setSelectedSubUnit(subUnit);
+  const selectSubUnit = (unitId: string) => {
+    onSelectUnit(unitId);
     setIsDropdownVisible(false);
   };
 
@@ -43,7 +52,10 @@ const SubUnitSelect = () => {
         <Icon name='Industry' color={colors.white} size='sm' />
         <Typography
           name='navigation'
-          text={selectedSubUnit?.name}
+          text={
+            optionalUnits.find((unit) => unit.id === selectedUnit)?.name ||
+            'Select'
+          }
           style={styles.selectText}
         />
         <Icon name='ChevronDown' color={colors.white} size='sm' />
@@ -51,14 +63,14 @@ const SubUnitSelect = () => {
 
       {isDropdownVisible && (
         <View style={styles.dropdownContainer}>
-          {mockSubUnits.map((subUnit) => (
+          {optionalUnits.map((unit) => (
             <TouchableOpacity
-              key={subUnit.id}
+              key={unit.id}
               style={styles.dropdownOption}
-              onPress={() => selectSubUnit(subUnit)}
+              onPress={() => selectSubUnit(unit.id)}
             >
               <Icon name='Industry' color={colors.white} size='sm' />
-              <Text style={styles.dropdownOptionText}>{subUnit.name}</Text>
+              <Text style={styles.dropdownOptionText}>{unit.name}</Text>
             </TouchableOpacity>
           ))}
         </View>

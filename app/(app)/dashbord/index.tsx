@@ -171,10 +171,10 @@ const Dashbord = () => {
   const router = useRouter();
 
   const goToFilter = (filter: string) => {
-    router.push(`/(tabs)/dashbord/hoses/${filter}`);
+    router.push(`/(app)/dashbord/hoses/${filter}`);
   };
   const goToHose = (id: string) => {
-    router.push(`/(tabs)/dashbord/hoses/hose/[${id}]`);
+    router.push(`/(app)/dashbord/hoses/hose/[${id}]`);
   };
   return (
     <>

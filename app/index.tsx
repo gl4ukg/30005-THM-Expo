@@ -1,7 +1,6 @@
 import {
   Dimensions,
   ImageBackground,
-  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -34,7 +33,6 @@ const Login = () => {
   };
   const windowHeight = Dimensions.get('window').height;
   const insets = useSafeAreaInsets();
-  
 
   return (
     <ImageBackground
@@ -99,7 +97,7 @@ const Login = () => {
             <Typography name='navigation' text='create' numberOfLines={1} />
           </Pressable>
           <Link
-            href={'/(tabs)/dashbord'}
+            href={'/(app)/dashbord'}
             asChild
             style={[
               styles.link,

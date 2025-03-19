@@ -1,12 +1,12 @@
 import { View, StyleSheet, Alert } from 'react-native';
 import { ButtonTHS } from '../UI/Button/button';
 import { Input } from '../UI/Input/input';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { LoginHeader } from './loginHeader';
 import { colors } from '@/lib/tokens/colors';
 import { HelpLinks } from './helpLinks';
 import { Typography } from '@/components/typography';
-import { THSContext, useTHSContext } from '@/context/THScontextProvider';
+import { useAppContext } from '@/context/ContextProvider';
 import { router } from 'expo-router';
 import { emailValidation } from '@/lib/util/validation';
 interface Props {
@@ -19,7 +19,7 @@ export const LoginScreen: React.FC<Props> = () => {
   const [nameError, setNameError] = useState<undefined | string>(undefined);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
 
-  const { state, dispatch } = useTHSContext();
+  const { state, dispatch } = useAppContext();
 
   function handleEmail(email: string) {
     setEmail(email);
@@ -39,18 +39,53 @@ export const LoginScreen: React.FC<Props> = () => {
   }
 
   const handleLogin = () => {
+    dispatch({
+      type: 'SET_LOGIN_LOADING',
+      payload: true,
+    });
     // check if valid.
     // if valid send request to api or do something else.
-    // update state
-    dispatch({
-      type: 'SET_USER',
-      payload: { email, name: fullName, id: password },
-    });
-    // login and navigate to dashboard
-    router.push('/(tabs)/dashbord');
+    setTimeout(() => {
+      if (password.length < 3) {
+        // login and navigate to dashboard
+        dispatch({
+          type: 'SET_LOGIN_LOADING',
+          payload: false,
+        });
+        Alert.alert('Login - failed', 'Invalid password or user not found', [
+          {
+            text: 'OK',
+          },
+        ]);
+      } else if (password.length >= 3 && password.length < 6) {
+        // login and navigate to dashboard
+        dispatch({
+          type: 'SET_LOGIN_LOADING',
+          payload: false,
+        });
+        Alert.alert('Login - failed', 'No internet', [
+          {
+            text: 'OK',
+          },
+        ]);
+      } else {
+        // update state
+        dispatch({
+          type: 'LOGIN',
+          payload: { email, name: fullName, id: password },
+        });
+        // login and navigate to dashboard
+        dispatch({
+          type: 'SET_LOGIN_LOADING',
+          payload: false,
+        });
+        router.push('/(app)/dashbord');
+      }
+    }, 3000);
   };
 
-  const isButtonDisabled = !email || !fullName || !password;
+  const isButtonDisabled =
+    !email || !fullName || !password || state.auth.isLoingLoading;
 
   return (
     <View style={styles.container}>
