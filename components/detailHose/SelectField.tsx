@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
   fieldContainer: {
     marginBottom: 15,
     width: '90%',
+    gap: 4,
   },
   iconContainer: {
     flexDirection: 'row',

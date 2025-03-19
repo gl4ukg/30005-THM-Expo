@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     flex: 1,
-    gap: 3,
+    gap: 4,
     position: 'relative',
   },
   iconContainer: {
