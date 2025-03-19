@@ -37,9 +37,8 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
         <Typography
           style={[styles.label, isSelected && styles.selectedLabel]}
           name={'navigation'}
-        >
-          {label}
-        </Typography>
+          text={label}
+        />
       </View>
     </Pressable>
   );
@@ -75,6 +74,7 @@ const styles = StyleSheet.create({
   label: {
     color: colors.extended333,
     flex: 1,
+    wordWrap: 'break-word',
   },
   selectedLabel: {
     color: colors.black,
