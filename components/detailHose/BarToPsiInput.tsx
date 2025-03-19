@@ -22,23 +22,17 @@ const BarToPsiInput = (props: BarToPsiInputProps) => {
   const handleBarChange = (text: string) => {
     setBar(text);
     const barValue = parseFloat(text);
-    if (!isNaN(barValue)) {
-      setPsi(barToPsi(barValue).toFixed(2));
-    } else {
-      setPsi('');
-    }
-    props.onChange({ bar: text, psi: barToPsi(barValue).toFixed(2) });
+    const psiValue = !isNaN(barValue) ? barToPsi(barValue).toFixed(2) : '';
+    setPsi(psiValue);
+    props.onChange({ bar: text, psi: psiValue });
   };
 
   const handlePsiChange = (text: string) => {
     setPsi(text);
     const psiValue = parseFloat(text);
-    if (!isNaN(psiValue)) {
-      setBar(psiToBar(psiValue).toFixed(2));
-    } else {
-      setBar('');
-    }
-    props.onChange({ bar: psiToBar(psiValue).toFixed(2), psi: text });
+    const barValue = !isNaN(psiValue) ? psiToBar(psiValue).toFixed(2) : '';
+    setBar(barValue);
+    props.onChange({ bar: barValue, psi: text });
   };
 
   return (

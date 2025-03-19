@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import { View, ScrollView } from 'react-native';
 import { mockedData } from '../../../../../context/mocked';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
@@ -15,6 +15,7 @@ import {
 import UniversalHoseData from '@/components/detailView/UniversalHoseData';
 import TessPartNumbers from '@/components/detailView/TessPartNumbers';
 import MaintananceInfo from '@/components/detailView/MaintananceInfo';
+import { AppContext } from '@/context/Reducer';
 
 type HoseData = {
   customerId: string;
@@ -82,6 +83,7 @@ type HoseData = {
 
 const HoseDetails = () => {
   const { slug } = useLocalSearchParams();
+  const { state, dispatch } = useContext(AppContext);
   const hoseData = mockedData.find(
     (hose) => hose.id === slug,
   ) as unknown as HoseData;
@@ -168,6 +170,17 @@ const HoseDetails = () => {
   );
   const [editedHID, setEditedHID] = useState(mapHoseDataToHID(hoseData));
 
+  const [originalGeneralInfo, setOriginalGeneralInfo] = useState(
+    mapHoseDataToGeneralInfo(hoseData),
+  );
+  const [originalUniversalHoseData, setOriginalUniversalHoseData] = useState(
+    mapHoseDataToUniversalHoseData(hoseData),
+  );
+  const [originalTPNData, setOriginalTPNData] = useState(
+    mapHoseDataToTPN(hoseData),
+  );
+  const [originalHID, setOriginalHID] = useState(mapHoseDataToHID(hoseData));
+
   const handleInputChange = (field: string, value: string) => {
     if (editedGeneralInfo.hasOwnProperty(field)) {
       setEditedGeneralInfo((prev) => ({
@@ -193,10 +206,33 @@ const HoseDetails = () => {
   };
 
   const toggleEditMode = () => {
+    if (editMode) {
+      setEditedGeneralInfo(originalGeneralInfo);
+      setEditedUniversalHoseData(originalUniversalHoseData);
+      setEditedTPNData(originalTPNData);
+      setEditedHID(originalHID);
+    } else {
+      setOriginalGeneralInfo(editedGeneralInfo);
+      setOriginalUniversalHoseData(editedUniversalHoseData);
+      setOriginalTPNData(editedTPNData);
+      setOriginalHID(editedHID);
+    }
     setEditMode(!editMode);
   };
 
   const handleSave = () => {
+    dispatch({
+      type: 'SAVE_HOSE_DATA',
+      payload: {
+        hoseId: hoseData.id,
+        hoseData: {
+          ...editedGeneralInfo,
+          ...editedUniversalHoseData,
+          ...editedTPNData,
+          ...editedHID,
+        },
+      },
+    });
     setEditMode(false);
   };
 
