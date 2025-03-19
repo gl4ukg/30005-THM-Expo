@@ -7,39 +7,22 @@ import { ButtonTHS } from '@/components/UI';
 import { useLocalSearchParams } from 'expo-router';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
-import { GHD as GeneralInfoType } from '@/components/detailView/types';
-import {
-  UHD as UniversalHoseDataType,
-  HID,
-} from '@/components/detailView/types';
+import { GHD, UHD, TPN, HID } from '@/components/detailView/types';
 import UniversalHoseData from '@/components/detailView/UniversalHoseData';
 import TessPartNumbers from '@/components/detailView/TessPartNumbers';
 import MaintananceInfo from '@/components/detailView/MaintananceInfo';
 import { AppContext } from '@/context/Reducer';
 
 type HoseData = {
-  customerId: string;
   id: string;
   prodDate: string;
-  Department: string;
   Description: string;
-  Status: string;
-  Customer: string;
-  RFid: string;
+  customerId: string;
   s1PlantVesselUnit: string;
   S2Equipment: string;
   equipmentSubunit: string;
   otherInfo: string;
-  tempClass: string;
-  pressureClass: string;
-  dimID: string;
-  lengthID: string;
-  connection1Type: string;
-  connection2Type: string;
-  connection1Dim: string;
-  connection2Dim: string;
-  batchNo: string;
-  certificateNo: string;
+  RFid: string;
   pollutionExposure: string;
   uvExposure: string;
   hoseStandard: string;
@@ -84,138 +67,42 @@ type HoseData = {
 const HoseDetails = () => {
   const { slug } = useLocalSearchParams();
   const { state, dispatch } = useContext(AppContext);
-  const hoseData = mockedData.find(
-    (hose) => hose.id === slug,
-  ) as unknown as HoseData;
+
+  const hoseData =
+    state.data.assignedUnits.hoses?.find(
+      (hose: HoseData) => hose.id === slug,
+    ) || mockedData.find((hose) => hose.id === slug);
 
   const scrollViewRef = useRef(null);
   const structureRef = useRef(null);
   const historyRef = useRef(null);
 
   const [editMode, setEditMode] = useState(false);
-
-  const mapHoseDataToGeneralInfo = (hoseData: HoseData): GeneralInfoType => ({
-    description: hoseData?.Description || '',
-    customerId: hoseData?.customerId || '',
-    s1PlantVesselUnit: hoseData?.s1PlantVesselUnit || '',
-    S2Equipment: hoseData?.S2Equipment || '',
-    equipmentSubunit: hoseData?.equipmentSubunit || '',
-    otherInfo: hoseData?.otherInfo || '',
-    RFid: hoseData?.RFid || '',
-    hoseMediumTemperature: '',
-    hoseFunction: '',
-    pollutionExposure: hoseData?.pollutionExposure || 'internal',
-    uvExposure: hoseData?.uvExposure || 'internal',
-  });
-
-  const mapHoseDataToUniversalHoseData = (
-    hoseData: HoseData,
-  ): UniversalHoseDataType => ({
-    hoseStandard: hoseData?.hoseStandard || '',
-    innerDiameter: hoseData?.innerDiameter || '',
-    totalLength: hoseData?.totalLength || '',
-    wpBar: hoseData?.wpBar || '',
-    wpPsi: hoseData?.wpPsi || '',
-    materialQuality: hoseData?.materialQuality || '',
-    typeFitting: hoseData?.typeFitting || '',
-    innerDiameter2: hoseData?.innerDiameter2 || '',
-    gender: hoseData?.gender || '',
-    angle: hoseData?.angle || '',
-    commentEnd1: hoseData?.commentEnd1 || '',
-  });
-
-  const mapHoseDataToTPN = (hoseData: HoseData) => ({
-    hoseType: hoseData?.hoseType || '',
-    ferrule1: hoseData?.ferrule1 || '',
-    ferrule2: hoseData?.ferrule2 || '',
-    insert1: hoseData?.insert1 || '',
-    insert2: hoseData?.insert2 || '',
-    addAEnd1: hoseData?.addAEnd1 || '',
-    addBEnd1: hoseData?.addBEnd1 || '',
-    addCEnd1: hoseData?.addCEnd1 || '',
-    addAEnd2: hoseData?.addAEnd2 || '',
-    addBEnd2: hoseData?.addBEnd2 || '',
-    addCEnd2: hoseData?.addCEnd2 || '',
-    spiralGuard: hoseData?.spiralGuard || '',
-    hookie: hoseData?.hookie || '',
-    whipcheck: hoseData?.whipcheck || '',
-    hoseProtection: hoseData?.hoseProtection || '',
-    breakAwayWeakLink: hoseData?.breakAwayWeakLink || '',
-  });
-
-  const mapHoseDataToHID = (hoseData: HoseData): HID => ({
-    inspectedDate: hoseData?.inspectedDate || '',
-    inspectedBy: hoseData?.inspectedBy || '',
-    hoseCondition: hoseData?.hoseCondition || '',
-    approved: hoseData?.Approved || '',
-    comment: hoseData?.comment || '',
-    prodDate: hoseData?.prodDate || '',
-    criticality: hoseData?.criticality || '',
-    inspectionInterval: hoseData?.inspectionInterval || '',
-    nextInspection: hoseData?.nextInspection || '',
-    replacementInterval: hoseData?.replacementInterval || '',
-    replacementDate: hoseData?.replacementDate || '',
-  });
-
-  const [editedGeneralInfo, setEditedGeneralInfo] = useState(
-    mapHoseDataToGeneralInfo(hoseData),
-  );
-
-  const [editedUniversalHoseData, setEditedUniversalHoseData] = useState(
-    mapHoseDataToUniversalHoseData(hoseData),
-  );
-
-  const [editedTPNData, setEditedTPNData] = useState(
-    mapHoseDataToTPN(hoseData),
-  );
-  const [editedHID, setEditedHID] = useState(mapHoseDataToHID(hoseData));
-
-  const [originalGeneralInfo, setOriginalGeneralInfo] = useState(
-    mapHoseDataToGeneralInfo(hoseData),
-  );
-  const [originalUniversalHoseData, setOriginalUniversalHoseData] = useState(
-    mapHoseDataToUniversalHoseData(hoseData),
-  );
-  const [originalTPNData, setOriginalTPNData] = useState(
-    mapHoseDataToTPN(hoseData),
-  );
-  const [originalHID, setOriginalHID] = useState(mapHoseDataToHID(hoseData));
+  const [localState, setLocalState] = useState<HoseData>(hoseData);
+  const [snapshotState, setSnapshotState] = useState<HoseData | null>(null);
 
   const handleInputChange = (field: string, value: string) => {
-    if (editedGeneralInfo.hasOwnProperty(field)) {
-      setEditedGeneralInfo((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
-    } else if (editedUniversalHoseData.hasOwnProperty(field)) {
-      setEditedUniversalHoseData((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
-    } else if (editedTPNData.hasOwnProperty(field)) {
-      setEditedTPNData((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
-    } else if (editedHID.hasOwnProperty(field)) {
-      setEditedHID((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
-    }
+    dispatch({
+      type: 'SAVE_HOSE_DATA',
+      payload: {
+        hoseId: hoseData.id,
+        hoseData: {
+          ...localState,
+          [field]: value,
+        },
+      },
+    });
+    setLocalState((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
   };
 
   const toggleEditMode = () => {
-    if (editMode) {
-      setEditedGeneralInfo(originalGeneralInfo);
-      setEditedUniversalHoseData(originalUniversalHoseData);
-      setEditedTPNData(originalTPNData);
-      setEditedHID(originalHID);
-    } else {
-      setOriginalGeneralInfo(editedGeneralInfo);
-      setOriginalUniversalHoseData(editedUniversalHoseData);
-      setOriginalTPNData(editedTPNData);
-      setOriginalHID(editedHID);
+    if (!editMode) {
+      setSnapshotState({ ...localState });
+    } else if (snapshotState) {
+      setLocalState(snapshotState);
     }
     setEditMode(!editMode);
   };
@@ -225,26 +112,22 @@ const HoseDetails = () => {
       type: 'SAVE_HOSE_DATA',
       payload: {
         hoseId: hoseData.id,
-        hoseData: {
-          ...editedGeneralInfo,
-          ...editedUniversalHoseData,
-          ...editedTPNData,
-          ...editedHID,
-        },
+        hoseData: localState,
       },
     });
+    setSnapshotState(null);
     setEditMode(false);
   };
 
-  const checkMissingData = (hoseData: GeneralInfoType) => {
+  const checkMissingData = (generalInfo: GHD) => {
     return (
-      !hoseData.description ||
-      !hoseData.customerId ||
-      !hoseData.s1PlantVesselUnit ||
-      !hoseData.S2Equipment ||
-      !hoseData.equipmentSubunit ||
-      !hoseData.otherInfo ||
-      !hoseData.RFid
+      !generalInfo.description ||
+      !generalInfo.customerId ||
+      !generalInfo.s1PlantVesselUnit ||
+      !generalInfo.S2Equipment ||
+      !generalInfo.equipmentSubunit ||
+      !generalInfo.otherInfo ||
+      !generalInfo.RFid
     );
   };
 
@@ -304,9 +187,9 @@ const HoseDetails = () => {
   return (
     <>
       <DetailsHeader
-        id={hoseData.id}
-        date={hoseData.prodDate}
-        missingData={checkMissingData(editedGeneralInfo)}
+        id={localState.id}
+        date={localState.prodDate}
+        missingData={checkMissingData(localState as unknown as GHD)}
         shortcuts={shortcuts}
       />
       <ButtonTHS
@@ -325,22 +208,22 @@ const HoseDetails = () => {
       )}
       <ScrollView ref={scrollViewRef}>
         <GeneralInfo
-          generalInfo={editedGeneralInfo}
+          generalInfo={localState as unknown as GHD}
           editMode={editMode}
           onInputChange={handleInputChange}
         />
         <UniversalHoseData
-          universalHoseData={editedUniversalHoseData}
+          universalHoseData={localState as UHD}
           editMode={editMode}
           onInputChange={handleInputChange}
         />
         <TessPartNumbers
-          tessPartNumbersData={editedTPNData}
+          tessPartNumbersData={localState as TPN}
           editMode={editMode}
           onInputChange={handleInputChange}
         />
         <MaintananceInfo
-          hoseData={editedHID}
+          hoseData={localState as unknown as HID}
           editMode={editMode}
           onInputChange={handleInputChange}
         />

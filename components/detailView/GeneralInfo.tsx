@@ -37,7 +37,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
             <Input
               label='Description:'
               value={generalInfo.description}
-              onChangeText={(text) => onInputChange('Description', text)}
+              onChangeText={(text) => onInputChange('description', text)}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -50,17 +50,15 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
           <SelectField
             label='S1 Plant, Vessel, Unit:'
             value={generalInfo.s1PlantVesselUnit}
-            onChange={(value) => handleSelectChange('s1PlantVesselUnit', value)}
+            onChange={(value) => onInputChange('s1PlantVesselUnit', value)}
             options={[]}
           />
-
           <SelectField
             label='S2 Equipment:'
             value={generalInfo.S2Equipment}
-            onChange={(value) => handleSelectChange('S2Equipment', value)}
+            onChange={(value) => onInputChange('S2Equipment', value)}
             options={[]}
           />
-
           <View style={styles.inputContainer}>
             <Input
               label='Equipment Subunit:'
@@ -75,19 +73,6 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
               onChangeText={(text) => onInputChange('otherInfo', text)}
             />
           </View>
-          <SelectField
-            label='Hose Medium/Temperature:'
-            value={generalInfo.s1PlantVesselUnit}
-            onChange={(value) => handleSelectChange('s1PlantVesselUnit', value)}
-            options={[]}
-          />
-          <View style={styles.inputContainer}>
-            <Input
-              label='Hose function:'
-              value={generalInfo.otherInfo}
-              onChangeText={(text) => onInputChange('hoseFunction', text)}
-            />
-          </View>
           <RadioGroup
             label='Pollution exposure:'
             choices={[
@@ -95,7 +80,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
               { id: 'exposed', label: 'exposed' },
             ]}
             selected={generalInfo.pollutionExposure}
-            onChange={handlePollutionExposureChange}
+            onChange={(value) => onInputChange('pollutionExposure', value)}
             type={'horizontal'}
           />
           <RadioGroup
@@ -105,7 +90,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
               { id: 'exposed', label: 'exposed' },
             ]}
             selected={generalInfo.uvExposure}
-            onChange={handleUVExposureChange}
+            onChange={(value) => onInputChange('uvExposure', value)}
             type={'horizontal'}
           />
         </>
@@ -123,14 +108,8 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
             value={generalInfo.equipmentSubunit}
           />
           <Datafield label='Other Info:' value={generalInfo.otherInfo} />
-          <Datafield label='RFID:' value={generalInfo.RFid} />
           <Datafield
-            label='Hose Medium/Temperature:'
-            value={generalInfo.hoseMediumTemperature}
-          />
-          <Datafield label='Hose function:' value={generalInfo.hoseFunction} />
-          <Datafield
-            label='Polution exposure:'
+            label='Pollution exposure:'
             value={generalInfo.pollutionExposure}
           />
           <Datafield label='UV exposure:' value={generalInfo.uvExposure} />
