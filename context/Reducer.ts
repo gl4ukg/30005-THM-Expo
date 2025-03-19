@@ -41,7 +41,7 @@ type AuthAction =
   | ActionWithPayload<'LOGIN', { email: string; id: string; name: string }>
   | ActionWithoutPayload<'LOGOUT'>
   | ActionWithPayload<'SET_TOKEN', string>
-  | ActionWithoutPayload<'TOGGLE_LOADING'>;
+  | ActionWithPayload<'SET_LOGIN_LOADING', boolean>;
 type DataAction =
   | ActionWithPayload<'SET_DATA', any>
   | ActionWithPayload<'SET_SELECTED_UNIT', string>
@@ -74,10 +74,10 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
         ...state,
         token: action.payload,
       };
-    case 'TOGGLE_LOADING':
+    case 'SET_LOGIN_LOADING':
       return {
         ...state,
-        isLoggingIn: !state.isLoggingIn,
+        isLoingLoading: action.payload,
       };
     default:
       return state;
