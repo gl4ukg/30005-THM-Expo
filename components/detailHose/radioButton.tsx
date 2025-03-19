@@ -8,7 +8,6 @@ interface RadioButtonProps {
   id: string;
   label: string;
   menu?: boolean;
-  choiceCount: number;
 }
 
 export const RadioButton: React.FC<RadioButtonProps> = ({
@@ -16,16 +15,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
   onChange,
   label,
   menu,
-  choiceCount,
 }) => {
-  let firstWord = ' ';
-  let secondWord = '';
-  if (choiceCount > 2) {
-    [firstWord, secondWord] = label.split(' ');
-    secondWord = secondWord || '';
-  } else {
-    firstWord = label;
-  }
   return (
     <Pressable
       onPress={onChange}
@@ -44,20 +34,11 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
         >
           {isSelected && <View style={styles.innerCircle} />}
         </View>
-        <View style={{ flexDirection: 'column' }}>
-          <Typography
-            style={[styles.label, isSelected && styles.selectedLabel]}
-            name={'navigation'}
-            text={firstWord}
-          />
-          {secondWord && (
-            <Typography
-              style={[styles.label, isSelected && styles.selectedLabel]}
-              name={'navigation'}
-              text={secondWord}
-            />
-          )}
-        </View>
+        <Typography
+          style={[styles.label, isSelected && styles.selectedLabel]}
+          name={'navigation'}
+          text={label}
+        />
       </View>
     </Pressable>
   );
@@ -93,6 +74,7 @@ const styles = StyleSheet.create({
   label: {
     color: colors.extended333,
     flex: 1,
+    wordWrap: 'break-word',
   },
   selectedLabel: {
     color: colors.black,
