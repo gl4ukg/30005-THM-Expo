@@ -4,20 +4,18 @@ import { Typography } from '../typography';
 import { colors } from '@/lib/tokens/colors';
 
 type UnitInputProps = {
-  unit: string;
-  value: string;
-  onChangeText: (text: string) => void;
   label?: string;
-  onBlur?: () => void;
+  value: number;
+  onChangeText: (value: number) => void;
+  unit: string;
 };
 
-const UnitInput = ({
-  unit,
+const UnitInput: React.FC<UnitInputProps> = ({
+  label,
   value,
   onChangeText,
-  onBlur,
-  label,
-}: UnitInputProps) => {
+  unit,
+}) => {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = useCallback(() => {
@@ -26,8 +24,14 @@ const UnitInput = ({
 
   const handleBlur = useCallback(() => {
     setIsFocused(false);
-    onBlur?.();
-  }, [setIsFocused, onBlur]);
+  }, [setIsFocused]);
+
+  const handleChange = (text: string) => {
+    const numericValue = parseFloat(text);
+    if (!isNaN(numericValue)) {
+      onChangeText(numericValue);
+    }
+  };
 
   return (
     <View>
@@ -36,8 +40,8 @@ const UnitInput = ({
         <TextInput
           style={[styles.input, isFocused && styles.inputFocused]}
           keyboardType='numeric'
-          value={value}
-          onChangeText={onChangeText}
+          value={value.toString()}
+          onChangeText={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
           selectionColor={colors.primary}
