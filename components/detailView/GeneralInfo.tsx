@@ -5,6 +5,7 @@ import { Input } from '../UI/Input/input';
 import { SelectField } from '../detailHose/SelectField';
 import { RadioGroup } from '../detailHose/radioGroup';
 import { GHD } from './types';
+import { TooltipWrapper } from '../detailHose/tooltipWrapper';
 
 type GeneralInfoProps = {
   generalInfo: GHD;
@@ -33,81 +34,114 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
     <View style={styles.container}>
       {editMode ? (
         <>
-          <View style={styles.inputContainer}>
+          <TooltipWrapper
+            tooltipData={{
+              title: 'Description',
+              message: 'This can be used in many ways to describe the hose',
+            }}
+          >
             <Input
-              label='Description:'
+              label={'Description:'}
               value={generalInfo.description}
-              onChangeText={(text) => onInputChange('Description', text)}
+              onChangeText={(text) => onInputChange('description', text)}
             />
-          </View>
-          <View style={styles.inputContainer}>
+          </TooltipWrapper>
+          <TooltipWrapper tooltipData={{ title: 'CustomerID', message: '' }}>
             <Input
               label='Customer ID:'
               value={generalInfo.customerId}
               onChangeText={(text) => onInputChange('customerId', text)}
             />
-          </View>
-          <SelectField
-            label='S1 Plant, Vessel, Unit:'
-            value={generalInfo.s1PlantVesselUnit}
-            onChange={(value) => handleSelectChange('s1PlantVesselUnit', value)}
-            options={[]}
-          />
+          </TooltipWrapper>
+          <TooltipWrapper
+            tooltipData={{
+              title: 'S1 Plant, Vessel, Unit',
+              message: 'A grouping',
+            }}
+          >
+            <SelectField
+              label='S1 Plant, Vessel, Unit:'
+              value={generalInfo.s1PlantVesselUnit}
+              onChange={(value) =>
+                handleSelectChange('s1PlantVesselUnit', value)
+              }
+              options={[]}
+            />
+          </TooltipWrapper>
 
-          <SelectField
-            label='S2 Equipment:'
-            value={generalInfo.S2Equipment}
-            onChange={(value) => handleSelectChange('S2Equipment', value)}
-            options={[]}
-          />
-
-          <View style={styles.inputContainer}>
+          <TooltipWrapper
+            tooltipData={{ title: 'S2 Equipment', message: 'component' }}
+          >
+            <SelectField
+              label='S2 Equipment:'
+              value={generalInfo.S2Equipment}
+              onChange={(value) => handleSelectChange('S2Equipment', value)}
+              options={[]}
+            />
+          </TooltipWrapper>
+          <TooltipWrapper>
             <Input
               label='Equipment Subunit:'
               value={generalInfo.equipmentSubunit}
               onChangeText={(text) => onInputChange('equipmentSubunit', text)}
             />
-          </View>
-          <View style={styles.inputContainer}>
+          </TooltipWrapper>
+          <TooltipWrapper
+            tooltipData={{ title: 'Other information', message: '' }}
+          >
             <Input
               label='Other Info:'
               value={generalInfo.otherInfo}
               onChangeText={(text) => onInputChange('otherInfo', text)}
             />
-          </View>
-          <SelectField
-            label='Hose Medium/Temperature:'
-            value={generalInfo.s1PlantVesselUnit}
-            onChange={(value) => handleSelectChange('s1PlantVesselUnit', value)}
-            options={[]}
-          />
-          <View style={styles.inputContainer}>
+          </TooltipWrapper>
+          <TooltipWrapper>
+            <SelectField
+              label='Hose Medium/Temperature:'
+              value={generalInfo.s1PlantVesselUnit}
+              onChange={(value) =>
+                handleSelectChange('s1PlantVesselUnit', value)
+              }
+              options={[]}
+            />
+          </TooltipWrapper>
+
+          <TooltipWrapper>
             <Input
               label='Hose function:'
-              value={generalInfo.otherInfo}
+              value={generalInfo.hoseFunction}
               onChangeText={(text) => onInputChange('hoseFunction', text)}
             />
-          </View>
-          <RadioGroup
-            label='Pollution exposure:'
-            choices={[
-              { id: 'internal', label: 'internal, not exposed' },
-              { id: 'exposed', label: 'exposed' },
-            ]}
-            selected={generalInfo.pollutionExposure}
-            onChange={handlePollutionExposureChange}
-            type={'horizontal'}
-          />
-          <RadioGroup
-            label='UV exposure:'
-            choices={[
-              { id: 'internal', label: 'internal, not exposed' },
-              { id: 'exposed', label: 'exposed' },
-            ]}
-            selected={generalInfo.uvExposure}
-            onChange={handleUVExposureChange}
-            type={'horizontal'}
-          />
+          </TooltipWrapper>
+          <TooltipWrapper>
+            <RadioGroup
+              label='Pollution exposure:'
+              choices={[
+                { id: 'internal', label: 'internal, not exposed' },
+                { id: 'exposed', label: 'exposed' },
+              ]}
+              selected={generalInfo.pollutionExposure}
+              onChange={handlePollutionExposureChange}
+              type={'horizontal'}
+            />
+          </TooltipWrapper>
+          <TooltipWrapper
+            tooltipData={{
+              title: 'UV exposure',
+              message: 'Is it exposed to the sun?',
+            }}
+          >
+            <RadioGroup
+              label='UV exposure:'
+              choices={[
+                { id: 'internal', label: 'internal, not exposed' },
+                { id: 'exposed', label: 'exposed' },
+              ]}
+              selected={generalInfo.uvExposure}
+              onChange={handleUVExposureChange}
+              type={'horizontal'}
+            />
+          </TooltipWrapper>
         </>
       ) : (
         <>
@@ -144,9 +178,6 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
 const styles = StyleSheet.create({
   container: {
     padding: 10,
-  },
-  inputContainer: {
-    marginBottom: 10,
   },
 });
 

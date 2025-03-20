@@ -25,7 +25,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
 }) => {
   return (
     <View style={styles.wrapper}>
-      <Typography name={'button'} style={styles.label}>
+      <Typography name={'navigation'} style={styles.label}>
         {label}
       </Typography>
       <View

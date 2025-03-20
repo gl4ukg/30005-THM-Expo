@@ -7,38 +7,41 @@ import { Icon } from '../Icon/Icon';
 interface DataFieldProps {
   label: string;
   value: string | number | undefined;
+  error?: boolean;
 }
 
-const DataField: React.FC<DataFieldProps> = ({ label, value }) => {
+const DataField: React.FC<DataFieldProps> = ({ label, value, error }) => {
   const isValueEmpty = value === undefined || value === '';
+  if (isValueEmpty) {
+    error = true;
+  }
 
   return (
     <View style={styles.container}>
-      {isValueEmpty ? (
-        <>
-          <Typography style={styles.emptyValueText} name={'fieldLabel'}>
-            {label}
-          </Typography>
-          <View style={styles.emptyValueContainer}>
-            <Typography
-              style={[styles.value, styles.emptyValueText]}
-              name={'fieldValue'}
-            >
-              Not set
-            </Typography>
-            <Icon name='Alert' color={colors.error} size='sm' />
-          </View>
-        </>
-      ) : (
-        <>
-          <Typography style={styles.label} name={'fieldLabel'}>
-            {label}
-          </Typography>
-          <Typography style={styles.value} name={'fieldValue'}>
+      <Typography
+        style={error ? styles.emptyValueText : styles.label}
+        name={'fieldLabel'}
+      >
+        {label}
+      </Typography>
+      <View style={styles.emptyValueContainer}>
+        {isValueEmpty ? (
+          <Typography
+            style={[styles.value, styles.emptyValueText]}
+            name={'fieldValue'}
+            text='Not set'
+          />
+        ) : (
+          <Typography
+            style={error ? styles.emptyValueText : styles.value}
+            name={'fieldValue'}
+          >
             {value !== undefined ? value.toString() : 'N/A'}
           </Typography>
-        </>
-      )}
+        )}
+
+        {error && <Icon name='Alert' color={colors.error} size='sm' />}
+      </View>
     </View>
   );
 };
@@ -61,7 +64,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyValueText: {
-    color: colors.error,
+    color: colors.errorText,
   },
 });
 export default DataField;
