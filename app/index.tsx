@@ -97,7 +97,7 @@ const Login = () => {
             <Typography name='navigation' text='create' numberOfLines={1} />
           </Pressable>
           <Link
-            href={'/scan'}
+            href={'/dashbord'}
             asChild
             style={[
               styles.link,
@@ -114,7 +114,7 @@ const Login = () => {
             </Pressable>
           </Link>
           <Link
-            href={'/ui'}
+            href={'/scan'}
             asChild
             style={[
               styles.link,
@@ -127,7 +127,7 @@ const Login = () => {
                 { flex: 1, backgroundColor: colors.extendedBlue },
               ]}
             >
-              <Typography name='navigation' text='UI' numberOfLines={1} />
+              <Typography name='navigation' text='Scan' numberOfLines={1} />
             </Pressable>
           </Link>
         </View>

@@ -19,6 +19,8 @@ import {
   useCodeScanner,
 } from 'react-native-vision-camera';
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
+import { reverseHexString } from '@/lib/util/rfid';
+
 const Ui = () => {
   const device = useCameraDevice('back');
   const { hasPermission, requestPermission } = useCameraPermission();
@@ -40,6 +42,7 @@ const Ui = () => {
   const cameraRef = useRef<Camera>(null);
   const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(null);
   const [id, setId] = useState<null | string>(null);
+  const [rfId, setRfId] = useState<null | string>(null);
   // return <Typography name='navigation' text='Missing Permission' />;
   if (device === undefined && scanMethod === 'Barcode')
     Alert.alert(
@@ -57,25 +60,36 @@ const Ui = () => {
     );
 
   const handleRFIDPress = () => {
+    setId(null);
     setScanMethod('RFID');
     readNdef();
   };
   const handleBarcodePress = () => {
+    setId(null);
     setScanMethod('Barcode');
   };
   async function readNdef() {
     console.log('readNdef');
     try {
       // register for the NFC tag with NDEF in it
-      await NfcManager.requestTechnology(NfcTech.Ndef);
+      await NfcManager.requestTechnology(NfcTech.NfcA);
       // the resolved tag object will contain `ndefMessage` property
       const tag = await NfcManager.getTag();
-      console.warn('Tag found', tag);
+
+      if (tag?.id) {
+        const originalId = tag.id;
+        const reversedId = reverseHexString(originalId);
+        setRfId(reversedId);
+        setId(reversedId);
+        setScanMethod(null);
+      }
     } catch (ex) {
       console.warn('Oops!', ex);
     } finally {
       // stop the nfc scanning
       NfcManager.cancelTechnologyRequest();
+      // close the session
+      NfcManager.close();
     }
   }
   return (
@@ -255,3 +269,5 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
   },
 });
+
+//5AB35DA0500104E0 e0040150a05db35a
