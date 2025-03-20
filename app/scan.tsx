@@ -18,7 +18,7 @@ import {
   useCameraPermission,
   useCodeScanner,
 } from 'react-native-vision-camera';
-
+import NfcManager, { NfcTech } from 'react-native-nfc-manager';
 const Ui = () => {
   const device = useCameraDevice('back');
   const { hasPermission, requestPermission } = useCameraPermission();
@@ -58,11 +58,26 @@ const Ui = () => {
 
   const handleRFIDPress = () => {
     setScanMethod('RFID');
+    readNdef();
   };
   const handleBarcodePress = () => {
     setScanMethod('Barcode');
   };
-
+  async function readNdef() {
+    console.log('readNdef');
+    try {
+      // register for the NFC tag with NDEF in it
+      await NfcManager.requestTechnology(NfcTech.Ndef);
+      // the resolved tag object will contain `ndefMessage` property
+      const tag = await NfcManager.getTag();
+      console.warn('Tag found', tag);
+    } catch (ex) {
+      console.warn('Oops!', ex);
+    } finally {
+      // stop the nfc scanning
+      NfcManager.cancelTechnologyRequest();
+    }
+  }
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.headerContainer}>
@@ -86,7 +101,6 @@ const Ui = () => {
                 flex: 1,
                 backgroundColor: 'white',
                 padding: 20,
-                height: 30,
                 borderRadius: 3,
                 borderColor: colors.primary25,
                 borderWidth: 1,
