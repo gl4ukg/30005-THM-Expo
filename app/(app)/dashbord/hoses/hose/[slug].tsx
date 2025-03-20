@@ -8,10 +8,14 @@ import { useLocalSearchParams } from 'expo-router';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 import { GHD, UHD, TPN, HID } from '@/components/detailView/types';
-import UniversalHoseData from '@/components/detailView/UniversalHoseData';
 import TessPartNumbers from '@/components/detailView/TessPartNumbers';
 import MaintananceInfo from '@/components/detailView/MaintananceInfo';
 import { AppContext } from '@/context/Reducer';
+import EditUniversalHoseData from '@/components/detailView/edit/EditUniversalHoseData';
+import UniversalHoseData from '@/components/detailView/UniversalHoseData';
+import EditGeneralInfo from '@/components/detailView/edit/EditGeneralInfo';
+import EditMaintananceInfo from '@/components/detailView/edit/EditMaintananceInfo';
+import EditTessPartNumbers from '@/components/detailView/edit/EditTessPartNumbers';
 
 type HoseData = {
   id: string;
@@ -207,26 +211,42 @@ const HoseDetails = () => {
         />
       )}
       <ScrollView ref={scrollViewRef}>
-        <GeneralInfo
-          generalInfo={localState as unknown as GHD}
-          editMode={editMode}
-          onInputChange={handleInputChange}
-        />
-        <UniversalHoseData
-          universalHoseData={localState as UHD}
-          editMode={editMode}
-          onInputChange={handleInputChange}
-        />
-        <TessPartNumbers
-          tessPartNumbersData={localState as TPN}
-          editMode={editMode}
-          onInputChange={handleInputChange}
-        />
-        <MaintananceInfo
-          hoseData={localState as unknown as HID}
-          editMode={editMode}
-          onInputChange={handleInputChange}
-        />
+        {editMode ? (
+          <EditGeneralInfo
+            generalInfo={localState as unknown as GHD}
+            onInputChange={handleInputChange}
+          />
+        ) : (
+          <GeneralInfo generalInfo={localState as unknown as GHD} />
+        )}
+        {editMode ? (
+          <EditUniversalHoseData
+            universalHoseData={localState as UHD}
+            onInputChange={handleInputChange}
+          />
+        ) : (
+          <UniversalHoseData universalHoseData={localState as UHD} />
+        )}
+        {editMode ? (
+          <EditTessPartNumbers
+            tessPartNumbersData={localState as TPN}
+            onInputChange={handleInputChange}
+          />
+        ) : (
+          <TessPartNumbers tessPartNumbersData={localState as TPN} />
+        )}
+        {editMode ? (
+          <EditMaintananceInfo
+            hoseData={localState as unknown as HID}
+            onInputChange={handleInputChange}
+          />
+        ) : (
+          <MaintananceInfo
+            hoseData={localState as unknown as HID}
+            editMode={editMode}
+            onInputChange={handleInputChange}
+          />
+        )}
         {shortcuts.map((section) => (
           <View key={section.id}>{section.content}</View>
         ))}

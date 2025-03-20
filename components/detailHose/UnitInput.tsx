@@ -40,7 +40,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
         <TextInput
           style={[styles.input, isFocused && styles.inputFocused]}
           keyboardType='numeric'
-          value={value.toString()}
+          value={value.toString() ?? ''}
           onChangeText={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}

@@ -51,6 +51,8 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
     </dict>
+    <key>NSFaceIDUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your Face ID biometric data.</string>
     <key>NSUserActivityTypes</key>
     <array>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
@@ -61,8 +63,8 @@
       <string>OpenSans_600SemiBold.ttf</string>
       <string>Roboto_400Regular.ttf</string>
       <string>Roboto_500Medium.ttf</string>
-      <string>RobotoCondensed_400Regular.ttf</string>
       <string>RobotoCondensed_300Light.ttf</string>
+      <string>RobotoCondensed_400Regular.ttf</string>
     </array>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
