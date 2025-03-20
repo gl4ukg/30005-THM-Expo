@@ -36,8 +36,8 @@ const Login = () => {
 
   return (
     <ImageBackground
-      style={{ flex: 1 }}
-      source={require('../assets/images/TESS-THM-inspector.png')}
+      style={styles.ImageBackground}
+      source={require('../assets/images/Island-Patriot-11.png')}
     >
       <SafeAreaView style={styles.safeArea}>
         <View style={{ flexDirection: 'row', gap: 5 }}>
@@ -193,5 +193,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     alignItems: 'center',
+  },
+  ImageBackground: {
+    flex: 1,
   },
 });
