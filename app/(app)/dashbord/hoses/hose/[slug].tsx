@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, ScrollView } from 'react-native';
 import { mockedData } from '../../../../../context/mocked';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
@@ -12,8 +12,20 @@ import { ButtonTHS } from '@/components/UI';
 import { useLocalSearchParams } from 'expo-router';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
-import { GHD, UHD, TPN, HID } from '@/components/detailView/types';
+import { GHD, UHD, TPN } from '@/components/detailView/types';
 import { AppContext } from '@/context/Reducer';
+
+const renderComponent = (
+  Component: React.FC<any>,
+  EditComponent: React.FC<any>,
+  props: any,
+) => {
+  return props.editMode ? (
+    <EditComponent {...props} />
+  ) : (
+    <Component {...props} />
+  );
+};
 
 const HoseDetails = () => {
   const { slug } = useLocalSearchParams();
@@ -42,9 +54,6 @@ const HoseDetails = () => {
     });
     setEditMode(false);
   };
-
-  const renderComponent = (Component: any, EditComponent: any, props: any) =>
-    editMode ? <EditComponent {...props} /> : <Component {...props} />;
 
   const shortcuts = [
     { id: 'photos', title: 'Photos', content: <View /> },
@@ -97,14 +106,17 @@ const HoseDetails = () => {
         {renderComponent(GeneralInfo, EditGeneralInfo, {
           generalInfo: localState as GHD,
           onInputChange: handleInputChange,
+          editMode,
         })}
         {renderComponent(UniversalHoseData, EditUniversalHoseData, {
           universalHoseData: localState as UHD,
           onInputChange: handleInputChange,
+          editMode,
         })}
         {renderComponent(TessPartNumbers, EditTessPartNumbers, {
           tessPartNumbersData: localState as TPN,
           onInputChange: handleInputChange,
+          editMode,
         })}
         {shortcuts.map((section) => (
           <View key={section.id}>{section.content}</View>
