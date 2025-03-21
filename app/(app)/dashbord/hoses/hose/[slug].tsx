@@ -14,6 +14,11 @@ import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 import { GHD, UHD, TPN } from '@/components/detailView/types';
 import { AppContext } from '@/context/Reducer';
+import MaintananceInfo from '@/components/detailView/MaintananceInfo';
+import EditMaintananceInfo from '@/components/detailView/edit/EditMaintananceInfo';
+import Documents from '@/components/detailView/Documents';
+import { colors } from '@/lib/tokens/colors';
+import { StyleSheet } from 'react-native';
 
 const renderComponent = (
   Component: React.FC<any>,
@@ -81,28 +86,28 @@ const HoseDetails = () => {
   ];
 
   return (
-    <>
-      <DetailsHeader
-        id={localState.id}
-        date={localState.prodDate}
-        missingData={!localState.description}
-        shortcuts={shortcuts}
-      />
-      <ButtonTHS
-        title={editMode ? 'Cancel Edit' : 'Edit'}
-        onPress={toggleEditMode}
-        variant='primary'
-        size='sm'
-      />
-      {editMode && (
+    <View style={styles.container}>
+      <ScrollView>
+        <DetailsHeader
+          id={localState.id}
+          date={localState.prodDate}
+          missingData={!localState.description}
+          shortcuts={shortcuts}
+        />
         <ButtonTHS
-          title='Save'
-          onPress={handleSave}
-          variant='secondary'
+          title={editMode ? 'Cancel Edit' : 'Edit'}
+          onPress={toggleEditMode}
+          variant='primary'
           size='sm'
         />
-      )}
-      <ScrollView>
+        {editMode && (
+          <ButtonTHS
+            title='Save'
+            onPress={handleSave}
+            variant='secondary'
+            size='sm'
+          />
+        )}
         {renderComponent(GeneralInfo, EditGeneralInfo, {
           generalInfo: localState as GHD,
           onInputChange: handleInputChange,
@@ -118,12 +123,34 @@ const HoseDetails = () => {
           onInputChange: handleInputChange,
           editMode,
         })}
-        {shortcuts.map((section) => (
-          <View key={section.id}>{section.content}</View>
-        ))}
+        {renderComponent(MaintananceInfo, EditMaintananceInfo, {
+          hoseData: localState,
+          onInputChange: handleInputChange,
+          editMode,
+        })}
+        {!editMode && (
+          <>
+            <Documents />
+            <Structure
+              structure={[
+                hoseData.Customer,
+                hoseData.s1PlantVesselUnit,
+                hoseData.S2Equipment,
+              ]}
+              name={hoseData.Description}
+            />
+            <HistoryView />
+          </>
+        )}
       </ScrollView>
-    </>
+    </View>
   );
 };
 
 export default HoseDetails;
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.white,
+  },
+});
