@@ -40,7 +40,7 @@ const Login = () => {
       source={require('../assets/images/Island-Patriot-11.png')}
     >
       <SafeAreaView style={styles.safeArea}>
-        <View style={{ flexDirection: 'row', gap: 5 }}>
+        <View style={{ flexDirection: 'row', gap: 5, padding: 20 }}>
           <Pressable
             style={[
               styles.link,
@@ -128,6 +128,23 @@ const Login = () => {
               ]}
             >
               <Typography name='navigation' text='Scan' numberOfLines={1} />
+            </Pressable>
+          </Link>
+          <Link
+            href={'/ui'}
+            asChild
+            style={[
+              styles.link,
+              { flex: 1, backgroundColor: colors.dashbordGreen },
+            ]}
+          >
+            <Pressable
+              style={[
+                styles.link,
+                { flex: 1, backgroundColor: colors.extendedBlue },
+              ]}
+            >
+              <Typography name='navigation' text='Ui' numberOfLines={1} />
             </Pressable>
           </Link>
         </View>
