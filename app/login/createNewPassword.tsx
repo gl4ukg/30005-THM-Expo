@@ -1,17 +1,14 @@
-import { View, StyleSheet } from 'react-native';
-import { ButtonTHS } from '../UI/Button/button';
-import { Input } from '../UI/Input/input';
-import { useState } from 'react';
-import { LoginHeader } from './loginHeader';
-import { colors } from '@/lib/tokens/colors';
-import { HelpLinks } from './helpLinks';
+import { HelpLinks } from '@/components/login/helpLinks';
+import { LoginHeader } from '@/components/login/loginHeader';
 import { Typography } from '@/components/typography';
+import { ButtonTHS } from '@/components/UI';
+import { Input } from '@/components/UI/Input/input';
+import { colors } from '@/lib/tokens/colors';
 import { passwordRequirements, validatePassword } from '@/lib/util/validation';
-interface Props {
-  nextView: (page: 'login' | 'requestAccess') => void;
-}
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
-export const CreateNewPassword: React.FC<Props> = () => {
+export default function ForgotPassword() {
   const [tempPassword, setTempPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -41,46 +38,43 @@ export const CreateNewPassword: React.FC<Props> = () => {
   };
 
   const isButtonDisabled = !tempPassword || !newPassword || !confirmPassword;
-
   return (
     <View style={styles.container}>
+      <LoginHeader header={'CREATE NEW PASSWORD'}>
+        <Typography
+          name='navigation'
+          text='Password must have:'
+          style={styles.whiteText}
+        />
+        <View>
+          <Typography
+            name='navigation'
+            text='- 8-64 characters'
+            style={styles.whiteText}
+          />
+          <Typography
+            name='navigation'
+            text='- An upercase letter'
+            style={styles.whiteText}
+          />
+          <Typography
+            name='navigation'
+            text='- A lowercase letter'
+            style={styles.whiteText}
+          />
+          <Typography
+            name='navigation'
+            text='- A number'
+            style={styles.whiteText}
+          />
+          <Typography
+            name='navigation'
+            text='- A special character'
+            style={styles.whiteText}
+          />
+        </View>
+      </LoginHeader>
       <View style={styles.form}>
-        <LoginHeader header={'CREATE NEW PASSWORD'}>
-          <View>
-            <Typography
-              name='navigation'
-              text='Password must have:'
-              style={styles.whiteText}
-            />
-            <View>
-              <Typography
-                name='navigation'
-                text='- 8-64 characters'
-                style={styles.whiteText}
-              />
-              <Typography
-                name='navigation'
-                text='- An upercase letter'
-                style={styles.whiteText}
-              />
-              <Typography
-                name='navigation'
-                text='- A lowercase letter'
-                style={styles.whiteText}
-              />
-              <Typography
-                name='navigation'
-                text='- A number'
-                style={styles.whiteText}
-              />
-              <Typography
-                name='navigation'
-                text='- A special character'
-                style={styles.whiteText}
-              />
-            </View>
-          </View>
-        </LoginHeader>
         <Input
           icon='Password'
           label='Temporary password'
@@ -107,33 +101,35 @@ export const CreateNewPassword: React.FC<Props> = () => {
           darkMode={true}
           type='password'
         />
+        <ButtonTHS
+          title={'LOGIN'}
+          onPress={handleLogin}
+          variant={'primary'}
+          disabled={isButtonDisabled}
+        />
       </View>
-      <ButtonTHS
-        title={'LOGIN'}
-        onPress={handleLogin}
-        variant={'primary'}
-        disabled={isButtonDisabled}
-      />
+
       <View style={styles.footer}>
         <HelpLinks header='Unable to log in?' />
         <Typography
           name={'navigation'}
           text={'© 2025 Copyright TESS AS'}
-          style={styles.whiteText}
+          style={styles.copyRights}
         />
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 36,
+    padding: 20,
     width: '100%',
     flex: 1,
     height: '100%',
     maxWidth: 340,
     marginHorizontal: 'auto',
-    padding: 20,
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: 50,
@@ -143,11 +139,15 @@ const styles = StyleSheet.create({
     gap: 15,
     alignItems: 'center',
   },
-  whiteText: {
-    color: colors.white,
-  },
   footer: {
     width: '100%',
     gap: 50,
+  },
+  copyRights: {
+    color: colors.white,
+    textAlign: 'center',
+  },
+  whiteText: {
+    color: colors.white,
   },
 });
