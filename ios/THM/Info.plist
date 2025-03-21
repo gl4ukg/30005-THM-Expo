@@ -28,6 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>myapp</string>
+          <string>com.tess.THM</string>
         </array>
       </dict>
       <dict>
