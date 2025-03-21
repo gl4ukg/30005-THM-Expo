@@ -5,9 +5,10 @@ import { colors } from '@/lib/tokens/colors';
 
 type UnitInputProps = {
   label?: string;
-  value: number;
-  onChangeText: (value: number) => void;
+  value: number | string;
+  onChangeText: (value: number | string) => void;
   unit: string;
+  editable?: boolean;
 };
 
 const UnitInput: React.FC<UnitInputProps> = ({
@@ -15,6 +16,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
   value,
   onChangeText,
   unit,
+  editable = true,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -27,10 +29,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
   }, [setIsFocused]);
 
   const handleChange = (text: string) => {
-    const numericValue = parseFloat(text);
-    if (!isNaN(numericValue)) {
-      onChangeText(numericValue);
-    }
+    onChangeText(text);
   };
 
   return (
@@ -40,11 +39,12 @@ const UnitInput: React.FC<UnitInputProps> = ({
         <TextInput
           style={[styles.input, isFocused && styles.inputFocused]}
           keyboardType='numeric'
-          value={value.toString() ?? ''}
+          value={value ? value.toString() : ''}
           onChangeText={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
           selectionColor={colors.primary}
+          editable={editable}
         />
         <Typography name='fieldLabel' text={unit} />
       </View>
@@ -74,3 +74,4 @@ const styles = StyleSheet.create({
 });
 
 export default UnitInput;
+12;
