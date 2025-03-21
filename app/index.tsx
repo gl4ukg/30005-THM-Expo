@@ -1,6 +1,7 @@
 import {
   Dimensions,
   ImageBackground,
+  KeyboardAvoidingView,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -40,137 +41,143 @@ const Login = () => {
       source={require('../assets/images/Island-Patriot-11.png')}
     >
       <SafeAreaView style={styles.safeArea}>
-        <View style={{ flexDirection: 'row', gap: 5, padding: 20 }}>
-          <Pressable
-            style={[
-              styles.link,
-              { flex: 1, backgroundColor: colors.dashbordGreen },
-            ]}
-            onPress={() => {
-              setView('welcome');
-            }}
-          >
-            <Typography name='navigation' text='welcome' numberOfLines={1} />
-          </Pressable>
-          <Pressable
-            style={[
-              styles.link,
-              { flex: 1, backgroundColor: colors.dashbordRed },
-            ]}
-            onPress={() => {
-              setView('resetPassword');
-            }}
-          >
-            <Typography name='navigation' text='reset' numberOfLines={1} />
-          </Pressable>
-          <Pressable
-            style={[
-              styles.link,
-              { flex: 1, backgroundColor: colors.dashbordYellow },
-            ]}
-            onPress={() => {
-              setView('requestAccess');
-            }}
-          >
-            <Typography name='navigation' text='request' numberOfLines={1} />
-          </Pressable>
-          <Pressable
-            style={[
-              styles.link,
-              { flex: 1, backgroundColor: colors.lightContrast25 },
-            ]}
-            onPress={() => {
-              setView('login');
-            }}
-          >
-            <Typography name='navigation' text='login' numberOfLines={1} />
-          </Pressable>
-          <Pressable
-            style={[
-              styles.link,
-              { flex: 1, backgroundColor: colors.extendedBlue },
-            ]}
-            onPress={() => {
-              setView('createPassword');
-            }}
-          >
-            <Typography name='navigation' text='create' numberOfLines={1} />
-          </Pressable>
-          <Link
-            href={'/dashbord'}
-            asChild
-            style={[
-              styles.link,
-              { flex: 1, backgroundColor: colors.dashbordGreen },
-            ]}
-          >
+        <KeyboardAvoidingView style={styles.safeArea}>
+          <View style={{ flexDirection: 'row', gap: 5, padding: 20 }}>
+            <Pressable
+              style={[
+                styles.link,
+                { flex: 1, backgroundColor: colors.dashbordGreen },
+              ]}
+              onPress={() => {
+                setView('welcome');
+              }}
+            >
+              <Typography name='navigation' text='welcome' numberOfLines={1} />
+            </Pressable>
+            <Pressable
+              style={[
+                styles.link,
+                { flex: 1, backgroundColor: colors.dashbordRed },
+              ]}
+              onPress={() => {
+                setView('resetPassword');
+              }}
+            >
+              <Typography name='navigation' text='reset' numberOfLines={1} />
+            </Pressable>
+            <Pressable
+              style={[
+                styles.link,
+                { flex: 1, backgroundColor: colors.dashbordYellow },
+              ]}
+              onPress={() => {
+                setView('requestAccess');
+              }}
+            >
+              <Typography name='navigation' text='request' numberOfLines={1} />
+            </Pressable>
+            <Pressable
+              style={[
+                styles.link,
+                { flex: 1, backgroundColor: colors.lightContrast25 },
+              ]}
+              onPress={() => {
+                setView('login');
+              }}
+            >
+              <Typography name='navigation' text='login' numberOfLines={1} />
+            </Pressable>
             <Pressable
               style={[
                 styles.link,
                 { flex: 1, backgroundColor: colors.extendedBlue },
               ]}
+              onPress={() => {
+                setView('createPassword');
+              }}
             >
-              <Typography name='navigation' text='dashbord' numberOfLines={1} />
+              <Typography name='navigation' text='create' numberOfLines={1} />
             </Pressable>
-          </Link>
-          <Link
-            href={'/scan'}
-            asChild
-            style={[
-              styles.link,
-              { flex: 1, backgroundColor: colors.dashbordGreen },
-            ]}
-          >
-            <Pressable
+            <Link
+              href={'/dashbord'}
+              asChild
               style={[
                 styles.link,
-                { flex: 1, backgroundColor: colors.extendedBlue },
+                { flex: 1, backgroundColor: colors.dashbordGreen },
               ]}
             >
-              <Typography name='navigation' text='Scan' numberOfLines={1} />
-            </Pressable>
-          </Link>
-          <Link
-            href={'/ui'}
-            asChild
-            style={[
-              styles.link,
-              { flex: 1, backgroundColor: colors.dashbordGreen },
-            ]}
-          >
-            <Pressable
+              <Pressable
+                style={[
+                  styles.link,
+                  { flex: 1, backgroundColor: colors.dashbordGreen },
+                ]}
+              >
+                <Typography
+                  name='navigation'
+                  text='welcome'
+                  numberOfLines={1}
+                />
+              </Pressable>
+            </Link>
+            <Link
+              href={'/scan'}
+              asChild
               style={[
                 styles.link,
-                { flex: 1, backgroundColor: colors.extendedBlue },
+                { flex: 1, backgroundColor: colors.dashbordGreen },
               ]}
             >
-              <Typography name='navigation' text='Ui' numberOfLines={1} />
-            </Pressable>
-          </Link>
-        </View>
-        <View
-          style={[
-            styles.scrollViewWrapper,
-            { height: windowHeight - insets.bottom },
-          ]}
-        >
-          <ScrollView contentContainerStyle={[styles.scrollView]}>
-            <View style={[styles.viewContainer, {}]}>
-              <TessLogo width={180} color={colors.white} />
-              {view === 'welcome' && <Welcome nextView={handlePress} />}
-              {view === 'login' && <LoginScreen nextView={handlePress} />}
-              {view === 'requestAccess' && (
-                <RequestAccess nextView={handlePress} />
-              )}
-              {view === 'resetPassword' && (
-                <ResetPassword nextView={handlePress} />
-              )}
-              {view === 'createPassword' && (
-                <CreateNewPassword nextView={handlePress} />
-              )}
-            </View>
-          </ScrollView>
-        </View>
+              <Pressable
+                style={[
+                  styles.link,
+                  { flex: 1, backgroundColor: colors.extendedBlue },
+                ]}
+              >
+                <Typography name='navigation' text='Scan' numberOfLines={1} />
+              </Pressable>
+            </Link>
+            <Link
+              href={'/ui'}
+              asChild
+              style={[
+                styles.link,
+                { flex: 1, backgroundColor: colors.dashbordGreen },
+              ]}
+            >
+              <Pressable
+                style={[
+                  styles.link,
+                  { flex: 1, backgroundColor: colors.dashbordRed },
+                ]}
+              >
+                <Typography name='navigation' text='reset' numberOfLines={1} />
+              </Pressable>
+            </Link>
+          </View>
+          <View
+            style={[
+              styles.scrollViewWrapper,
+              { height: windowHeight - insets.bottom },
+            ]}
+          >
+            <ScrollView contentContainerStyle={[styles.scrollView]}>
+              <View style={[styles.viewContainer, {}]}>
+                <TessLogo width={180} color={colors.white} />
+                {view === 'welcome' && <Welcome nextView={handlePress} />}
+                {view === 'login' && <LoginScreen nextView={handlePress} />}
+                {view === 'requestAccess' && (
+                  <RequestAccess nextView={handlePress} />
+                )}
+                {view === 'resetPassword' && (
+                  <ResetPassword nextView={handlePress} />
+                )}
+                {view === 'createPassword' && (
+                  <CreateNewPassword nextView={handlePress} />
+                )}
+              </View>
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
       <View style={styles.lines}>
         <TessLines />
@@ -188,7 +195,10 @@ const styles = StyleSheet.create({
   scrollViewWrapper: {
     flex: 1,
   },
-  scrollView: {},
+  scrollView: {
+    // zIndex: 10,
+    paddingBottom: 30,
+  },
   viewContainer: {
     paddingTop: 36,
   },
@@ -206,7 +216,8 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   lines: {
-    position: 'absolute',
+    zIndex: 1,
+    position: 'sticky',
     bottom: 0,
     width: '100%',
     alignItems: 'center',

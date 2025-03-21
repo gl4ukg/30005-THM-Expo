@@ -2,6 +2,7 @@ import { View, Linking, Alert, StyleSheet, Pressable } from 'react-native';
 import { Typography } from '../typography';
 import { colors } from '@/lib/tokens/colors';
 import { LinkButton } from '@/components/UI/Button/linkButton';
+import { Icon } from '@/components/Icon/Icon';
 
 interface Props {
   header: string;
@@ -29,30 +30,32 @@ export const HelpLinks: React.FC<Props> = ({ header }) => {
 
   return (
     <View style={styles.paragraph}>
-      <View>
-        <Typography
-          name={'navigationBold'}
-          text={header}
-          style={styles.whiteText}
-        />
+      <Typography
+        name={'navigationBold'}
+        text={header}
+        style={styles.whiteText}
+      />
+      <Typography
+        name={'navigation'}
+        text={'Please contact the THM team:'}
+        style={styles.whiteText}
+      />
+      <Pressable onPress={handlePhonePress} style={styles.linkButton}>
+        <Icon name='Phone' color={colors.white} />
         <Typography
           name={'navigation'}
-          text={'Please contact the THM team:'}
+          text={phoneNumber}
           style={styles.whiteText}
         />
-        <Pressable onPress={handlePhonePress}>
-          <Typography
-            name={'navigation'}
-            text={phoneNumber}
-            style={styles.whiteText}
-          />
-        </Pressable>
-        <LinkButton
-          variant='dark'
-          title={emailAddr}
-          onPress={() => handleEmailPress()}
-        />
-      </View>
+      </Pressable>
+      <LinkButton
+        variant='dark'
+        title={emailAddr}
+        style={styles.linkButton}
+        onPress={() => handleEmailPress()}
+      >
+        <Icon name='Email' color={colors.linkLightGreen} />
+      </LinkButton>
     </View>
   );
 };
@@ -60,12 +63,17 @@ const styles = StyleSheet.create({
   paragraph: {
     width: '100%',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   whiteText: {
     color: colors.white,
   },
   linkColor: {
     color: colors.linkLightGreen,
+  },
+  linkButton: {
+    padding: 5,
+    flexDirection: 'row',
+    gap: 10,
   },
 });

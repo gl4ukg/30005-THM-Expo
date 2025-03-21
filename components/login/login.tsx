@@ -9,10 +9,11 @@ import { Typography } from '@/components/typography';
 import { useAppContext } from '@/context/ContextProvider';
 import { router } from 'expo-router';
 import { emailValidation } from '@/lib/util/validation';
+import { LinkButton } from '@/components/UI/Button/linkButton';
 interface Props {
-  nextView: (page: 'login' | 'requestAccess') => void;
+  nextView: (page: 'login' | 'resetPassword') => void;
 }
-export const LoginScreen: React.FC<Props> = () => {
+export const LoginScreen: React.FC<Props> = ({ nextView }) => {
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
@@ -117,6 +118,13 @@ export const LoginScreen: React.FC<Props> = () => {
           darkMode={true}
           type='password'
         />
+        <View style={{ width: '100%', alignItems: 'flex-end', marginTop: -10 }}>
+          <LinkButton
+            variant='dark'
+            title='Forgot Password?'
+            onPress={() => nextView('resetPassword')}
+          />
+        </View>
       </View>
       <ButtonTHS
         title={'LOGIN'}
@@ -129,7 +137,7 @@ export const LoginScreen: React.FC<Props> = () => {
         <Typography
           name={'navigation'}
           text={'© 2025 Copyright TESS AS'}
-          style={styles.whiteText}
+          style={styles.copyRights}
         />
       </View>
     </View>
@@ -153,8 +161,9 @@ const styles = StyleSheet.create({
     gap: 15,
     alignItems: 'center',
   },
-  whiteText: {
+  copyRights: {
     color: colors.white,
+    textAlign: 'center',
   },
   footer: {
     width: '100%',
