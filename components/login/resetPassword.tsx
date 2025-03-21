@@ -36,7 +36,7 @@ export const ResetPassword: React.FC<Props> = () => {
         <Typography
           name='navigation'
           text='Enter your email (User ID) to reset your password.'
-          style={styles.whiteText}
+          style={styles.copyRights}
         />
       </LoginHeader>
 
@@ -63,7 +63,7 @@ export const ResetPassword: React.FC<Props> = () => {
         <Typography
           name={'navigation'}
           text={'© 2025 Copyright TESS AS'}
-          style={styles.whiteText}
+          style={styles.copyRights}
         />
       </View>
     </View>
@@ -94,8 +94,8 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: 50,
   },
-  whiteText: {
+  copyRights: {
     color: colors.white,
-    textAlign: 'left',
+    textAlign: 'center',
   },
 });

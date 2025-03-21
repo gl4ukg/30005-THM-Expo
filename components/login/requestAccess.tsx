@@ -182,7 +182,7 @@ export const RequestAccess: React.FC<Props> = () => {
         <Typography
           name={'navigation'}
           text={'© 2025 Copyright TESS AS'}
-          style={styles.whiteText}
+          style={styles.copyRights}
         />
       </View>
     </View>
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: 50,
   },
-  whiteText: {
+  copyRights: {
     color: colors.white,
     textAlign: 'center',
   },

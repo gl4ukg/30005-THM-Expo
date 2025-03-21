@@ -68,11 +68,11 @@ const HoseDetails = () => {
         <View>
           <Structure
             structure={[
-              'Customer WEB DEMO',
-              'Test Princess',
-              'This structure is really long and should hopefully wrap',
+              hoseData.Customer,
+              hoseData.s1PlantVesselUnit,
+              hoseData.S2Equipment,
             ]}
-            name={'5254-04 x 250 mm'}
+            name={hoseData.Description}
           />
         </View>
       ),
