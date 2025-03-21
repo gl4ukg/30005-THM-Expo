@@ -1,6 +1,7 @@
-import { Typography } from "@/components/typography";
-import { colors } from "@/lib/tokens/colors";
-import React, { ReactNode } from "react";
+import { IconName } from '@/components/Icon/iconMapping';
+import { Typography } from '@/components/typography';
+import { colors } from '@/lib/tokens/colors';
+import React, { ReactNode } from 'react';
 
 import {
   Pressable,
@@ -8,12 +9,12 @@ import {
   type PressableProps,
   StyleSheet,
   ViewStyle,
-} from "react-native";
+} from 'react-native';
 
 interface LinkButtonProps extends PressableProps {
   title: string;
   children?: ReactNode | ReactNode[];
-  variant?: "light"|"dark";
+  variant?: 'light' | 'dark';
   disabled?: boolean;
   vSpace?: number;
   hSpace?: number;
@@ -22,71 +23,69 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
   children,
   title,
   onPress,
-  variant = "light",
+  variant = 'light',
   disabled = false,
   style,
   vSpace,
-  hSpace
+  hSpace,
 }) => {
-  if( style !== undefined && typeof style !== "object"  ) throw new Error('style should be a type ViewStyle')
+  if (style !== undefined && typeof style !== 'object')
+    throw new Error('style should be a type ViewStyle');
   const [isPressed, setIsPressed] = React.useState(false);
 
   return (
     <View style={styles.wrapper}>
-        <Pressable
+      <Pressable
         disabled={disabled}
         onPress={disabled ? undefined : onPress}
-        onPressIn={() =>setIsPressed(true)}
+        onPressIn={() => setIsPressed(true)}
         onPressOut={() => setIsPressed(false)}
         style={({ pressed }) => [
-            styles.base,
-            styles[variant] as ViewStyle,
-            disabled && styles.containerDisabled,
-            style,
-            {
-                paddingVertical: vSpace,
-                paddingHorizontal: hSpace
-            },
+          styles.base,
+          styles[variant] as ViewStyle,
+          disabled && styles.containerDisabled,
+          style,
+          {
+            paddingVertical: vSpace,
+            paddingHorizontal: hSpace,
+          },
         ]}
-        >
-        <View style={ [styles.textWrapper ]}>
-            {React.Children.map(children, (child) => child)}
-            <Typography 
-            name={variant === "light" ? "navigation" : "navigationBold"}
+      >
+        <View style={[styles.textWrapper]}>
+          {React.Children.map(children, (child) => child)}
+          <Typography
+            name={variant === 'light' ? 'navigation' : 'navigationBold'}
             numberOfLines={1}
-            style={[buttonTextStyle[variant], isPressed && styles.pressed]} 
-            text={title} />
+            style={[buttonTextStyle[variant], isPressed && styles.pressed]}
+            text={title}
+          />
         </View>
-        </Pressable>
+      </Pressable>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   wrapper: {
-    flexDirection:"row"
+    flexDirection: 'row',
   },
   base: {
-    backgroundColor: "transparent",
-    justifyContent: "center",
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
   },
   textWrapper: {
-    // borderBottomWidth: 1, 
-    // borderBottomColor: colors.primary
+    flexDirection: 'row',
+    gap: 10,
   },
-  containerDisabled:{
+  containerDisabled: {
     opacity: 0.5,
-    textDecorationLine: "underline",
+    textDecorationLine: 'underline',
   },
   pressed: {
-    // borderBottomWidth: 1, 
-    // borderBottomColor: colors.primary
-    textDecorationLine: "underline",
+    textDecorationLine: 'underline',
   },
-  light: {
-  },
-  dark: {
-  },
+  light: {},
+  dark: {},
 });
 
 const buttonTextStyle = StyleSheet.create({
@@ -94,8 +93,6 @@ const buttonTextStyle = StyleSheet.create({
     color: colors.primary,
   },
   dark: {
-    color: colors.lightContrast75
-
-  }
+    color: colors.lightContrast75,
+  },
 });
-
