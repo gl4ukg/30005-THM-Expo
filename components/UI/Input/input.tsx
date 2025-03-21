@@ -9,6 +9,7 @@ import {
   View,
   Pressable,
   TextInputProps,
+  Platform,
 } from 'react-native';
 
 interface Props {
@@ -71,7 +72,7 @@ export const Input = forwardRef<TextInput, Props>(
               <Icon
                 name={icon}
                 size='md'
-                color={darkMode ? colors.white : colors.extended333}
+                color={darkMode ? colors.white : colors.extended666}
                 styles={{ opacity: disabled ? 0.5 : 1 }}
               />
             </View>
@@ -80,10 +81,10 @@ export const Input = forwardRef<TextInput, Props>(
             {label && (
               <View>
                 <Typography
-                  name='fieldLabel'
+                  name='navigation'
                   text={label}
                   style={{
-                    color: darkMode ? colors.white : colors.extended333,
+                    color: darkMode ? colors.white : colors.extended666,
                     opacity: disabled ? 0.5 : 1,
                   }}
                 />
@@ -141,11 +142,18 @@ const styles = StyleSheet.create({
   input: {
     paddingLeft: 10,
     borderWidth: 1,
-    paddingVertical: 10,
+    paddingVertical: 6,
     position: 'relative',
     color: colors.extended333,
-    borderColor: colors.extended666,
+    borderColor: colors.secondary95,
     backgroundColor: colors.white,
+    borderRadius: 1,
+    fontSize: 16,
+    lineHeight: 22,
+    fontFamily: Platform.select({
+      android: 'OpenSans_400Regular',
+      ios: 'OpenSans-Regular',
+    }),
   },
   outerView: {
     flexDirection: 'row',
@@ -159,7 +167,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     flex: 1,
-    gap: 3,
+    gap: 4,
     position: 'relative',
   },
   iconContainer: {
@@ -181,7 +189,7 @@ const styles = StyleSheet.create({
   focusedBorder: {
     borderWidth: 2,
     borderColor: colors.primary,
-    paddingVertical: 9,
+    paddingVertical: 5,
   },
   disabled: {
     opacity: 1 / 2,

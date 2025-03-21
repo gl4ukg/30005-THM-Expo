@@ -52,7 +52,8 @@ type DataAction =
         action: Action & (ActionRFQ | ActionCONTACT | ActionSCRAP);
         actionType: ActionsType;
       }
-    >;
+    >
+  | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: string; hoseData: any }>;
 type SettingsAction = ActionWithPayload<'UPDATE_SETTINGS', any>;
 
 // Reducers for each slice of the app state (these should be defined elsewhere)
@@ -105,6 +106,20 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
             action.payload.actionType
           ].filter((a) => a.id === action.payload.id),
         },
+      };
+    case 'SAVE_HOSE_DATA':
+      return {
+        ...state,
+        assignedUnits: Array.isArray(state.assignedUnits)
+          ? state.assignedUnits.reduce((acc: any, hose: any) => {
+              const hoseId = hose.id;
+              acc[hoseId] =
+                hose.id === action.payload.hoseId
+                  ? { ...hose, ...action.payload.hoseData }
+                  : hose;
+              return acc;
+            }, {})
+          : state.assignedUnits,
       };
     default:
       return state;

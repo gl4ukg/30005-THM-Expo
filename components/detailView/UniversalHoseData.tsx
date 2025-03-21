@@ -9,6 +9,8 @@ import { Typography } from '../typography';
 import { Checkbox } from '../UI/Checkbox';
 import { Icon } from '../Icon/Icon';
 import { colors } from '@/lib/tokens/colors';
+import BarToPsiInput from '../detailHose/BarToPsiInput';
+import UnitInput from '../detailHose/UnitInput';
 
 interface UniversalHoseDataProps {
   universalHoseData: UHD;
@@ -38,7 +40,7 @@ const EditCouplingSection = ({
   onInputChange,
 }: {
   universalHoseData: UHD;
-  onInputChange: () => {};
+  onInputChange: (field: string, value: string) => {};
 }) => (
   <>
     <SelectField
@@ -121,27 +123,23 @@ const UniversalHoseData = ({
             options={[]}
           />
           <View style={styles.inputContainer}>
-            <Input
+            <UnitInput
               label='Total Length'
               value={universalHoseData.totalLength}
               onChangeText={(text) => onInputChange('totalLength', text)}
+              unit={'mm'}
             />
           </View>
-          <View style={styles.inputContainer}>
-            <Input
-              label='WP Bar'
-              value={universalHoseData.wpBar}
-              onChangeText={(text) => onInputChange('wpBar', text)}
-            />
+          <BarToPsiInput
+            pressureInBars={universalHoseData.wpBar}
+            onChange={(pressure) => {
+              onInputChange('wpBar', pressure.bar);
+              onInputChange('wpPsi', pressure.psi);
+            }}
+          />
+          <View style={styles.sectionSpacer}>
+            <Typography name='navigationBold' text='Coupling end 1' />
           </View>
-          <View style={styles.inputContainer}>
-            <Input
-              label='WP Psi'
-              value={universalHoseData.wpPsi}
-              onChangeText={(text) => onInputChange('wpPsi', text)}
-            />
-          </View>
-          <Typography name='navigationBold' text='Coupling end 1' />
           <EditCouplingSection
             universalHoseData={universalHoseData}
             onInputChange={onInputChange}
@@ -158,7 +156,7 @@ const UniversalHoseData = ({
                 onChange={handleCheckboxChange}
               />
               <Typography name='button' text='Same as end 1' />
-              <View style={{ ...styles.tooltipContainer, marginLeft: 10 }}>
+              <View style={styles.tooltipContainer}>
                 <Icon name='Tooltip' size='md' color={colors.primary} />
               </View>
             </View>
@@ -198,9 +196,11 @@ const UniversalHoseData = ({
             label='Total Length'
             value={universalHoseData.totalLength}
           />
-          <Datafield label='WP Bar' value={universalHoseData.wpBar} />
-          <Datafield label='WP Psi' value={universalHoseData.wpPsi} />
-          <Typography name='navigationBold' text='Coupling end 1' />
+          <Datafield label='WP BAR' value={universalHoseData.wpBar} />
+          <Datafield label='WP PSI' value={universalHoseData.wpPsi} />
+          <View style={styles.sectionSpacer}>
+            <Typography name='navigationBold' text='Coupling end 1' />
+          </View>
           <CouplingSection universalHoseData={universalHoseData} />
           <View style={styles.sectionTitleContainer}>
             <Typography name='navigationBold' text='Coupling end 2' />
@@ -229,10 +229,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
   },
-  sectionTitle: {
-    marginBottom: 0,
-  },
+
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -246,6 +246,10 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  sectionSpacer: {
+    marginTop: 10,
+    marginBottom: 10,
   },
 });
 
