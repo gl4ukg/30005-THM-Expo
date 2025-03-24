@@ -8,18 +8,17 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { useState } from 'react';
-import { Welcome } from '@/components/login/welcome';
-import { LoginScreen } from '@/components/login/login';
+
 import { Typography } from '@/components/typography';
 import { TessLines } from '@/components/decorative/tessLines';
-import { RequestAccess } from '@/components/login/requestAccess';
 import { colors } from '@/lib/tokens/colors';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { TessLogo } from '@/components/login/logo';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ResetPassword } from '@/components/login/resetPassword';
-import { CreateNewPassword } from '@/components/login/createPassword';
+import { NorwegianFlag } from '@/components/decorative/norwegianFlag';
+import { LinkButton } from '@/components/UI/Button/linkButton';
+import { ButtonTHS } from '@/components/UI';
+import { LoginHeader } from '@/components/login/loginHeader';
 
 type LoginViews =
   | 'welcome'
@@ -28,77 +27,39 @@ type LoginViews =
   | 'resetPassword'
   | 'createPassword';
 const Login = () => {
-  const [view, setView] = useState<LoginViews>('welcome');
-  const handlePress = (page: LoginViews) => {
-    setView(page);
-  };
   const windowHeight = Dimensions.get('window').height;
   const insets = useSafeAreaInsets();
 
   return (
     <ImageBackground
-      style={styles.ImageBackground}
-      source={require('../assets/images/Island-Patriot-11.png')}
+      style={styles.imageBackground}
+      source={require('@/assets/images/Island-Patriot-11.png')}
     >
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView style={styles.safeArea}>
           {/* TODO: remove View block under */}
-          <View style={{ flexDirection: 'row', gap: 5 }}>
-            <Pressable
+          <View style={{ flexDirection: 'row', gap: 5, padding: 15 }}>
+            <Link
+              href={'/login/createNewPassword'}
+              asChild
               style={[
                 styles.link,
                 { flex: 1, backgroundColor: colors.dashbordGreen },
               ]}
-              onPress={() => {
-                setView('welcome');
-              }}
             >
-              <Typography name='navigation' text='welcome' numberOfLines={1} />
-            </Pressable>
-            <Pressable
-              style={[
-                styles.link,
-                { flex: 1, backgroundColor: colors.dashbordRed },
-              ]}
-              onPress={() => {
-                setView('resetPassword');
-              }}
-            >
-              <Typography name='navigation' text='reset' numberOfLines={1} />
-            </Pressable>
-            <Pressable
-              style={[
-                styles.link,
-                { flex: 1, backgroundColor: colors.dashbordYellow },
-              ]}
-              onPress={() => {
-                setView('requestAccess');
-              }}
-            >
-              <Typography name='navigation' text='request' numberOfLines={1} />
-            </Pressable>
-            <Pressable
-              style={[
-                styles.link,
-                { flex: 1, backgroundColor: colors.lightContrast25 },
-              ]}
-              onPress={() => {
-                setView('login');
-              }}
-            >
-              <Typography name='navigation' text='login' numberOfLines={1} />
-            </Pressable>
-            <Pressable
-              style={[
-                styles.link,
-                { flex: 1, backgroundColor: colors.extendedBlue },
-              ]}
-              onPress={() => {
-                setView('createPassword');
-              }}
-            >
-              <Typography name='navigation' text='create' numberOfLines={1} />
-            </Pressable>
+              <Pressable
+                style={[
+                  styles.link,
+                  { flex: 1, backgroundColor: colors.extendedBlue },
+                ]}
+              >
+                <Typography
+                  name='navigation'
+                  text='New Password'
+                  numberOfLines={1}
+                />
+              </Pressable>
+            </Link>
             <Link
               href={'/(app)/dashbord'}
               asChild
@@ -147,17 +108,67 @@ const Login = () => {
             <ScrollView contentContainerStyle={[styles.scrollView]}>
               <View style={[styles.viewContainer, {}]}>
                 <TessLogo width={180} color={colors.white} />
-                {view === 'welcome' && <Welcome nextView={handlePress} />}
-                {view === 'login' && <LoginScreen nextView={handlePress} />}
-                {view === 'requestAccess' && (
-                  <RequestAccess nextView={handlePress} />
-                )}
-                {view === 'resetPassword' && (
-                  <ResetPassword nextView={handlePress} />
-                )}
-                {view === 'createPassword' && (
-                  <CreateNewPassword nextView={handlePress} />
-                )}
+                <View style={styles.container}>
+                  <LoginHeader header='WELCOME' style={styles.loginHeader}>
+                    <View style={styles.paragraph}>
+                      <Typography
+                        name='navigation'
+                        text='to TESS Hose Management (THM).'
+                        style={styles.whiteText}
+                      />
+                      <Typography name='navigation' style={styles.whiteText}>
+                        <Typography
+                          name='navigationBold'
+                          text='Existing users: '
+                        />
+                        <Typography
+                          name='navigation'
+                          text='sign in with your user login.'
+                        />
+                      </Typography>
+                      <Typography name='navigation' style={styles.whiteText}>
+                        <Typography name='navigationBold' text='New users: ' />
+                        <Typography
+                          name='navigation'
+                          text='request access and our team will revert to you with information needed to setup your account.'
+                        />
+                      </Typography>
+                    </View>
+                  </LoginHeader>
+                  <View style={styles.content}>
+                    <View style={styles.buttonWrapper}>
+                      <ButtonTHS
+                        title={'LOGIN'}
+                        onPress={() => {
+                          router.push('/login');
+                        }}
+                        variant={'primary'}
+                      />
+                      <LinkButton
+                        variant='dark'
+                        title='Request Access'
+                        onPress={() => {
+                          router.push('/login/requestAccess');
+                        }}
+                        vSpace={7}
+                        hSpace={7}
+                      />
+                    </View>
+                    <View style={styles.semiFooter}>
+                      <Typography
+                        name={'navigation'}
+                        text={'We hose the world'}
+                        style={styles.whiteText}
+                      />
+                      <NorwegianFlag width={32} />
+                      <Typography
+                        name={'navigation'}
+                        text={'© 2025 Copyright TESS AS'}
+                        style={styles.whiteText}
+                      />
+                    </View>
+                  </View>
+                </View>
               </View>
             </ScrollView>
           </View>
@@ -206,7 +217,39 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  ImageBackground: {
+  imageBackground: {
     flex: 1,
+  },
+  container: {
+    width: '100%',
+    maxWidth: 340,
+    marginHorizontal: 'auto',
+    padding: 20,
+    height: '100%',
+    gap: 50,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  loginHeader: {
+    marginBottom: 10,
+  },
+  paragraph: {
+    gap: 5,
+  },
+  content: {
+    width: '100%',
+  },
+  buttonWrapper: {
+    width: '100%',
+    gap: 25,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  semiFooter: {
+    width: '100%',
+    gap: 15,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });

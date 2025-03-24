@@ -9,9 +9,17 @@ export default function RootLayout() {
   return (
     <ContextProvider>
       <SafeAreaProvider>
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animationTypeForReplace: 'push',
+          }}
+        >
           {state.auth.user === null && (
-            <Stack.Screen name='index' options={{ headerShown: false }} />
+            <>
+              <Stack.Screen name='index' options={{ headerShown: false }} />
+              <Stack.Screen name='/login' options={{ headerShown: false }} />
+            </>
           )}
           {state.auth.user !== null && (
             <SafeAreaView style={styles.safeArea}>

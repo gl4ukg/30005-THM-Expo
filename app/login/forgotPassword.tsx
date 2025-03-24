@@ -1,18 +1,14 @@
-import { View, StyleSheet } from 'react-native';
-import { ButtonTHS } from '../UI/Button/button';
-import { Input } from '../UI/Input/input';
-import { useState } from 'react';
-import { LoginHeader } from './loginHeader';
-import { colors } from '@/lib/tokens/colors';
-import { HelpLinks } from './helpLinks';
+import { HelpLinks } from '@/components/login/helpLinks';
+import { LoginHeader } from '@/components/login/loginHeader';
 import { Typography } from '@/components/typography';
+import { ButtonTHS } from '@/components/UI';
+import { Input } from '@/components/UI/Input/input';
+import { colors } from '@/lib/tokens/colors';
 import { emailValidation } from '@/lib/util/validation';
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
-interface Props {
-  nextView: (page: 'login' | 'requestAccess') => void;
-}
-
-export const ResetPassword: React.FC<Props> = () => {
+export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
 
@@ -29,14 +25,13 @@ export const ResetPassword: React.FC<Props> = () => {
       setEmailError(undefined);
     } else setEmailError(validation);
   };
-
   return (
-    <View style={styles.container}>
+    <>
       <LoginHeader header='RESET PASSWORD'>
         <Typography
           name='navigation'
           text='Enter your email (User ID) to reset your password.'
-          style={styles.copyRights}
+          style={styles.subtitle}
         />
       </LoginHeader>
 
@@ -66,29 +61,19 @@ export const ResetPassword: React.FC<Props> = () => {
           style={styles.copyRights}
         />
       </View>
-    </View>
+    </>
   );
-};
+}
+
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    flex: 1,
-    height: '100%',
-    maxWidth: 340,
-    marginHorizontal: 'auto',
-    padding: 20,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 50,
+  subtitle: {
+    color: colors.white,
+    textAlign: 'left',
   },
   form: {
     width: '100%',
     gap: 15,
     alignItems: 'center',
-  },
-  buttonPlacement: {
-    alignSelf: 'flex-start',
-    paddingLeft: 50,
   },
   footer: {
     width: '100%',
