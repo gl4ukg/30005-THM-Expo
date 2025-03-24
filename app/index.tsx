@@ -37,11 +37,8 @@ const Login = () => {
     >
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView style={styles.safeArea}>
-          {/* TODO: remove View block under */}
-          <View style={{ flexDirection: 'row', gap: 5, padding: 15 }}>
-            <Link
-              href={'/login/createNewPassword'}
-              asChild
+          <View style={{ flexDirection: 'row', gap: 5, padding: 20 }}>
+            <Pressable
               style={[
                 styles.link,
                 { flex: 1, backgroundColor: colors.dashbordGreen },
@@ -61,7 +58,28 @@ const Login = () => {
               </Pressable>
             </Link>
             <Link
-              href={'/(app)/dashbord'}
+              href={'/dashbord'}
+              asChild
+              style={[
+                styles.link,
+                { flex: 1, backgroundColor: colors.dashbordGreen },
+              ]}
+            >
+              <Pressable
+                style={[
+                  styles.link,
+                  { flex: 1, backgroundColor: colors.dashbordGreen },
+                ]}
+              >
+                <Typography
+                  name='navigation'
+                  text='welcome'
+                  numberOfLines={1}
+                />
+              </Pressable>
+            </Link>
+            <Link
+              href={'/scan'}
               asChild
               style={[
                 styles.link,
@@ -74,11 +92,7 @@ const Login = () => {
                   { flex: 1, backgroundColor: colors.extendedBlue },
                 ]}
               >
-                <Typography
-                  name='navigation'
-                  text='dashbord'
-                  numberOfLines={1}
-                />
+                <Typography name='navigation' text='Scan' numberOfLines={1} />
               </Pressable>
             </Link>
             <Link
@@ -92,10 +106,10 @@ const Login = () => {
               <Pressable
                 style={[
                   styles.link,
-                  { flex: 1, backgroundColor: colors.extendedBlue },
+                  { flex: 1, backgroundColor: colors.dashbordRed },
                 ]}
               >
-                <Typography name='navigation' text='UI' numberOfLines={1} />
+                <Typography name='navigation' text='reset' numberOfLines={1} />
               </Pressable>
             </Link>
           </View>

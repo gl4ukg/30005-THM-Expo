@@ -10,15 +10,22 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.hejuhenryk.THM",
-      "appleTeamId": "55NT296GTJ"
+      "appleTeamId": "55NT296GTJ",
+      "infoPlist": {
+        "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera."
+      },
+      "bundleIdentifier": "com.tess.THM"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.hejuhenryk.THM"
+      "package": "com.tess.THM",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.NFC"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -49,7 +56,15 @@
           ]
         }
       ],
-      "expo-secure-store"
+      [
+        "react-native-vision-camera",
+        {
+          "cameraPermissionText": "$(PRODUCT_NAME) needs access to your Camera.",
+          "enableCodeScanner": true
+        }
+      ],
+      "expo-secure-store",
+      "react-native-nfc-manager"
     ],
     "experiments": {
       "typedRoutes": true
