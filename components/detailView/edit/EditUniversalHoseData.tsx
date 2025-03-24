@@ -54,13 +54,6 @@ const EditCouplingSection = ({
       onChange={(value) => onInputChange('angle', value)}
       options={[]}
     />
-    <View style={styles.inputContainer}>
-      <Input
-        label='Comment End 1'
-        value={universalHoseData.commentEnd1}
-        onChangeText={(text) => onInputChange('commentEnd1', text)}
-      />
-    </View>
   </>
 );
 
@@ -115,19 +108,22 @@ const EditUniversalHoseData = ({
           onInputChange('wpPsi', String(pressure.psi));
         }}
       />
-      <View style={styles.sectionSpacer}>
+      <View style={styles.sectionTitleContainer}>
         <Typography name='navigationBold' text='Coupling end 1' />
       </View>
       <EditCouplingSection
         universalHoseData={universalHoseData}
         onInputChange={onInputChange}
       />
-      <View style={styles.sectionTitleContainer}>
-        <Typography
-          name='navigationBold'
-          style={styles.sectionTitle}
-          text='Coupling end 2'
+      <View style={styles.inputContainer}>
+        <Input
+          label='Comment End 1'
+          value={universalHoseData.commentEnd1}
+          onChangeText={(text) => onInputChange('commentEnd2', text)}
         />
+      </View>
+      <View style={styles.sectionTitleContainer}>
+        <Typography name='navigationBold' text='Coupling end 2' />
         <View style={styles.checkboxContainer}>
           <Checkbox isChecked={sameAsEnd1} onChange={handleCheckboxChange} />
           <Typography name='button' text='Same as end 1' />
@@ -137,10 +133,19 @@ const EditUniversalHoseData = ({
         </View>
       </View>
       {!sameAsEnd1 && (
-        <EditCouplingSection
-          universalHoseData={universalHoseData}
-          onInputChange={onInputChange}
-        />
+        <>
+          <EditCouplingSection
+            universalHoseData={universalHoseData}
+            onInputChange={onInputChange}
+          />
+          <View style={styles.inputContainer}>
+            <Input
+              label='Comment End 2'
+              value={universalHoseData.commentEnd1}
+              onChangeText={(text) => onInputChange('commentEnd2', text)}
+            />
+          </View>
+        </>
       )}
     </View>
   );
@@ -170,10 +175,6 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  sectionSpacer: {
-    marginTop: 10,
-    marginBottom: 10,
   },
 });
 

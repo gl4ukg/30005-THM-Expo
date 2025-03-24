@@ -1,16 +1,12 @@
-import { View, StyleSheet } from 'react-native';
-import Bookmark from './Bookmark';
-import { Typography } from '../typography';
 import { colors } from '@/lib/tokens/colors';
-import { stringToDate, formatDate } from '@/lib/util/formatDate';
-import Datafield from './Datafield';
+import { formatDate, stringToDate } from '@/lib/util/formatDate';
 import React from 'react';
-import { SelectField } from '../detailHose/SelectField';
-import { RadioGroup } from '../detailHose/radioGroup';
-import { HID } from './types';
-import { Input } from '../UI/Input/input';
-import { TooltipWrapper } from '../detailHose/tooltipWrapper';
+import { StyleSheet, View } from 'react-native';
+import { Typography } from '../typography';
+import Bookmark from './Bookmark';
+import Datafield from './Datafield';
 import EditMaintananceInfo from './edit/EditMaintananceInfo';
+import { HID } from './types';
 
 type MaintananceProps = {
   hoseData: HID;
@@ -97,7 +93,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   container: {
-    padding: 10,
+    flex: 1,
   },
   inputContainer: {
     paddingBottom: 20,

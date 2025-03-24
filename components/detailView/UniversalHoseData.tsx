@@ -10,8 +10,19 @@ interface UniversalHoseDataProps {
   universalHoseData: UHD;
 }
 
-const CouplingSection = ({ universalHoseData }: { universalHoseData: UHD }) => (
-  <>
+const CouplingSection = ({
+  universalHoseData,
+  title,
+}: {
+  universalHoseData: UHD;
+  title: string;
+}) => (
+  <View style={styles.couplingSection}>
+    <Typography
+      name='navigationBold'
+      text={title}
+      style={styles.sectionTitle}
+    />
     <Datafield
       label='Material Quality'
       value={universalHoseData.materialQuality}
@@ -24,7 +35,7 @@ const CouplingSection = ({ universalHoseData }: { universalHoseData: UHD }) => (
     <Datafield label='Gender' value={universalHoseData.gender} />
     <Datafield label='Angle' value={universalHoseData.angle} />
     <Datafield label='Comment End 1' value={universalHoseData.commentEnd1} />
-  </>
+  </View>
 );
 
 const UniversalHoseData = ({ universalHoseData }: UniversalHoseDataProps) => {
@@ -39,25 +50,25 @@ const UniversalHoseData = ({ universalHoseData }: UniversalHoseDataProps) => {
       <Datafield label='Total Length' value={universalHoseData.totalLength} />
       <Datafield label='WP BAR' value={universalHoseData.wpBar} />
       <Datafield label='WP PSI' value={universalHoseData.wpPsi} />
-      <View style={styles.sectionSpacer}>
-        <Typography name='navigationBold' text='Coupling end 1' />
-      </View>
-      <CouplingSection universalHoseData={universalHoseData} />
+      <CouplingSection
+        universalHoseData={universalHoseData}
+        title='Coupling end 1'
+      />
       <View style={styles.sectionTitleContainer}>
-        <Typography name='navigationBold' text='Coupling end 2' />
-        <View style={styles.sectionTitleContainer}>
-          <Checkbox isChecked={false} onChange={() => {}} disabled />
-          <Typography name='button' text='Same as end 1' />
-        </View>
+        <Checkbox isChecked={false} onChange={() => {}} disabled />
+        <Typography name='button' text='Same as end 1' />
       </View>
-      <CouplingSection universalHoseData={universalHoseData} />
+      <CouplingSection
+        universalHoseData={universalHoseData}
+        title='Coupling end 2'
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    flex: 1,
   },
   sectionTitleContainer: {
     flexDirection: 'row',
@@ -66,8 +77,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
-  sectionSpacer: {
-    marginTop: 10,
+  couplingSection: {
+    marginVertical: 10,
+    borderRadius: 8,
+  },
+  sectionTitle: {
     marginBottom: 10,
   },
 });

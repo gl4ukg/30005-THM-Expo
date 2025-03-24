@@ -51,9 +51,7 @@ const TessPartNumbers: React.FC<TessPartNumbersProps> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
+  container: {},
   section: {
     marginBottom: 10,
   },

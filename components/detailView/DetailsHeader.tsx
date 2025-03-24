@@ -39,9 +39,12 @@ const DetailsHeader: React.FC<DetailsHeaderProps> = ({
 
 const styles = StyleSheet.create({
   header: {
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: 16,
+    marginBottom: 16,
     alignItems: 'center',
+    backgroundColor: colors.headerBackground, // Updated to match "end coupling 2"
+    padding: 12,
+    borderRadius: 8,
   },
   headerRow: {
     flexDirection: 'row',
@@ -53,9 +56,11 @@ const styles = StyleSheet.create({
   hoseData: {
     fontSize: 16,
     textAlign: 'center',
+    color: colors.textPrimary, // Updated to match "end coupling 2"
   },
   boldText: {
     fontWeight: 'bold',
+    color: colors.textSecondary, // Updated to match "end coupling 2"
   },
 });
 

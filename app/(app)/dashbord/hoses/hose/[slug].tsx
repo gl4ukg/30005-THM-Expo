@@ -31,7 +31,6 @@ const renderComponent = (
     <Component {...props} />
   );
 };
-
 const HoseDetails = () => {
   const { slug } = useLocalSearchParams();
   const { state, dispatch } = useContext(AppContext);
