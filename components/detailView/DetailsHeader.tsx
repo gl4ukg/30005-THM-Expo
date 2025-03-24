@@ -1,6 +1,6 @@
 import { colors } from '@/lib/tokens/colors';
 import { formatDate } from '@/lib/util/formatDate';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Icon } from '../Icon/Icon';
 import { Typography } from '../typography';
 
@@ -17,38 +17,34 @@ const DetailsHeader: React.FC<DetailsHeaderProps> = ({
   missingData,
 }) => {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <View style={styles.headerRow}>
-          {missingData && <Icon name='Alert' color={colors.error} size='sm' />}
-          <Typography style={styles.hoseData} name={'fieldLabel'}>
-            Hose ID:{' '}
-            <Typography name={'fieldValue'} style={styles.boldText}>
-              {id}
-            </Typography>
-          </Typography>
-        </View>
+    <View style={styles.header}>
+      <View style={styles.headerRow}>
+        {missingData && <Icon name='Alert' color={colors.error} size='sm' />}
         <Typography style={styles.hoseData} name={'fieldLabel'}>
-          Production Date:
+          Hose ID:{' '}
           <Typography name={'fieldValue'} style={styles.boldText}>
-            {formatDate(date)}
+            {id}
           </Typography>
         </Typography>
       </View>
-    </SafeAreaView>
+      <Typography style={styles.hoseData} name={'fieldLabel'}>
+        Production Date:
+        <Typography name={'fieldValue'} style={styles.boldText}>
+          {formatDate(date)}
+        </Typography>
+      </Typography>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    marginTop: 20,
-  },
   header: {
-    marginBottom: 20,
+    marginTop: 16,
+    marginBottom: 16,
     alignItems: 'center',
-  },
-  headerContent: {
-    alignItems: 'center',
+    backgroundColor: colors.headerBackground, // Updated to match "end coupling 2"
+    padding: 12,
+    borderRadius: 8,
   },
   headerRow: {
     flexDirection: 'row',
@@ -60,9 +56,11 @@ const styles = StyleSheet.create({
   hoseData: {
     fontSize: 16,
     textAlign: 'center',
+    color: colors.textPrimary, // Updated to match "end coupling 2"
   },
   boldText: {
     fontWeight: 'bold',
+    color: colors.textSecondary, // Updated to match "end coupling 2"
   },
 });
 

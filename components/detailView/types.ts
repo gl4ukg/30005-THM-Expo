@@ -46,16 +46,22 @@ export type TPN = {
 };
 
 export type HID = {
-  inspectedDate: string,
-  inspectedBy:string,
-  hoseCondition:string,
-  approved:string,
-  comment:string,
-  prodDate:string,
-  criticality:string,
-  inspectionInterval:string,
-  nextInspection:string,
-  replacementInterval:string,
-  replacementDate:string,
+  inspectedDate: string;
+  inspectedBy: string;
+  hoseCondition: string;
+  approved: string;
+  comment: string;
+  prodDate: string;
+  criticality: string;
+  inspectionInterval: string;
+  nextInspection: string;
+  replacementInterval: string;
+  replacementDate: string;
+};
 
-}
+export type HoseData = {
+  generalHoseData: GHD;
+  universalHoseData: UHD;
+  tessPartNumbers: TPN;
+  historyData: HID;
+};

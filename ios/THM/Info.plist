@@ -53,8 +53,6 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
     </dict>
-    <key>NSCameraUsageDescription</key>
-    <string>$(PRODUCT_NAME) needs access to your Camera.</string>
     <key>NSFaceIDUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your Face ID biometric data.</string>
     <key>NSUserActivityTypes</key>
@@ -67,8 +65,8 @@
       <string>OpenSans_600SemiBold.ttf</string>
       <string>Roboto_400Regular.ttf</string>
       <string>Roboto_500Medium.ttf</string>
-      <string>RobotoCondensed_400Regular.ttf</string>
       <string>RobotoCondensed_300Light.ttf</string>
+      <string>RobotoCondensed_400Regular.ttf</string>
     </array>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>

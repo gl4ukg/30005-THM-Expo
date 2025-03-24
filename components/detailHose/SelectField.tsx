@@ -54,7 +54,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
         >
           <Typography
             name='navigation'
-            style={[hasError && styles.errorStyle]}
+            style={[styles.valueStyle, hasError && styles.errorStyle]}
             text={selectedValue || 'Select...'}
           />
 
@@ -143,4 +143,5 @@ const styles = StyleSheet.create({
   tooltipStylingIfError: {
     paddingBottom: 22,
   },
+  valueStyle: { color: colors.extended333 },
 });

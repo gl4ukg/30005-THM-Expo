@@ -17,7 +17,7 @@ npm run reset-project
 1. Install dependencies
 
    ```bash
-   yarn
+   npx expo install
    ```
 2. We will need to use developer build (we can not use expo go)
    Sett up you env

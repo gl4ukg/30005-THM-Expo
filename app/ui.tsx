@@ -19,6 +19,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { DateInput } from '@/components/UI/Input/DateInput';
 
 const Ui = () => {
   const [iconsExpanded, setIconsExpanded] = useState(false);
@@ -27,6 +28,7 @@ const Ui = () => {
   const [inputsExpanded, setInputsExpanded] = useState(false);
   const [radioBtnExpanded, setRadioBtnExpanded] = useState(false);
   const [selectExpanded, setSelectExpanded] = useState(true);
+  const [datePickerExpanded, setdatePickerExpanded] = useState(false);
 
   const [name, setName] = useState('');
   const [genericText, setGenericText] = useState('');
@@ -307,6 +309,12 @@ const Ui = () => {
                 <Icon name='Alert' size='sm' color={colors.black} />
                 <Icon name='Alert' size='md' color={colors.black} />
                 <Typography text='Alert' name='fieldLabel' />
+              </View>
+              <View style={styles.rowWrapper}>
+                <Icon name='Calendar' size='xsm' color={colors.black} />
+                <Icon name='Calendar' size='sm' color={colors.black} />
+                <Icon name='Calendar' size='md' color={colors.black} />
+                <Typography text='Calendar' name='fieldLabel' />
               </View>
             </View>
             <Pressable
@@ -626,6 +634,24 @@ const Ui = () => {
                 required={true}
                 options={condition.map((c) => ({ id: c, label: c }))}
               />
+            </View>
+            <Pressable
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
+              onPress={() => setdatePickerExpanded(!datePickerExpanded)}
+            >
+              <Typography
+                text='Datepicker'
+                name='sectionHeaderCapslock'
+                style={{ color: colors.black }}
+              />
+              {datePickerExpanded ? (
+                <Icon name='ChevronDown' size='md' color={colors.black} />
+              ) : (
+                <Icon name='ChevronRight' size='md' color={colors.black} />
+              )}
+            </Pressable>
+            <View style={{ display: datePickerExpanded ? 'flex' : 'none' }}>
+              <DateInput label={'What Day is it?'} />
             </View>
           </ScrollView>
         </View>
