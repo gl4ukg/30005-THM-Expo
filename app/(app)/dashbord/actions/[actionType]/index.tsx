@@ -1,3 +1,4 @@
+import { ContactTess } from '@/components/dashboard/contactTess';
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
 import { useAppContext } from '@/context/ContextProvider';
@@ -27,13 +28,25 @@ const Action: React.FC<Props> = (props) => {
     dispatch({ type: 'REMOVE_ACTION', payload: { id, actionType } });
 
   const actionsMap = {
-    CONTACT: 'Contact TESS Team',
-    RFQ: 'Order hoses - RFQ',
-    SCRAP: 'Scrap',
+    CONTACT: ['Contact TESS Team', 'Message details'],
+    RFQ: ['Order hoses - RFQ', 'RFQ'],
+    SCRAP: ['Scrap', 'Scrap report'],
   } as const;
-
   return (
     <>
+      <ContactTess
+        title={actionsMap[actionType][0] || 'Actions'}
+        subTitle={actionsMap[actionType][1]}
+        hoses={state.data.assignedUnits['testPrinces'].hoses}
+        onSave={function (arg0: any): void {
+          throw new Error('Function not implemented.');
+        }}
+        onAdd={function (arg0: any): void {
+          throw new Error('Function not implemented.');
+        }}
+      />
+      {/* 
+
       <View style={style.header}>
         <Typography
           name='sectionHeader'
@@ -90,6 +103,7 @@ const Action: React.FC<Props> = (props) => {
           )}
         />
       </View>
+          */}
     </>
   );
 };

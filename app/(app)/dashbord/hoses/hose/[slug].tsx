@@ -313,14 +313,14 @@ const HoseDetails = () => {
         title={editMode ? 'Cancel Edit' : 'Edit'}
         onPress={toggleEditMode}
         variant='primary'
-        size='sm'
+        size='lg'
       />
       {editMode && (
         <ButtonTHS
           title='Save'
           onPress={handleSave}
           variant='secondary'
-          size='sm'
+          size='lg'
         />
       )}
       <ScrollView ref={scrollViewRef}>
