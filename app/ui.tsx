@@ -59,8 +59,6 @@ const Ui = () => {
             padding: 20,
             gap: 5,
             height: '100%',
-            borderColor: 'red',
-            borderWidth: 1,
           }}
         >
           <View
