@@ -56,17 +56,14 @@ const Login = () => {
             >
               <Typography name='navigation' text='welcome' numberOfLines={1} />
             </Pressable>
-            <Pressable
-              style={[
-                styles.link,
-                { flex: 1, backgroundColor: colors.dashbordGreen },
-              ]}
-              onPress={() => {
-                router.push(`/(app)/dashbord/hoses/hose/register?hoseId=1`);
+            <Link
+              href={{
+                pathname: '/(app)/dashbord/hoses/register',
+                params: { id: '2209045' },
               }}
             >
-              <Typography name='navigation' text='register' numberOfLines={1} />
-            </Pressable>
+              Register Hose 123
+            </Link>
             <Pressable
               style={[
                 styles.link,

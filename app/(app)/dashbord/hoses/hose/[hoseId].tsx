@@ -151,5 +151,6 @@ export default HoseDetails;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
+    padding: 10,
   },
 });

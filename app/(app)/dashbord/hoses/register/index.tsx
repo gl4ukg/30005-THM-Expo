@@ -2,20 +2,27 @@ import EditGeneralInfo from '@/components/detailView/edit/EditGeneralInfo';
 import EditMaintananceInfo from '@/components/detailView/edit/EditMaintananceInfo';
 import EditTessPartNumbers from '@/components/detailView/edit/EditTessPartNumbers';
 import EditUniversalHoseData from '@/components/detailView/edit/EditUniversalHoseData';
-import { HoseData } from '@/components/detailView/types';
+import { GHD, HID, HoseData, TPN, UHD } from '@/components/detailView/types';
 import { Typography } from '@/components/typography';
 import { AppContext } from '@/context/Reducer';
+import { colors } from '@/lib/tokens/colors';
 import { useLocalSearchParams } from 'expo-router';
 import { useContext, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
 
-export const RegisterHose = () => {
+const RegisterHose = () => {
   const { hoseId } = useLocalSearchParams();
   const { state, dispatch } = useContext(AppContext);
 
-  const hoseData = { id: hoseId } as Partial<HoseData>;
+  const initialHoseData: Partial<HoseData> = {
+    id: hoseId,
+    generalHoseData: {} as GHD,
+    universalHoseData: {} as UHD,
+    tessPartNumbers: {} as TPN,
+    maintananceInfo: {} as HID,
+  };
 
-  const [localState, setLocalState] = useState(hoseData);
+  const [localState, setLocalState] = useState(initialHoseData);
 
   const handleInputChange = (field: string, value: string) => {
     setLocalState((prevState) => ({
@@ -27,32 +34,44 @@ export const RegisterHose = () => {
   console.log('heihei, her er jeg');
 
   return (
-    <View>
+    <View style={styles.container}>
       <ScrollView>
-        <View>
+        <View style={{ alignItems: 'center' }}>
           <Typography name='navigationBold' text='Register hose' />
-          <Typography name='navigation' text='Hose ID:'>
-            <Typography name='navigationBold' text={hoseId} />
+          <Typography name='navigation'>
+            Hose ID:{' '}
+            <Typography name={'navigationBold'} text={hoseId ?? '1234'} />
           </Typography>
         </View>
 
         <EditGeneralInfo
-          generalInfo={hoseData.generalHoseData}
+          generalInfo={localState.generalHoseData!}
           onInputChange={handleInputChange}
         />
         <EditUniversalHoseData
-          universalHoseData={hoseData.universalHoseData}
+          universalHoseData={localState.universalHoseData}
           onInputChange={handleInputChange}
         />
         <EditTessPartNumbers
-          tessPartNumbersData={hoseData.tessPartNumbers}
+          tessPartNumbersData={localState.tessPartNumbers}
           onInputChange={handleInputChange}
         />
         <EditMaintananceInfo
-          hoseData={hoseData.maintananceInfo}
+          hoseData={localState.maintananceInfo}
           onInputChange={handleInputChange}
         />
       </ScrollView>
     </View>
   );
 };
+
+export default RegisterHose;
+const styles = StyleSheet.create({
+  header: {
+    alignItems: 'center',
+  },
+  container: {
+    padding: 10,
+    backgroundColor: colors.white,
+  },
+});

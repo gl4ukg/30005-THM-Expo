@@ -24,6 +24,11 @@ export type UHD = {
   gender: string;
   angle: string;
   commentEnd1: string;
+  materialQuality2: string;
+  typeFitting2: string;
+  commentEnd2: string;
+  gender2: string;
+  angle2: string;
 };
 
 export type TPN = {
