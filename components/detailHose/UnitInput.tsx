@@ -5,7 +5,7 @@ import { colors } from '@/lib/tokens/colors';
 
 type UnitInputProps = {
   label?: string;
-  value: number | string;
+  value: number;
   onChangeText: (value: number | string) => void;
   unit: string;
   editable?: boolean;

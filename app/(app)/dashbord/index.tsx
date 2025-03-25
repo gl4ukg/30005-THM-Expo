@@ -5,7 +5,13 @@ import { ActionMenu } from '@/components/UI/ActionMenu';
 import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+  Button,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const month: BarData = [
@@ -176,6 +182,9 @@ const Dashbord = () => {
   const goToHose = (id: string) => {
     router.push(`/(app)/dashbord/hoses/hose/[${id}]`);
   };
+  const goToRegisterHose = (hoseId: string) => {
+    router.push(`/(app)/dashbord/hoses/hose/register?hoseId=${hoseId}`);
+  };
   return (
     <>
       <ScrollView contentContainerStyle={style.container}>
@@ -194,7 +203,7 @@ const Dashbord = () => {
             value={1129}
             trend={1}
             state='error'
-            onPress={() => goToHose('failed')}
+            onPress={() => goToFilter('failed')}
           />
           <Primary
             label='Overdue'
@@ -244,6 +253,12 @@ const Dashbord = () => {
           value={14}
           trend={1}
         />
+        <View>
+          <Button
+            title='Register Hose'
+            onPress={() => goToRegisterHose('123456')}
+          />
+        </View>
       </ScrollView>
     </>
   );

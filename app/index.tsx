@@ -15,7 +15,7 @@ import { Typography } from '@/components/typography';
 import { TessLines } from '@/components/decorative/tessLines';
 import { RequestAccess } from '@/components/login/requestAccess';
 import { colors } from '@/lib/tokens/colors';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { TessLogo } from '@/components/login/logo';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ResetPassword } from '@/components/login/resetPassword';
@@ -28,6 +28,7 @@ type LoginViews =
   | 'resetPassword'
   | 'createPassword';
 const Login = () => {
+  const router = useRouter();
   const [view, setView] = useState<LoginViews>('welcome');
   const handlePress = (page: LoginViews) => {
     setView(page);
@@ -54,6 +55,17 @@ const Login = () => {
               }}
             >
               <Typography name='navigation' text='welcome' numberOfLines={1} />
+            </Pressable>
+            <Pressable
+              style={[
+                styles.link,
+                { flex: 1, backgroundColor: colors.dashbordGreen },
+              ]}
+              onPress={() => {
+                router.push(`/(app)/dashbord/hoses/hose/register?hoseId=1`);
+              }}
+            >
+              <Typography name='navigation' text='register' numberOfLines={1} />
             </Pressable>
             <Pressable
               style={[
