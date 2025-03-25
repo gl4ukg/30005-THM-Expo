@@ -79,7 +79,7 @@ const EditUniversalHoseData = ({
   }, [sameAsEnd1, universalHoseData, onInputChange]);
 
   return (
-    <View style={styles.container}>
+    <View>
       <Bookmark title='Universal Hose Data' />
       <SelectField
         label='Hose Standard'
@@ -152,9 +152,6 @@ const EditUniversalHoseData = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
   inputContainer: {
     marginBottom: 10,
   },

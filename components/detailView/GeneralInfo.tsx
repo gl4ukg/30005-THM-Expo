@@ -9,7 +9,7 @@ type GeneralInfoProps = {
 
 const GeneralInfo: React.FC<GeneralInfoProps> = ({ generalInfo }) => {
   return (
-    <View style={styles.container}>
+    <View>
       <Datafield label='Description:' value={generalInfo.description} />
       <Datafield label='Customer ID:' value={generalInfo.customerId} />
       <Datafield
@@ -31,11 +31,5 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({ generalInfo }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-});
 
 export default GeneralInfo;

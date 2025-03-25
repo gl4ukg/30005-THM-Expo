@@ -13,7 +13,7 @@ const EditTessPartNumbers: React.FC<EditTessPartNumbersProps> = ({
   tessPartNumbersData,
   onInputChange,
 }) => (
-  <View style={styles.container}>
+  <View>
     <SelectField
       label='Hose Type'
       value={tessPartNumbersData.hoseType}
@@ -123,9 +123,6 @@ const EditTessPartNumbers: React.FC<EditTessPartNumbersProps> = ({
 );
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
   section: {
     marginBottom: 10,
   },

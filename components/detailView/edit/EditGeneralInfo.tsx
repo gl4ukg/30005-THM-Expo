@@ -14,7 +14,7 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
   generalInfo,
   onInputChange,
 }) => (
-  <View style={styles.container}>
+  <View>
     <View style={styles.inputContainer}>
       <Input
         label='Description:'
@@ -79,9 +79,6 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
 );
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
   inputContainer: {
     marginBottom: 10,
   },
