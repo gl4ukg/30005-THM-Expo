@@ -1,7 +1,7 @@
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
-import { ButtonTHS } from '@/components/UI';
 import { colors } from '@/lib/tokens/colors';
+import { reverseHexString } from '@/lib/util/rfid';
 import { useRef, useState } from 'react';
 import {
   Alert,
@@ -12,14 +12,13 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import NfcManager, { NfcTech } from 'react-native-nfc-manager';
 import {
   Camera,
   useCameraDevice,
   useCameraPermission,
   useCodeScanner,
 } from 'react-native-vision-camera';
-import NfcManager, { NfcTech } from 'react-native-nfc-manager';
-import { reverseHexString } from '@/lib/util/rfid';
 
 const Ui = () => {
   const device = useCameraDevice('back');
@@ -70,10 +69,15 @@ const Ui = () => {
   };
   async function readNdef() {
     console.log('readNdef');
+    // console.log('NfcManager.requestTechnology', NfcManager.requestTechnology);\
     try {
       // register for the NFC tag with NDEF in it
       await NfcManager.requestTechnology(NfcTech.NfcA);
       // the resolved tag object will contain `ndefMessage` property
+      if (!NfcManager.isSupported()) {
+        Alert.alert('NFC is not supported on this device');
+        return;
+      }
       const tag = await NfcManager.getTag();
 
       if (tag?.id) {
@@ -178,23 +182,18 @@ const Ui = () => {
           </View>
         </View>
       </View>
-      <ScrollView contentContainerStyle={styles.scrollView}>
+      <View style={styles.cameraContainer}>
         {device !== undefined && scanMethod === 'Barcode' && (
           <Camera
             ref={cameraRef}
-            style={{
-              width: '100%',
-              height: 300,
-              borderWidth: 1,
-              borderColor: colors.black,
-            }}
+            style={styles.camera}
             focusable={true}
             device={device}
             codeScanner={codeScanner}
             isActive={scanMethod === 'Barcode'}
           />
         )}
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -258,15 +257,24 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flex: 1,
   },
+
   switchText: {
     color: colors.extended333,
   },
   switchTextActive: {
     color: colors.white,
   },
-  scrollView: {
-    paddingHorizontal: 20,
-    paddingVertical: 30,
+  cameraContainer: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  camera: {
+    width: '90%',
+    height: 200,
+    margin: '5%',
+    borderWidth: 2,
+    borderColor: colors.black,
   },
 });
 

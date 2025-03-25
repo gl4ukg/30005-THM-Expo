@@ -38,7 +38,9 @@ const Login = () => {
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView style={styles.safeArea}>
           <View style={{ flexDirection: 'row', gap: 5, padding: 20 }}>
-            <Pressable
+            <Link
+              href={'/dashbord'}
+              asChild
               style={[
                 styles.link,
                 { flex: 1, backgroundColor: colors.dashbordGreen },
@@ -109,7 +111,7 @@ const Login = () => {
                   { flex: 1, backgroundColor: colors.dashbordRed },
                 ]}
               >
-                <Typography name='navigation' text='reset' numberOfLines={1} />
+                <Typography name='navigation' text='Ui' numberOfLines={1} />
               </Pressable>
             </Link>
           </View>
