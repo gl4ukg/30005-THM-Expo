@@ -7,7 +7,6 @@ import {
   Alert,
   Pressable,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   TextInput,
   View,
@@ -188,7 +187,7 @@ const Ui = () => {
             ref={cameraRef}
             style={styles.camera}
             focusable={true}
-            device={device}
+            device={device!}
             codeScanner={codeScanner}
             isActive={scanMethod === 'Barcode'}
           />
@@ -264,16 +263,16 @@ const styles = StyleSheet.create({
   switchTextActive: {
     color: colors.white,
   },
+  // there is an issue with the camera view, https://github.com/mrousavy/react-native-vision-camera/issues/3237 it is not rendering in right place on the first render, overflow: 'hidden' fixes it for now
   cameraContainer: {
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    overflow: 'hidden',
   },
   camera: {
-    width: '90%',
-    height: 200,
-    margin: '5%',
-    borderWidth: 2,
+    flex: 1,
+    width: '100%',
     borderColor: colors.black,
   },
 });
