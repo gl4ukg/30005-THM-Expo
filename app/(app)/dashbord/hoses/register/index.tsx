@@ -104,13 +104,19 @@ const RegisterHose = () => {
           />
         </View>
         <View style={styles.buttonContainer}>
-          <ButtonTHS title='Save & close' onPress={() => {}} />
+          <ButtonTHS title='Save & close' size='sm' onPress={() => {}} />
           <ButtonTHS
             title='Save as draft'
             onPress={() => {}}
             variant='secondary'
+            size='sm'
           />
-          <ButtonTHS title='Cancel' onPress={() => {}} variant='tertiary' />
+          <ButtonTHS
+            title='Cancel'
+            onPress={() => {}}
+            variant='tertiary'
+            size='sm'
+          />
         </View>
       </ScrollView>
     </View>
