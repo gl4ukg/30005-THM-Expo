@@ -1,8 +1,9 @@
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
+import { Input } from '@/components/UI/Input/input';
 import { colors } from '@/lib/tokens/colors';
 import { reverseHexString } from '@/lib/util/rfid';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Pressable,
@@ -18,19 +19,20 @@ import {
   useCameraPermission,
   useCodeScanner,
 } from 'react-native-vision-camera';
-
-const Ui = () => {
+const Scan = () => {
+  const inputRef = useRef<TextInput>(null);
   const device = useCameraDevice('back');
   const { hasPermission, requestPermission } = useCameraPermission();
   const codeScanner = useCodeScanner({
-    codeTypes: ['code-128', 'code-39', 'code-93', 'ean-13'],
+    codeTypes: ['code-39'],
+    // codeTypes: ['code-128', 'code-39', 'code-93', 'ean-13'],
     regionOfInterest: { x: 0, y: 0, width: 100, height: 50 },
     onCodeScanned: (codes) => {
       if (typeof codes[0].value === 'string') {
         setId(codes[0].value);
         setScanMethod(null);
       } else {
-        setId(null);
+        setId('');
       }
       console.log(`Scanned ${codes[0].type} ${codes[0].value} !`);
     },
@@ -39,8 +41,24 @@ const Ui = () => {
   if (!hasPermission) requestPermission();
   const cameraRef = useRef<Camera>(null);
   const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(null);
-  const [id, setId] = useState<null | string>(null);
+  const [id, setId] = useState<null | string>('');
   const [rfId, setRfId] = useState<null | string>(null);
+  const [isNfcSupported, setIsNfcSupported] = useState(false);
+  const [isNfcOn, setIsNfcOn] = useState(false);
+
+  useEffect(() => {
+    const checkNfcSupport = async () => {
+      const isSupported = await NfcManager.isSupported();
+      setIsNfcSupported(isSupported);
+      if (!isSupported)
+        Alert.alert(
+          'NFC',
+          'RFID is not supported on this device, you will not be able to use it',
+        );
+    };
+    checkNfcSupport();
+  }, []);
+
   // return <Typography name='navigation' text='Missing Permission' />;
   if (device === undefined && scanMethod === 'Barcode')
     Alert.alert(
@@ -57,13 +75,22 @@ const Ui = () => {
       },
     );
 
-  const handleRFIDPress = () => {
-    setId(null);
+  const handleRFIDPress = async () => {
+    setId('');
+    inputRef.current?.blur();
+    const isEnabled = await NfcManager.isEnabled();
+    if (!isEnabled) {
+      Alert.alert('NFC is not enabled ', 'Go to settings and enable NFC');
+      setScanMethod(null);
+      return;
+    }
     setScanMethod('RFID');
+    setIsNfcOn(true);
     readNdef();
   };
   const handleBarcodePress = () => {
-    setId(null);
+    setId('');
+    inputRef.current?.blur();
     setScanMethod('Barcode');
   };
   async function readNdef() {
@@ -71,12 +98,15 @@ const Ui = () => {
     // console.log('NfcManager.requestTechnology', NfcManager.requestTechnology);\
     try {
       // register for the NFC tag with NDEF in it
-      await NfcManager.requestTechnology(NfcTech.NfcA);
+      const nfcRequest = await NfcManager.requestTechnology(NfcTech.NfcA);
+      console.log('nfcRequest', NfcManager.connect([NfcTech.NfcA]));
       // the resolved tag object will contain `ndefMessage` property
       if (!NfcManager.isSupported()) {
         Alert.alert('NFC is not supported on this device');
-        return;
+        throw new Error('NFC is not supported on this device');
       }
+      const isSupported = await NfcManager.isEnabled();
+      console.log('isSupported', isSupported);
       const tag = await NfcManager.getTag();
 
       if (tag?.id) {
@@ -110,78 +140,80 @@ const Ui = () => {
             text='Scan or type ID'
           />
         </View>
-        <View style={styles.header}>
-          <View style={styles.search}>
-            <TextInput
-              placeholder='123456789'
-              style={{
-                flex: 1,
-                backgroundColor: 'white',
-                padding: 20,
-                borderRadius: 3,
-                borderColor: colors.primary25,
-                borderWidth: 1,
-              }}
-              value={id || ''}
-              onChange={(value) => setId(value.nativeEvent.text ?? null)}
+        <View style={styles.inputsWrapper}>
+          <View style={styles.inputs}>
+            <Input
+              label=''
+              value={`${id}`}
+              onChangeText={setId}
+              type='numeric'
+              ref={inputRef}
             />
-            <Icon name='Search' color={colors.primary25} size='sm' />
-          </View>
-          <View style={styles.switch}>
-            <Pressable
-              style={
-                scanMethod === 'Barcode'
-                  ? styles.switchButtonActive
-                  : styles.switchButton
-              }
-              onPress={handleBarcodePress}
-            >
-              <Icon
-                name='Barcode'
-                size='xsm'
-                color={
-                  scanMethod === 'Barcode' ? colors.white : colors.extended333
-                }
-              />
-              <Typography
-                name='navigation'
-                text='Barcode'
+            <View style={styles.switch}>
+              <Pressable
                 style={
                   scanMethod === 'Barcode'
-                    ? styles.switchTextActive
-                    : styles.switchText
+                    ? styles.switchButtonActive
+                    : styles.switchButton
                 }
-              />
-            </Pressable>
-            <Pressable
-              style={
-                scanMethod === 'RFID'
-                  ? styles.switchButtonActive
-                  : styles.switchButton
-              }
-              onPress={handleRFIDPress}
-            >
-              <Icon
-                name='RFID'
-                size='xsm'
-                color={
-                  scanMethod === 'RFID' ? colors.white : colors.extended333
-                }
-              />
-              <Typography
-                name='navigation'
-                text='RFID'
+                onPress={handleBarcodePress}
+              >
+                <Icon
+                  name='Barcode'
+                  size='xsm'
+                  color={
+                    scanMethod === 'Barcode' ? colors.white : colors.extended333
+                  }
+                />
+                <Typography
+                  name='navigation'
+                  text='Barcode'
+                  style={
+                    scanMethod === 'Barcode'
+                      ? styles.switchTextActive
+                      : styles.switchText
+                  }
+                />
+              </Pressable>
+              <Pressable
                 style={
                   scanMethod === 'RFID'
-                    ? styles.switchTextActive
-                    : styles.switchText
+                    ? styles.switchButtonActive
+                    : styles.switchButton
                 }
-              />
-            </Pressable>
+                onPress={handleRFIDPress}
+              >
+                <Icon
+                  name='RFID'
+                  size='xsm'
+                  color={
+                    scanMethod === 'RFID' ? colors.white : colors.extended333
+                  }
+                />
+                <Typography
+                  name='navigation'
+                  text='RFID'
+                  style={
+                    scanMethod === 'RFID'
+                      ? styles.switchTextActive
+                      : styles.switchText
+                  }
+                />
+              </Pressable>
+            </View>
           </View>
+          <Pressable
+            style={({ pressed }) => [
+              styles.searchButton,
+              pressed && styles.searchButtonPressed,
+            ]}
+            onPress={() => {}}
+          >
+            <Icon name='Search' color={colors.primary25} size='sm' />
+          </Pressable>
         </View>
       </View>
-      <View style={styles.cameraContainer}>
+      <View style={styles.readerContainer}>
         {device !== undefined && scanMethod === 'Barcode' && (
           <Camera
             ref={cameraRef}
@@ -192,12 +224,17 @@ const Ui = () => {
             isActive={scanMethod === 'Barcode'}
           />
         )}
+        {scanMethod === 'RFID' && isNfcOn && (
+          <View style={styles.rfidContainer}>
+            <Icon name='RFID' size='lg' />
+            <Typography name='sectionHeaderCapslock' text='Scan RFID now' />
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
 };
-
-export default Ui;
+export default Scan;
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -221,15 +258,25 @@ const styles = StyleSheet.create({
   headerText: {
     textAlign: 'center',
   },
-  search: {
-    width: '100%',
-    flexDirection: 'row',
+  searchButton: {
+    width: 36,
+    height: 36,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 10,
-    // flex: 1,
+  },
+  searchButtonPressed: {
+    backgroundColor: colors.dashbordYellow,
+  },
+  inputsWrapper: {
+    flexDirection: 'row',
+    gap: 5,
+  },
+  inputs: {
+    gap: 5,
+    flex: 1,
   },
   switch: {
+    marginLeft: 30,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -263,10 +310,11 @@ const styles = StyleSheet.create({
   switchTextActive: {
     color: colors.white,
   },
-  // there is an issue with the camera view, https://github.com/mrousavy/react-native-vision-camera/issues/3237 it is not rendering in right place on the first render, overflow: 'hidden' fixes it for now
-  cameraContainer: {
+  // there is an issue with the camera view, https://github.com/mrousavy/react-native-vision-camera/issues/3237
+  // it is not rendering in right place on the first render, overflow: 'hidden' fixes it for now
+  readerContainer: {
     flex: 1,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
   },
@@ -274,6 +322,12 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     borderColor: colors.black,
+  },
+  rfidContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
   },
 });
 
