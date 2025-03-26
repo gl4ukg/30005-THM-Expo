@@ -39,6 +39,14 @@ const CouplingSection = ({
 );
 
 const UniversalHoseData = ({ universalHoseData }: UniversalHoseDataProps) => {
+  const areCouplingsSame =
+    universalHoseData.materialQuality === universalHoseData.materialQuality2 &&
+    universalHoseData.typeFitting === universalHoseData.typeFitting2 &&
+    universalHoseData.innerDiameter2 === universalHoseData.innerDiameter2 &&
+    universalHoseData.gender === universalHoseData.gender2 &&
+    universalHoseData.angle === universalHoseData.angle2 &&
+    universalHoseData.commentEnd1 === universalHoseData.commentEnd2;
+
   return (
     <View style={styles.container}>
       <Bookmark title='Universal Hose Data' />
@@ -54,8 +62,8 @@ const UniversalHoseData = ({ universalHoseData }: UniversalHoseDataProps) => {
         universalHoseData={universalHoseData}
         title='Coupling end 1'
       />
-      <View style={styles.sectionTitleContainer}>
-        <Checkbox isChecked={false} onChange={() => {}} disabled />
+      <View style={styles.checkboxContainer}>
+        <Checkbox isChecked={areCouplingsSame} disabled onChange={() => {}} />
         <Typography name='button' text='Same as end 1' />
       </View>
       <CouplingSection
@@ -69,6 +77,12 @@ const UniversalHoseData = ({ universalHoseData }: UniversalHoseDataProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 0,
+    marginLeft: 25,
   },
   sectionTitleContainer: {
     flexDirection: 'row',

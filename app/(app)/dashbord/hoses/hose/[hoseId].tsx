@@ -32,12 +32,12 @@ const renderComponent = (
   );
 };
 const HoseDetails = () => {
-  const { slug } = useLocalSearchParams();
+  const { hoseId } = useLocalSearchParams();
   const { state, dispatch } = useContext(AppContext);
 
   const hoseData =
-    state.data.assignedUnits.hoses?.find((hose) => hose.id === slug) ||
-    mockedData.find((hose) => hose.id === slug);
+    state.data.assignedUnits.hoses?.find((hose) => hose.id === hoseId) ||
+    mockedData.find((hose) => hose.id === hoseId);
 
   const [editMode, setEditMode] = useState(false);
   const [localState, setLocalState] = useState(hoseData);
@@ -151,5 +151,6 @@ export default HoseDetails;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
+    padding: 10,
   },
 });

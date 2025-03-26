@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 16,
     alignItems: 'center',
-    backgroundColor: colors.headerBackground, // Updated to match "end coupling 2"
     padding: 12,
     borderRadius: 8,
   },
@@ -56,11 +55,9 @@ const styles = StyleSheet.create({
   hoseData: {
     fontSize: 16,
     textAlign: 'center',
-    color: colors.textPrimary, // Updated to match "end coupling 2"
   },
   boldText: {
     fontWeight: 'bold',
-    color: colors.textSecondary, // Updated to match "end coupling 2"
   },
 });
 

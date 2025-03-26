@@ -2,10 +2,9 @@ import { BarChart, Primary, Secondary } from '@/components/dashboard';
 import { BarData } from '@/components/dashboard/barChart';
 import { Typography } from '@/components/typography';
 import { ActionMenu } from '@/components/UI/ActionMenu';
-import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const month: BarData = [
@@ -173,9 +172,7 @@ const Dashbord = () => {
   const goToFilter = (filter: string) => {
     router.push(`/(app)/dashbord/hoses/${filter}`);
   };
-  const goToHose = (id: string) => {
-    router.push(`/(app)/dashbord/hoses/hose/[${id}]`);
-  };
+
   return (
     <>
       <ScrollView contentContainerStyle={style.container}>
@@ -194,7 +191,7 @@ const Dashbord = () => {
             value={1129}
             trend={1}
             state='error'
-            onPress={() => goToHose('failed')}
+            onPress={() => goToFilter('failed')}
           />
           <Primary
             label='Overdue'
@@ -244,6 +241,7 @@ const Dashbord = () => {
           value={14}
           trend={1}
         />
+        <View></View>
       </ScrollView>
     </>
   );

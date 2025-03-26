@@ -11,7 +11,11 @@ export default function DashbordLayout() {
         />
         <Stack.Screen name='hoses/index' options={{ headerShown: true }} />
         <Stack.Screen
-          name='hoses/hose/[slug]'
+          name='hoses/hose/[hoseId]'
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='hoses/register/[id]'
           options={{ headerShown: false }}
         />
       </Stack>
