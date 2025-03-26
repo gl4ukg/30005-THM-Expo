@@ -1,10 +1,13 @@
 import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
+import Documents from '@/components/detailView/Documents';
 import EditGeneralInfo from '@/components/detailView/edit/EditGeneralInfo';
 import EditMaintananceInfo from '@/components/detailView/edit/EditMaintananceInfo';
 import EditTessPartNumbers from '@/components/detailView/edit/EditTessPartNumbers';
 import EditUniversalHoseData from '@/components/detailView/edit/EditUniversalHoseData';
 import { GHD, HID, HoseData, TPN, UHD } from '@/components/detailView/types';
 import { Typography } from '@/components/typography';
+import { ButtonTHS } from '@/components/UI';
+import { Checkbox } from '@/components/UI/Checkbox';
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
 import { AppContext } from '@/context/Reducer';
@@ -16,6 +19,11 @@ import { ScrollView, View, StyleSheet } from 'react-native';
 const RegisterHose = () => {
   const { hoseId } = useLocalSearchParams();
   const { state, dispatch } = useContext(AppContext);
+  const [registerMultiple, setRegisterMultiple] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setRegisterMultiple((prevState) => !prevState);
+  };
 
   const initialHoseData: Partial<HoseData> = {
     id: hoseId,
@@ -83,6 +91,27 @@ const RegisterHose = () => {
           hoseData={localState.maintananceInfo}
           onInputChange={handleInputChange}
         />
+        <Documents />
+        <View style={styles.checkboxContainer}>
+          <Checkbox
+            isChecked={registerMultiple}
+            onChange={handleCheckboxChange}
+          />
+          <Typography
+            name='button'
+            text='Register next hose with same data (after Save)'
+            style={styles.checkboxText}
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <ButtonTHS title='Save & close' onPress={() => {}} />
+          <ButtonTHS
+            title='Save as draft'
+            onPress={() => {}}
+            variant='secondary'
+          />
+          <ButtonTHS title='Cancel' onPress={() => {}} variant='tertiary' />
+        </View>
       </ScrollView>
     </View>
   );
@@ -90,6 +119,25 @@ const RegisterHose = () => {
 
 export default RegisterHose;
 const styles = StyleSheet.create({
+  buttonContainer: {
+    paddingHorizontal: 50,
+    gap: 20,
+  },
+  checkboxContainer: {
+    marginVertical: 50,
+    borderWidth: 1,
+    borderColor: colors.extended333,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  checkboxText: {
+    paddingVertical: 10,
+    marginLeft: 10,
+    flex: 1,
+    flexWrap: 'wrap',
+  },
   header: {
     alignItems: 'center',
   },
