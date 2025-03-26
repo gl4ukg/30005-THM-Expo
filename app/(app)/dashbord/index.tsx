@@ -2,16 +2,9 @@ import { BarChart, Primary, Secondary } from '@/components/dashboard';
 import { BarData } from '@/components/dashboard/barChart';
 import { Typography } from '@/components/typography';
 import { ActionMenu } from '@/components/UI/ActionMenu';
-import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  View,
-  Button,
-} from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const month: BarData = [
@@ -179,12 +172,7 @@ const Dashbord = () => {
   const goToFilter = (filter: string) => {
     router.push(`/(app)/dashbord/hoses/${filter}`);
   };
-  const goToHose = (id: string) => {
-    router.push(`/(app)/dashbord/hoses/hose/[${id}]`);
-  };
-  const goToRegisterHose = (hoseId: string) => {
-    router.push(`/(app)/dashbord/hoses/hose/register?hoseId=${hoseId}`);
-  };
+
   return (
     <>
       <ScrollView contentContainerStyle={style.container}>
@@ -253,12 +241,7 @@ const Dashbord = () => {
           value={14}
           trend={1}
         />
-        <View>
-          <Button
-            title='Register Hose'
-            onPress={() => goToRegisterHose('123456')}
-          />
-        </View>
+        <View></View>
       </ScrollView>
     </>
   );

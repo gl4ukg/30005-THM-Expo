@@ -27,6 +27,8 @@ type LoginViews =
   | 'resetPassword'
   | 'createPassword';
 const Login = () => {
+  const router = useRouter();
+
   const windowHeight = Dimensions.get('window').height;
   const insets = useSafeAreaInsets();
 
@@ -37,7 +39,18 @@ const Login = () => {
     >
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView style={styles.safeArea}>
-          <View style={{ flexDirection: 'row', gap: 5, padding: 20 }}>
+          {/* TODO: remove View block under */}
+          <View style={{ flexDirection: 'row', gap: 5 }}>
+            <Link
+              href={{
+                pathname: '/(app)/dashbord/hoses/register',
+                params: { id: '2209045' },
+              }}
+              style={{ backgroundColor: 'hotpink' }}
+            >
+              Register Hose 123
+            </Link>
+
             <Link
               href={'/dashbord'}
               asChild
@@ -54,28 +67,7 @@ const Login = () => {
               >
                 <Typography
                   name='navigation'
-                  text='New Password'
-                  numberOfLines={1}
-                />
-              </Pressable>
-            </Link>
-            <Link
-              href={'/dashbord'}
-              asChild
-              style={[
-                styles.link,
-                { flex: 1, backgroundColor: colors.dashbordGreen },
-              ]}
-            >
-              <Pressable
-                style={[
-                  styles.link,
-                  { flex: 1, backgroundColor: colors.dashbordGreen },
-                ]}
-              >
-                <Typography
-                  name='navigation'
-                  text='welcome'
+                  text='dashboard'
                   numberOfLines={1}
                 />
               </Pressable>
