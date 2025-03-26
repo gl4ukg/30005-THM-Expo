@@ -114,9 +114,14 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
             isOpen={isOpen}
             handlePress={() => setIsOpen((isOpen) => !isOpen)}
           />
-          <Pressable style={styles.button}>
-            <Icon name='Search' color='#fff' />
-          </Pressable>
+          <Link asChild href='/scan' style={styles.button}>
+            <Pressable
+              style={({ pressed }) => [pressed && {}]}
+              onPress={() => setIsOpen(false)}
+            >
+              <Icon name='Search' color='#fff' />
+            </Pressable>
+          </Link>
           <Pressable style={styles.button} onPress={() => router.back()}>
             <Icon name='ChevronLeft' color='#fff' />
           </Pressable>
