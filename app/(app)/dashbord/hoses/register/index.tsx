@@ -1,9 +1,12 @@
+import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
 import EditGeneralInfo from '@/components/detailView/edit/EditGeneralInfo';
 import EditMaintananceInfo from '@/components/detailView/edit/EditMaintananceInfo';
 import EditTessPartNumbers from '@/components/detailView/edit/EditTessPartNumbers';
 import EditUniversalHoseData from '@/components/detailView/edit/EditUniversalHoseData';
 import { GHD, HID, HoseData, TPN, UHD } from '@/components/detailView/types';
 import { Typography } from '@/components/typography';
+import { DateInput } from '@/components/UI/Input/DateInput';
+import { RFIDInput } from '@/components/UI/Input/RFID';
 import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
 import { useLocalSearchParams } from 'expo-router';
@@ -31,17 +34,37 @@ const RegisterHose = () => {
     }));
   };
 
-  console.log('heihei, her er jeg');
-
   return (
     <View style={styles.container}>
       <ScrollView>
         <View style={{ alignItems: 'center' }}>
           <Typography name='navigationBold' text='Register hose' />
           <Typography name='navigation'>
-            Hose ID:{' '}
-            <Typography name={'navigationBold'} text={hoseId ?? '1234'} />
+            Hose ID: <Typography name={'navigationBold'} text={hoseId ?? ''} />
           </Typography>
+        </View>
+        <View>
+          <TooltipWrapper
+            tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
+          >
+            <RFIDInput label='RFID' />
+          </TooltipWrapper>
+          <TooltipWrapper
+            tooltipData={{
+              title: 'production date',
+              message: 'This is the production date',
+            }}
+          >
+            <DateInput label='Production date:' />
+          </TooltipWrapper>
+          <TooltipWrapper
+            tooltipData={{
+              title: 'installation date',
+              message: 'This is the installation date',
+            }}
+          >
+            <DateInput label='Installation date:' />
+          </TooltipWrapper>
         </View>
 
         <EditGeneralInfo

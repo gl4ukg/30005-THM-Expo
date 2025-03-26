@@ -27,6 +27,8 @@ export const TooltipWrapper: React.FC<
     </View>
   );
 };
+
+// TODO: Fix tooltipl placement
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -36,7 +38,7 @@ const styles = StyleSheet.create({
   },
   fieldContainer: {
     marginBottom: 15,
-    width: '90%',
+    width: '88%',
   },
   iconContainer: {
     flexDirection: 'row',

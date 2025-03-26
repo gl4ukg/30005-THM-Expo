@@ -44,9 +44,6 @@ const BarToPsiInput: React.FC<BarToPsiInputProps> = ({
         <View style={styles.inputWrapper}>
           <UnitInput unit='PSI' value={psi} onChangeText={handlePsiChange} />
         </View>
-        <View style={styles.tooltipContainer}>
-          <Icon name='Tooltip' size='lg' color={colors.primary} />
-        </View>
       </View>
     </View>
   );
@@ -55,12 +52,6 @@ const BarToPsiInput: React.FC<BarToPsiInputProps> = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
-  },
-  tooltipContainer: {
-    marginLeft: 7,
-    marginRight: -7,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   inputWrapper: {
