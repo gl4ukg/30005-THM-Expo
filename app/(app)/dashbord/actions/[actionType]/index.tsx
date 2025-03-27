@@ -5,6 +5,7 @@ import { useAppContext } from '@/context/ContextProvider';
 import { ActionRFQ, ActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { useLocalSearchParams } from 'expo-router';
+import React from 'react';
 import {
   FlatList,
   Pressable,
@@ -37,7 +38,7 @@ const Action: React.FC<Props> = (props) => {
       <ContactTess
         title={actionsMap[actionType][0] || 'Actions'}
         subTitle={actionsMap[actionType][1]}
-        hoses={state.data.assignedUnits['testPrinces'].hoses}
+        hoses={state.data.selectedHoses}
         onSave={function (arg0: any): void {
           throw new Error('Function not implemented.');
         }}

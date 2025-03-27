@@ -19,7 +19,7 @@ interface Props {
   selectedIds: string[];
   canSelect?: boolean;
   onSelectionChange?: (id: string) => void;
-  onSelectAll: () => void;
+  onSelectAll?: () => void;
 }
 
 const spacing = {
@@ -39,7 +39,7 @@ export const ListTable: FC<Props> = ({
 
   return (
     <View style={style.container}>
-      {canSelect && (
+      {canSelect && onSelectAll ? (
         <View
           style={{
             flexDirection: 'row',
@@ -51,6 +51,19 @@ export const ListTable: FC<Props> = ({
           <Checkbox
             isChecked={selectedIds.length === items.length}
             onChange={onSelectAll}
+          />
+        </View>
+      ) : (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <Typography
+            name='tableHeader'
+            text={'total: ' + items.length + ' hoses'}
           />
         </View>
       )}

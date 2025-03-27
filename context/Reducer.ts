@@ -1,3 +1,4 @@
+import { HoseType } from '@/app/(app)/dashbord/hoses/[filter]';
 import {
   Action,
   ActionCONTACT,
@@ -53,7 +54,9 @@ type DataAction =
         actionType: ActionsType;
       }
     >
-  | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: string; hoseData: any }>;
+  | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: string; hoseData: any }>
+  | ActionWithPayload<'SELECT_HOSE', HoseType>
+  | ActionWithPayload<'DESELECT_HOSE', HoseType>
 type SettingsAction = ActionWithPayload<'UPDATE_SETTINGS', any>;
 
 // Reducers for each slice of the app state (these should be defined elsewhere)
@@ -120,6 +123,16 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
               return acc;
             }, {})
           : state.assignedUnits,
+      };
+    case 'SELECT_HOSE':
+      return {
+        ...state,
+        selectedHoses: [...state.selectedHoses, action.payload],
+      };
+    case 'DESELECT_HOSE':
+      return {
+        ...state,
+        selectedHoses: state.selectedHoses.filter(hose => hose !== action.payload),
       };
     default:
       return state;

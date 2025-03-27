@@ -2,7 +2,7 @@ import { mockedData } from '@/context/mocked';
 import { ListTable } from '@/components/dashboard/listTable';
 import { SelectedHoseCounter } from '@/components/dashboard/selectedHoseCounter';
 import { Typography } from '@/components/typography';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconName } from '@/components/Icon/iconMapping';
@@ -119,16 +119,29 @@ const Hose: React.FC<Props> = (props) => {
     });
   };
   const handleSelectionChange = (id: string) => {
+    const selectedHose = filteredList.find((hose) => hose.id === id);
+    const isSelected = action?.actionSelectedItems.includes(id);
+
+    if (selectedHose && !isSelected) {
+      dispatch({
+        type: 'SELECT_HOSE',
+        payload: selectedHose,
+      });
+    } else if (isSelected && selectedHose) {
+      dispatch({
+        type: 'DESELECT_HOSE',
+        payload: selectedHose,
+      });
+    }
     if (action) {
       setAction({
         ...action,
-        actionSelectedItems: action.actionSelectedItems.includes(id)
+        actionSelectedItems: isSelected
           ? action.actionSelectedItems.filter((item) => item !== id)
           : [...action.actionSelectedItems, id],
       });
     }
   };
-
   return (
     <>
       <ActionsFab
