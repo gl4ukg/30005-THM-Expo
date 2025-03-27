@@ -37,6 +37,7 @@ export type Section = {
   title: string;
   content: JSX.Element;
 };
+
 const HoseDetails = () => {
   const { hoseId } = useLocalSearchParams();
   const { state, dispatch } = useContext(AppContext);
@@ -104,12 +105,14 @@ const HoseDetails = () => {
 
   return (
     <View style={styles.container}>
-      <ActionsFab
-        selected={action?.value || null}
-        options={options}
-        onChange={onChangeAction}
-        menuTitle='Actions'
-      />
+      {!editMode && (
+        <ActionsFab
+          selected={action?.value || null}
+          options={options}
+          onChange={onChangeAction}
+          menuTitle='Actions'
+        />
+      )}
       <ScrollView ref={scrollViewRef}>
         <DetailsHeader
           id={localState.id}
