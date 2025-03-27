@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   sm: {
-    height: 40,
+    height: 45,
     width: '70%',
   },
   lg: {

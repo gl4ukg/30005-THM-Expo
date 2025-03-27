@@ -4,20 +4,20 @@ import { Typography } from '../typography';
 import { colors } from '@/lib/tokens/colors';
 
 type UnitInputProps = {
-  unit: string;
-  value: string;
-  onChangeText: (text: string) => void;
   label?: string;
-  onBlur?: () => void;
+  value: number;
+  onChangeText: (value: number | string) => void;
+  unit: string;
+  editable?: boolean;
 };
 
-const UnitInput = ({
-  unit,
+const UnitInput: React.FC<UnitInputProps> = ({
+  label,
   value,
   onChangeText,
-  onBlur,
-  label,
-}: UnitInputProps) => {
+  unit,
+  editable = true,
+}) => {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = useCallback(() => {
@@ -26,8 +26,11 @@ const UnitInput = ({
 
   const handleBlur = useCallback(() => {
     setIsFocused(false);
-    onBlur?.();
-  }, [setIsFocused, onBlur]);
+  }, [setIsFocused]);
+
+  const handleChange = (text: string) => {
+    onChangeText(text);
+  };
 
   return (
     <View>
@@ -36,11 +39,12 @@ const UnitInput = ({
         <TextInput
           style={[styles.input, isFocused && styles.inputFocused]}
           keyboardType='numeric'
-          value={value}
-          onChangeText={onChangeText}
+          value={value ? value.toString() : ''}
+          onChangeText={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
           selectionColor={colors.primary}
+          editable={editable}
         />
         <Typography name='fieldLabel' text={unit} />
       </View>
@@ -70,3 +74,4 @@ const styles = StyleSheet.create({
 });
 
 export default UnitInput;
+12;

@@ -2,20 +2,21 @@ import { Icon } from '@/components/Icon/Icon';
 import { IconName } from '@/components/Icon/iconMapping';
 import { Typography } from '@/components/typography';
 import { colors } from '@/lib/tokens/colors';
-import { useState, useRef, useEffect, forwardRef, FC } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import {
-  TextInput,
-  StyleSheet,
-  View,
-  Pressable,
-  TextInputProps,
+  NativeSyntheticEvent,
   Platform,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  TextInputFocusEventData,
+  TextInputProps,
+  View,
 } from 'react-native';
 
-interface Props {
+interface Props extends TextInputProps {
   icon?: IconName;
-  label: string;
-  placeHolder?: string;
+  label?: string;
   value: string;
   onChangeText: (text: string) => void;
   type?: TextInputProps['inputMode'] | 'password' | 'textArea';
@@ -23,23 +24,55 @@ interface Props {
   darkMode?: boolean;
   disabled?: boolean;
 }
+
+/**
+ * Input component
+ *
+ * @description A reusable text input field that extends the TextInput component from React Native.
+ * @extends TextInput
+ *
+ * @icon - The name of the icon to display next to the input field (if any), e.g. "User" extends string but its type is IconName from the Icon component.
+ *
+ * @label - The label to display above the input field.
+ *
+ * @value - The value of the input field.
+ *
+ * @onChangeText - The callback function to handle changes to the input field.
+ *
+ * @type - The type of input field to display. Can be 'text', 'password', or 'textArea' extending TextInputProps['inputMode'].
+ *
+ * @ref - The ref will be forwarded to the underlying TextInput component.
+ *
+ * @errorMessage - The error message to display below the input field.
+ *
+ * @darkMode - Whether the input field should have a dark mode style, can be used on dark backgrounds.
+ *
+ * @example
+ * <Input
+ *   icon={"User"}
+ *   label="Username"
+ *   type="text"
+ *   darkMode={true}
+ *   disabled={false}
+ * />
+ */
 export const Input = forwardRef<TextInput, Props>(
   (
     {
       icon,
       label,
-      placeHolder,
       value,
       onChangeText,
       type,
       errorMessage,
       darkMode,
       disabled,
+      ...inputProps
     },
     ref: React.Ref<TextInput>,
   ) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [isFocused, setIsFocused] = useState(false);
+    const [isFocused, setIsFocused] = useState(true);
 
     const togglePasswordVisibility = () => {
       setIsPasswordVisible((prevState) => !prevState);
@@ -49,13 +82,23 @@ export const Input = forwardRef<TextInput, Props>(
       type === 'password' || type === 'textArea' ? 'text' : type;
 
     const [displayError, setDisplayError] = useState(false);
-    const toggleUnfocused = () => {
+    const handleUnfocused = (
+      e: NativeSyntheticEvent<TextInputFocusEventData>,
+    ) => {
+      inputProps.onBlur && inputProps.onBlur(e);
       setIsFocused(false);
       if (errorMessage) {
         setDisplayError(true);
       } else {
         setDisplayError(false);
       }
+    };
+
+    const handleFocused = (
+      e: NativeSyntheticEvent<TextInputFocusEventData>,
+    ) => {
+      inputProps.onFocus && inputProps.onFocus(e);
+      setIsFocused(true);
     };
 
     useEffect(() => {
@@ -92,22 +135,23 @@ export const Input = forwardRef<TextInput, Props>(
             )}
             <View>
               <TextInput
+                {...inputProps}
                 style={[
                   styles.input,
                   isFocused && !disabled && styles.focusedBorder,
-                  displayError && !isFocused && styles.errorBorder,
+                  errorMessage && !isFocused && styles.errorBorder,
                   darkMode && styles.darkMode,
                   disabled && styles.disabled,
                 ]}
                 value={value}
                 onChangeText={onChangeText}
-                placeholder={placeHolder}
+                placeholder={inputProps.placeholder}
                 inputMode={inputMode}
                 multiline={type === 'textArea'}
                 scrollEnabled={type !== 'textArea'}
                 secureTextEntry={type === 'password' && !isPasswordVisible}
-                onBlur={toggleUnfocused}
-                onFocus={() => setIsFocused(true)}
+                onBlur={handleUnfocused}
+                onFocus={handleFocused}
                 editable={!disabled}
                 ref={ref}
               />
@@ -126,7 +170,7 @@ export const Input = forwardRef<TextInput, Props>(
             </View>
           </View>
         </View>
-        {displayError && (
+        {errorMessage && displayError && (
           <Typography
             name={'navigation'}
             text={errorMessage}

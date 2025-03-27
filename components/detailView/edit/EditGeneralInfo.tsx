@@ -1,0 +1,120 @@
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Input } from '../../UI/Input/input';
+import { SelectField } from '../../detailHose/SelectField';
+import { RadioGroup } from '../../detailHose/radioGroup';
+import { GHD } from '../types';
+import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
+import Tooltip from '@/components/Icon/icons/Tooltip';
+import { Icon } from '@/components/Icon/Icon';
+
+type EditGeneralInfoProps = {
+  generalInfo: GHD;
+  onInputChange: (field: string, value: string) => void;
+};
+
+const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
+  generalInfo,
+  onInputChange,
+}) => (
+  <View style={styles.container}>
+    <TooltipWrapper
+      tooltipData={{ title: 'description', message: 'This is the description' }}
+    >
+      <Input
+        label='Description:'
+        value={generalInfo.description}
+        onChangeText={(text) => onInputChange('description', text)}
+      />
+    </TooltipWrapper>
+    <TooltipWrapper
+      tooltipData={{ title: 'Customer ID', message: 'This is the customer ID' }}
+    >
+      <Input
+        label='Customer ID:'
+        value={generalInfo.customerId}
+        onChangeText={(text) => onInputChange('customerId', text)}
+      />
+    </TooltipWrapper>
+    <TooltipWrapper
+      tooltipData={{ title: 'Location', message: 'This is the location' }}
+    >
+      <SelectField
+        label='S1 Plant, Vessel, Unit:'
+        value={generalInfo.s1PlantVesselUnit}
+        onChange={(value) => onInputChange('s1PlantVesselUnit', value)}
+        options={[]}
+      />
+    </TooltipWrapper>
+    <TooltipWrapper
+      tooltipData={{
+        title: 's2 equipment',
+        message: 'This is the s2 equipment',
+      }}
+    >
+      <SelectField
+        label='S2 Equipment:'
+        value={generalInfo.S2Equipment}
+        onChange={(value) => onInputChange('S2Equipment', value)}
+        options={[]}
+      />
+    </TooltipWrapper>
+    <TooltipWrapper
+      tooltipData={{ title: 'Equipment', message: 'This is the equipment' }}
+    >
+      <Input
+        label='Equipment Subunit:'
+        value={generalInfo.equipmentSubunit}
+        onChangeText={(text) => onInputChange('equipmentSubunit', text)}
+      />
+    </TooltipWrapper>
+    <TooltipWrapper
+      tooltipData={{ title: 'Other Info', message: 'This is the other info' }}
+    >
+      <Input
+        label='Other Info:'
+        value={generalInfo.otherInfo}
+        onChangeText={(text) => onInputChange('otherInfo', text)}
+      />
+    </TooltipWrapper>
+    <TooltipWrapper
+      tooltipData={{
+        title: 'pollution exposure',
+        message: 'This is the pollution exposure',
+      }}
+    >
+      <RadioGroup
+        label='Pollution exposure:'
+        choices={[
+          { id: 'internal', label: 'internal, not exposed' },
+          { id: 'exposed', label: 'exposed' },
+        ]}
+        selected={generalInfo.pollutionExposure}
+        onChange={(value) => onInputChange('pollutionExposure', value)}
+        type={'horizontal'}
+      />
+    </TooltipWrapper>
+    <TooltipWrapper
+      tooltipData={{ title: 'UV exposure', message: 'This is the UV exposure' }}
+    >
+      <RadioGroup
+        label='UV exposure:'
+        choices={[
+          { id: 'internal', label: 'internal, not exposed' },
+          { id: 'exposed', label: 'exposed' },
+        ]}
+        selected={generalInfo.uvExposure}
+        onChange={(value) => onInputChange('uvExposure', value)}
+        type={'horizontal'}
+      />
+    </TooltipWrapper>
+  </View>
+);
+
+const styles = StyleSheet.create({
+  container: {
+    gap: 10,
+  },
+});
+
+export default EditGeneralInfo;

@@ -1,15 +1,15 @@
-import { View, StyleSheet, Alert } from 'react-native';
-import { ButtonTHS } from '../UI/Button/button';
-import { Input } from '../UI/Input/input';
+import { View, StyleSheet, Alert, Pressable } from 'react-native';
 import { useState } from 'react';
-import { LoginHeader } from './loginHeader';
 import { colors } from '@/lib/tokens/colors';
-import { HelpLinks } from './helpLinks';
 import { LinkButton } from '@/components/UI/Button/linkButton';
 import { Typography } from '@/components/typography';
 import { useAppContext } from '@/context/ContextProvider';
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { emailValidation } from '@/lib/util/validation';
+import { LoginHeader } from '@/components/login/loginHeader';
+import { Input } from '@/components/UI/Input/input';
+import { ButtonTHS } from '@/components/UI';
+import { HelpLinks } from '@/components/login/helpLinks';
 
 interface Props {
   nextView: (page: 'login' | 'requestAccess') => void;
@@ -43,8 +43,7 @@ const mockApiCall = (data: RequestData): Promise<ApiResponse> => {
     }, 1000);
   });
 };
-
-export const RequestAccess: React.FC<Props> = () => {
+export default function ForgotPassword() {
   const { state, dispatch } = useAppContext();
 
   const [email, setEmail] = useState('');
@@ -111,10 +110,26 @@ export const RequestAccess: React.FC<Props> = () => {
 
   const isButtonDisabled =
     !email || !fullName || !mobileNumber || !company || !units;
-
   return (
-    <View style={styles.container}>
+    <>
       <LoginHeader header='REQUEST ACCESS' />
+      <View style={{ flexDirection: 'row', gap: 5, padding: 15 }}>
+        <Link
+          href={'/login/createNewPassword'}
+          asChild
+          style={[{ flex: 1, backgroundColor: colors.dashbordGreen }]}
+        >
+          <Pressable
+            style={[{ flex: 1, backgroundColor: colors.extendedBlue }]}
+          >
+            <Typography
+              name='navigation'
+              text='New Password'
+              numberOfLines={1}
+            />
+          </Pressable>
+        </Link>
+      </View>
       <View style={styles.form}>
         <Input
           icon='Email'
@@ -185,9 +200,10 @@ export const RequestAccess: React.FC<Props> = () => {
           style={styles.copyRights}
         />
       </View>
-    </View>
+    </>
   );
-};
+}
+
 const styles = StyleSheet.create({
   container: {
     width: '100%',

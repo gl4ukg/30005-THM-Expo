@@ -7,21 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		096F3A5DA63244A88F5BA01C /* RobotoCondensed_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C17C8A636F804569A11C0C2F /* RobotoCondensed_400Regular.ttf */; };
+		0D65943DE2024230BBC1DF5D /* OpenSans_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F89798CA2E16453693F68025 /* OpenSans_400Regular.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		3CEEBA091D5F4147866BDFE2 /* RobotoCondensed_300Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1881C45A5520449CA0CA53E9 /* RobotoCondensed_300Light.ttf */; };
+		142C4991D759400885E2086B /* RobotoCondensed_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8695F0352E57436387B61535 /* RobotoCondensed_400Regular.ttf */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		45B56A3968C422F754884FB0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = BB4F99A1EE88F4DF0297BC4B /* PrivacyInfo.xcprivacy */; };
-		4C9B164927624126AA3FC3C7 /* OpenSans_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB56B6E1AFB447FF8232E07E /* OpenSans_400Regular.ttf */; };
-		72B52BF8BE13460791C31DBB /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527E406FCC89452EA5CD696B /* noop-file.swift */; };
+		3F2290DEC89B401883988CDA /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F208B7B8864511A0022D2A /* noop-file.swift */; };
+		5A81E59D5A2E452E9BA22A3A /* Roboto_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA33710239DA46C38CF5E0A7 /* Roboto_400Regular.ttf */; };
+		5CAAE850EE104EB2BE2B1051 /* OpenSans_600SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 77AD39A738E24AFB9F0F038D /* OpenSans_600SemiBold.ttf */; };
 		96905EF65AED1B983A6B3ABC /* libPods-THM.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-THM.a */; };
-		A2D35AD731104CDA9297EFAF /* OpenSans_600SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F2E8493DE2584F07858F1E82 /* OpenSans_600SemiBold.ttf */; };
+		A846CF53CA4340A099B80D33 /* Roboto_500Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F9458D5BF9BF4A9999D38693 /* Roboto_500Medium.ttf */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		D1FBC94392F743FEBFB4E894 /* Roboto_500Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F002E27D239C4C6CB6B6081A /* Roboto_500Medium.ttf */; };
-		D72CA27DB7A74026B8BAA991 /* Roboto_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5CD6FEC11D24140A131F6C3 /* Roboto_400Regular.ttf */; };
+		EC431196C0A1A3CD06399958 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 892CCA0CF0FA988243BB0108 /* PrivacyInfo.xcprivacy */; };
+		F579D7E9A1F64808ACD7EBCC /* RobotoCondensed_300Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D2B0DACEC9A4D7D8C61F35E /* RobotoCondensed_300Light.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,21 +31,21 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = THM/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = THM/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = THM/main.m; sourceTree = "<group>"; };
-		1881C45A5520449CA0CA53E9 /* RobotoCondensed_300Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = RobotoCondensed_300Light.ttf; path = "../node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_300Light.ttf"; sourceTree = "<group>"; };
-		527E406FCC89452EA5CD696B /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "THM/noop-file.swift"; sourceTree = "<group>"; };
+		1D2B0DACEC9A4D7D8C61F35E /* RobotoCondensed_300Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = RobotoCondensed_300Light.ttf; path = "../node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_300Light.ttf"; sourceTree = "<group>"; };
+		4807C8F90066431DA8A38656 /* THM-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "THM-Bridging-Header.h"; path = "THM/THM-Bridging-Header.h"; sourceTree = "<group>"; };
 		58EEBF8E8E6FB1BC6CAF49B5 /* libPods-THM.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-THM.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C2E3173556A471DD304B334 /* Pods-THM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THM.debug.xcconfig"; path = "Target Support Files/Pods-THM/Pods-THM.debug.xcconfig"; sourceTree = "<group>"; };
+		77AD39A738E24AFB9F0F038D /* OpenSans_600SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = OpenSans_600SemiBold.ttf; path = "../node_modules/@expo-google-fonts/open-sans/OpenSans_600SemiBold.ttf"; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-THM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THM.release.xcconfig"; path = "Target Support Files/Pods-THM/Pods-THM.release.xcconfig"; sourceTree = "<group>"; };
+		8695F0352E57436387B61535 /* RobotoCondensed_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = RobotoCondensed_400Regular.ttf; path = "../node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_400Regular.ttf"; sourceTree = "<group>"; };
+		892CCA0CF0FA988243BB0108 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = THM/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = THM/SplashScreen.storyboard; sourceTree = "<group>"; };
+		B8F208B7B8864511A0022D2A /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "THM/noop-file.swift"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		BB4F99A1EE88F4DF0297BC4B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = THM/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		BE8532156C55468A9AAD65C9 /* THM-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "THM-Bridging-Header.h"; path = "THM/THM-Bridging-Header.h"; sourceTree = "<group>"; };
-		C17C8A636F804569A11C0C2F /* RobotoCondensed_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = RobotoCondensed_400Regular.ttf; path = "../node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_400Regular.ttf"; sourceTree = "<group>"; };
-		D5CD6FEC11D24140A131F6C3 /* Roboto_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_400Regular.ttf; path = "../node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf"; sourceTree = "<group>"; };
-		EB56B6E1AFB447FF8232E07E /* OpenSans_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = OpenSans_400Regular.ttf; path = "../node_modules/@expo-google-fonts/open-sans/OpenSans_400Regular.ttf"; sourceTree = "<group>"; };
+		DA33710239DA46C38CF5E0A7 /* Roboto_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_400Regular.ttf; path = "../node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F002E27D239C4C6CB6B6081A /* Roboto_500Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_500Medium.ttf; path = "../node_modules/@expo-google-fonts/roboto/Roboto_500Medium.ttf"; sourceTree = "<group>"; };
-		F2E8493DE2584F07858F1E82 /* OpenSans_600SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = OpenSans_600SemiBold.ttf; path = "../node_modules/@expo-google-fonts/open-sans/OpenSans_600SemiBold.ttf"; sourceTree = "<group>"; };
+		F89798CA2E16453693F68025 /* OpenSans_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = OpenSans_400Regular.ttf; path = "../node_modules/@expo-google-fonts/open-sans/OpenSans_400Regular.ttf"; sourceTree = "<group>"; };
+		F9458D5BF9BF4A9999D38693 /* Roboto_500Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_500Medium.ttf; path = "../node_modules/@expo-google-fonts/roboto/Roboto_500Medium.ttf"; sourceTree = "<group>"; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-THM/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,25 +71,11 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				527E406FCC89452EA5CD696B /* noop-file.swift */,
-				BE8532156C55468A9AAD65C9 /* THM-Bridging-Header.h */,
-				BB4F99A1EE88F4DF0297BC4B /* PrivacyInfo.xcprivacy */,
+				B8F208B7B8864511A0022D2A /* noop-file.swift */,
+				4807C8F90066431DA8A38656 /* THM-Bridging-Header.h */,
+				892CCA0CF0FA988243BB0108 /* PrivacyInfo.xcprivacy */,
 			);
 			name = THM;
-			sourceTree = "<group>";
-		};
-		240AA11B1C94446DA7C78FB7 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				EB56B6E1AFB447FF8232E07E /* OpenSans_400Regular.ttf */,
-				F2E8493DE2584F07858F1E82 /* OpenSans_600SemiBold.ttf */,
-				D5CD6FEC11D24140A131F6C3 /* Roboto_400Regular.ttf */,
-				F002E27D239C4C6CB6B6081A /* Roboto_500Medium.ttf */,
-				C17C8A636F804569A11C0C2F /* RobotoCondensed_400Regular.ttf */,
-				1881C45A5520449CA0CA53E9 /* RobotoCondensed_300Light.ttf */,
-			);
-			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -117,7 +103,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				D65327D7A22EEC0BE12398D9 /* Pods */,
 				D7E4C46ADA2E9064B798F356 /* ExpoModulesProviders */,
-				240AA11B1C94446DA7C78FB7 /* Resources */,
+				C1FE719C71734198BC3A8378 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -149,6 +135,20 @@
 			path = THM/Supporting;
 			sourceTree = "<group>";
 		};
+		C1FE719C71734198BC3A8378 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F89798CA2E16453693F68025 /* OpenSans_400Regular.ttf */,
+				77AD39A738E24AFB9F0F038D /* OpenSans_600SemiBold.ttf */,
+				DA33710239DA46C38CF5E0A7 /* Roboto_400Regular.ttf */,
+				F9458D5BF9BF4A9999D38693 /* Roboto_500Medium.ttf */,
+				1D2B0DACEC9A4D7D8C61F35E /* RobotoCondensed_300Light.ttf */,
+				8695F0352E57436387B61535 /* RobotoCondensed_400Regular.ttf */,
+			);
+			name = Resources;
+			path = "";
+			sourceTree = "<group>";
+		};
 		D65327D7A22EEC0BE12398D9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -174,13 +174,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "THM" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				FE6FC395431D189D47E89D3F /* [Expo] Configure project */,
+				F521EB8D15CDF45919342A8D /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				4422D6268BC8413E0CED2E2A /* [CP] Embed Pods Frameworks */,
+				7A4ECD1821B3DE5592989EEA /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -230,13 +230,13 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				4C9B164927624126AA3FC3C7 /* OpenSans_400Regular.ttf in Resources */,
-				A2D35AD731104CDA9297EFAF /* OpenSans_600SemiBold.ttf in Resources */,
-				D72CA27DB7A74026B8BAA991 /* Roboto_400Regular.ttf in Resources */,
-				D1FBC94392F743FEBFB4E894 /* Roboto_500Medium.ttf in Resources */,
-				096F3A5DA63244A88F5BA01C /* RobotoCondensed_400Regular.ttf in Resources */,
-				45B56A3968C422F754884FB0 /* PrivacyInfo.xcprivacy in Resources */,
-				3CEEBA091D5F4147866BDFE2 /* RobotoCondensed_300Light.ttf in Resources */,
+				0D65943DE2024230BBC1DF5D /* OpenSans_400Regular.ttf in Resources */,
+				5CAAE850EE104EB2BE2B1051 /* OpenSans_600SemiBold.ttf in Resources */,
+				5A81E59D5A2E452E9BA22A3A /* Roboto_400Regular.ttf in Resources */,
+				A846CF53CA4340A099B80D33 /* Roboto_500Medium.ttf in Resources */,
+				F579D7E9A1F64808ACD7EBCC /* RobotoCondensed_300Light.ttf in Resources */,
+				142C4991D759400885E2086B /* RobotoCondensed_400Regular.ttf in Resources */,
+				EC431196C0A1A3CD06399958 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,7 +280,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4422D6268BC8413E0CED2E2A /* [CP] Embed Pods Frameworks */ = {
+		7A4ECD1821B3DE5592989EEA /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -336,7 +336,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-THM/Pods-THM-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		FE6FC395431D189D47E89D3F /* [Expo] Configure project */ = {
+		F521EB8D15CDF45919342A8D /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -365,7 +365,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
-				72B52BF8BE13460791C31DBB /* noop-file.swift in Sources */,
+				3F2290DEC89B401883988CDA /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,7 +396,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hejuhenryk.THM;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tess.THM;
 				PRODUCT_NAME = THM;
 				SWIFT_OBJC_BRIDGING_HEADER = "THM/THM-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -425,7 +425,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hejuhenryk.THM;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tess.THM;
 				PRODUCT_NAME = THM;
 				SWIFT_OBJC_BRIDGING_HEADER = "THM/THM-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

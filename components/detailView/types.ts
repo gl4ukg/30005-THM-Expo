@@ -24,6 +24,11 @@ export type UHD = {
   gender: string;
   angle: string;
   commentEnd1: string;
+  materialQuality2: string;
+  typeFitting2: string;
+  commentEnd2: string;
+  gender2: string;
+  angle2: string;
 };
 
 export type TPN = {
@@ -46,16 +51,22 @@ export type TPN = {
 };
 
 export type HID = {
-  inspectedDate: string,
-  inspectedBy:string,
-  hoseCondition:string,
-  approved:string,
-  comment:string,
-  prodDate:string,
-  criticality:string,
-  inspectionInterval:string,
-  nextInspection:string,
-  replacementInterval:string,
-  replacementDate:string,
+  inspectedDate: string;
+  inspectedBy: string;
+  hoseCondition: string;
+  approved: string;
+  comment: string;
+  prodDate: string;
+  criticality: string;
+  inspectionInterval: string;
+  nextInspection: string;
+  replacementInterval: string;
+  replacementDate: string;
+};
 
-}
+export type HoseData = {
+  generalHoseData: GHD;
+  universalHoseData: UHD;
+  tessPartNumbers: TPN;
+  historyData: HID;
+};

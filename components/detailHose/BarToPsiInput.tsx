@@ -6,33 +6,32 @@ import { colors } from '@/lib/tokens/colors';
 import { Typography } from '../typography';
 
 type BarToPsiInputProps = {
-  pressureInBars: string;
-  onChange: (pressure: { bar: string; psi: string }) => void;
+  pressureInBars: number;
+  onChange: (pressure: { bar: number; psi: number }) => void;
 };
 
 const barToPsi = (bar: number): number => bar * 14.5038;
 const psiToBar = (psi: number): number => psi / 14.5038;
 
-const BarToPsiInput = (props: BarToPsiInputProps) => {
-  const [bar, setBar] = useState<string>(props.pressureInBars);
-  const [psi, setPsi] = useState<string>(
-    barToPsi(parseFloat(props.pressureInBars)).toFixed(2),
-  );
+const BarToPsiInput: React.FC<BarToPsiInputProps> = ({
+  pressureInBars,
+  onChange,
+}) => {
+  const [bar, setBar] = useState<number>(pressureInBars);
+  const [psi, setPsi] = useState<number>(barToPsi(pressureInBars));
 
-  const handleBarChange = (text: string) => {
-    setBar(text);
-    const barValue = parseFloat(text);
-    const psiValue = !isNaN(barValue) ? barToPsi(barValue).toFixed(2) : '';
+  const handleBarChange = (value: number) => {
+    setBar(value);
+    const psiValue = barToPsi(value);
     setPsi(psiValue);
-    props.onChange({ bar: text, psi: psiValue });
+    onChange({ bar: value, psi: psiValue });
   };
 
-  const handlePsiChange = (text: string) => {
-    setPsi(text);
-    const psiValue = parseFloat(text);
-    const barValue = !isNaN(psiValue) ? psiToBar(psiValue).toFixed(2) : '';
+  const handlePsiChange = (value: number) => {
+    setPsi(value);
+    const barValue = psiToBar(value);
     setBar(barValue);
-    props.onChange({ bar: barValue, psi: text });
+    onChange({ bar: barValue, psi: value });
   };
 
   return (
@@ -45,9 +44,6 @@ const BarToPsiInput = (props: BarToPsiInputProps) => {
         <View style={styles.inputWrapper}>
           <UnitInput unit='PSI' value={psi} onChangeText={handlePsiChange} />
         </View>
-        <View style={styles.tooltipContainer}>
-          <Icon name='Tooltip' size='lg' color={colors.primary} />
-        </View>
       </View>
     </View>
   );
@@ -56,12 +52,6 @@ const BarToPsiInput = (props: BarToPsiInputProps) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
-  },
-  tooltipContainer: {
-    marginLeft: 7,
-    marginRight: -7,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   inputWrapper: {

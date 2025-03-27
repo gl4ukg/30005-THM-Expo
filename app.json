@@ -10,15 +10,28 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.hejuhenryk.THM",
-      "appleTeamId": "55NT296GTJ"
+      "appleTeamId": "55NT296GTJ",
+      "infoPlist": {
+        "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera."
+      },
+      "bundleIdentifier": "com.tess.THM",
+      "runtimeVersion": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.hejuhenryk.THM"
+      "package": "com.tess.THM",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.NFC",
+        "android.permission.CAMERA",
+        "android.permission.NFC"
+      ],
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -49,7 +62,27 @@
           ]
         }
       ],
-      "expo-secure-store"
+      [
+        "react-native-vision-camera",
+        {
+          "cameraPermissionText": "$(PRODUCT_NAME) needs access to your Camera.",
+          "enableCodeScanner": true
+        }
+      ],
+      "expo-secure-store",
+      [
+        "react-native-nfc-manager",
+        {
+          "nfcPermission": "$(PRODUCT_NAME) needs access to your NFC reader.",
+          "selectIdentifiers": [
+            "A0000002471001"
+          ],
+          "systemCodes": [
+            "8008"
+          ],
+          "includeNdefEntitlement": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
@@ -61,6 +94,9 @@
       "eas": {
         "projectId": "975f2122-d912-413d-a0a1-3371afd5e891"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/975f2122-d912-413d-a0a1-3371afd5e891"
     }
   }
 }
