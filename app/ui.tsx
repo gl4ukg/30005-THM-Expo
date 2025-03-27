@@ -37,7 +37,7 @@ const Ui = () => {
   const [error, setError] = useState<undefined | string>(undefined);
   const [selectedChoiceId, setSelectedChoiceId] = useState<string>('');
 
-  const inputRef = useRef<TextInput>(null);
+  const passInputRef = useRef<TextInput>(null);
 
   function handleChangeName(input: string) {
     setName(input);
@@ -544,6 +544,7 @@ const Ui = () => {
                   icon={'Phone'}
                   type={'tel'}
                   darkMode={true}
+                  placeholder='(123) 456-7890'
                   onChangeText={setPhone}
                 />
                 <Input
@@ -559,8 +560,11 @@ const Ui = () => {
               <ButtonTHS
                 title={'focus on password'}
                 onPress={() => {
-                  if (inputRef.current) {
-                    inputRef.current?.focus();
+                  if (passInputRef.current) {
+                    // console.log('focus on password');
+                    passInputRef.current.isFocused()
+                      ? passInputRef.current.blur()
+                      : passInputRef.current?.focus();
                   }
                 }}
               />
@@ -569,14 +573,25 @@ const Ui = () => {
                 value={genericText}
                 icon={'User'}
                 type={'password'}
-                errorMessage='Password must be at least 8 characters long and include a number and a special character.'
+                errorMessage={
+                  passInputRef.current?.isFocused()
+                    ? undefined
+                    : 'Password must be at least 8 characters long and include a number and a special character.'
+                }
                 onChangeText={setGenericText}
-                ref={inputRef}
+                onBlur={() => console.log('blur')}
+                ref={passInputRef}
+                onFocus={() => console.log('focus on password')}
               />
               <Input
                 label={'TextArea'}
                 value={genericText}
                 type={'textArea'}
+                errorMessage={
+                  genericText.length > 8
+                    ? undefined
+                    : 'Password must be at least 8 characters long and include a number and a special character.'
+                }
                 onChangeText={setGenericText}
               />
             </View>
