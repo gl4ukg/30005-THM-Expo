@@ -65,6 +65,7 @@ export const ContactTess: React.FC<Props> = ({
               label={'RFQ type'}
               value={'Choose'}
               onChange={setRfq}
+              onlyOptions={true}
               options={[
                 {
                   id: 'certificate',
@@ -73,6 +74,10 @@ export const ContactTess: React.FC<Props> = ({
                 {
                   id: 'noPressureTest',
                   label: 'TESS to quote without pressure test',
+                },
+                {
+                  id: 'Unspecified',
+                  label: 'Unspecified',
                 },
               ]}
             />

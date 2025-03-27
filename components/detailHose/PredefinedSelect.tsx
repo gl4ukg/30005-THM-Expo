@@ -19,6 +19,7 @@ interface PredefinedSelectProps {
   selected: string;
   onClose: () => void;
   title: string;
+  onlyOptions?: boolean;
 }
 
 export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
@@ -27,6 +28,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
   selected,
   onClose,
   title,
+  onlyOptions = false,
 }) => {
   const [selectedValue, setSelectedValue] = useState(selected);
   const [initialValue, setInitialValue] = useState(selected);
@@ -102,12 +104,14 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
             }
           />
         </View>
-        <Input
-          value={searchText}
-          onChangeText={setSearchText}
-          label='Type to search:'
-          placeHolder='...'
-        />
+        {!onlyOptions && (
+          <Input
+            value={searchText}
+            onChangeText={setSearchText}
+            label='Type to search:'
+            placeHolder='...'
+          />
+        )}
       </View>
       <ScrollView ref={scrollViewRef} style={styles.optionsContainer}>
         {filteredOptions
@@ -130,22 +134,24 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
               />
             </Pressable>
           ))}
-        <Pressable
-          key={'N/A'}
-          style={[
-            styles.option,
-            selectedValue === 'N/A' && styles.selectedOption,
-          ]}
-          onPress={() => handleNAPress()}
-        >
-          <RadioButton
-            isSelected={selectedValue === 'N/A'}
-            onChange={() => handleNAPress()}
-            id={'na'}
-            label={'N/A'}
-            menu
-          />
-        </Pressable>
+        {!onlyOptions && (
+          <Pressable
+            key={'N/A'}
+            style={[
+              styles.option,
+              selectedValue === 'N/A' && styles.selectedOption,
+            ]}
+            onPress={() => handleNAPress()}
+          >
+            <RadioButton
+              isSelected={selectedValue === 'N/A'}
+              onChange={() => handleNAPress()}
+              id={'na'}
+              label={'N/A'}
+              menu
+            />
+          </Pressable>
+        )}
         {selectedValue === 'N/A' && (
           <KeyboardAvoidingView>
             <Input
