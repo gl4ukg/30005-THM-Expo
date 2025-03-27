@@ -110,6 +110,13 @@ const Hose: React.FC<Props> = (props) => {
       : 'All Hoses';
   const listLength = filteredList.length;
   const onChangeAction = (value: string) => {
+    state.data.selectedHoses.forEach((hoseId) => {
+      dispatch({
+        type: 'DESELECT_HOSE',
+        payload: hoseId,
+      });
+    });
+
     setAction({
       value,
       label: options.find((option) => option.value === value)?.label || '',
@@ -144,10 +151,22 @@ const Hose: React.FC<Props> = (props) => {
     }
   };
   const handleActionContact = () => {
-    console.log('action', action?.label);
-    console.log('selected Ids', state.data.selectedHoses);
-    if (state.data.selectedHoses.length > 0)
+    if (
+      state.data.selectedHoses.length > 0 &&
+      action?.value === 'requestForQuote'
+    ) {
       router.push(`/dashbord/actions/rfq`);
+    } else if (
+      state.data.selectedHoses.length > 0 &&
+      action?.value === 'scrapHoses'
+    ) {
+      router.push(`/dashbord/actions/scrap`);
+    } else if (
+      state.data.selectedHoses.length > 0 &&
+      action?.value === 'contactTessTeam'
+    ) {
+      router.push(`/dashbord/actions/contact`);
+    }
   };
   return (
     <>

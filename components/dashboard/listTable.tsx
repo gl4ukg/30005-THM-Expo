@@ -270,6 +270,7 @@ const styles = StyleSheet.create({
   counter: {
     width: '100%',
     paddingHorizontal: 10,
+    paddingBottom: 10,
     textAlign: 'right',
   },
   tableHeader: {

@@ -7,6 +7,7 @@ import { Input } from '../UI/Input/input';
 import { SelectField } from '../detailHose/SelectField';
 import { Typography } from '../typography';
 import { ListTable } from './listTable';
+import { router } from 'expo-router';
 
 interface Props {
   title: string;
@@ -120,7 +121,12 @@ export const ContactTess: React.FC<Props> = ({
                 })
               }
             />
-            <ButtonTHS title='Cancel' variant='tertiary' size='sm' />
+            <ButtonTHS
+              title='Cancel'
+              variant='tertiary'
+              size='sm'
+              onPress={() => router.back()}
+            />
           </View>
         </View>
       </ScrollView>
