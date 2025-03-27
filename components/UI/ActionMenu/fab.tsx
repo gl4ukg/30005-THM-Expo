@@ -4,10 +4,10 @@ import { colors } from '@/lib/tokens/colors';
 import { FC, useState } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { IconName } from '@/components/Icon/iconMapping';
-import { Section } from '@/app/(app)/dashbord/hoses/hose/[slug]';
+import { Section } from '@/app/(app)/dashbord/hoses/hose/[hoseId]';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-type Option<T> = {
+export type Option<T> = {
   icon?: IconName;
   label: string;
   value: T;

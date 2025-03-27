@@ -41,7 +41,8 @@ import Barcode from './icons/Barcode';
 import Plus from './icons/Plus';
 import Document from './icons/Document';
 import Tooltip from './icons/Tooltip';
-import Calendar from './icons/Calendar'
+import Calendar from './icons/Calendar';
+import Edit from './icons/Edit';
 
 export type IconName =
   | 'Alert'
@@ -87,7 +88,8 @@ export type IconName =
   | 'Plus'
   | 'Document'
   | 'Tooltip'
-  | 'Calendar';
+  | 'Calendar'
+  | 'Edit';
 
 export const iconMapping: Record<IconName, React.FC<any>> = {
   Alert,
@@ -133,5 +135,6 @@ export const iconMapping: Record<IconName, React.FC<any>> = {
   Plus,
   Document,
   Tooltip,
-  Calendar
+  Calendar,
+  Edit,
 };
