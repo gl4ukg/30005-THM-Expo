@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { View, ScrollView } from 'react-native';
 import { mockedData } from '../../../../../context/mocked';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
@@ -19,6 +19,7 @@ import EditMaintananceInfo from '@/components/detailView/edit/EditMaintananceInf
 import Documents from '@/components/detailView/Documents';
 import { colors } from '@/lib/tokens/colors';
 import { StyleSheet } from 'react-native';
+import { ActionsFab, Option } from '@/components/UI/ActionMenu/fab';
 
 const renderComponent = (
   Component: React.FC<any>,
@@ -31,9 +32,16 @@ const renderComponent = (
     <Component {...props} />
   );
 };
+export type Section = {
+  id: string;
+  title: string;
+  content: JSX.Element;
+};
 const HoseDetails = () => {
   const { hoseId } = useLocalSearchParams();
   const { state, dispatch } = useContext(AppContext);
+  const [action, setAction] = useState<Option<string> | null>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const hoseData =
     state.data.assignedUnits.hoses?.find((hose) => hose.id === hoseId) ||
@@ -59,54 +67,56 @@ const HoseDetails = () => {
     setEditMode(false);
   };
 
-  const shortcuts = [
-    { id: 'photos', title: 'Photos', content: <View /> },
-    { id: 'hoseModule', title: 'Hose module', content: <View /> },
-    { id: 'tessPartNumbers', title: 'TESS Part Numbers', content: <View /> },
-    { id: 'maintenanceInfo', title: 'Maintenance info', content: <View /> },
-    { id: 'documents', title: 'Documents', content: <View /> },
+  const onChangeAction = (value: string) => {
+    setAction({ label: value, value: value });
+    if (value === 'edit') {
+      setEditMode(true);
+    }
+  };
+
+  const options: Option<string>[] = [
     {
-      id: 'structure',
-      title: 'Structure',
-      content: (
-        <View>
-          <Structure
-            structure={[
-              hoseData.Customer,
-              hoseData.s1PlantVesselUnit,
-              hoseData.S2Equipment,
-            ]}
-            name={hoseData.Description}
-          />
-        </View>
-      ),
+      label: 'Inspect hose',
+      value: 'inspect',
+      icon: 'Inspect',
     },
-    { id: 'history', title: 'History', content: <HistoryView /> },
+    {
+      label: 'Edit hose data',
+      value: 'edit',
+      icon: 'Edit',
+    },
+    {
+      label: 'Order hose (RFQ)',
+      value: 'order',
+      icon: 'Cart',
+    },
+    {
+      label: 'Scrap hose',
+      value: 'scrap',
+      icon: 'Trash',
+    },
+    {
+      label: 'Contact TESS team',
+      value: 'contact',
+      icon: 'Email',
+    },
   ];
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ActionsFab
+        selected={action?.value || null}
+        options={options}
+        onChange={onChangeAction}
+        menuTitle='Actions'
+      />
+      <ScrollView ref={scrollViewRef}>
         <DetailsHeader
           id={localState.id}
           date={localState.prodDate}
           missingData={!localState.description}
-          shortcuts={shortcuts}
         />
-        <ButtonTHS
-          title={editMode ? 'Cancel Edit' : 'Edit'}
-          onPress={toggleEditMode}
-          variant='primary'
-          size='sm'
-        />
-        {editMode && (
-          <ButtonTHS
-            title='Save'
-            onPress={handleSave}
-            variant='secondary'
-            size='sm'
-          />
-        )}
+
         {renderComponent(GeneralInfo, EditGeneralInfo, {
           generalInfo: localState as GHD,
           onInputChange: handleInputChange,
@@ -141,6 +151,25 @@ const HoseDetails = () => {
             <HistoryView />
           </>
         )}
+        {editMode && (
+          <View style={styles.buttonContainer}>
+            <ButtonTHS
+              title='Save and close'
+              onPress={() => {
+                handleSave();
+              }}
+              variant='primary'
+              size='sm'
+            />
+
+            <ButtonTHS
+              title='Cancel'
+              onPress={toggleEditMode}
+              variant='tertiary'
+              size='sm'
+            />
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -152,5 +181,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
     padding: 10,
+    paddingBottom: 50,
+  },
+  buttonContainer: {
+    paddingHorizontal: 70,
+    gap: 20,
   },
 });
