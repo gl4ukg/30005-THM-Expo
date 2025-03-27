@@ -4,19 +4,27 @@ import { useLocalSearchParams } from 'expo-router';
 
 interface Props {}
 const Action: React.FC<Props> = (props) => {
-  const { state, dispatch } = useAppContext();
+  const { state } = useAppContext();
   const hoses = state.data.assignedUnits[
     state.data.selectedUnitId!
   ].hoses.filter((hose) => state.data.selectedHoses.includes(hose.id));
+
+  function saveRfq(formData: {
+    comment: string;
+    name: string;
+    mail: string;
+    phone: string;
+    rfq: string | null;
+    selectedIds: string[];
+  }) {
+    console.log('saveRfq', formData);
+  }
   return (
     <ContactTess
-      title={'RFQ'}
-      subTitle={'Order hoses - RFQ'}
+      title={'Order hoses - RFQ'}
+      subTitle={'RFQ'}
       hoses={hoses}
-      isRfq
-      onSave={function (arg0: any): void {
-        throw new Error('Function not implemented.');
-      }}
+      onSave={saveRfq}
       onAdd={function (arg0: any): void {
         throw new Error('Function not implemented.');
       }}

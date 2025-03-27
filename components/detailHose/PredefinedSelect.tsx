@@ -152,7 +152,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
             />
           </Pressable>
         )}
-        {selectedValue === 'N/A' && (
+        {selectedValue === 'N/A' && !onlyOptions && (
           <KeyboardAvoidingView>
             <Input
               // ref={textInputRef}

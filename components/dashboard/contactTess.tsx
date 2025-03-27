@@ -12,7 +12,6 @@ interface Props {
   title: string;
   subTitle: string;
   hoses: HoseType[];
-  isRfq?: boolean;
   onSave: (arg0: any) => void;
   onAdd?: (arg0: any) => void;
 }
@@ -20,7 +19,6 @@ export const ContactTess: React.FC<Props> = ({
   title,
   subTitle,
   hoses,
-  isRfq = false,
   onSave,
 }) => {
   const [comment, setComment] = useState('');
@@ -39,6 +37,7 @@ export const ContactTess: React.FC<Props> = ({
       setSelectedIds([...selectedIds, id]);
     }
   };
+  const isRfq = subTitle === 'RFQ' ? true : false;
 
   return (
     <>
@@ -107,7 +106,20 @@ export const ContactTess: React.FC<Props> = ({
             onChangeText={setPhone}
           />
           <View style={style.buttonContainer}>
-            <ButtonTHS title={title} size='sm' onPress={onSave} />
+            <ButtonTHS
+              title={title}
+              size='sm'
+              onPress={() =>
+                onSave({
+                  comment,
+                  name,
+                  mail,
+                  phone,
+                  rfq,
+                  selectedIds,
+                })
+              }
+            />
             <ButtonTHS title='Cancel' variant='tertiary' size='sm' />
           </View>
         </View>
