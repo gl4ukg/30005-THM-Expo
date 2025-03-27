@@ -72,7 +72,7 @@ export const Input = forwardRef<TextInput, Props>(
     ref: React.Ref<TextInput>,
   ) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [isFocused, setIsFocused] = useState(true);
+    const [isFocused, setIsFocused] = useState(false);
 
     const togglePasswordVisibility = () => {
       setIsPasswordVisible((prevState) => !prevState);
@@ -147,6 +147,7 @@ export const Input = forwardRef<TextInput, Props>(
                 onChangeText={onChangeText}
                 placeholder={inputProps.placeholder}
                 inputMode={inputMode}
+                numberOfLines={type === 'textArea' ? 4 : 1}
                 multiline={type === 'textArea'}
                 scrollEnabled={type !== 'textArea'}
                 secureTextEntry={type === 'password' && !isPasswordVisible}

@@ -2,7 +2,7 @@ import { mockedData } from '@/context/mocked';
 import { ListTable } from '@/components/dashboard/listTable';
 import { SelectedHoseCounter } from '@/components/dashboard/selectedHoseCounter';
 import { Typography } from '@/components/typography';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconName } from '@/components/Icon/iconMapping';
@@ -68,6 +68,7 @@ const Hose: React.FC<Props> = (props) => {
     actionSelectedItems: string[];
   } | null>(null);
   const { filter } = useLocalSearchParams();
+  const router = useRouter();
   const options = [
     {
       value: 'contactTessTeam',
@@ -125,12 +126,12 @@ const Hose: React.FC<Props> = (props) => {
     if (selectedHose && !isSelected) {
       dispatch({
         type: 'SELECT_HOSE',
-        payload: selectedHose,
+        payload: selectedHose.id,
       });
     } else if (isSelected && selectedHose) {
       dispatch({
         type: 'DESELECT_HOSE',
-        payload: selectedHose,
+        payload: selectedHose.id,
       });
     }
     if (action) {
@@ -141,6 +142,12 @@ const Hose: React.FC<Props> = (props) => {
           : [...action.actionSelectedItems, id],
       });
     }
+  };
+  const handleActionContact = () => {
+    console.log('action', action?.label);
+    console.log('selected Ids', state.data.selectedHoses);
+    if (state.data.selectedHoses.length > 0)
+      router.push(`/dashbord/actions/rfq`);
   };
   return (
     <>
@@ -166,7 +173,7 @@ const Hose: React.FC<Props> = (props) => {
               <SelectedHoseCounter
                 icon={action.icon}
                 counter={action.actionSelectedItems.length}
-                handlePress={() => {}}
+                handlePress={handleActionContact}
               />
             </View>
           </View>

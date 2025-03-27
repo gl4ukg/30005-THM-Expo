@@ -38,7 +38,7 @@ export const ListTable: FC<Props> = ({
   };
 
   return (
-    <View style={style.container}>
+    <View style={styles.container}>
       {canSelect && onSelectAll ? (
         <View
           style={{
@@ -54,23 +54,16 @@ export const ListTable: FC<Props> = ({
           />
         </View>
       ) : (
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-          }}
-        >
-          <Typography
-            name='tableHeader'
-            text={'total: ' + items.length + ' hoses'}
-          />
-        </View>
+        <Typography
+          name='tableHeader'
+          text={`Total: ${items.length} ${items.length > 1 ? 'hoses' : 'hose'}`}
+          style={styles.counter}
+        />
       )}
 
       <View
         style={[
-          style.tableHeader,
+          styles.tableHeader,
           {
             paddingLeft: spacing.paddingBlock,
             paddingRight: spacing.paddingBlock,
@@ -80,17 +73,17 @@ export const ListTable: FC<Props> = ({
         <Typography
           name='tableHeader'
           text='Hose ID'
-          style={[style.label, style.labelColumOne]}
+          style={[styles.label, styles.labelColumOne]}
         />
         <Typography
           name='tableHeader'
           text='Position/Condition'
-          style={[style.label, style.labelColumTwo]}
+          style={[styles.label, styles.labelColumTwo]}
         />
         <Typography
           name='tableHeader'
           text='Inspected'
-          style={[style.label, style.labelColumThree]}
+          style={[styles.label, styles.labelColumThree]}
         />
       </View>
       <FlatList
@@ -268,10 +261,15 @@ const elementStyle = StyleSheet.create({
   },
 });
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     width: '100%',
     flex: 1,
+  },
+  counter: {
+    width: '100%',
+    paddingHorizontal: 10,
+    textAlign: 'right',
   },
   tableHeader: {
     width: '100%',

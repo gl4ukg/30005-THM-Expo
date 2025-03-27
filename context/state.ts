@@ -59,7 +59,7 @@ interface DataState {
       hoses: Hose[];
     };
   };
-  selectedHoses: Hose[];
+  selectedHoses: string[];
   selectedUnitId: null | string;
   actions: {
     RFQ: ActionRFQ[];

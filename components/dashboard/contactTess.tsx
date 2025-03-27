@@ -1,14 +1,12 @@
+import { HoseType } from '@/app/(app)/dashbord/hoses/[filter]';
+import { colors } from '@/lib/tokens/colors';
+import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { ButtonTHS } from '../UI';
+import { Input } from '../UI/Input/input';
+import { SelectField } from '../detailHose/SelectField';
 import { Typography } from '../typography';
 import { ListTable } from './listTable';
-import { Input } from '../UI/Input/input';
-import { useState } from 'react';
-import { HoseType } from '@/app/(app)/dashbord/hoses/[filter]';
-import { SelectedHoseCounter } from './selectedHoseCounter';
-import { IconName } from '../Icon/iconMapping';
-import { colors } from '@/lib/tokens/colors';
-import { ButtonTHS } from '../UI';
-import { SelectField } from '../detailHose/SelectField';
 
 interface Props {
   title: string;
@@ -16,20 +14,32 @@ interface Props {
   hoses: HoseType[];
   isRfq?: boolean;
   onSave: (arg0: any) => void;
-  onAdd: (arg0: any) => void;
+  onAdd?: (arg0: any) => void;
 }
 export const ContactTess: React.FC<Props> = ({
   title,
   subTitle,
   hoses,
   isRfq = false,
+  onSave,
 }) => {
   const [comment, setComment] = useState('');
   const [name, setName] = useState('');
   const [mail, setMail] = useState('');
   const [phone, setPhone] = useState('');
+  const [rfq, setRfq] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>(
+    hoses.map((h) => h.id),
+  );
 
-  console.log('hoses', hoses.length);
+  const handleSelectionChange = (id: string) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter((i) => i !== id));
+    } else {
+      setSelectedIds([...selectedIds, id]);
+    }
+  };
+
   return (
     <>
       <ScrollView>
@@ -45,8 +55,8 @@ export const ContactTess: React.FC<Props> = ({
         </View>
         <ListTable
           items={hoses}
-          selectedIds={hoses.map((hose) => hose.id) || []}
-          onSelectionChange={() => {}}
+          selectedIds={selectedIds}
+          onSelectionChange={handleSelectionChange}
           canSelect={true}
         />
         <View style={style.pagePadding}>
@@ -54,9 +64,7 @@ export const ContactTess: React.FC<Props> = ({
             <SelectField
               label={'RFQ type'}
               value={'Choose'}
-              onChange={function (value: string): void {
-                throw new Error('Function not implemented.');
-              }}
+              onChange={setRfq}
               options={[
                 {
                   id: 'certificate',
@@ -66,7 +74,6 @@ export const ContactTess: React.FC<Props> = ({
                   id: 'noPressureTest',
                   label: 'TESS to quote without pressure test',
                 },
-                { id: 'unspecified', label: 'Unspecified' },
               ]}
             />
           )}
@@ -75,6 +82,7 @@ export const ContactTess: React.FC<Props> = ({
             label={'Comment:'}
             value={comment}
             onChangeText={setComment}
+            numberOfLines={4}
           />
           <Input
             type='text'
@@ -94,11 +102,7 @@ export const ContactTess: React.FC<Props> = ({
             value={phone}
             onChangeText={setPhone}
           />
-          <ButtonTHS
-            title={title}
-            size='sm'
-            onPress={() => console.log(hoses)}
-          />
+          <ButtonTHS title={title} size='sm' onPress={onSave} />
           <ButtonTHS title='Cancel' variant='tertiary' size='sm' />
         </View>
       </ScrollView>
