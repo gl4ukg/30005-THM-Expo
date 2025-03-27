@@ -45,7 +45,7 @@ export const ContactTess: React.FC<Props> = ({
       <ScrollView>
         <View style={style.selectedCounterContainer}>
           <View style={style.selectedCounterTitle}>
-            <Typography name='navigation' text={title} />
+            <Typography name='navigationBold' text={title} />
             <Typography
               name='navigation'
               text={subTitle}
@@ -82,7 +82,6 @@ export const ContactTess: React.FC<Props> = ({
             label={'Comment:'}
             value={comment}
             onChangeText={setComment}
-            numberOfLines={4}
           />
           <Input
             type='text'
@@ -102,8 +101,10 @@ export const ContactTess: React.FC<Props> = ({
             value={phone}
             onChangeText={setPhone}
           />
-          <ButtonTHS title={title} size='sm' onPress={onSave} />
-          <ButtonTHS title='Cancel' variant='tertiary' size='sm' />
+          <View style={style.buttonContainer}>
+            <ButtonTHS title={title} size='sm' onPress={onSave} />
+            <ButtonTHS title='Cancel' variant='tertiary' size='sm' />
+          </View>
         </View>
       </ScrollView>
     </>
@@ -116,6 +117,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative',
     width: '100%',
+    paddingBottom: 40,
   },
   selectedCounterTitle: {
     alignItems: 'center',
@@ -128,6 +130,14 @@ const style = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     gap: 20,
-    paddingBottom: 40,
+    paddingBottom: 50,
+    paddingTop: 30,
+  },
+  buttonContainer: {
+    paddingTop: 50,
+    width: '100%',
+    flexDirection: 'column',
+    gap: 20,
+    alignItems: 'center',
   },
 });

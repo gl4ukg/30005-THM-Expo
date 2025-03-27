@@ -142,12 +142,12 @@ export const Input = forwardRef<TextInput, Props>(
                   errorMessage && !isFocused && styles.errorBorder,
                   darkMode && styles.darkMode,
                   disabled && styles.disabled,
+                  type === 'textArea' && styles.textAreaHeight,
                 ]}
                 value={value}
                 onChangeText={onChangeText}
                 placeholder={inputProps.placeholder}
                 inputMode={inputMode}
-                numberOfLines={type === 'textArea' ? 4 : 1}
                 multiline={type === 'textArea'}
                 scrollEnabled={type !== 'textArea'}
                 secureTextEntry={type === 'password' && !isPasswordVisible}
@@ -241,5 +241,8 @@ const styles = StyleSheet.create({
   },
   darkMode: {
     backgroundColor: colors.inputBackground,
+  },
+  textAreaHeight: {
+    minHeight: 120,
   },
 });

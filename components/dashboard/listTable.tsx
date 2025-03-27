@@ -39,7 +39,7 @@ export const ListTable: FC<Props> = ({
 
   return (
     <View style={styles.container}>
-      {canSelect && onSelectAll ? (
+      {canSelect && onSelectAll && (
         <View
           style={{
             flexDirection: 'row',
@@ -53,9 +53,10 @@ export const ListTable: FC<Props> = ({
             onChange={onSelectAll}
           />
         </View>
-      ) : (
+      )}
+      {canSelect && !onSelectAll && (
         <Typography
-          name='tableHeader'
+          name='fieldLabel'
           text={`Total: ${items.length} ${items.length > 1 ? 'hoses' : 'hose'}`}
           style={styles.counter}
         />
