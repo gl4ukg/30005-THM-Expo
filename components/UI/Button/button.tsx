@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   sm: {
     height: 45,
-    width: '70%',
+    maxWidth: 220,
   },
   lg: {
     height: 55,
