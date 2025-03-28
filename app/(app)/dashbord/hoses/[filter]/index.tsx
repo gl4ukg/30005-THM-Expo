@@ -2,7 +2,7 @@ import { mockedData } from '@/context/mocked';
 import { ListTable } from '@/components/dashboard/listTable';
 import { SelectedHoseCounter } from '@/components/dashboard/selectedHoseCounter';
 import { Typography } from '@/components/typography';
-import { useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconName } from '@/components/Icon/iconMapping';
@@ -68,6 +68,7 @@ const Hose: React.FC<Props> = (props) => {
     actionSelectedItems: string[];
   } | null>(null);
   const { filter } = useLocalSearchParams();
+  const router = useRouter();
   const options = [
     {
       value: 'contactTessTeam',
@@ -109,6 +110,13 @@ const Hose: React.FC<Props> = (props) => {
       : 'All Hoses';
   const listLength = filteredList.length;
   const onChangeAction = (value: string) => {
+    state.data.selectedHoses.forEach((hoseId) => {
+      dispatch({
+        type: 'DESELECT_HOSE',
+        payload: hoseId,
+      });
+    });
+
     setAction({
       value,
       label: options.find((option) => option.value === value)?.label || '',
@@ -119,16 +127,47 @@ const Hose: React.FC<Props> = (props) => {
     });
   };
   const handleSelectionChange = (id: string) => {
+    const selectedHose = filteredList.find((hose) => hose.id === id);
+    const isSelected = action?.actionSelectedItems.includes(id);
+
+    if (selectedHose && !isSelected) {
+      dispatch({
+        type: 'SELECT_HOSE',
+        payload: selectedHose.id,
+      });
+    } else if (isSelected && selectedHose) {
+      dispatch({
+        type: 'DESELECT_HOSE',
+        payload: selectedHose.id,
+      });
+    }
     if (action) {
       setAction({
         ...action,
-        actionSelectedItems: action.actionSelectedItems.includes(id)
+        actionSelectedItems: isSelected
           ? action.actionSelectedItems.filter((item) => item !== id)
           : [...action.actionSelectedItems, id],
       });
     }
   };
-
+  const handleActionContact = () => {
+    if (
+      state.data.selectedHoses.length > 0 &&
+      action?.value === 'requestForQuote'
+    ) {
+      router.push(`/dashbord/actions/rfq`);
+    } else if (
+      state.data.selectedHoses.length > 0 &&
+      action?.value === 'scrapHoses'
+    ) {
+      router.push(`/dashbord/actions/scrap`);
+    } else if (
+      state.data.selectedHoses.length > 0 &&
+      action?.value === 'contactTessTeam'
+    ) {
+      router.push(`/dashbord/actions/contact`);
+    }
+  };
   return (
     <>
       <ActionsFab
@@ -153,7 +192,7 @@ const Hose: React.FC<Props> = (props) => {
               <SelectedHoseCounter
                 icon={action.icon}
                 counter={action.actionSelectedItems.length}
-                handlePress={() => {}}
+                handlePress={handleActionContact}
               />
             </View>
           </View>
@@ -166,12 +205,19 @@ const Hose: React.FC<Props> = (props) => {
         canSelect={action !== null}
         onSelectAll={() => {
           if (action) {
+            const allIds = filteredList.map((item) => item.id);
+            const isAllSelected =
+              action.actionSelectedItems.length === listLength;
+
+            if (isAllSelected) {
+              dispatch({ type: 'DESELECT_ALL_HOSES' });
+            } else {
+              dispatch({ type: 'SELECT_ALL_HOSES', payload: allIds });
+            }
+
             setAction({
               ...action,
-              actionSelectedItems:
-                action.actionSelectedItems.length === listLength
-                  ? []
-                  : [...filteredList.map((item) => item.id)],
+              actionSelectedItems: isAllSelected ? [] : allIds,
             });
           }
         }}
