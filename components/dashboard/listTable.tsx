@@ -74,17 +74,17 @@ export const ListTable: FC<Props> = ({
         <Typography
           name='tableHeader'
           text='Hose ID'
-          style={[styles.label, styles.labelColumOne]}
+          style={[styles.label, styles.labelColumnOne]}
         />
         <Typography
           name='tableHeader'
           text='Position/Condition'
-          style={[styles.label, styles.labelColumTwo]}
+          style={[styles.label, styles.labelColumnTwo]}
         />
         <Typography
           name='tableHeader'
           text='Inspected'
-          style={[styles.label, styles.labelColumThree]}
+          style={[styles.label, styles.labelColumnThree]}
         />
       </View>
       <FlatList
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   label: {
     alignSelf: 'flex-start',
   },
-  labelColumOne: { width: 70 },
-  labelColumTwo: { flex: 1 },
-  labelColumThree: { width: 105 },
+  labelColumnOne: { width: 70 },
+  labelColumnTwo: { flex: 1 },
+  labelColumnThree: { width: 105 },
 });
