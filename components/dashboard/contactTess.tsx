@@ -1,7 +1,7 @@
 import { HoseType } from '@/app/(app)/dashbord/hoses/[filter]';
 import { colors } from '@/lib/tokens/colors';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { ButtonTHS } from '../UI';
 import { Input } from '../UI/Input/input';
 import { SelectField } from '../detailHose/SelectField';
@@ -42,94 +42,99 @@ export const ContactTess: React.FC<Props> = ({
 
   return (
     <>
-      <ScrollView>
-        <View style={style.selectedCounterContainer}>
-          <View style={style.selectedCounterTitle}>
-            <Typography name='navigationBold' text={title} />
-            <Typography
-              name='navigation'
-              text={subTitle}
-              style={style.selectedCounterTitle}
+      <FlatList
+        data={[{ key: 'page' }]}
+        renderItem={() => (
+          <>
+            <View style={style.selectedCounterContainer}>
+              <View style={style.selectedCounterTitle}>
+                <Typography name='navigationBold' text={title} />
+                <Typography
+                  name='navigation'
+                  text={subTitle}
+                  style={style.selectedCounterTitle}
+                />
+              </View>
+            </View>
+            <ListTable
+              items={hoses}
+              selectedIds={selectedIds}
+              onSelectionChange={handleSelectionChange}
+              canSelect={true}
             />
-          </View>
-        </View>
-        <ListTable
-          items={hoses}
-          selectedIds={selectedIds}
-          onSelectionChange={handleSelectionChange}
-          canSelect={true}
-        />
-        <View style={style.pagePadding}>
-          {isRfq && (
-            <SelectField
-              label={'RFQ type'}
-              value={'Choose'}
-              onChange={setRfq}
-              onlyOptions={true}
-              options={[
-                {
-                  id: 'certificate',
-                  label: 'TESS to quote with pressure test and certificate',
-                },
-                {
-                  id: 'noPressureTest',
-                  label: 'TESS to quote without pressure test',
-                },
-                {
-                  id: 'Unspecified',
-                  label: 'Unspecified',
-                },
-              ]}
-            />
-          )}
-          <Input
-            type='textArea'
-            label={'Comment:'}
-            value={comment}
-            onChangeText={setComment}
-          />
-          <Input
-            type='text'
-            label={'Name:'}
-            value={name}
-            onChangeText={setName}
-          />
-          <Input
-            type='email'
-            label={'Mail:'}
-            value={mail}
-            onChangeText={setMail}
-          />
-          <Input
-            type='tel'
-            label={'Phone:'}
-            value={phone}
-            onChangeText={setPhone}
-          />
-          <View style={style.buttonContainer}>
-            <ButtonTHS
-              title={title}
-              size='sm'
-              onPress={() =>
-                onSave({
-                  comment,
-                  name,
-                  mail,
-                  phone,
-                  rfq,
-                  selectedIds,
-                })
-              }
-            />
-            <ButtonTHS
-              title='Cancel'
-              variant='tertiary'
-              size='sm'
-              onPress={() => router.back()}
-            />
-          </View>
-        </View>
-      </ScrollView>
+            <View style={style.pagePadding}>
+              {isRfq && (
+                <SelectField
+                  label={'RFQ type'}
+                  value={'Choose'}
+                  onChange={setRfq}
+                  onlyOptions={true}
+                  options={[
+                    {
+                      id: 'certificate',
+                      label: 'TESS to quote with pressure test and certificate',
+                    },
+                    {
+                      id: 'noPressureTest',
+                      label: 'TESS to quote without pressure test',
+                    },
+                    {
+                      id: 'Unspecified',
+                      label: 'Unspecified',
+                    },
+                  ]}
+                />
+              )}
+              <Input
+                type='textArea'
+                label={'Comment:'}
+                value={comment}
+                onChangeText={setComment}
+              />
+              <Input
+                type='text'
+                label={'Name:'}
+                value={name}
+                onChangeText={setName}
+              />
+              <Input
+                type='email'
+                label={'Mail:'}
+                value={mail}
+                onChangeText={setMail}
+              />
+              <Input
+                type='tel'
+                label={'Phone:'}
+                value={phone}
+                onChangeText={setPhone}
+              />
+              <View style={style.buttonContainer}>
+                <ButtonTHS
+                  title={title}
+                  size='sm'
+                  onPress={() =>
+                    onSave({
+                      comment,
+                      name,
+                      mail,
+                      phone,
+                      rfq,
+                      selectedIds,
+                    })
+                  }
+                />
+                <ButtonTHS
+                  title='Cancel'
+                  variant='tertiary'
+                  size='sm'
+                  onPress={() => router.back()}
+                />
+              </View>
+            </View>
+          </>
+        )}
+      />
     </>
   );
 };
