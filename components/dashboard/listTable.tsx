@@ -39,55 +39,59 @@ export const ListTable: FC<Props> = ({
 
   return (
     <View style={styles.container}>
-      {canSelect && onSelectAll && (
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-          }}
-        >
-          <Typography name='tableHeader' text='Select all:' />
-          <Checkbox
-            isChecked={selectedIds.length === items.length}
-            onChange={onSelectAll}
-          />
-        </View>
-      )}
-      {canSelect && !onSelectAll && (
-        <Typography
-          name='fieldLabel'
-          text={`Total: ${items.length} ${items.length > 1 ? 'hoses' : 'hose'}`}
-          style={styles.counter}
-        />
-      )}
-
-      <View
-        style={[
-          styles.tableHeader,
-          {
-            paddingLeft: spacing.paddingBlock,
-            paddingRight: spacing.paddingBlock,
-          },
-        ]}
-      >
-        <Typography
-          name='tableHeader'
-          text='Hose ID'
-          style={[styles.label, styles.labelColumnOne]}
-        />
-        <Typography
-          name='tableHeader'
-          text='Position/Condition'
-          style={[styles.label, styles.labelColumnTwo]}
-        />
-        <Typography
-          name='tableHeader'
-          text='Inspected'
-          style={[styles.label, styles.labelColumnThree]}
-        />
-      </View>
       <FlatList
+        ListHeaderComponent={
+          <>
+            {canSelect && onSelectAll && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                }}
+              >
+                <Typography name='tableHeader' text='Select all:' />
+                <Checkbox
+                  isChecked={selectedIds.length === items.length}
+                  onChange={onSelectAll}
+                />
+              </View>
+            )}
+            {canSelect && !onSelectAll && (
+              <Typography
+                name='fieldLabel'
+                text={`Total: ${items.length} ${items.length > 1 ? 'hoses' : 'hose'}`}
+                style={styles.counter}
+              />
+            )}
+
+            <View
+              style={[
+                styles.tableHeader,
+                {
+                  paddingLeft: spacing.paddingBlock,
+                  paddingRight: spacing.paddingBlock,
+                },
+              ]}
+            >
+              <Typography
+                name='tableHeader'
+                text='Hose ID'
+                style={[styles.label, styles.labelColumnOne]}
+              />
+              <Typography
+                name='tableHeader'
+                text='Position/Condition'
+                style={[styles.label, styles.labelColumnTwo]}
+              />
+              <Typography
+                name='tableHeader'
+                text='Inspected'
+                style={[styles.label, styles.labelColumnThree]}
+              />
+            </View>
+          </>
+        }
         data={items}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
