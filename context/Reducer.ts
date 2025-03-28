@@ -127,7 +127,6 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
           : state.assignedUnits,
       };
     case 'SELECT_HOSE':
-      console.log('selectedHose1', action.payload);
       return {
         ...state,
         selectedHoses: [...state.selectedHoses, action.payload],
@@ -139,7 +138,7 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
           (hose) => hose !== action.payload,
         ),
       };
-    case 'SELECT_ALL_HOSES': 
+    case 'SELECT_ALL_HOSES':
       return {
         ...state,
         selectedHoses: action.payload,

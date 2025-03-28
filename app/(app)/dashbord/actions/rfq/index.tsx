@@ -1,6 +1,5 @@
 import { ContactTess } from '@/components/dashboard/contactTess';
 import { useAppContext } from '@/context/ContextProvider';
-import { useLocalSearchParams } from 'expo-router';
 
 interface Props {}
 const Action: React.FC<Props> = (props) => {
