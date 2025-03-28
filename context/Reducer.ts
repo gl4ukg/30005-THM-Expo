@@ -56,7 +56,9 @@ type DataAction =
     >
   | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: string; hoseData: any }>
   | ActionWithPayload<'SELECT_HOSE', string>
-  | ActionWithPayload<'DESELECT_HOSE', string>;
+  | ActionWithPayload<'DESELECT_HOSE', string>
+  | ActionWithPayload<'SELECT_ALL_HOSES', string[]>
+  | ActionWithoutPayload<'DESELECT_ALL_HOSES'>;
 type SettingsAction = ActionWithPayload<'UPDATE_SETTINGS', any>;
 
 // Reducers for each slice of the app state (these should be defined elsewhere)
@@ -136,6 +138,16 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
         selectedHoses: state.selectedHoses.filter(
           (hose) => hose !== action.payload,
         ),
+      };
+    case 'SELECT_ALL_HOSES': 
+      return {
+        ...state,
+        selectedHoses: action.payload,
+      };
+    case 'DESELECT_ALL_HOSES':
+      return {
+        ...state,
+        selectedHoses: [],
       };
     default:
       return state;

@@ -205,12 +205,19 @@ const Hose: React.FC<Props> = (props) => {
         canSelect={action !== null}
         onSelectAll={() => {
           if (action) {
+            const allIds = filteredList.map((item) => item.id);
+            const isAllSelected =
+              action.actionSelectedItems.length === listLength;
+
+            if (isAllSelected) {
+              dispatch({ type: 'DESELECT_ALL_HOSES' });
+            } else {
+              dispatch({ type: 'SELECT_ALL_HOSES', payload: allIds });
+            }
+
             setAction({
               ...action,
-              actionSelectedItems:
-                action.actionSelectedItems.length === listLength
-                  ? []
-                  : [...filteredList.map((item) => item.id)],
+              actionSelectedItems: isAllSelected ? [] : allIds,
             });
           }
         }}
