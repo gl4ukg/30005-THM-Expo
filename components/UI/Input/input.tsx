@@ -142,7 +142,7 @@ export const Input = forwardRef<TextInput, Props>(
                   errorMessage && !isFocused && styles.errorBorder,
                   darkMode && styles.darkMode,
                   disabled && styles.disabled,
-                  type === 'textArea' && styles.textAreaHeight,
+                  type === 'textArea' && styles.textAreaStyle,
                 ]}
                 value={value}
                 onChangeText={onChangeText}
@@ -242,7 +242,8 @@ const styles = StyleSheet.create({
   darkMode: {
     backgroundColor: colors.inputBackground,
   },
-  textAreaHeight: {
-    minHeight: 120,
+  textAreaStyle: {
+    minHeight: 80,
+    textAlignVertical: 'top',
   },
 });
