@@ -105,7 +105,7 @@ const HoseDetails = () => {
 
   return (
     <View style={styles.container}>
-      {!editMode && (
+      {state.data.selectedHoses.length === 0 && !editMode && (
         <ActionsFab
           selected={action?.value || null}
           options={options}
