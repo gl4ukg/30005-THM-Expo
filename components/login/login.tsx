@@ -95,7 +95,7 @@ export const LoginScreen: React.FC<Props> = ({ nextView }) => {
         <Input
           icon='Email'
           label='Email'
-          placeHolder='ola@nordmann.no'
+          placeholder='ola@nordmann.no'
           value={email}
           onChangeText={handleEmail}
           darkMode={true}
@@ -122,7 +122,7 @@ export const LoginScreen: React.FC<Props> = ({ nextView }) => {
           <LinkButton
             variant='dark'
             title='Forgot Password?'
-            onPress={() => nextView('resetPassword')}
+            onPress={() => router.push('/(app)/login/forgotpassword')}
           />
         </View>
       </View>

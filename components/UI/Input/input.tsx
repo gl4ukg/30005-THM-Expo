@@ -87,7 +87,7 @@ export const Input = forwardRef<TextInput, Props>(
     ) => {
       inputProps.onBlur && inputProps.onBlur(e);
       setIsFocused(false);
-      if (errorMessage) {
+      if (errorMessage && value !== '') {
         setDisplayError(true);
       } else {
         setDisplayError(false);
@@ -139,7 +139,7 @@ export const Input = forwardRef<TextInput, Props>(
                 style={[
                   styles.input,
                   isFocused && !disabled && styles.focusedBorder,
-                  errorMessage && !isFocused && styles.errorBorder,
+                  displayError && !isFocused && styles.errorBorder,
                   darkMode && styles.darkMode,
                   disabled && styles.disabled,
                   type === 'textArea' && styles.textAreaStyle,
@@ -175,7 +175,10 @@ export const Input = forwardRef<TextInput, Props>(
           <Typography
             name={'navigation'}
             text={errorMessage}
-            style={[styles.error, icon && styles.errorPaddingIfIcon]}
+            style={[
+              darkMode ? styles.errorTextDarkMode : styles.error,
+              icon && styles.errorPaddingIfIcon,
+            ]}
           />
         )}
       </View>
@@ -223,6 +226,10 @@ const styles = StyleSheet.create({
   },
   error: {
     color: colors.error,
+    paddingTop: 9,
+  },
+  errorTextDarkMode: {
+    color: colors.errorTextDarkMode,
     paddingTop: 9,
   },
   errorPaddingIfIcon: {
