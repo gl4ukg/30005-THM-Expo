@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { View, ScrollView } from 'react-native';
 import { mockedData } from '../../../../../context/mocked';
 import DetailsHeader from '@/components/detailView/DetailsHeader';
@@ -9,7 +9,7 @@ import EditUniversalHoseData from '@/components/detailView/edit/EditUniversalHos
 import TessPartNumbers from '@/components/detailView/TessPartNumbers';
 import EditTessPartNumbers from '@/components/detailView/edit/EditTessPartNumbers';
 import { ButtonTHS } from '@/components/UI';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import Structure from '@/components/detailView/Structure';
 import HistoryView from '@/components/detailView/History';
 import { GHD, UHD, TPN } from '@/components/detailView/types';
@@ -51,6 +51,8 @@ const HoseDetails = () => {
   const [editMode, setEditMode] = useState(false);
   const [localState, setLocalState] = useState(hoseData);
 
+  const router = useRouter();
+
   const handleInputChange = (field: string, value: string) => {
     setLocalState((prevState) => ({
       ...prevState,
@@ -68,10 +70,40 @@ const HoseDetails = () => {
     setEditMode(false);
   };
 
-  const onChangeAction = (value: string) => {
+  const handleAction = (value: string) => {
     setAction({ label: value, value: value });
-    if (value === 'edit') {
-      setEditMode(true);
+
+    if (!state.data.selectedHoses.includes(hoseData.id)) {
+      dispatch({
+        type: 'SELECT_HOSE',
+        payload: hoseData.id,
+      });
+    }
+
+    switch (value) {
+      case 'edit':
+        setEditMode(true);
+        break;
+      case 'order':
+        router.push({
+          pathname: `/dashbord/actions/rfq`,
+          params: { hoseId: hoseData.id },
+        });
+        break;
+      case 'scrap':
+        router.push({
+          pathname: `/dashbord/actions/scrap`,
+          params: { hoseId: hoseData.id },
+        });
+        break;
+      case 'contact':
+        router.push({
+          pathname: `/dashbord/actions/contact`,
+          params: { hoseId: hoseData.id },
+        });
+        break;
+      default:
+        break;
     }
   };
 
@@ -105,11 +137,11 @@ const HoseDetails = () => {
 
   return (
     <View style={styles.container}>
-      {state.data.selectedHoses.length === 0 && !editMode && (
+      {state.data.selectedHoses.length <= 1 && !editMode && (
         <ActionsFab
           selected={action?.value || null}
           options={options}
-          onChange={onChangeAction}
+          onChange={handleAction}
           menuTitle='Actions'
         />
       )}
