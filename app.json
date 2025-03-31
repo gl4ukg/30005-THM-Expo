@@ -14,7 +14,7 @@
       "infoPlist": {
         "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera."
       },
-      "bundleIdentifier": "com.tess.THM",
+      "bundleIdentifier": "no.tess.THM",
       "runtimeVersion": "1.0.0"
     },
     "android": {
@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.tess.THM",
+      "package": "no.tess.THM",
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.NFC",

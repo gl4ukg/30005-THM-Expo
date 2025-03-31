@@ -72,7 +72,7 @@ export const Input = forwardRef<TextInput, Props>(
     ref: React.Ref<TextInput>,
   ) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [isFocused, setIsFocused] = useState(true);
+    const [isFocused, setIsFocused] = useState(false);
 
     const togglePasswordVisibility = () => {
       setIsPasswordVisible((prevState) => !prevState);
@@ -142,6 +142,7 @@ export const Input = forwardRef<TextInput, Props>(
                   errorMessage && !isFocused && styles.errorBorder,
                   darkMode && styles.darkMode,
                   disabled && styles.disabled,
+                  type === 'textArea' && styles.textAreaStyle,
                 ]}
                 value={value}
                 onChangeText={onChangeText}
@@ -240,5 +241,9 @@ const styles = StyleSheet.create({
   },
   darkMode: {
     backgroundColor: colors.inputBackground,
+  },
+  textAreaStyle: {
+    minHeight: 80,
+    textAlignVertical: 'top',
   },
 });

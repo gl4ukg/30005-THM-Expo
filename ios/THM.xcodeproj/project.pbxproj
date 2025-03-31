@@ -7,45 +7,45 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0D65943DE2024230BBC1DF5D /* OpenSans_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F89798CA2E16453693F68025 /* OpenSans_400Regular.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		142C4991D759400885E2086B /* RobotoCondensed_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8695F0352E57436387B61535 /* RobotoCondensed_400Regular.ttf */; };
+		2D6FEB95268D422A9475FFF3 /* OpenSans_600SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB365966E58548D599C15254 /* OpenSans_600SemiBold.ttf */; };
+		355CD30C4F954ADB9C5A8B7A /* RobotoCondensed_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0B4FA988F1343268B762B70 /* RobotoCondensed_400Regular.ttf */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		3F2290DEC89B401883988CDA /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F208B7B8864511A0022D2A /* noop-file.swift */; };
-		5A81E59D5A2E452E9BA22A3A /* Roboto_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA33710239DA46C38CF5E0A7 /* Roboto_400Regular.ttf */; };
-		5CAAE850EE104EB2BE2B1051 /* OpenSans_600SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 77AD39A738E24AFB9F0F038D /* OpenSans_600SemiBold.ttf */; };
+		72CB5A6062714E538014DD5A /* OpenSans_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 131673611BB94736BFA25248 /* OpenSans_400Regular.ttf */; };
+		7A1328C989C04E94BA0D9A51 /* RobotoCondensed_300Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4A947D7EA98C40F0887D5994 /* RobotoCondensed_300Light.ttf */; };
+		93F2FF56A9184A44AF8B33C9 /* Roboto_500Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1B81FFBCC7F44472B47910E2 /* Roboto_500Medium.ttf */; };
 		96905EF65AED1B983A6B3ABC /* libPods-THM.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-THM.a */; };
-		A846CF53CA4340A099B80D33 /* Roboto_500Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F9458D5BF9BF4A9999D38693 /* Roboto_500Medium.ttf */; };
+		A9D0CEC3FC3B58BDAFBD15B2 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C046952D1D4A53CDB36C7AA1 /* PrivacyInfo.xcprivacy */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		EC431196C0A1A3CD06399958 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 892CCA0CF0FA988243BB0108 /* PrivacyInfo.xcprivacy */; };
-		F579D7E9A1F64808ACD7EBCC /* RobotoCondensed_300Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D2B0DACEC9A4D7D8C61F35E /* RobotoCondensed_300Light.ttf */; };
+		F01C49AD8CAD466EA63AF1B2 /* Roboto_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C92BB523EAF647B2A9CD137B /* Roboto_400Regular.ttf */; };
+		F4F15CEBFB6D4BBD99E00A4F /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4DB0F9851C4B9DA84EED60 /* noop-file.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		131673611BB94736BFA25248 /* OpenSans_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = OpenSans_400Regular.ttf; path = "../node_modules/@expo-google-fonts/open-sans/OpenSans_400Regular.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* THM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = THM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = THM/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = THM/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = THM/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = THM/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = THM/main.m; sourceTree = "<group>"; };
-		1D2B0DACEC9A4D7D8C61F35E /* RobotoCondensed_300Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = RobotoCondensed_300Light.ttf; path = "../node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_300Light.ttf"; sourceTree = "<group>"; };
-		4807C8F90066431DA8A38656 /* THM-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "THM-Bridging-Header.h"; path = "THM/THM-Bridging-Header.h"; sourceTree = "<group>"; };
+		1B81FFBCC7F44472B47910E2 /* Roboto_500Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_500Medium.ttf; path = "../node_modules/@expo-google-fonts/roboto/Roboto_500Medium.ttf"; sourceTree = "<group>"; };
+		1D4C9277F9F34F5F88C339D5 /* THM-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "THM-Bridging-Header.h"; path = "THM/THM-Bridging-Header.h"; sourceTree = "<group>"; };
+		4A947D7EA98C40F0887D5994 /* RobotoCondensed_300Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = RobotoCondensed_300Light.ttf; path = "../node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_300Light.ttf"; sourceTree = "<group>"; };
 		58EEBF8E8E6FB1BC6CAF49B5 /* libPods-THM.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-THM.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C2E3173556A471DD304B334 /* Pods-THM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THM.debug.xcconfig"; path = "Target Support Files/Pods-THM/Pods-THM.debug.xcconfig"; sourceTree = "<group>"; };
-		77AD39A738E24AFB9F0F038D /* OpenSans_600SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = OpenSans_600SemiBold.ttf; path = "../node_modules/@expo-google-fonts/open-sans/OpenSans_600SemiBold.ttf"; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-THM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-THM.release.xcconfig"; path = "Target Support Files/Pods-THM/Pods-THM.release.xcconfig"; sourceTree = "<group>"; };
-		8695F0352E57436387B61535 /* RobotoCondensed_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = RobotoCondensed_400Regular.ttf; path = "../node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_400Regular.ttf"; sourceTree = "<group>"; };
-		892CCA0CF0FA988243BB0108 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = THM/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		7E4DB0F9851C4B9DA84EED60 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "THM/noop-file.swift"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = THM/SplashScreen.storyboard; sourceTree = "<group>"; };
-		B8F208B7B8864511A0022D2A /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "THM/noop-file.swift"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		DA33710239DA46C38CF5E0A7 /* Roboto_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_400Regular.ttf; path = "../node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf"; sourceTree = "<group>"; };
+		BB365966E58548D599C15254 /* OpenSans_600SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = OpenSans_600SemiBold.ttf; path = "../node_modules/@expo-google-fonts/open-sans/OpenSans_600SemiBold.ttf"; sourceTree = "<group>"; };
+		C046952D1D4A53CDB36C7AA1 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = THM/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		C92BB523EAF647B2A9CD137B /* Roboto_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_400Regular.ttf; path = "../node_modules/@expo-google-fonts/roboto/Roboto_400Regular.ttf"; sourceTree = "<group>"; };
+		E0B4FA988F1343268B762B70 /* RobotoCondensed_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = RobotoCondensed_400Regular.ttf; path = "../node_modules/@expo-google-fonts/roboto-condensed/RobotoCondensed_400Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F89798CA2E16453693F68025 /* OpenSans_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = OpenSans_400Regular.ttf; path = "../node_modules/@expo-google-fonts/open-sans/OpenSans_400Regular.ttf"; sourceTree = "<group>"; };
-		F9458D5BF9BF4A9999D38693 /* Roboto_500Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_500Medium.ttf; path = "../node_modules/@expo-google-fonts/roboto/Roboto_500Medium.ttf"; sourceTree = "<group>"; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-THM/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,9 +71,9 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				B8F208B7B8864511A0022D2A /* noop-file.swift */,
-				4807C8F90066431DA8A38656 /* THM-Bridging-Header.h */,
-				892CCA0CF0FA988243BB0108 /* PrivacyInfo.xcprivacy */,
+				7E4DB0F9851C4B9DA84EED60 /* noop-file.swift */,
+				1D4C9277F9F34F5F88C339D5 /* THM-Bridging-Header.h */,
+				C046952D1D4A53CDB36C7AA1 /* PrivacyInfo.xcprivacy */,
 			);
 			name = THM;
 			sourceTree = "<group>";
@@ -103,7 +103,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				D65327D7A22EEC0BE12398D9 /* Pods */,
 				D7E4C46ADA2E9064B798F356 /* ExpoModulesProviders */,
-				C1FE719C71734198BC3A8378 /* Resources */,
+				A54B10D5C6164261B2E8C367 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -126,6 +126,20 @@
 			name = THM;
 			sourceTree = "<group>";
 		};
+		A54B10D5C6164261B2E8C367 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				131673611BB94736BFA25248 /* OpenSans_400Regular.ttf */,
+				BB365966E58548D599C15254 /* OpenSans_600SemiBold.ttf */,
+				C92BB523EAF647B2A9CD137B /* Roboto_400Regular.ttf */,
+				1B81FFBCC7F44472B47910E2 /* Roboto_500Medium.ttf */,
+				4A947D7EA98C40F0887D5994 /* RobotoCondensed_300Light.ttf */,
+				E0B4FA988F1343268B762B70 /* RobotoCondensed_400Regular.ttf */,
+			);
+			name = Resources;
+			path = "";
+			sourceTree = "<group>";
+		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
@@ -133,20 +147,6 @@
 			);
 			name = Supporting;
 			path = THM/Supporting;
-			sourceTree = "<group>";
-		};
-		C1FE719C71734198BC3A8378 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				F89798CA2E16453693F68025 /* OpenSans_400Regular.ttf */,
-				77AD39A738E24AFB9F0F038D /* OpenSans_600SemiBold.ttf */,
-				DA33710239DA46C38CF5E0A7 /* Roboto_400Regular.ttf */,
-				F9458D5BF9BF4A9999D38693 /* Roboto_500Medium.ttf */,
-				1D2B0DACEC9A4D7D8C61F35E /* RobotoCondensed_300Light.ttf */,
-				8695F0352E57436387B61535 /* RobotoCondensed_400Regular.ttf */,
-			);
-			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 		D65327D7A22EEC0BE12398D9 /* Pods */ = {
@@ -174,13 +174,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "THM" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				F521EB8D15CDF45919342A8D /* [Expo] Configure project */,
+				0F53F0F56B022552182C31F0 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				7A4ECD1821B3DE5592989EEA /* [CP] Embed Pods Frameworks */,
+				680266B7C2E6A8119299550B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -230,13 +230,13 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				0D65943DE2024230BBC1DF5D /* OpenSans_400Regular.ttf in Resources */,
-				5CAAE850EE104EB2BE2B1051 /* OpenSans_600SemiBold.ttf in Resources */,
-				5A81E59D5A2E452E9BA22A3A /* Roboto_400Regular.ttf in Resources */,
-				A846CF53CA4340A099B80D33 /* Roboto_500Medium.ttf in Resources */,
-				F579D7E9A1F64808ACD7EBCC /* RobotoCondensed_300Light.ttf in Resources */,
-				142C4991D759400885E2086B /* RobotoCondensed_400Regular.ttf in Resources */,
-				EC431196C0A1A3CD06399958 /* PrivacyInfo.xcprivacy in Resources */,
+				72CB5A6062714E538014DD5A /* OpenSans_400Regular.ttf in Resources */,
+				2D6FEB95268D422A9475FFF3 /* OpenSans_600SemiBold.ttf in Resources */,
+				F01C49AD8CAD466EA63AF1B2 /* Roboto_400Regular.ttf in Resources */,
+				93F2FF56A9184A44AF8B33C9 /* Roboto_500Medium.ttf in Resources */,
+				7A1328C989C04E94BA0D9A51 /* RobotoCondensed_300Light.ttf in Resources */,
+				355CD30C4F954ADB9C5A8B7A /* RobotoCondensed_400Regular.ttf in Resources */,
+				A9D0CEC3FC3B58BDAFBD15B2 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,7 +280,26 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7A4ECD1821B3DE5592989EEA /* [CP] Embed Pods Frameworks */ = {
+		0F53F0F56B022552182C31F0 /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-THM/expo-configure-project.sh\"\n";
+		};
+		680266B7C2E6A8119299550B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -307,9 +326,11 @@
 				"${PODS_ROOT}/Target Support Files/Pods-THM/Pods-THM-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/ExpoConstants_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXUpdates/EXUpdates.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem/ExpoFileSystem_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoSystemUI/ExpoSystemUI_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly/RCT-Folly_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/ReachabilitySwift/ReachabilitySwift.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/boost/boost_privacy.bundle",
@@ -321,9 +342,11 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoConstants_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXUpdates.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoFileSystem_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoSystemUI_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCT-Folly_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ReachabilitySwift.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
@@ -336,25 +359,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-THM/Pods-THM-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F521EB8D15CDF45919342A8D /* [Expo] Configure project */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-THM/expo-configure-project.sh\"\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -365,7 +369,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
-				3F2290DEC89B401883988CDA /* noop-file.swift in Sources */,
+				F4F15CEBFB6D4BBD99E00A4F /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,7 +400,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = com.tess.THM;
+				PRODUCT_BUNDLE_IDENTIFIER = no.tess.THM;
 				PRODUCT_NAME = THM;
 				SWIFT_OBJC_BRIDGING_HEADER = "THM/THM-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -425,7 +429,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = com.tess.THM;
+				PRODUCT_BUNDLE_IDENTIFIER = no.tess.THM;
 				PRODUCT_NAME = THM;
 				SWIFT_OBJC_BRIDGING_HEADER = "THM/THM-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

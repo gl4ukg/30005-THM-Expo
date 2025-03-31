@@ -11,6 +11,7 @@ interface SelectFieldProps {
   onChange: (value: string) => void;
   options: { id: string; label: string }[];
   required?: boolean;
+  onlyOptions?: boolean;
 }
 
 export const SelectField: React.FC<SelectFieldProps> = ({
@@ -19,6 +20,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
   onChange,
   options,
   required,
+  onlyOptions,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(value);
@@ -90,6 +92,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
             selected={selectedValue}
             onClose={() => handleClose()}
             title={label}
+            onlyOptions={onlyOptions}
           />
         </SafeAreaView>
       </Modal>

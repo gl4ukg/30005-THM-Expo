@@ -28,7 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>myapp</string>
-          <string>com.tess.THM</string>
+          <string>no.tess.THM</string>
         </array>
       </dict>
       <dict>
@@ -45,7 +45,7 @@
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NFCReaderUsageDescription</key>
-    <string>Custom permission message</string>
+    <string>$(PRODUCT_NAME) needs access to your NFC reader.</string>
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>

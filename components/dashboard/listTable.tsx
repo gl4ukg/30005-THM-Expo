@@ -19,7 +19,7 @@ interface Props {
   selectedIds: string[];
   canSelect?: boolean;
   onSelectionChange?: (id: string) => void;
-  onSelectAll: () => void;
+  onSelectAll?: () => void;
 }
 
 const spacing = {
@@ -38,49 +38,60 @@ export const ListTable: FC<Props> = ({
   };
 
   return (
-    <View style={style.container}>
-      {canSelect && (
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-          }}
-        >
-          <Typography name='tableHeader' text='Select all:' />
-          <Checkbox
-            isChecked={selectedIds.length === items.length}
-            onChange={onSelectAll}
-          />
-        </View>
-      )}
-
-      <View
-        style={[
-          style.tableHeader,
-          {
-            paddingLeft: spacing.paddingBlock,
-            paddingRight: spacing.paddingBlock,
-          },
-        ]}
-      >
-        <Typography
-          name='tableHeader'
-          text='Hose ID'
-          style={[style.label, style.labelColumOne]}
-        />
-        <Typography
-          name='tableHeader'
-          text='Position/Condition'
-          style={[style.label, style.labelColumTwo]}
-        />
-        <Typography
-          name='tableHeader'
-          text='Inspected'
-          style={[style.label, style.labelColumThree]}
-        />
-      </View>
+    <View style={styles.container}>
       <FlatList
+        ListHeaderComponent={
+          <>
+            {canSelect && onSelectAll && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                }}
+              >
+                <Typography name='tableHeader' text='Select all:' />
+                <Checkbox
+                  isChecked={selectedIds.length === items.length}
+                  onChange={onSelectAll}
+                />
+              </View>
+            )}
+            {canSelect && !onSelectAll && (
+              <Typography
+                name='fieldLabel'
+                text={`Total: ${items.length} ${items.length > 1 ? 'hoses' : 'hose'}`}
+                style={styles.counter}
+              />
+            )}
+
+            <View
+              style={[
+                styles.tableHeader,
+                {
+                  paddingLeft: spacing.paddingBlock,
+                  paddingRight: spacing.paddingBlock,
+                },
+              ]}
+            >
+              <Typography
+                name='tableHeader'
+                text='Hose ID'
+                style={[styles.label, styles.labelColumnOne]}
+              />
+              <Typography
+                name='tableHeader'
+                text='Position/Condition'
+                style={[styles.label, styles.labelColumnTwo]}
+              />
+              <Typography
+                name='tableHeader'
+                text='Inspected'
+                style={[styles.label, styles.labelColumnThree]}
+              />
+            </View>
+          </>
+        }
         data={items}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -255,10 +266,16 @@ const elementStyle = StyleSheet.create({
   },
 });
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     width: '100%',
     flex: 1,
+  },
+  counter: {
+    width: '100%',
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    textAlign: 'right',
   },
   tableHeader: {
     width: '100%',
@@ -272,7 +289,7 @@ const style = StyleSheet.create({
   label: {
     alignSelf: 'flex-start',
   },
-  labelColumOne: { width: 70 },
-  labelColumTwo: { flex: 1 },
-  labelColumThree: { width: 105 },
+  labelColumnOne: { width: 70 },
+  labelColumnTwo: { flex: 1 },
+  labelColumnThree: { width: 105 },
 });
