@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { Input } from '@/components/UI/Input/input';
+import { colors } from '@/lib/tokens/colors';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  View,
-  StyleSheet,
+  KeyboardAvoidingView,
   Pressable,
   ScrollView,
+  StyleSheet,
   TextInput,
-  KeyboardAvoidingView,
+  View,
 } from 'react-native';
-import { colors } from '@/lib/tokens/colors';
 import { Typography } from '../typography';
-import { RadioButton } from './radioButton';
 import { ButtonTHS } from '../UI';
-import { Input } from '@/components/UI/Input/input';
+import { RadioButton } from './radioButton';
 
 interface PredefinedSelectProps {
   options: { id: string; label: string }[];
@@ -53,7 +53,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
   }, [selected, options]);
 
   const handleSave = () => {
-    if (selectedValue === 'N/A' && manualInput.trim() !== '') {
+    if (selectedValue === 'N/A' && manualInput?.trim() !== '') {
       onSelect(manualInput);
     } else {
       onSelect(selectedValue);
@@ -109,7 +109,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
             value={searchText}
             onChangeText={setSearchText}
             label='Type to search:'
-            placeHolder='...'
+            placeholder='...'
           />
         )}
       </View>
@@ -155,10 +155,9 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
         {selectedValue === 'N/A' && !onlyOptions && (
           <KeyboardAvoidingView>
             <Input
-              // ref={textInputRef}
+              type='textArea'
               label='Comment:'
-              // style={styles.manualInput}
-              placeHolder='Enter manual option'
+              placeholder='Enter manual option'
               value={manualInput}
               onChangeText={handleTextChange}
             />
