@@ -62,6 +62,9 @@ export type HID = {
   nextInspection: string;
   replacementInterval: string;
   replacementDate: string;
+  drawingNumber: string;
+  positionNumber: string;
+  customerArticleNumber: string;
 };
 
 export type HoseData = {
