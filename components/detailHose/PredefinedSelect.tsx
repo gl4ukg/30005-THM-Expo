@@ -34,6 +34,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
   const [initialValue, setInitialValue] = useState(selected);
   const [manualInput, setManualInput] = useState('');
   const [searchText, setSearchText] = useState('');
+  const [error, setError] = useState('');
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
 
@@ -53,9 +54,17 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
   }, [selected, options]);
 
   const handleSave = () => {
-    if (selectedValue === 'N/A' && manualInput.trim() !== '') {
+    if (
+      selectedValue === 'N/A' &&
+      (!manualInput || manualInput.trim() === '')
+    ) {
+      setError('Please enter a value');
+      return;
+    } else if (selectedValue === 'N/A') {
+      setError('');
       onSelect(manualInput);
     } else {
+      setError('');
       onSelect(selectedValue);
     }
     onClose();
@@ -109,7 +118,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
             value={searchText}
             onChangeText={setSearchText}
             label='Type to search:'
-            placeHolder='...'
+            placeholder='...'
           />
         )}
       </View>
@@ -158,9 +167,11 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
               // ref={textInputRef}
               label='Comment:'
               // style={styles.manualInput}
-              placeHolder='Enter manual option'
+              placeholder='Enter manual option'
               value={manualInput}
               onChangeText={handleTextChange}
+              errorMessage={error}
+              validateOnSave={true}
             />
           </KeyboardAvoidingView>
         )}

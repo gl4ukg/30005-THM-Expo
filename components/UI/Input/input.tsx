@@ -23,6 +23,7 @@ interface Props extends TextInputProps {
   errorMessage?: string;
   darkMode?: boolean;
   disabled?: boolean;
+  validateOnSave?: boolean;
 }
 
 /**
@@ -67,6 +68,7 @@ export const Input = forwardRef<TextInput, Props>(
       errorMessage,
       darkMode,
       disabled,
+      validateOnSave,
       ...inputProps
     },
     ref: React.Ref<TextInput>,
@@ -100,6 +102,12 @@ export const Input = forwardRef<TextInput, Props>(
       inputProps.onFocus && inputProps.onFocus(e);
       setIsFocused(true);
     };
+
+    useEffect(() => {
+      if (validateOnSave && errorMessage) {
+        setDisplayError(true);
+      }
+    }, [validateOnSave, errorMessage]);
 
     useEffect(() => {
       if (ref && 'current' in ref && ref.current) {
