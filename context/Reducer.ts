@@ -146,7 +146,7 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
     case 'DESELECT_ALL_HOSES':
       return {
         ...state,
-        selectedHoses: [],
+        selectedHoses: '',
       };
     default:
       return state;

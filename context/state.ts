@@ -59,7 +59,7 @@ interface DataState {
       hoses: Hose[];
     };
   };
-  selectedHoses: string[];
+  selectedHoses: string[] | string;
   selectedUnitId: null | string;
   actions: {
     RFQ: ActionRFQ[];
@@ -94,7 +94,7 @@ const initialDataState: DataState = {
     },
   },
   selectedUnitId: 'testPrinces',
-  selectedHoses: [],
+  selectedHoses: '',
   actions: {
     RFQ: [
       {

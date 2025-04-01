@@ -137,7 +137,7 @@ const HoseDetails = () => {
 
   return (
     <View style={styles.container}>
-      {state.data.selectedHoses.length <= 1 && !editMode && (
+      {!Array.isArray(state.data.selectedHoses) && !editMode && (
         <ActionsFab
           selected={action?.value || null}
           options={options}

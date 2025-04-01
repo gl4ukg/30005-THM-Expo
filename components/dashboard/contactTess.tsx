@@ -8,6 +8,7 @@ import { SelectField } from '../detailHose/SelectField';
 import { Typography } from '../typography';
 import { ListTable } from './listTable';
 import { router } from 'expo-router';
+import { useAppContext } from '@/context/ContextProvider';
 
 interface Props {
   title: string;
@@ -30,12 +31,20 @@ export const ContactTess: React.FC<Props> = ({
   const [selectedIds, setSelectedIds] = useState<string[]>(
     hoses.map((h) => h.id),
   );
-
+  const { state, dispatch } = useAppContext();
   const handleSelectionChange = (id: string) => {
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter((i) => i !== id));
+      dispatch({
+        type: 'DESELECT_HOSE',
+        payload: id,
+      });
     } else {
       setSelectedIds([...selectedIds, id]);
+      dispatch({
+        type: 'SELECT_HOSE',
+        payload: id,
+      });
     }
   };
   const isRfq = subTitle === 'RFQ' ? true : false;

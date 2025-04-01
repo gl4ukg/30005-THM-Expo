@@ -88,12 +88,6 @@ const Hose: React.FC<Props> = (props) => {
       subtitle: '(add hoses to bin)',
       icon: 'Trash' as IconName,
     },
-    {
-      value: 'callToYourMother',
-      label: 'Call to your mother',
-      subtitle: '(add hoses for your mother)',
-      icon: 'Phone' as IconName,
-    },
   ];
 
   // const { listLength } = getFilteredHoses(
@@ -110,12 +104,13 @@ const Hose: React.FC<Props> = (props) => {
       : 'All Hoses';
   const listLength = filteredList.length;
   const onChangeAction = (value: string) => {
-    state.data.selectedHoses.forEach((hoseId) => {
-      dispatch({
-        type: 'DESELECT_HOSE',
-        payload: hoseId,
+    typeof state.data.selectedHoses !== 'string' &&
+      state.data.selectedHoses.forEach((hoseId) => {
+        dispatch({
+          type: 'DESELECT_HOSE',
+          payload: hoseId,
+        });
       });
-    });
 
     setAction({
       value,
