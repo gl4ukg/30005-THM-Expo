@@ -34,10 +34,16 @@ const UnitInput: React.FC<UnitInputProps> = ({
 
   return (
     <View>
-      {label && <Typography name='fieldLabel' text={label} />}
+      {label && (
+        <Typography name='navigation' text={label} style={styles.label} />
+      )}
       <View style={styles.inputContainer}>
         <TextInput
-          style={[styles.input, isFocused && styles.inputFocused]}
+          style={[
+            { color: colors.extended666 },
+            styles.input,
+            isFocused && styles.inputFocused,
+          ]}
           keyboardType='numeric'
           value={value ? value.toString() : ''}
           onChangeText={handleChange}
@@ -46,7 +52,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
           selectionColor={colors.primary}
           editable={editable}
         />
-        <Typography name='fieldLabel' text={unit} />
+        <Typography name='navigation' text={unit} style={styles.label} />
       </View>
     </View>
   );
@@ -71,7 +77,10 @@ const styles = StyleSheet.create({
   inputFocused: {
     borderColor: colors.primary,
   },
+  label: {
+    marginBottom: 5,
+    color: colors.extended666,
+  },
 });
 
 export default UnitInput;
-12;
