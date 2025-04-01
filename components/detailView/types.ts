@@ -10,6 +10,7 @@ export type GHD = {
   hoseFunction: string;
   pollutionExposure: string;
   uvExposure: string;
+  installationDate: string;
 };
 
 export type UHD = {
