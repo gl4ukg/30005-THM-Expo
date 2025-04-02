@@ -31,11 +31,11 @@ const UnitInput: React.FC<UnitInputProps> = ({
   }, [setIsFocused]);
 
   const handleChange = (text: string) => {
-    const parsedValue = parseFloat(text);
-    if (!isNaN(parsedValue)) {
-      onChangeText(parsedValue);
-    } else if (text === '') {
-      onChangeText(0);
+    const numericRegex = /^[0-9.]+$/;
+
+    const hasOnlyOneDot = text.split('.').length <= 2;
+    if (numericRegex.test(text) && hasOnlyOneDot) {
+      onChangeText(parseFloat(text));
     }
   };
 
