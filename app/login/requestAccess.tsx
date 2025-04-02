@@ -4,7 +4,7 @@ import { colors } from '@/lib/tokens/colors';
 import { LinkButton } from '@/components/UI/Button/linkButton';
 import { Typography } from '@/components/typography';
 import { useAppContext } from '@/context/ContextProvider';
-import { Link, router } from 'expo-router';
+import { router } from 'expo-router';
 import { emailValidation } from '@/lib/util/validation';
 import { LoginHeader } from '@/components/login/loginHeader';
 import { Input } from '@/components/UI/Input/input';
@@ -112,93 +112,79 @@ export default function ForgotPassword() {
     !email || !fullName || !mobileNumber || !company || !units;
   return (
     <>
-      <LoginHeader header='REQUEST ACCESS' />
-      <View style={{ flexDirection: 'row', gap: 5, padding: 15 }}>
-        <Link
-          href={'/login/createNewPassword'}
-          asChild
-          style={[{ flex: 1, backgroundColor: colors.dashbordGreen }]}
-        >
-          <Pressable
-            style={[{ flex: 1, backgroundColor: colors.extendedBlue }]}
-          >
-            <Typography
-              name='navigation'
-              text='New Password'
-              numberOfLines={1}
-            />
-          </Pressable>
-        </Link>
-      </View>
-      <View style={styles.form}>
-        <Input
-          icon='Email'
-          label='Your email (User ID)'
-          placeHolder='ola@nordmann.no'
-          value={email}
-          type='email'
-          onChangeText={handleEmail}
-          errorMessage={emailError}
-          darkMode={true}
-        />
-        <Input
-          icon='User'
-          label='Your full name'
-          value={fullName}
-          onChangeText={handleNameChange}
-          errorMessage={nameError}
-          darkMode={true}
-        />
-        <Input
-          icon='Phone'
-          label='Your mobile number'
-          value={mobileNumber}
-          type='tel'
-          onChangeText={setMobileNumber}
-          darkMode={true}
-        />
-        <Input
-          icon='Industry'
-          label='Your company'
-          value={company}
-          onChangeText={setCompany}
-          darkMode={true}
-        />
-        {units.map((unit, index) => (
+      <View style={styles.container}>
+        <View style={styles.form}>
+          <LoginHeader header='REQUEST ACCESS' />
+
           <Input
-            key={index}
-            icon='Task'
-            label={
-              index === 0
-                ? 'Your unit (plant, vessel, rig)'
-                : `Unit ${index + 1}`
-            }
-            value={unit}
-            onChangeText={(value) => updateUnitValue(index, value)}
+            icon='Email'
+            label='Your email (User ID)'
+            placeholder='ola@nordmann.no'
+            value={email}
+            type='email'
+            onChangeText={handleEmail}
+            errorMessage={emailError}
             darkMode={true}
           />
-        ))}
-        <View style={styles.buttonPlacement}>
-          <LinkButton
-            title={'+ Add more units?'}
-            variant={'dark'}
-            onPress={addUnitField}
+          <Input
+            icon='User'
+            label='Your full name'
+            value={fullName}
+            onChangeText={handleNameChange}
+            errorMessage={nameError}
+            darkMode={true}
+          />
+          <Input
+            icon='Phone'
+            label='Your mobile number'
+            value={mobileNumber}
+            type='tel'
+            onChangeText={setMobileNumber}
+            darkMode={true}
+          />
+          <Input
+            icon='Industry'
+            label='Your company'
+            value={company}
+            onChangeText={setCompany}
+            darkMode={true}
+          />
+          {units.map((unit, index) => (
+            <Input
+              key={index}
+              icon='Task'
+              label={
+                index === 0
+                  ? 'Your unit (plant, vessel, rig)'
+                  : `Unit ${index + 1}`
+              }
+              value={unit}
+              onChangeText={(value) => updateUnitValue(index, value)}
+              darkMode={true}
+            />
+          ))}
+          <View style={styles.buttonPlacement}>
+            <LinkButton
+              title={'+ Add more units?'}
+              variant={'dark'}
+              onPress={addUnitField}
+            />
+          </View>
+        </View>
+        <ButtonTHS
+          title={'REQUEST ACCESS'}
+          onPress={handleRequest}
+          variant={'primary'}
+          disabled={isButtonDisabled}
+        />
+        <View style={styles.footer}>
+          <HelpLinks header='Not sure what to do?' />
+          <Typography
+            name={'navigation'}
+            text={'© 2025 Copyright TESS AS'}
+            style={styles.copyRights}
           />
         </View>
-      </View>
-      <ButtonTHS
-        title={'REQUEST ACCESS'}
-        onPress={handleRequest}
-        variant={'primary'}
-        disabled={isButtonDisabled}
-      />
-      <View style={styles.footer}>
-        <HelpLinks header='Not sure what to do?' />
-        <Typography
-          name={'navigation'}
-          text={'© 2025 Copyright TESS AS'}
-          style={styles.copyRights}
-        />
       </View>
     </>
   );
@@ -214,7 +200,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 50,
+    gap: 26,
   },
   form: {
     width: '100%',
@@ -223,14 +209,18 @@ const styles = StyleSheet.create({
   },
   buttonPlacement: {
     alignSelf: 'flex-start',
-    paddingLeft: 50,
+    paddingLeft: 40,
+    marginBottom: 24,
   },
   footer: {
     width: '100%',
-    gap: 50,
+    gap: 26,
+    alignItems: 'center',
   },
   copyRights: {
     color: colors.white,
     textAlign: 'center',
+    backgroundColor: colors.black,
+    paddingHorizontal: 26,
   },
 });

@@ -101,15 +101,14 @@ export default function ForgotPassword() {
           darkMode={true}
           type='password'
         />
+      </View>
+      <View style={styles.footer}>
         <ButtonTHS
-          title={'LOGIN'}
+          title={'Create new password'}
           onPress={handleLogin}
           variant={'primary'}
           disabled={isButtonDisabled}
         />
-      </View>
-
-      <View style={styles.footer}>
         <HelpLinks header='Unable to log in?' />
         <Typography
           name={'navigation'}
@@ -141,11 +140,14 @@ const styles = StyleSheet.create({
   },
   footer: {
     width: '100%',
-    gap: 50,
+    gap: 26,
+    alignItems: 'center',
   },
   copyRights: {
     color: colors.white,
     textAlign: 'center',
+    backgroundColor: colors.black,
+    paddingHorizontal: 26,
   },
   whiteText: {
     color: colors.white,

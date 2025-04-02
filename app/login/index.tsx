@@ -93,7 +93,7 @@ export default function Login() {
         <Input
           icon='Email'
           label='Email'
-          placeHolder='ola@nordmann.no'
+          placeholder='ola@nordmann.no'
           value={email}
           onChangeText={handleEmail}
           darkMode={true}
@@ -126,7 +126,7 @@ export default function Login() {
           <LinkButton
             variant='dark'
             title='Forgot Password?'
-            onPress={() => router.push('/login/forgotpassword')}
+            onPress={() => router.push('/login/forgotPassword')}
           />
         </View>
       </View>
@@ -168,9 +168,12 @@ const styles = StyleSheet.create({
   copyRights: {
     color: colors.white,
     textAlign: 'center',
+    backgroundColor: colors.black,
+    paddingHorizontal: 26,
   },
   footer: {
     width: '100%',
     gap: 50,
+    alignItems: 'center',
   },
 });
