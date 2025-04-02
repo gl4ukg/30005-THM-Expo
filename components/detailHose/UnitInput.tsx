@@ -1,14 +1,15 @@
 import React, { useState, useCallback } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet, KeyboardTypeOptions } from 'react-native';
 import { Typography } from '../typography';
 import { colors } from '@/lib/tokens/colors';
 
 type UnitInputProps = {
   label?: string;
   value: number;
-  onChangeText: (value: number | string) => void;
+  onChangeText: (value: number) => void;
   unit: string;
   editable?: boolean;
+  keyboardType?: KeyboardTypeOptions;
 };
 
 const UnitInput: React.FC<UnitInputProps> = ({
@@ -17,6 +18,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
   onChangeText,
   unit,
   editable = true,
+  keyboardType = 'numeric',
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -29,7 +31,12 @@ const UnitInput: React.FC<UnitInputProps> = ({
   }, [setIsFocused]);
 
   const handleChange = (text: string) => {
-    onChangeText(text);
+    const parsedValue = parseFloat(text);
+    if (!isNaN(parsedValue)) {
+      onChangeText(parsedValue);
+    } else if (text === '') {
+      onChangeText(0);
+    }
   };
 
   return (
@@ -44,7 +51,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
             styles.input,
             isFocused && styles.inputFocused,
           ]}
-          keyboardType='numeric'
+          keyboardType={keyboardType}
           value={value ? value.toString() : ''}
           onChangeText={handleChange}
           onFocus={handleFocus}

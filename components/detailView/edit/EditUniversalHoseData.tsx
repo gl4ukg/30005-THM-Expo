@@ -128,7 +128,9 @@ const EditUniversalHoseData = ({
           <UnitInput
             label='Total Length'
             value={Number(universalHoseData.totalLength)}
-            onChangeText={(text) => onInputChange('totalLength', text)}
+            onChangeText={(value: number) =>
+              onInputChange('totalLength', String(value))
+            }
             unit={'mm'}
           />
         </View>
