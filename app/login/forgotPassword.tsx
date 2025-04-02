@@ -28,31 +28,6 @@ export default function ForgotPassword() {
   };
   return (
     <>
-      <View
-        style={{
-          flexDirection: 'row',
-          width: 340,
-          paddingHorizontal: 15,
-          margin: 'auto',
-        }}
-      >
-        <Link
-          href={'/login'}
-          asChild
-          style={[
-            {
-              flex: 1,
-              backgroundColor: colors.dashbordGreen,
-            },
-          ]}
-        >
-          <Pressable
-            style={[{ flex: 1, backgroundColor: colors.extendedBlue }]}
-          >
-            <Typography name='navigation' text='login' numberOfLines={1} />
-          </Pressable>
-        </Link>
-      </View>
       <View style={styles.container}>
         <LoginHeader header='RESET PASSWORD'>
           <Typography

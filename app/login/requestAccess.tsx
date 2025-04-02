@@ -112,35 +112,6 @@ export default function ForgotPassword() {
     !email || !fullName || !mobileNumber || !company || !units;
   return (
     <>
-      <View
-        style={{
-          flexDirection: 'row',
-          width: 340,
-          paddingHorizontal: 15,
-          margin: 'auto',
-        }}
-      >
-        <Link
-          href={'/login/createNewPassword'}
-          asChild
-          style={[
-            {
-              flex: 1,
-              backgroundColor: colors.dashbordGreen,
-            },
-          ]}
-        >
-          <Pressable
-            style={[{ flex: 1, backgroundColor: colors.extendedBlue }]}
-          >
-            <Typography
-              name='navigation'
-              text='New Password'
-              numberOfLines={1}
-            />
-          </Pressable>
-        </Link>
-      </View>
       <View style={styles.container}>
         <View style={styles.form}>
           <LoginHeader header='REQUEST ACCESS' />
