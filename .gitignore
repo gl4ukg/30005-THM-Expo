@@ -11,7 +11,7 @@ expo-env.d.ts
 .env
 
 android/
-ios/** */
+ios/
 
 # Native
 *.orig.*
