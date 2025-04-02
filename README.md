@@ -17,8 +17,9 @@ npm run reset-project
 1. Install dependencies
 
    ```bash
+   yarn add expo
    npx expo install
-   npx expo prebuild
+   npx expo prebuild --clean
    cd ios
    pod install
    cd ..
