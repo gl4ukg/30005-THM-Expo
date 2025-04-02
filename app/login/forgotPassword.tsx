@@ -5,9 +5,8 @@ import { ButtonTHS } from '@/components/UI';
 import { Input } from '@/components/UI/Input/input';
 import { colors } from '@/lib/tokens/colors';
 import { emailValidation } from '@/lib/util/validation';
-import { Link } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');

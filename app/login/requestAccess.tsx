@@ -4,7 +4,7 @@ import { colors } from '@/lib/tokens/colors';
 import { LinkButton } from '@/components/UI/Button/linkButton';
 import { Typography } from '@/components/typography';
 import { useAppContext } from '@/context/ContextProvider';
-import { Link, router } from 'expo-router';
+import { router } from 'expo-router';
 import { emailValidation } from '@/lib/util/validation';
 import { LoginHeader } from '@/components/login/loginHeader';
 import { Input } from '@/components/UI/Input/input';
