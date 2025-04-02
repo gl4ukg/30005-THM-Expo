@@ -83,14 +83,16 @@ export default function ForgotPassword() {
       });
 
       if (response.success) {
-        console.log('Request successful:', response);
-
         dispatch({
           type: 'LOGIN',
           payload: { email, name: fullName, id: mobileNumber },
         });
-
-        router.push('/(app)/dashbord');
+        Alert.alert('Request sent', 'You will receive an email shortly.', [
+          {
+            text: 'OK',
+            onPress: () => router.push('/login'),
+          },
+        ]);
       }
     } catch (error) {
       const { message } = error as ApiError;

@@ -5,8 +5,9 @@ import { ButtonTHS } from '@/components/UI';
 import { Input } from '@/components/UI/Input/input';
 import { colors } from '@/lib/tokens/colors';
 import { emailValidation } from '@/lib/util/validation';
+import { router } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -23,6 +24,12 @@ export default function ForgotPassword() {
     const validation = emailValidation(email);
     if (validation === true) {
       setEmailError(undefined);
+      Alert.alert('Request sent', 'You will receive an email shortly.', [
+        {
+          text: 'OK',
+          onPress: () => router.push('/login'),
+        },
+      ]);
     } else setEmailError(validation);
   };
   return (
