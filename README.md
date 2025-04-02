@@ -18,6 +18,11 @@ npm run reset-project
 
    ```bash
    npx expo install
+   npx expo prebuild
+   cd ios
+   pod install
+   cd ..
+   
    ```
 2. We will need to use developer build (we can not use expo go)
    Sett up you env
