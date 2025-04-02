@@ -48,6 +48,8 @@ interface Props extends TextInputProps {
  *
  * @darkMode - Whether the input field should have a dark mode style, can be used on dark backgrounds.
  *
+ * @validateOnSave - Whether the error message should be displayed when the input field is saved. To be used when the input field is the last in its form or alone.
+ *
  * @example
  * <Input
  *   icon={"User"}
@@ -103,6 +105,7 @@ export const Input = forwardRef<TextInput, Props>(
       setIsFocused(true);
     };
 
+    // for use when validateOnSave is true, to display error message without relying on blur
     useEffect(() => {
       if (validateOnSave && errorMessage) {
         setDisplayError(true);
