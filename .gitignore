@@ -42,5 +42,4 @@ yarn-error.*
 app-example
 
 #temp
-/ios
-/android
+.vscode
