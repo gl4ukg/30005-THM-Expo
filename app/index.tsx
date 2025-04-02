@@ -172,7 +172,7 @@ const Login = () => {
                       <Typography
                         name={'navigation'}
                         text={'© 2025 Copyright TESS AS'}
-                        style={styles.whiteText}
+                        style={styles.copyRights}
                       />
                     </View>
                   </View>
@@ -218,6 +218,12 @@ const styles = StyleSheet.create({
   whiteText: {
     color: colors.white,
   },
+  copyRights: {
+    color: colors.white,
+    textAlign: 'center',
+    backgroundColor: colors.black,
+    paddingHorizontal: 26,
+  },
   lines: {
     zIndex: 1,
     position: 'sticky',
@@ -259,5 +265,6 @@ const styles = StyleSheet.create({
     gap: 15,
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingTop: 50,
   },
 });
