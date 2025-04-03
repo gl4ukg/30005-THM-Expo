@@ -1,14 +1,15 @@
 import React, { useState, useCallback } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet, KeyboardTypeOptions } from 'react-native';
 import { Typography } from '../typography';
 import { colors } from '@/lib/tokens/colors';
 
 type UnitInputProps = {
   label?: string;
   value: number;
-  onChangeText: (value: number | string) => void;
+  onChangeText: (value: number) => void;
   unit: string;
   editable?: boolean;
+  keyboardType?: KeyboardTypeOptions;
 };
 
 const UnitInput: React.FC<UnitInputProps> = ({
@@ -17,6 +18,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
   onChangeText,
   unit,
   editable = true,
+  keyboardType = 'numeric',
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -29,16 +31,27 @@ const UnitInput: React.FC<UnitInputProps> = ({
   }, [setIsFocused]);
 
   const handleChange = (text: string) => {
-    onChangeText(text);
+    const numericRegex = /^[0-9.]+$/;
+
+    const hasOnlyOneDot = text.split('.').length <= 2;
+    if (numericRegex.test(text) && hasOnlyOneDot) {
+      onChangeText(parseFloat(text));
+    }
   };
 
   return (
     <View>
-      {label && <Typography name='fieldLabel' text={label} />}
+      {label && (
+        <Typography name='navigation' text={label} style={styles.label} />
+      )}
       <View style={styles.inputContainer}>
         <TextInput
-          style={[styles.input, isFocused && styles.inputFocused]}
-          keyboardType='numeric'
+          style={[
+            { color: colors.extended666 },
+            styles.input,
+            isFocused && styles.inputFocused,
+          ]}
+          keyboardType={keyboardType}
           value={value ? value.toString() : ''}
           onChangeText={handleChange}
           onFocus={handleFocus}
@@ -46,7 +59,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
           selectionColor={colors.primary}
           editable={editable}
         />
-        <Typography name='fieldLabel' text={unit} />
+        <Typography name='navigation' text={unit} style={styles.label} />
       </View>
     </View>
   );
@@ -71,7 +84,10 @@ const styles = StyleSheet.create({
   inputFocused: {
     borderColor: colors.primary,
   },
+  label: {
+    marginBottom: 5,
+    color: colors.extended666,
+  },
 });
 
 export default UnitInput;
-12;

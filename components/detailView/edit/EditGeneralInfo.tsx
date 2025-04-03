@@ -5,6 +5,7 @@ import { SelectField } from '../../detailHose/SelectField';
 import { RadioGroup } from '../../detailHose/radioGroup';
 import { GHD } from '../types';
 import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
+import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
 
 type EditGeneralInfoProps = {
@@ -35,6 +36,18 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
         tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
       >
         <RFIDInput label='RFID' onRFIDScanned={handleRFIDScanned} />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{
+          title: 'production date',
+          message: 'This is the production date',
+        }}
+      >
+        <DateInput
+          label='Production date'
+          value={localState.productionDate}
+          onChange={(date) => onInputChange('productionDate', date.toString())}
+        />
       </TooltipWrapper>
       <TooltipWrapper
         tooltipData={{
