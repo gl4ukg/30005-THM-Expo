@@ -99,7 +99,7 @@ export const ContactTess: React.FC<Props> = ({
             )}
             <Input
               type='textArea'
-              label={'Comment:'}
+              label={isRfq ? 'Delivery address / Comments' : 'Comment:'}
               value={comment}
               onChangeText={setComment}
             />
