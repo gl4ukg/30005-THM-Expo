@@ -33,7 +33,6 @@ const MaintananceInfo: React.FC<MaintananceProps> = ({
         label={'Inspected Date:'}
         value={formatDate(hoseData.inspectedDate)}
       />
-
       {editMode ? (
         <EditMaintananceInfo
           hoseData={hoseData}
@@ -76,6 +75,14 @@ const MaintananceInfo: React.FC<MaintananceProps> = ({
           value={formatDate(hoseData.replacementDate)}
         />
       </View>
+      <View style={styles.spacing}>
+        <Datafield label={'Drawing Number:'} value={hoseData.drawingNumber} />
+        <Datafield label={'Position Number:'} value={hoseData.positionNumber} />
+        <Datafield
+          label={'Customer Article Number:'}
+          value={hoseData.customerArticleNumber}
+        />
+      </View>
     </View>
   );
 };
@@ -97,5 +104,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     paddingBottom: 20,
+  },
+  spacing: {
+    paddingTop: 10,
   },
 });

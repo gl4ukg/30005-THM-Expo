@@ -5,6 +5,9 @@ import { RadioGroup } from '@/components/detailHose/radioGroup';
 import { SelectField } from '@/components/detailHose/SelectField';
 import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
 import { Typography } from '@/components/typography';
+import Datafield from '../Datafield';
+import { colors } from '@/lib/tokens/colors';
+import { formatDate } from '@/lib/util/formatDate';
 
 type EditMaintananceProps = {
   hoseData: any;
@@ -70,14 +73,61 @@ const EditMaintananceInfo: React.FC<EditMaintananceProps> = ({
           value={hoseData.criticality}
           onChange={(value) => onInputChange('criticality', value)}
           options={[
-            { id: 'Not set', label: 'Not set' },
-            { id: '1 - None', label: '1 - None' },
-            { id: '2 - Very low', label: '2 - Very low' },
-            { id: '3 - Low', label: '3 - Low' },
-            { id: '4 - Medium', label: '4 - Medium' },
-            { id: '5 - High', label: '5 - High' },
-            { id: '6 - Very high', label: '6 - Very high' },
+            { id: '0 - None', label: '1 - None' },
+            { id: '1 - Very low', label: '2 - Very low' },
+            { id: '2 - Low', label: '3 - Low' },
+            { id: '3 - Medium', label: '4 - Medium' },
+            { id: '4 - High', label: '5 - High' },
+            { id: '5 - Very high', label: '6 - Very high' },
           ]}
+        />
+        <View style={styles.inspectionDetails}>
+          <Datafield
+            label={'Inspection Interval:'}
+            value={hoseData.inspectionInterval}
+          />
+          <Datafield
+            label={'Next Inspection:'}
+            value={formatDate(hoseData.nextInspection)}
+          />
+          <Datafield
+            label={'Replacement Interval:'}
+            value={hoseData.replacementInterval}
+          />
+          <Datafield
+            label={'Replacement Date:'}
+            value={formatDate(hoseData.replacementDate)}
+          />
+        </View>
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{ title: 'Inspection Interval', message: '' }}
+      >
+        <Input
+          label={'Drawing Number:'}
+          value={hoseData.drawingNumber}
+          onChangeText={(text) => onInputChange('drawingNumber', text)}
+          type='text'
+        />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{ title: 'Inspection Interval', message: '' }}
+      >
+        <Input
+          label={'Position Number:'}
+          value={hoseData.positionNumber}
+          onChangeText={(text) => onInputChange('positionNumber', text)}
+          type='text'
+        />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{ title: 'Inspection Interval', message: '' }}
+      >
+        <Input
+          label={'Customer Article Number:'}
+          value={hoseData.customerArticleNumber}
+          onChangeText={(text) => onInputChange('customerArticleNumber', text)}
+          type='text'
         />
       </TooltipWrapper>
     </View>
@@ -93,5 +143,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+  },
+  inspectionDetails: {
+    borderLeftWidth: 2,
+    borderColor: colors.strokeInputField,
+    paddingLeft: 18,
+    marginTop: 10,
+    paddingBottom: 10,
   },
 });

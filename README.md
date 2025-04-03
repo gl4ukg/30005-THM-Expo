@@ -17,7 +17,13 @@ npm run reset-project
 1. Install dependencies
 
    ```bash
+   yarn add expo
    npx expo install
+   npx expo prebuild --clean
+   cd ios
+   pod install
+   cd ..
+   
    ```
 2. We will need to use developer build (we can not use expo go)
    Sett up you env

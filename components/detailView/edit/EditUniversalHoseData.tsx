@@ -1,11 +1,9 @@
 import BarToPsiInput from '@/components/detailHose/BarToPsiInput';
 import { SelectField } from '@/components/detailHose/SelectField';
 import UnitInput from '@/components/detailHose/UnitInput';
-import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Input } from '@/components/UI/Input/input';
-import { colors } from '@/lib/tokens/colors';
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Bookmark from '../Bookmark';
@@ -22,7 +20,7 @@ const EditCouplingSection = ({
   onInputChange,
 }: {
   universalHoseData: UHD;
-  onInputChange: (field: string, value: string) => {};
+  onInputChange: (field: string, value: string) => void;
 }) => (
   <>
     <TooltipWrapper tooltipData={{ title: 'Material Quality', message: '' }}>
@@ -128,7 +126,9 @@ const EditUniversalHoseData = ({
           <UnitInput
             label='Total Length'
             value={Number(universalHoseData.totalLength)}
-            onChangeText={(text) => onInputChange('totalLength', text)}
+            onChangeText={(value: number) =>
+              onInputChange('totalLength', String(value))
+            }
             unit={'mm'}
           />
         </View>
