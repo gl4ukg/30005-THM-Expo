@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Datafield from './Datafield';
 import { GHD } from './types';
+import { formatDate } from '@/lib/util/formatDate';
 
 type GeneralInfoProps = {
   generalInfo: GHD;
@@ -10,6 +11,12 @@ type GeneralInfoProps = {
 const GeneralInfo: React.FC<GeneralInfoProps> = ({ generalInfo }) => {
   return (
     <View>
+      <Datafield label='RFID:' value={generalInfo.RFid} />
+      <Datafield
+        label='Installation date:'
+        value={formatDate(generalInfo.installationDate)}
+      />
+
       <Datafield label='Description:' value={generalInfo.description} />
       <Datafield label='Customer ID:' value={generalInfo.customerId} />
       <Datafield
@@ -27,7 +34,6 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({ generalInfo }) => {
         value={generalInfo.pollutionExposure}
       />
       <Datafield label='UV exposure:' value={generalInfo.uvExposure} />
-      <Datafield label='RFID:' value={generalInfo.RFid} />
     </View>
   );
 };

@@ -7,6 +7,8 @@ import { GHD } from '../types';
 import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
 import Tooltip from '@/components/Icon/icons/Tooltip';
 import { Icon } from '@/components/Icon/Icon';
+import { DateInput } from '@/components/UI/Input/DateInput';
+import { RFIDInput } from '@/components/UI/Input/RFID';
 
 type EditGeneralInfoProps = {
   generalInfo: GHD;
@@ -18,6 +20,19 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
   onInputChange,
 }) => (
   <View style={styles.container}>
+    <TooltipWrapper
+      tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
+    >
+      <RFIDInput label='RFID' />
+    </TooltipWrapper>
+    <TooltipWrapper
+      tooltipData={{
+        title: 'installation date',
+        message: 'This is the installation date',
+      }}
+    >
+      <DateInput label='Installation date:' />
+    </TooltipWrapper>
     <TooltipWrapper
       tooltipData={{ title: 'description', message: 'This is the description' }}
     >

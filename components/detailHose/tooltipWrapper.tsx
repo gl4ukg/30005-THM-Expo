@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   fieldContainer: {
-    marginBottom: 15,
+    marginBottom: 10,
     width: '88%',
   },
   iconContainer: {
