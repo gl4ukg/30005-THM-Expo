@@ -20,6 +20,7 @@ const RegisterHose = () => {
   const { hoseId } = useLocalSearchParams();
   const { state, dispatch } = useContext(AppContext);
   const [registerMultiple, setRegisterMultiple] = useState(false);
+  const [rfid, setRfid] = useState<string>('');
 
   const handleCheckboxChange = () => {
     setRegisterMultiple((prevState) => !prevState);
@@ -42,20 +43,31 @@ const RegisterHose = () => {
     }));
   };
 
+  const handleRFIDScanned = (newRfid: string | null) => {
+    if (newRfid) {
+      setRfid(newRfid);
+      setLocalState((prevState) => ({
+        ...prevState,
+        id: newRfid,
+      }));
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView>
         <View style={{ alignItems: 'center' }}>
           <Typography name='navigationBold' text='Register hose' />
           <Typography name='navigation'>
-            Hose ID: <Typography name={'navigationBold'} text={hoseId ?? ''} />
+            Hose ID
+            <Typography name={'navigationBold'} text={String(hoseId ?? '')} />
           </Typography>
         </View>
         <View>
           <TooltipWrapper
             tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
           >
-            <RFIDInput label='RFID' />
+            <RFIDInput label='RFID' onRFIDScanned={handleRFIDScanned} />
           </TooltipWrapper>
           <TooltipWrapper
             tooltipData={{
@@ -63,15 +75,13 @@ const RegisterHose = () => {
               message: 'This is the production date',
             }}
           >
-            <DateInput label='Production date:' />
-          </TooltipWrapper>
-          <TooltipWrapper
-            tooltipData={{
-              title: 'installation date',
-              message: 'This is the installation date',
-            }}
-          >
-            <DateInput label='Installation date:' />
+            <DateInput
+              label='Production date'
+              value={localState.generalHoseData?.productionDate}
+              onChange={(date) =>
+                handleInputChange('productionDate', date.toString())
+              }
+            />
           </TooltipWrapper>
         </View>
 
@@ -124,6 +134,7 @@ const RegisterHose = () => {
 };
 
 export default RegisterHose;
+
 const styles = StyleSheet.create({
   buttonContainer: {
     paddingHorizontal: 50,

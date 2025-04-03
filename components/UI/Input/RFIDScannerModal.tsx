@@ -65,15 +65,20 @@ const RFIDScannerModal: React.FC<RFIDScannerModalProps> = ({
               </>
             ) : (
               <>
-                <Typography
-                  name='sectionHeader'
-                  text='Scan RFID now'
-                  style={styles.title}
-                />
-                <Icon name='RFID' size='lg' color={colors.primary} />
-                {scanning && (
-                  <ActivityIndicator size='large' color={colors.primary} />
-                )}
+                <View style={styles.headerRow}>
+                  <Typography
+                    name='sectionHeader'
+                    text='Scan RFID now'
+                    style={styles.titleInRow}
+                  />
+                  <Icon name='RFID' size='md' color={colors.primary} />
+                </View>
+
+                <View style={styles.spinnerContainer}>
+                  {scanning && (
+                    <ActivityIndicator size='large' color={colors.primary} />
+                  )}
+                </View>
               </>
             )}
           </View>
@@ -96,7 +101,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.extended333,
   },
   modalView: {
-    height: height / 2,
+    height: height / 3,
     width: width - 40,
     margin: 20,
     backgroundColor: 'white',
@@ -114,12 +119,31 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   contentContainer: {
+    flex: 1,
     alignItems: 'center',
-    gap: 20,
+    justifyContent: 'flex-start',
+    width: '100%',
+    paddingVertical: 10,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  titleInRow: {
+    marginRight: 10,
   },
   title: {
-    marginBottom: 10,
+    marginBottom: 15,
     textAlign: 'center',
+  },
+  spinnerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

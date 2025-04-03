@@ -25,7 +25,6 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
   const previousRfid = useRef<string | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
 
-  // Check NFC support on mount
   const checkNfc = useCallback(async () => {
     try {
       const supported = await NfcManager.isSupported();
@@ -42,7 +41,6 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
     }
   }, []);
 
-  // Handle RFID scanning
   const handleRFIDScan = useCallback(async () => {
     if (!isNfcSupported || isCancelling) {
       return;
@@ -55,10 +53,12 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
     }
 
     previousRfid.current = rfid;
-    setModalVisible(true);
-    setScanning(true);
+
+    Platform.OS === 'android' && setRfid(null);
     setScanError(null);
     onRFIDScanned(null);
+    setModalVisible(true);
+    setScanning(true);
 
     if (isCancelling) {
       return;
@@ -101,7 +101,6 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
         setIsCancelling(false);
         setScanning(false);
 
-        // If no new RFID was set (rfid is null), restore previous value
         if (rfid === null && previousRfid.current !== null) {
           setRfid(previousRfid.current);
           onRFIDScanned(previousRfid.current);
