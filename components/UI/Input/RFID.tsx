@@ -21,9 +21,7 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
   const [isNfcSupported, setIsNfcSupported] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [scanError, setScanError] = useState<string | null>(null);
-  const isMounted = useRef(true);
   const previousRfid = useRef<string | null>(null);
-  const [isCancelling, setIsCancelling] = useState(false);
 
   const checkNfc = useCallback(async () => {
     try {
@@ -42,82 +40,56 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
   }, []);
 
   const handleRFIDScan = useCallback(async () => {
-    if (!isNfcSupported || isCancelling) {
-      return;
-    }
-
-    const isNfcEnabled = await NfcManager.isEnabled();
-    if (!isNfcEnabled) {
-      Alert.alert('NFC disabled', 'Please enable NFC in your device settings.');
-      return;
-    }
-
-    previousRfid.current = rfid;
-
-    Platform.OS === 'android' && setRfid(null);
-    setScanError(null);
-    onRFIDScanned(null);
-    setModalVisible(true);
-    setScanning(true);
-
-    if (isCancelling) {
-      return;
-    }
+    if (!isNfcSupported) return;
 
     try {
-      setIsCancelling(true);
-      await NfcManager.cancelTechnologyRequest();
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      if (!(await NfcManager.isEnabled())) {
+        Alert.alert(
+          'NFC disabled',
+          'Please enable NFC in your device settings.',
+        );
+        return;
+      }
+
+      previousRfid.current = rfid;
+      Platform.OS === 'android' && setRfid(null);
+      setScanError(null);
+      onRFIDScanned(null);
+      setModalVisible(true);
+      setScanning(true);
+
       await NfcManager.requestTechnology(NfcTech.Iso15693IOS);
       const tag = await NfcManager.getTag();
 
       if (tag?.id) {
-        const originalId = tag.id;
-        const reversedId = reverseHexString(originalId);
-        if (isMounted.current) {
-          setRfid(reversedId);
-          onRFIDScanned(reversedId);
-        }
+        const reversedId = reverseHexString(tag.id);
+        setRfid(reversedId);
+        onRFIDScanned(reversedId);
       } else {
-        if (isMounted.current) {
-          setScanError('No tag ID found.');
-        }
+        setScanError('No tag ID found.');
       }
     } catch (ex: any) {
-      if (isMounted.current) {
-        if (ex.message && !ex.message.includes('User cancelled')) {
-          setScanError('Error reading NFC tag.');
-          Alert.alert('Error reading NFC', 'Please try again.');
-        } else {
-          if (previousRfid.current !== null) {
-            setRfid(previousRfid.current);
-            onRFIDScanned(previousRfid.current);
-          }
-        }
+      if (ex.message && !ex.message.includes('User cancelled')) {
+        setScanError('Error reading NFC tag.');
+        Alert.alert('Error reading NFC', 'Please try again.');
+      } else if (previousRfid.current !== null) {
+        setRfid(previousRfid.current);
+        onRFIDScanned(previousRfid.current);
       }
     } finally {
-      if (isMounted.current) {
-        NfcManager.cancelTechnologyRequest();
-        setIsCancelling(false);
-        setScanning(false);
+      NfcManager.cancelTechnologyRequest();
+      setScanning(false);
 
-        if (rfid === null && previousRfid.current !== null) {
-          setRfid(previousRfid.current);
-          onRFIDScanned(previousRfid.current);
-        }
-
-        setTimeout(() => {
-          if (isMounted.current) {
-            setModalVisible(false);
-          }
-        }, 1000);
+      if (rfid === null && previousRfid.current !== null) {
+        setRfid(previousRfid.current);
+        onRFIDScanned(previousRfid.current);
       }
+
+      setTimeout(() => setModalVisible(false), 1000);
     }
-  }, [isNfcSupported, isCancelling, onRFIDScanned, rfid]);
+  }, [isNfcSupported, onRFIDScanned, rfid]);
 
   useEffect(() => {
-    let mounted = true;
-
     const initNFC = async () => {
       try {
         await NfcManager.start();
@@ -130,16 +102,12 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
     initNFC();
 
     return () => {
-      mounted = false;
-      isMounted.current = false;
       NfcManager.cancelTechnologyRequest();
     };
   }, [checkNfc]);
 
   const handlePress = () => {
-    if (!isCancelling) {
-      handleRFIDScan();
-    }
+    handleRFIDScan();
   };
 
   const handleModalClose = () => {
@@ -147,7 +115,6 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
     setModalVisible(false);
     setScanError(null);
     setScanning(false);
-    setIsCancelling(false);
     if (previousRfid.current !== null) {
       setRfid(previousRfid.current);
       onRFIDScanned(previousRfid.current);
@@ -186,10 +153,7 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
 };
 
 const styles = StyleSheet.create({
-  label: {
-    marginBottom: 5,
-    color: colors.extended666,
-  },
+  label: { marginBottom: 5, color: colors.extended666 },
   inputContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -202,9 +166,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     width: '100%',
   },
-  iconContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
+  iconContainer: { flexDirection: 'row', alignItems: 'center' },
   valueStyle: { color: colors.extended333 },
 });
