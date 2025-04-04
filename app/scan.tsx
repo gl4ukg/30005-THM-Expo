@@ -1,130 +1,135 @@
-import { Icon } from '@/components/Icon/Icon';
-import { Typography } from '@/components/typography';
-import { Input } from '@/components/UI/Input/input';
-import { colors } from '@/lib/tokens/colors';
-import { reverseHexString } from '@/lib/util/rfid';
-import { useEffect, useRef, useState } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {
-  Alert,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  TextInput,
   View,
+  StyleSheet,
+  Pressable,
+  Alert,
+  SafeAreaView,
+  TextInput,
+  Platform,
 } from 'react-native';
+import { Typography } from '@/components/typography';
+import { colors } from '@/lib/tokens/colors';
+import { Icon } from '@/components/Icon/Icon';
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
+import { reverseHexString } from '@/lib/util/rfid';
 import {
   Camera,
   useCameraDevice,
   useCameraPermission,
   useCodeScanner,
 } from 'react-native-vision-camera';
+import { Input } from '@/components/UI/Input/input';
+
 const Scan = () => {
   const inputRef = useRef<TextInput>(null);
   const device = useCameraDevice('back');
   const { hasPermission, requestPermission } = useCameraPermission();
+  const cameraRef = useRef<Camera>(null);
+  const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(null);
+  const [id, setId] = useState<string | null>(null);
+  const [rfid, setRfid] = useState<string | null>(null);
+  const [showRfidScanView, setShowRfidScanView] = useState(false);
+  const [isNfcSupported, setIsNfcSupported] = useState(false);
+  const [scanError, setScanError] = useState<string | null>(null);
+  const previousRfid = useRef<string | null>(null);
+
   const codeScanner = useCodeScanner({
     codeTypes: ['code-39'],
-    // codeTypes: ['code-128', 'code-39', 'code-93', 'ean-13'],
-    regionOfInterest: { x: 0, y: 0, width: 100, height: 50 },
     onCodeScanned: (codes) => {
-      if (typeof codes[0].value === 'string') {
-        setId(codes[0].value);
-        setScanMethod(null);
-      } else {
-        setId('');
-      }
-      console.log(`Scanned ${codes[0].type} ${codes[0].value} !`);
+      setId(typeof codes[0].value === 'string' ? codes[0].value : '');
+      setScanMethod(null);
     },
   });
 
-  if (!hasPermission) requestPermission();
-  const cameraRef = useRef<Camera>(null);
-  const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(null);
-  const [id, setId] = useState<null | string>('');
-  const [rfId, setRfId] = useState<null | string>(null);
-  const [isNfcSupported, setIsNfcSupported] = useState(false);
-  const [isNfcOn, setIsNfcOn] = useState(false);
-
   useEffect(() => {
-    const checkNfcSupport = async () => {
-      const isSupported = await NfcManager.isSupported();
-      setIsNfcSupported(isSupported);
-      if (!isSupported)
-        Alert.alert(
-          'NFC',
-          'RFID is not supported on this device, you will not be able to use it',
-        );
+    const initNFC = async () => {
+      try {
+        await NfcManager.start();
+        const supported = await NfcManager.isSupported();
+        setIsNfcSupported(supported);
+        if (!supported) {
+          Alert.alert('NFC not supported', 'This device does not support NFC.');
+        }
+      } catch (error) {
+        console.error('Error checking NFC support:', error);
+        Alert.alert('Error', 'Failed to check NFC support. Please try again.');
+      }
     };
-    checkNfcSupport();
+
+    initNFC();
+
+    return () => {
+      NfcManager.cancelTechnologyRequest();
+    };
   }, []);
 
-  // return <Typography name='navigation' text='Missing Permission' />;
-  if (device === undefined && scanMethod === 'Barcode')
-    Alert.alert(
-      'Your device does not have a camera.',
-      'Please use a device with a camera or use other scan methods.',
-      [
-        {
-          text: 'OK',
-          style: 'default',
-        },
-      ],
-      {
-        cancelable: false,
-      },
-    );
+  const handleRFIDScan = useCallback(async () => {
+    if (!isNfcSupported) return;
 
-  const handleRFIDPress = async () => {
-    setId('');
-    inputRef.current?.blur();
-    const isEnabled = await NfcManager.isEnabled();
-    if (!isEnabled) {
-      Alert.alert('NFC is not enabled ', 'Go to settings and enable NFC');
-      setScanMethod(null);
-      return;
+    try {
+      if (!(await NfcManager.isEnabled())) {
+        Alert.alert('NFC disabled', 'Enable NFC in your device settings.');
+        return;
+      }
+
+      previousRfid.current = rfid;
+      setScanError(null);
+      setId(null);
+      setShowRfidScanView(true);
+
+      await NfcManager.requestTechnology(NfcTech.Iso15693IOS);
+      const tag = await NfcManager.getTag();
+
+      if (tag?.id) {
+        const reversedId = reverseHexString(tag.id);
+        setRfid(reversedId);
+        setId(reversedId);
+        setScanMethod(null);
+      } else {
+        setScanError('No tag ID found.');
+      }
+    } catch (ex: any) {
+      console.log('Error Message:', ex.message);
+      if (ex.message && !ex.message.includes('User cancelled')) {
+        setScanError('Error reading NFC tag.');
+        Alert.alert('Error reading NFC', 'Please try again.');
+      } else if (previousRfid.current) {
+        setRfid(previousRfid.current);
+        setId(previousRfid.current);
+      }
+    } finally {
+      NfcManager.cancelTechnologyRequest();
+      setShowRfidScanView(false);
+
+      if (rfid === null && previousRfid.current) {
+        setRfid(previousRfid.current);
+        setId(previousRfid.current);
+      }
     }
+  }, [isNfcSupported, rfid]);
+
+  const handleRFIDPress = () => {
+    inputRef.current?.blur();
+    handleRFIDScan();
     setScanMethod('RFID');
-    setIsNfcOn(true);
-    readNdef();
   };
+
   const handleBarcodePress = () => {
     setId('');
     inputRef.current?.blur();
     setScanMethod('Barcode');
   };
-  async function readNdef() {
-    console.log('readNdef');
-    // console.log('NfcManager.requestTechnology', NfcManager.requestTechnology);\
-    try {
-      // register for the NFC tag with NDEF in it
-      const nfcRequest = await NfcManager.requestTechnology(NfcTech.NfcA);
-      console.log('nfcRequest', NfcManager.connect([NfcTech.NfcA]));
-      // the resolved tag object will contain `ndefMessage` property
-      if (!NfcManager.isSupported()) {
-        Alert.alert('NFC is not supported on this device');
-        throw new Error('NFC is not supported on this device');
-      }
-      const isSupported = await NfcManager.isEnabled();
-      console.log('isSupported', isSupported);
-      const tag = await NfcManager.getTag();
 
-      if (tag?.id) {
-        const originalId = tag.id;
-        const reversedId = reverseHexString(originalId);
-        setRfId(reversedId);
-        setId(reversedId);
-        setScanMethod(null);
-      }
-    } catch (ex) {
-      console.warn('Oops!', ex);
-    } finally {
-      // stop the nfc scanning
-      NfcManager.cancelTechnologyRequest();
-      // close the session
-      NfcManager.close();
-    }
+  if (!hasPermission) requestPermission();
+
+  if (device === undefined && scanMethod === 'Barcode') {
+    Alert.alert(
+      'Your device does not have a camera.',
+      'Please use a device with a camera or use other scan methods.',
+    );
   }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.headerContainer}>
@@ -143,8 +148,7 @@ const Scan = () => {
         <View style={styles.inputsWrapper}>
           <View style={styles.inputs}>
             <Input
-              label=''
-              value={`${id}`}
+              value={id || ''}
               onChangeText={setId}
               type='numeric'
               ref={inputRef}
@@ -202,79 +206,58 @@ const Scan = () => {
               </Pressable>
             </View>
           </View>
-          <Pressable
-            style={({ pressed }) => [
-              styles.searchButton,
-              pressed && styles.searchButtonPressed,
-            ]}
-            onPress={() => {}}
-          >
+          <Pressable style={styles.searchButton} onPress={() => {}}>
             <Icon name='Search' color={colors.primary25} size='sm' />
           </Pressable>
         </View>
       </View>
       <View style={styles.readerContainer}>
-        {device !== undefined && scanMethod === 'Barcode' && (
+        {device && scanMethod === 'Barcode' && (
           <Camera
             ref={cameraRef}
             style={styles.camera}
-            focusable={true}
-            device={device!}
+            device={device}
             codeScanner={codeScanner}
             isActive={scanMethod === 'Barcode'}
           />
         )}
-        {scanMethod === 'RFID' && isNfcOn && (
+        {scanMethod === 'RFID' && showRfidScanView && (
           <View style={styles.rfidContainer}>
             <Icon name='RFID' size='lg' />
-            <Typography name='sectionHeaderCapslock' text='Scan RFID now' />
+            <Typography
+              name='sectionHeaderCapslock'
+              text={Platform.OS === 'android' ? 'Scan RFID now' : ''}
+            />
           </View>
         )}
       </View>
     </SafeAreaView>
   );
 };
+
 export default Scan;
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
+  safeArea: { flex: 1 },
   headerContainer: {
     position: 'fixed',
     top: 0,
     width: '100%',
-    height: 'auto',
     backgroundColor: colors.lightContrast,
     gap: 20,
     paddingHorizontal: 20,
     paddingVertical: 30,
   },
-  header: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 10,
-  },
-  headerText: {
-    textAlign: 'center',
-  },
+  header: { justifyContent: 'center', alignItems: 'center', gap: 10 },
+  headerText: { textAlign: 'center' },
   searchButton: {
     width: 36,
     height: 36,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  searchButtonPressed: {
-    backgroundColor: colors.dashbordYellow,
-  },
-  inputsWrapper: {
-    flexDirection: 'row',
-    gap: 5,
-  },
-  inputs: {
-    gap: 5,
-    flex: 1,
-  },
+  inputsWrapper: { flexDirection: 'row', gap: 5 },
+  inputs: { gap: 5, flex: 1 },
   switch: {
     marginLeft: 30,
     flexDirection: 'row',
@@ -303,26 +286,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flex: 1,
   },
-
-  switchText: {
-    color: colors.extended333,
-  },
-  switchTextActive: {
-    color: colors.white,
-  },
-  // there is an issue with the camera view, https://github.com/mrousavy/react-native-vision-camera/issues/3237
-  // it is not rendering in right place on the first render, overflow: 'hidden' fixes it for now
+  switchText: { color: colors.extended333 },
+  switchTextActive: { color: colors.white },
   readerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
   },
-  camera: {
-    flex: 1,
-    width: '100%',
-    borderColor: colors.black,
-  },
+  camera: { flex: 1, width: '100%', borderColor: colors.black },
   rfidContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -330,5 +302,3 @@ const styles = StyleSheet.create({
     gap: 20,
   },
 });
-
-//5AB35DA0500104E0 e0040150a05db35a
