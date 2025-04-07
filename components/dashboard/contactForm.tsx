@@ -10,18 +10,21 @@ import { ListTable } from './listTable';
 import { router } from 'expo-router';
 import { useAppContext } from '@/context/ContextProvider';
 import { emailValidation } from '@/lib/util/validation';
+import { LinkButton } from '../UI/Button/linkButton';
 
 interface Props {
   title: string;
   subTitle: string;
   hoses: HoseType[];
+  fromScanPath?: boolean;
   onSave: (arg0: any) => void;
   onAdd?: (arg0: any) => void;
 }
-export const ContactTess: React.FC<Props> = ({
+export const ContactForm: React.FC<Props> = ({
   title,
   subTitle,
   hoses,
+  fromScanPath = false,
   onSave,
 }) => {
   const { state } = useAppContext();
@@ -34,6 +37,12 @@ export const ContactTess: React.FC<Props> = ({
   const [selectedIds, setSelectedIds] = useState<string[]>(
     hoses.map((h) => h.id),
   );
+
+  const responsePathMapping: Record<string, string> = {
+    'Scrap report': 'Add hose to this scrap report',
+    RFQ: 'Add hose to RFQ',
+    default: 'Add hose to this request',
+  };
 
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
 
@@ -156,6 +165,13 @@ export const ContactTess: React.FC<Props> = ({
               onSelectionChange={handleSelectionChange}
               canSelect={true}
             />
+            {fromScanPath && (
+              <LinkButton
+                variant='light'
+                title={`${responsePathMapping[subTitle ?? 'default']}`}
+                onPress={() => router.push('/scan')}
+              />
+            )}
           </>
         )}
       />

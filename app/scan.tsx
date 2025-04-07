@@ -1,4 +1,6 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { RelativePathString, router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router/build/hooks';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -20,8 +22,20 @@ import {
   useCodeScanner,
 } from 'react-native-vision-camera';
 import { Input } from '@/components/UI/Input/input';
+import { useAppContext } from '@/context/ContextProvider';
 
 const Scan = () => {
+  const { title } = useLocalSearchParams() as { title?: string };
+  const { dispatch } = useAppContext();
+
+  const titleToRouteParam: Record<string, string> = {
+    'Order hoses': 'rfq',
+    'Scrap hoses': 'scrap',
+  };
+
+  const routeParam = titleToRouteParam[title ?? 'Order hoses'];
+  const path = `/dashbord/actions/${routeParam}?source=scan`;
+
   const inputRef = useRef<TextInput>(null);
   const device = useCameraDevice('back');
   const { hasPermission, requestPermission } = useCameraPermission();
@@ -137,7 +151,7 @@ const Scan = () => {
           <Typography
             name='navigationBold'
             style={styles.headerText}
-            text='Register hose or Equipment'
+            text={title || 'Register hose or Equipment'}
           />
           <Typography
             name='navigation'
@@ -206,7 +220,19 @@ const Scan = () => {
               </Pressable>
             </View>
           </View>
-          <Pressable style={styles.searchButton} onPress={() => {}}>
+          <Pressable
+            style={({ pressed }) => [
+              styles.searchButton,
+              pressed && styles.searchButtonPressed,
+            ]}
+            onPress={() => {
+              dispatch({
+                type: 'SELECT_HOSE',
+                payload: `${id}`,
+              });
+              router.push(`${path}` as RelativePathString);
+            }}
+          >
             <Icon name='Search' color={colors.primary25} size='sm' />
           </Pressable>
         </View>
@@ -267,6 +293,9 @@ const styles = StyleSheet.create({
     padding: 3,
     borderRadius: 3,
     gap: 20,
+  },
+  searchButtonPressed: {
+    backgroundColor: colors.dashbordYellow,
   },
   switchButton: {
     flexDirection: 'row',
