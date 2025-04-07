@@ -1,4 +1,4 @@
-import { ContactTess } from '@/components/dashboard/contactTess';
+import { ContactForm } from '@/components/dashboard/contactForm';
 import { useAppContext } from '@/context/ContextProvider';
 import { useLocalSearchParams } from 'expo-router';
 
@@ -19,7 +19,7 @@ const Action: React.FC<Props> = (props) => {
     console.log('saveMessage', formData);
   }
   return (
-    <ContactTess
+    <ContactForm
       title={'Contact TESS Team'}
       subTitle={'Message details'}
       hoses={hoses}

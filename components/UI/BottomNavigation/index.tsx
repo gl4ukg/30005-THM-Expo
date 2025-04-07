@@ -4,7 +4,7 @@ import { OpenMenu } from '@/components/UI/BottomNavigation/openMenu';
 import { NavMenu } from '@/components/UI/NavMenu/navMenu';
 import { colors } from '@/lib/tokens/colors';
 import { Link, useRouter } from 'expo-router';
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -15,34 +15,41 @@ import {
 } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AppContext } from '@/context/Reducer';
 
 interface BottomNavigationProps {}
 export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
   const [isOpen, setIsOpen] = useState(false);
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { dispatch } = useContext(AppContext);
+
+  const handleLinkPress = (to: string) => {
+    dispatch({ type: 'DESELECT_ALL_HOSES' });
+    setIsOpen(false);
+  };
 
   return (
     <View style={[styles.modal, isOpen && styles.modalOpen]}>
       <View style={{ bottom: insets.bottom }}>
         <Collapsible collapsed={!isOpen} style={[styles.collapsible]}>
           <NavMenu
-            handleLinkPress={() => setIsOpen(false)}
+            handleLinkPress={() => handleLinkPress}
             elements={[
               {
                 title: 'Download / sync data',
                 to: '/(app)/dashbord/hoses',
-                icon: () => <Icon name='Download' color='#009640' />,
+                icon: () => <Icon name='Download' color={colors.primary} />,
               },
               {
                 title: 'Upload your data',
                 to: '/(app)/dashbord',
-                icon: () => <Icon name='Upload' color='#009640' />,
+                icon: () => <Icon name='Upload' color={colors.primary} />,
               },
               {
                 id: 'Inspection',
                 title: 'Inspection',
-                icon: () => <Icon name='Search' color='#009640' />,
+                icon: () => <Icon name='Search' color={colors.primary} />,
                 links: [
                   {
                     title: 'Inspect',
@@ -65,32 +72,32 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               {
                 title: 'Alerts /KPIs',
                 to: '/(app)/user',
-                icon: () => <Icon name='Meter' color='#009640' />,
+                icon: () => <Icon name='Meter' color={colors.primary} />,
               },
               {
                 title: 'Order hoses',
-                to: '/(app)/dashbord/actions',
-                icon: () => <Icon name='Cart' color='#009640' />,
+                to: '/scan?title=Order%20hoses',
+                icon: () => <Icon name='Cart' color={colors.primary} />,
               },
               {
                 title: 'Hose replacement & pressure testing',
                 to: '/(app)/user',
-                icon: () => <Icon name='Task' color='#009640' />,
+                icon: () => <Icon name='Task' color={colors.primary} />,
               },
               {
                 title: 'Report ID as scrapped',
-                to: '/(app)/user',
-                icon: () => <Icon name='Trash' color='#009640' />,
+                to: '/scan?title=Scrap%20hoses',
+                icon: () => <Icon name='Trash' color={colors.primary} />,
               },
               {
                 title: 'Send mail',
                 to: '/(app)/user',
-                icon: () => <Icon name='Email' color='#009640' />,
+                icon: () => <Icon name='Email' color={colors.primary} />,
               },
               {
                 title: 'Settings',
                 to: '/(app)/user',
-                icon: () => <Icon name='Settings' color='#009640' />,
+                icon: () => <Icon name='Settings' color={colors.primary} />,
               },
             ]}
           />

@@ -1,9 +1,10 @@
-import { ContactTess } from '@/components/dashboard/contactTess';
+import { ContactForm } from '@/components/dashboard/contactForm';
 import { useAppContext } from '@/context/ContextProvider';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router/build/hooks';
 
 interface Props {}
 const Action: React.FC<Props> = (props) => {
+  const { source } = useLocalSearchParams();
   const { state } = useAppContext();
   const hoses = state.data.assignedUnits[
     state.data.selectedUnitId!
@@ -19,11 +20,12 @@ const Action: React.FC<Props> = (props) => {
     console.log('saveScrap', formData);
   }
   return (
-    <ContactTess
+    <ContactForm
       title={'Scrap hoses'}
       subTitle={'Scrap report'}
       hoses={hoses}
       onSave={saveScrapReport}
+      fromScanPath={source === 'scan'}
       onAdd={function (arg0: any): void {
         throw new Error('Function not implemented.');
       }}
