@@ -15,7 +15,13 @@ import EditUniversalHoseData from '@/components/detailView/edit/EditUniversalHos
 import { GHD, TPN, UHD } from '@/components/detailView/types';
 import { Typography } from '@/components/typography';
 import { AppContext } from '@/context/Reducer';
-import { Hose } from '@/context/state';
+import {
+  Hose,
+  isMultiSelection,
+  isSingleSelection,
+  SelectionActionsType,
+  SingleSelection,
+} from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useRef, useState } from 'react';
@@ -42,14 +48,16 @@ const HoseDetails = () => {
   const { hoseId } = useLocalSearchParams();
 
   const { state, dispatch } = useContext(AppContext);
-  const [action, setAction] = useState<Option<string> | null>(null);
+  const [action, setAction] = useState<Option<SingleSelection['type']> | null>(
+    null,
+  );
   const scrollViewRef = useRef<ScrollView>(null);
 
   const [editMode, setEditMode] = useState(false);
   const [hoseData, setHoseData] = useState<Hose | undefined>(
     state.data.hoses.find((hose) => hose.id === hoseId),
   );
-
+  console.log(state.data.selection);
   const router = useRouter();
 
   if (hoseData === undefined) {
@@ -82,40 +90,46 @@ const HoseDetails = () => {
     setEditMode(false);
   };
 
-  const handleAction = (value: string) => {
-    if (!hoseData.id) return;
-    setAction({ label: value, value: value });
-    if (!state.data.selection) {
-      dispatch({
-        type: 'SELECT_HOSE_SINGEL_SELECT',
-        payload: hoseData.id,
-      });
-    }
+  const handleAction = (value: SingleSelection['type'] | 'EDIT_HOSE') => {
+    if (value === 'EDIT_HOSE') {
+      setEditMode(true);
+      return;
+    } else {
+      if (!hoseData.id) return;
+      setAction({ label: value, value: value });
+      if (!state.data.selection) {
+        dispatch({
+          type: 'SELECT_ONE_HOSE',
+          payload: {
+            type: value,
+            id: hoseData.id,
+          },
+        });
+      }
 
-    switch (value) {
-      case 'edit':
-        setEditMode(true);
-        break;
-      case 'order':
-        router.push({
-          pathname: `/dashbord/actions/rfq`,
-          params: { hoseId: hoseData.id },
-        });
-        break;
-      case 'scrap':
-        router.push({
-          pathname: `/dashbord/actions/scrap`,
-          params: { hoseId: hoseData.id },
-        });
-        break;
-      case 'contact':
-        router.push({
-          pathname: `/dashbord/actions/contact`,
-          params: { hoseId: hoseData.id },
-        });
-        break;
-      default:
-        break;
+      switch (value) {
+        case 'RFQ':
+          router.push({
+            pathname: `/dashbord/actions/rfq`,
+            params: { hoseId: hoseData.id },
+          });
+          break;
+        case 'SCRAP':
+          router.push({
+            pathname: `/dashbord/actions/scrap`,
+            params: { hoseId: hoseData.id },
+          });
+          break;
+        case 'CONTACT':
+          router.push({
+            pathname: `/dashbord/actions/contact`,
+            params: { hoseId: hoseData.id },
+          });
+          break;
+        default:
+          console.error('action not found');
+          break;
+      }
     }
   };
 
@@ -127,7 +141,7 @@ const HoseDetails = () => {
     },
     {
       label: 'Edit hose data',
-      value: 'edit',
+      value: 'EDIT_HOSE',
       icon: 'Edit',
     },
     {
@@ -158,10 +172,10 @@ const HoseDetails = () => {
 
   return (
     <View style={styles.container}>
-      {state.data.selection && !editMode && (
+      {!isMultiSelection(state.data.selection) && !editMode && (
         <ActionsFab
           selected={action?.value || null}
-          options={options}
+          options={options as Option<SelectionActionsType>[]}
           onChange={handleAction}
           menuTitle='Actions'
         />

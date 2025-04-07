@@ -81,7 +81,7 @@ export const isMultiSelection = (
 ): selection is MultiSelection => !!selection && 'ids' in selection;
 
 export const isSingleSelection = (
-  selection: HoseSelection,
+  selection: HoseSelection | null,
 ): selection is SingleSelection => !!selection && 'id' in selection;
 
 interface DataState {
