@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { TPN } from '../types';
-import { SelectField } from '../../detailHose/SelectField';
-import { Typography } from '@/components/typography';
 import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
+import { Typography } from '@/components/typography';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { SelectField } from '../../detailHose/SelectField';
+import { TPN } from '../types';
 
 type EditTessPartNumbersProps = {
   tessPartNumbersData: TPN;

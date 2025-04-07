@@ -18,7 +18,7 @@ interface AuthState {
   token: null | string;
 }
 
-interface Hose extends Record<string, string | boolean | number> {
+export interface Hose extends Record<string, string | boolean | number> {
   id: string;
   name: string;
   position: string;
@@ -50,23 +50,65 @@ export interface ActionSCRAP extends Action {
 export interface ActionCONTACT extends Action {
   type: 'CONTACT';
 }
-export type ActionsType = 'RFQ' | 'SCRAP' | 'CONTACT';
+export type SelectionActionsType = 'RFQ' | 'SCRAP' | 'CONTACT';
+
+type ManyHosesSelection<T extends SelectionActionsType> = {
+  type: T;
+  ids: string[];
+};
+type SingleHoseSelection<T extends SelectionActionsType> = {
+  type: T;
+  id: string;
+};
+type ScrapSingleHoseSelection = SingleHoseSelection<'SCRAP'>;
+type ContactSingleHoseSelection = SingleHoseSelection<'CONTACT'>;
+type RFQSingleHoseSelection = SingleHoseSelection<'RFQ'>;
+type ScrapMultiHosesSelection = ManyHosesSelection<'SCRAP'>;
+type ContactMultiHosesSelection = ManyHosesSelection<'CONTACT'>;
+type RFQMultiHosesSelection = ManyHosesSelection<'RFQ'>;
+export type SingleSelection =
+  | ScrapSingleHoseSelection
+  | ContactSingleHoseSelection
+  | RFQSingleHoseSelection;
+export type MultiSelection =
+  | ScrapMultiHosesSelection
+  | ContactMultiHosesSelection
+  | RFQMultiHosesSelection;
+export type HoseSelection = SingleSelection | MultiSelection;
+
+export const isMultiSelection = (
+  selection: HoseSelection | null,
+): selection is MultiSelection => !!selection && 'ids' in selection;
+
+export const isSingleSelection = (
+  selection: HoseSelection,
+): selection is SingleSelection => !!selection && 'id' in selection;
+
 interface DataState {
   // define data state properties
+  // assignedUnits: {
+  //   [unitId: string]: {
+  //     unitName: string;
+  //     hoses: Hose[];
+  //   };
+  // };
+  hoses: Hose[];
   assignedUnits: {
-    [unitId: string]: {
-      unitName: string;
-      hoses: Hose[];
-    };
-  };
-  selectedHoses: string[] | string;
-  selectedUnitId: null | string;
-  actions: {
-    RFQ: ActionRFQ[];
-    SCRAP: ActionSCRAP[];
-    CONTACT: ActionCONTACT[];
-  };
-  aktiveDraft: null | (Omit<Action, 'status'> & { status: 'DRAFT' });
+    unitId: string;
+    unitName: string;
+  }[];
+  workingUnitId: null | string;
+
+  selection: HoseSelection | null;
+
+  // selectedHoses: string[] | string;
+  // selectedUnitId: null | string;
+  // actions: {
+  //   RFQ: ActionRFQ[];
+  //   SCRAP: ActionSCRAP[];
+  //   CONTACT: ActionCONTACT[];
+  // };
+  // aktiveDraft: null | (Omit<Action, 'status'> & { status: 'DRAFT' });
 }
 
 interface SettingsState {
@@ -87,41 +129,10 @@ const initialAuthState: AuthState = {
 
 const initialDataState: DataState = {
   // initial data state values
-  assignedUnits: {
-    testPrinces: {
-      unitName: 'Test Princes',
-      hoses: mockedData as any,
-    },
-  },
-  selectedUnitId: 'testPrinces',
-  selectedHoses: '',
-  actions: {
-    RFQ: [
-      {
-        id: '3027725',
-        createdAt: '311224',
-        actionId: '1',
-        actionHoseIdList: [],
-        status: 'DRAFT',
-        position: 'Test Princes',
-        pressureTested: false,
-        type: 'RFQ',
-      },
-      {
-        id: '3027122',
-        createdAt: '311224',
-        actionId: '1',
-        actionHoseIdList: [],
-        status: 'SENDT',
-        position: 'Test Princes',
-        pressureTested: true,
-        type: 'RFQ',
-      },
-    ],
-    SCRAP: [],
-    CONTACT: [],
-  },
-  aktiveDraft: null,
+  hoses: [],
+  assignedUnits: [],
+  workingUnitId: null,
+  selection: null,
 };
 
 const initialSettingsState: SettingsState = {

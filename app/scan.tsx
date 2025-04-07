@@ -19,6 +19,7 @@ import {
   useCameraPermission,
   useCodeScanner,
 } from 'react-native-vision-camera';
+
 const Scan = () => {
   const inputRef = useRef<TextInput>(null);
   const device = useCameraDevice('back');

@@ -155,7 +155,7 @@ const Dashbord = () => {
   useFocusEffect(
     useCallback(() => {
       dispatch({
-        type: 'DESELECT_ALL_HOSES',
+        type: 'FINISH_SELECTION',
       });
     }, [dispatch]),
   );

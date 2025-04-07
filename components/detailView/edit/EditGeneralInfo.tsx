@@ -1,14 +1,12 @@
+import { DateInput } from '@/components/UI/Input/DateInput';
+import { RFIDInput } from '@/components/UI/Input/RFID';
+import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Input } from '../../UI/Input/input';
 import { SelectField } from '../../detailHose/SelectField';
 import { RadioGroup } from '../../detailHose/radioGroup';
 import { GHD } from '../types';
-import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
-import Tooltip from '@/components/Icon/icons/Tooltip';
-import { Icon } from '@/components/Icon/Icon';
-import { DateInput } from '@/components/UI/Input/DateInput';
-import { RFIDInput } from '@/components/UI/Input/RFID';
 
 type EditGeneralInfoProps = {
   generalInfo: GHD;

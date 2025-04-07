@@ -42,7 +42,7 @@ export const ContactTess: React.FC<Props> = ({
     } else {
       setSelectedIds([...selectedIds, id]);
       dispatch({
-        type: 'SELECT_HOSE',
+        type: 'SELECT_HOSE_SINGEL_SELECT',
         payload: id,
       });
     }

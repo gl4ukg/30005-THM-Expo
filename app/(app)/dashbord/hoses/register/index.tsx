@@ -1,7 +1,7 @@
 import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
 import Documents from '@/components/detailView/Documents';
 import EditGeneralInfo from '@/components/detailView/edit/EditGeneralInfo';
-import EditMaintananceInfo from '@/components/detailView/edit/EditMaintananceInfo';
+import EditMaintananceInfo from '@/components/detailView/edit/EditMaintenanceInfo';
 import EditTessPartNumbers from '@/components/detailView/edit/EditTessPartNumbers';
 import EditUniversalHoseData from '@/components/detailView/edit/EditUniversalHoseData';
 import { GHD, HID, HoseData, TPN, UHD } from '@/components/detailView/types';

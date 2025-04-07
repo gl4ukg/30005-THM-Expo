@@ -1,25 +1,25 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
-import { View, ScrollView } from 'react-native';
-import { mockedData } from '../../../../../context/mocked';
-import DetailsHeader from '@/components/detailView/DetailsHeader';
-import GeneralInfo from '@/components/detailView/GeneralInfo';
-import EditGeneralInfo from '@/components/detailView/edit/EditGeneralInfo';
-import UniversalHoseData from '@/components/detailView/UniversalHoseData';
-import EditUniversalHoseData from '@/components/detailView/edit/EditUniversalHoseData';
-import TessPartNumbers from '@/components/detailView/TessPartNumbers';
-import EditTessPartNumbers from '@/components/detailView/edit/EditTessPartNumbers';
 import { ButtonTHS } from '@/components/UI';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import Structure from '@/components/detailView/Structure';
-import HistoryView from '@/components/detailView/History';
-import { GHD, UHD, TPN } from '@/components/detailView/types';
-import { AppContext } from '@/context/Reducer';
-import MaintananceInfo from '@/components/detailView/MaintananceInfo';
-import EditMaintananceInfo from '@/components/detailView/edit/EditMaintananceInfo';
-import Documents from '@/components/detailView/Documents';
-import { colors } from '@/lib/tokens/colors';
-import { StyleSheet } from 'react-native';
 import { ActionsFab, Option } from '@/components/UI/ActionMenu/fab';
+import DetailsHeader from '@/components/detailView/DetailsHeader';
+import Documents from '@/components/detailView/Documents';
+import GeneralInfo from '@/components/detailView/GeneralInfo';
+import HistoryView from '@/components/detailView/History';
+import MaintenanceInfo from '@/components/detailView/MaintenanceInfo';
+import Structure from '@/components/detailView/Structure';
+import TessPartNumbers from '@/components/detailView/TessPartNumbers';
+import UniversalHoseData from '@/components/detailView/UniversalHoseData';
+import EditGeneralInfo from '@/components/detailView/edit/EditGeneralInfo';
+import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
+import EditTessPartNumbers from '@/components/detailView/edit/EditTessPartNumbers';
+import EditUniversalHoseData from '@/components/detailView/edit/EditUniversalHoseData';
+import { GHD, TPN, UHD } from '@/components/detailView/types';
+import { Typography } from '@/components/typography';
+import { AppContext } from '@/context/Reducer';
+import { Hose } from '@/context/state';
+import { colors } from '@/lib/tokens/colors';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useContext, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 const renderComponent = (
   Component: React.FC<any>,
@@ -40,42 +40,54 @@ export type Section = {
 
 const HoseDetails = () => {
   const { hoseId } = useLocalSearchParams();
+
   const { state, dispatch } = useContext(AppContext);
   const [action, setAction] = useState<Option<string> | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const hoseData =
-    state.data.assignedUnits.hoses?.find((hose) => hose.id === hoseId) ||
-    mockedData.find((hose) => hose.id === hoseId);
-
   const [editMode, setEditMode] = useState(false);
-  const [localState, setLocalState] = useState(hoseData);
+  const [hoseData, setHoseData] = useState<Hose | undefined>(
+    state.data.hoses.find((hose) => hose.id === hoseId),
+  );
 
   const router = useRouter();
 
-  const handleInputChange = (field: string, value: string) => {
-    setLocalState((prevState) => ({
-      ...prevState,
-      [field]: value,
-    }));
+  if (hoseData === undefined) {
+    return (
+      <View style={styles.container}>
+        <Typography name={'navigationBold'} text='Hose not found' />
+      </View>
+    );
+  }
+  hoseData;
+  const handleInputChange = (field: keyof Hose, value: string) => {
+    setHoseData(
+      (prevState) =>
+        ({
+          ...prevState,
+          [field]: value,
+        }) as Hose,
+    );
   };
 
   const toggleEditMode = () => setEditMode((prev) => !prev);
 
   const handleSave = () => {
+    if (hoseData.id === undefined) return;
+
     dispatch({
       type: 'SAVE_HOSE_DATA',
-      payload: { hoseId: hoseData.id, hoseData: localState },
+      payload: { hoseId: hoseData.id, hoseData },
     });
     setEditMode(false);
   };
 
   const handleAction = (value: string) => {
+    if (!hoseData.id) return;
     setAction({ label: value, value: value });
-
-    if (!state.data.selectedHoses.includes(hoseData.id)) {
+    if (!state.data.selection) {
       dispatch({
-        type: 'SELECT_HOSE',
+        type: 'SELECT_HOSE_SINGEL_SELECT',
         payload: hoseData.id,
       });
     }
@@ -135,9 +147,18 @@ const HoseDetails = () => {
     },
   ];
 
+  const getStructure = (hose: Hose) => {
+    // TODO how to get structure?
+    const structure: string[] = [];
+    if (typeof hose.Customer === 'string') structure.push(hose.Customer);
+    if (hose.unit) structure.push(hose.unit as string);
+    if (hose.position) structure.push(hose.position as string);
+    return structure;
+  };
+
   return (
     <View style={styles.container}>
-      {!Array.isArray(state.data.selectedHoses) && !editMode && (
+      {state.data.selection && !editMode && (
         <ActionsFab
           selected={action?.value || null}
           options={options}
@@ -147,28 +168,28 @@ const HoseDetails = () => {
       )}
       <ScrollView ref={scrollViewRef}>
         <DetailsHeader
-          id={localState.id}
-          date={localState.prodDate}
-          missingData={!localState.description}
+          id={hoseData.id}
+          date={hoseData.prodDate}
+          missingData={hoseData.missingData}
         />
 
         {renderComponent(GeneralInfo, EditGeneralInfo, {
-          generalInfo: localState as GHD,
+          generalInfo: hoseData,
           onInputChange: handleInputChange,
           editMode,
         })}
         {renderComponent(UniversalHoseData, EditUniversalHoseData, {
-          universalHoseData: localState as UHD,
+          universalHoseData: hoseData,
           onInputChange: handleInputChange,
           editMode,
         })}
         {renderComponent(TessPartNumbers, EditTessPartNumbers, {
-          tessPartNumbersData: localState as TPN,
+          tessPartNumbersData: hoseData,
           onInputChange: handleInputChange,
           editMode,
         })}
-        {renderComponent(MaintananceInfo, EditMaintananceInfo, {
-          hoseData: localState,
+        {renderComponent(MaintenanceInfo, EditMaintenanceInfo, {
+          hoseData: hoseData,
           onInputChange: handleInputChange,
           editMode,
         })}
@@ -176,12 +197,12 @@ const HoseDetails = () => {
           <>
             <Documents />
             <Structure
-              structure={[
-                hoseData.Customer,
-                hoseData.s1PlantVesselUnit,
-                hoseData.S2Equipment,
-              ]}
-              name={hoseData.Description}
+              structure={getStructure(hoseData)}
+              name={
+                typeof hoseData.Description === 'string'
+                  ? hoseData.Description
+                  : ''
+              }
             />
             <HistoryView />
           </>
