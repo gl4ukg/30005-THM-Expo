@@ -2,6 +2,7 @@ import { ContactTess } from '@/components/dashboard/contactTess';
 import { useAppContext } from '@/context/ContextProvider';
 import { Hose, isMultiSelection, isSingleSelection } from '@/context/state';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
+import { Alert } from 'react-native';
 
 interface Props {}
 const Action: React.FC<Props> = (props) => {
@@ -24,23 +25,35 @@ const Action: React.FC<Props> = (props) => {
     rfq: string | null;
     selectedIds: string[];
   }) {
-    console.log('saveRfq', formData);
+    Alert.alert(
+      'Save',
+      `
+      
+      Comment: ${formData.comment} 
+      
+      Name: ${formData.name} 
+      
+      Mail: ${formData.mail} Phone: ${formData.phone} RFQ: ${formData.rfq}
+
+      Selected ids: ${formData.selectedIds.join(',')}
+      `,
+    );
   }
   let pageData = {
     title: '',
     subTitle: '',
   };
-  if (action === 'contact') {
+  if (action === 'CONTACT') {
     pageData = {
       title: 'Contact TESS Team',
       subTitle: 'Message details',
     };
-  } else if (action === 'rfq') {
+  } else if (action === 'RFQ') {
     pageData = {
       title: 'Order hoses - RFQ',
       subTitle: 'RFQ',
     };
-  } else if (action === 'scrap') {
+  } else if (action === 'SCRAP') {
     pageData = {
       title: 'Scrap hoses',
       subTitle: 'Scrap report',

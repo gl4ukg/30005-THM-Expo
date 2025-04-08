@@ -3,7 +3,7 @@ import {
   ActionCONTACT,
   ActionRFQ,
   ActionSCRAP,
-  SelectionActionsType,
+  SingleSelectionActionsType,
   AppState,
   AuthState,
   DataState,
@@ -52,13 +52,13 @@ type DataAction =
   | ActionWithPayload<'SET_WORKING_UNIT', string>
   | ActionWithPayload<
       'REMOVE_ACTION',
-      { id: string; actionType: SelectionActionsType }
+      { id: string; actionType: SingleSelectionActionsType }
     >
   | ActionWithPayload<
       'ADD_ACTION',
       {
         action: Action & (ActionRFQ | ActionCONTACT | ActionSCRAP);
-        actionType: SelectionActionsType;
+        actionType: SingleSelectionActionsType;
       }
     >
   | ActionWithPayload<'SET_HOSE_DATA', Hose[]>
@@ -184,7 +184,7 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
         selection: null,
       };
     default: {
-      console.error('Unknown action type:', action.type);
+      // console.error('Unknown action type:', action.type);
       return state;
     }
   }
@@ -210,7 +210,7 @@ const rootReducer: React.Reducer<AppState, AppAction> = combineReducers({
   auth: authReducer,
   data: dataReducer,
   settings: settingReducer,
-} as any);
+}) as any; // TODO
 
 const AppContext = createContext<{
   state: AppState;

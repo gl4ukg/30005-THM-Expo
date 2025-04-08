@@ -1,6 +1,6 @@
 import { HoseType } from '@/app/(app)/dashbord/hoses/[filter]';
 import { colors } from '@/lib/tokens/colors';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { ButtonTHS } from '../UI';
 import { Input } from '../UI/Input/input';
@@ -9,6 +9,7 @@ import { Typography } from '../typography';
 import { ListTable } from './listTable';
 import { router } from 'expo-router';
 import { useAppContext } from '@/context/ContextProvider';
+import { isMultiSelection } from '@/context/state';
 
 interface Props {
   title: string;
@@ -25,6 +26,7 @@ export const ContactTess: React.FC<Props> = ({
   hoses,
   onSave,
 }) => {
+  console.log('hoses', title);
   const [comment, setComment] = useState('');
   const [name, setName] = useState('');
   const [mail, setMail] = useState('');
@@ -33,8 +35,14 @@ export const ContactTess: React.FC<Props> = ({
   const [selectedIds, setSelectedIds] = useState<string[]>(
     hoses.map((h) => h.id),
   );
+  const originallySelectedHoses = useMemo(() => hoses, []);
   const { state, dispatch } = useAppContext();
   const handleSelectionChange = (id: string) => {
+    if (isMultiSelection(state.data.selection))
+      dispatch({
+        type: 'TOGGLE_HOSE_MULTI_SELECTION',
+        payload: id,
+      });
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter((i) => i !== id));
     } else {
@@ -109,6 +117,7 @@ export const ContactTess: React.FC<Props> = ({
               <ButtonTHS
                 title={title}
                 size='sm'
+                disabled={selectedIds.length === 0}
                 onPress={() =>
                   onSave({
                     comment,
@@ -133,7 +142,7 @@ export const ContactTess: React.FC<Props> = ({
         renderItem={() => (
           <>
             <ListTable
-              items={hoses}
+              items={originallySelectedHoses}
               selectedIds={selectedIds}
               onSelectionChange={handleSelectionChange}
               canSelect={true}

@@ -12,20 +12,18 @@ import EditGeneralInfo from '@/components/detailView/edit/EditGeneralInfo';
 import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
 import EditTessPartNumbers from '@/components/detailView/edit/EditTessPartNumbers';
 import EditUniversalHoseData from '@/components/detailView/edit/EditUniversalHoseData';
-import { GHD, TPN, UHD } from '@/components/detailView/types';
 import { Typography } from '@/components/typography';
 import { AppContext } from '@/context/Reducer';
 import {
   Hose,
   isMultiSelection,
-  isSingleSelection,
-  SelectionActionsType,
   SingleSelection,
+  SingleSelectionActionsType,
 } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 
 const renderComponent = (
   Component: React.FC<any>,
@@ -48,16 +46,16 @@ const HoseDetails = () => {
   const { hoseId } = useLocalSearchParams();
 
   const { state, dispatch } = useContext(AppContext);
-  const [action, setAction] = useState<Option<SingleSelection['type']> | null>(
-    null,
-  );
+  // const [action, setAction] = useState<Option<SingleSelection['type']> | null>(
+  //   null,
+  // );
   const scrollViewRef = useRef<ScrollView>(null);
 
   const [editMode, setEditMode] = useState(false);
   const [hoseData, setHoseData] = useState<Hose | undefined>(
     state.data.hoses.find((hose) => hose.id === hoseId),
   );
-  console.log(state.data.selection);
+
   const router = useRouter();
 
   if (hoseData === undefined) {
@@ -90,13 +88,17 @@ const HoseDetails = () => {
     setEditMode(false);
   };
 
-  const handleAction = (value: SingleSelection['type'] | 'EDIT_HOSE') => {
-    if (value === 'EDIT_HOSE') {
+  const handleAction = (value: SingleSelection['type']) => {
+    if (value === 'EDIT') {
       setEditMode(true);
+      return;
+    } else if (value === 'INSPECT') {
+      // TODO implement inspection page
+      Alert.alert('Not implemented', 'This feature is not implemented yet');
       return;
     } else {
       if (!hoseData.id) return;
-      setAction({ label: value, value: value });
+      // setAction({ label: value, value: value });
       if (!state.data.selection) {
         dispatch({
           type: 'SELECT_ONE_HOSE',
@@ -106,57 +108,37 @@ const HoseDetails = () => {
           },
         });
       }
-
-      switch (value) {
-        case 'RFQ':
-          router.push({
-            pathname: `/dashbord/actions/rfq`,
-            params: { hoseId: hoseData.id },
-          });
-          break;
-        case 'SCRAP':
-          router.push({
-            pathname: `/dashbord/actions/scrap`,
-            params: { hoseId: hoseData.id },
-          });
-          break;
-        case 'CONTACT':
-          router.push({
-            pathname: `/dashbord/actions/contact`,
-            params: { hoseId: hoseData.id },
-          });
-          break;
-        default:
-          console.error('action not found');
-          break;
-      }
+      router.push({
+        pathname: `/dashbord/actions/[action]`,
+        params: { hoseId: hoseData.id, action: value },
+      });
     }
   };
 
-  const options: Option<string>[] = [
+  const options: Option<SingleSelectionActionsType>[] = [
     {
       label: 'Inspect hose',
-      value: 'inspect',
+      value: 'INSPECT',
       icon: 'Inspect',
     },
     {
       label: 'Edit hose data',
-      value: 'EDIT_HOSE',
+      value: 'EDIT',
       icon: 'Edit',
     },
     {
       label: 'Order hose (RFQ)',
-      value: 'order',
+      value: 'RFQ',
       icon: 'Cart',
     },
     {
       label: 'Scrap hose',
-      value: 'scrap',
+      value: 'SCRAP',
       icon: 'Trash',
     },
     {
-      label: 'Contact TESS team',
-      value: 'contact',
+      label: 'Contact TESS Team',
+      value: 'CONTACT',
       icon: 'Email',
     },
   ];
@@ -174,9 +156,8 @@ const HoseDetails = () => {
     <View style={styles.container}>
       {!isMultiSelection(state.data.selection) && !editMode && (
         <ActionsFab
-          selected={action?.value || null}
-          options={options as Option<SelectionActionsType>[]}
-          onChange={handleAction}
+          options={options as Option<SingleSelectionActionsType>[]}
+          onChange={handleAction as (value: string) => void}
           menuTitle='Actions'
         />
       )}

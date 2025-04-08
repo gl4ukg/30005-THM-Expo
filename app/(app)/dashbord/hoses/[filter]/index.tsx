@@ -4,7 +4,12 @@ import { IconName } from '@/components/Icon/iconMapping';
 import { Typography } from '@/components/typography';
 import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 import { useAppContext } from '@/context/ContextProvider';
-import { Hose, SelectionActionsType, isMultiSelection } from '@/context/state';
+import {
+  Hose,
+  MultiSelectionActionsType,
+  SingleSelectionActionsType,
+  isMultiSelection,
+} from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
@@ -50,7 +55,7 @@ const FilteredHosesList: React.FC<Props> = (props) => {
     subtitle?: string;
     icon?: IconName;
   };
-  const options: Option<SelectionActionsType>[] = [
+  const options: Option<MultiSelectionActionsType>[] = [
     {
       value: 'CONTACT',
       label: 'Contact TESS Team',
@@ -75,7 +80,7 @@ const FilteredHosesList: React.FC<Props> = (props) => {
     filter ?? '',
     state.data.hoses,
   ); //TODO
-  const onChangeAction = (value: SelectionActionsType) => {
+  const onChangeAction = (value: MultiSelectionActionsType) => {
     dispatch({
       type: 'START_MULTI_SELECTION',
       payload: value,
@@ -118,9 +123,8 @@ const FilteredHosesList: React.FC<Props> = (props) => {
   return (
     <>
       <ActionsFab
-        selected={state.data.selection?.type || null}
         options={options}
-        onChange={onChangeAction}
+        onChange={onChangeAction as (value: string) => void}
         menuTitle='Actions'
       />
       <View style={style.header}>

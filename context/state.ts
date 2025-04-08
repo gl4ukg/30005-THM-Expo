@@ -50,26 +50,37 @@ export interface ActionSCRAP extends Action {
 export interface ActionCONTACT extends Action {
   type: 'CONTACT';
 }
-export type SelectionActionsType = 'RFQ' | 'SCRAP' | 'CONTACT';
+export type SingleSelectionActionsType =
+  | 'RFQ'
+  | 'SCRAP'
+  | 'CONTACT'
+  | 'INSPECT'
+  | 'EDIT';
 
-type ManyHosesSelection<T extends SelectionActionsType> = {
+export type MultiSelectionActionsType = 'RFQ' | 'SCRAP' | 'CONTACT';
+
+type MultiHosesSelection<T extends MultiSelectionActionsType> = {
   type: T;
   ids: string[];
 };
-type SingleHoseSelection<T extends SelectionActionsType> = {
+type SingleHoseSelection<T extends SingleSelectionActionsType> = {
   type: T;
   id: string;
 };
 type ScrapSingleHoseSelection = SingleHoseSelection<'SCRAP'>;
 type ContactSingleHoseSelection = SingleHoseSelection<'CONTACT'>;
 type RFQSingleHoseSelection = SingleHoseSelection<'RFQ'>;
-type ScrapMultiHosesSelection = ManyHosesSelection<'SCRAP'>;
-type ContactMultiHosesSelection = ManyHosesSelection<'CONTACT'>;
-type RFQMultiHosesSelection = ManyHosesSelection<'RFQ'>;
+type InspectSingleHoseSelection = SingleHoseSelection<'INSPECT'>;
+type EditSingleHoseSelection = SingleHoseSelection<'EDIT'>;
+type ScrapMultiHosesSelection = MultiHosesSelection<'SCRAP'>;
+type ContactMultiHosesSelection = MultiHosesSelection<'CONTACT'>;
+type RFQMultiHosesSelection = MultiHosesSelection<'RFQ'>;
 export type SingleSelection =
   | ScrapSingleHoseSelection
   | ContactSingleHoseSelection
-  | RFQSingleHoseSelection;
+  | RFQSingleHoseSelection
+  | InspectSingleHoseSelection
+  | EditSingleHoseSelection;
 export type MultiSelection =
   | ScrapMultiHosesSelection
   | ContactMultiHosesSelection

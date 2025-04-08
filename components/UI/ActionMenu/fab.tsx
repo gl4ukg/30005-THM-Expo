@@ -6,7 +6,10 @@ import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { IconName } from '@/components/Icon/iconMapping';
 import { Section } from '@/app/(app)/dashbord/hoses/hose/[hoseId]';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { SelectionActionsType } from '@/context/state';
+import {
+  MultiSelectionActionsType,
+  SingleSelectionActionsType,
+} from '@/context/state';
 
 export type Option<T> = {
   icon?: IconName;
@@ -15,15 +18,13 @@ export type Option<T> = {
 };
 interface Props<T> {
   menuTitle?: string;
-  selected: T | null;
   options: Option<T>[];
   onChange: (value: T) => void;
   scrollToSection?: (sectionId: string) => void;
   shortcuts?: Section[];
 }
 
-export const ActionsFab: FC<Props<SelectionActionsType>> = ({
-  selected,
+export const ActionsFab: FC<Props<string>> = ({
   options,
   onChange,
   scrollToSection,
@@ -31,7 +32,7 @@ export const ActionsFab: FC<Props<SelectionActionsType>> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleChange = (value: SelectionActionsType) => {
+  const handleChange = (value: Partial<string>) => {
     onChange(value);
     setIsOpen(false);
   };
