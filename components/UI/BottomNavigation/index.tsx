@@ -108,7 +108,11 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
           <TessLines width={Dimensions.get('window').width * 0.6} />
         </View>
         <View style={styles.buttonsWrapper}>
-          <Link asChild href='/(app)/user' style={styles.button}>
+          <Link
+            asChild
+            href='/(app)/user'
+            style={[styles.button, { display: 'none' }]}
+          >
             <Pressable
               style={({ pressed }) => [pressed && {}]}
               onPress={() => setIsOpen(false)}
@@ -129,7 +133,10 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               <Icon name='Search' color='#fff' />
             </Pressable>
           </Link> */}
-          <Pressable style={styles.button} onPress={() => router.back()}>
+          <Pressable
+            style={styles.button}
+            onPress={() => (isOpen ? setIsOpen(false) : router.back())}
+          >
             <Icon name='ChevronLeft' color='#fff' />
           </Pressable>
         </View>
@@ -164,6 +171,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   navigationContainer: {
+    paddingHorizontal: 20,
     width: '100%',
     position: 'absolute',
     bottom: 0,
