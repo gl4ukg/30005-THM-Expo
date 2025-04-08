@@ -121,7 +121,6 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
             </Pressable>
           </Link>
           <View style={{ width: 30, height: 30 }} />
-
           <OpenMenu
             isOpen={isOpen}
             handlePress={() => setIsOpen((isOpen) => !isOpen)}
