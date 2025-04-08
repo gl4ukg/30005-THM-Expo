@@ -92,11 +92,26 @@ const RegisterHose = () => {
               }
             />
           </TooltipWrapper>
+          <TooltipWrapper
+            tooltipData={{
+              title: 'Installation date',
+              message: 'This is the installation date',
+            }}
+          >
+            <DateInput
+              label='Installation date'
+              value={localState.generalHoseData?.installationDate}
+              onChange={(date) =>
+                handleInputChange('installationDate', date.toString())
+              }
+            />
+          </TooltipWrapper>
         </View>
 
         <EditGeneralInfo
           generalInfo={localState.generalHoseData!}
           onInputChange={handleInputChange}
+          register
         />
         <EditUniversalHoseData
           universalHoseData={localState.universalHoseData}

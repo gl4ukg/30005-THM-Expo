@@ -11,11 +11,12 @@ import { RFIDInput } from '@/components/UI/Input/RFID';
 type EditGeneralInfoProps = {
   generalInfo: GHD;
   onInputChange: (field: string, value: string) => void;
+  register: boolean;
 };
 
 const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
   generalInfo,
-  onInputChange,
+  register,
 }) => {
   const [rfid, setRfid] = useState<string>('');
   const [localState, setLocalState] = useState(generalInfo);
@@ -32,23 +33,29 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
 
   return (
     <View style={styles.container}>
-      <TooltipWrapper
-        tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
-      >
-        <RFIDInput label='RFID' onRFIDScanned={handleRFIDScanned} />
-      </TooltipWrapper>
-      <TooltipWrapper
-        tooltipData={{
-          title: 'production date',
-          message: 'This is the production date',
-        }}
-      >
-        <DateInput
-          label='Production date'
-          value={localState.productionDate}
-          onChange={(date) => onInputChange('productionDate', date.toString())}
-        />
-      </TooltipWrapper>
+      {!register && (
+        <>
+          <TooltipWrapper
+            tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
+          >
+            <RFIDInput label='RFID' onRFIDScanned={handleRFIDScanned} />
+          </TooltipWrapper>
+          <TooltipWrapper
+            tooltipData={{
+              title: 'Installation date',
+              message: 'This is the installation date',
+            }}
+          >
+            <DateInput
+              label='Installation date'
+              value={localState.installationDate}
+              onChange={(date) =>
+                onInputChange('installationDate', date.toString())
+              }
+            />
+          </TooltipWrapper>
+        </>
+      )}
       <TooltipWrapper
         tooltipData={{
           title: 'description',
