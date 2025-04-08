@@ -1,4 +1,4 @@
-import { ContactTess } from '@/components/dashboard/contactTess';
+import { ContactForm } from '@/components/dashboard/contactForm';
 import { useAppContext } from '@/context/ContextProvider';
 import { Hose, isMultiSelection, isSingleSelection } from '@/context/state';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
@@ -67,9 +67,10 @@ const Action: React.FC<Props> = (props) => {
   }
 
   return (
-    <ContactTess
+    <ContactForm
       title={pageData.title}
       subTitle={pageData.subTitle}
+      isRFQ={action === 'RFQ'}
       hoses={hoses}
       onSave={save}
       onAdd={function (arg0: any): void {

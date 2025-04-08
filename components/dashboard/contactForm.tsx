@@ -1,5 +1,7 @@
 import { HoseType } from '@/app/(app)/dashbord/hoses/[filter]';
+import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
+import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { ButtonTHS } from '../UI';
@@ -7,7 +9,9 @@ import { Input } from '../UI/Input/input';
 import { SelectField } from '../detailHose/SelectField';
 import { Typography } from '../typography';
 import { ListTable } from './listTable';
-import { router } from 'expo-router';
+import { emailValidation } from '@/lib/util/validation';
+import { isMultiSelection } from '@/context/state';
+import { LinkButton } from '@/components/UI/Button/linkButton';
 
 interface Props {
   title: string;
@@ -26,6 +30,7 @@ export const ContactForm: React.FC<Props> = ({
   fromScanPath = false,
   onSave,
 }) => {
+  const { state, dispatch } = useAppContext();
   const [comment, setComment] = useState('');
   const [name, setName] = useState(state.auth.user?.name || '');
   const [mail, setMail] = useState(state.auth.user?.email || '');
@@ -35,7 +40,6 @@ export const ContactForm: React.FC<Props> = ({
     hoses.map((h) => h.id),
   );
   const originallySelectedHoses = useMemo(() => hoses, []);
-  const { state, dispatch } = useAppContext();
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
   function handleMail(email: string) {
     setMail(email);
@@ -56,7 +60,11 @@ export const ContactForm: React.FC<Props> = ({
       setSelectedIds([...selectedIds, id]);
     }
   };
-
+  const responsePathMapping: Record<string, string> = {
+    'Scrap report': 'Add hose to this scrap report',
+    RFQ: 'Add hose to RFQ',
+    default: 'Add hose to this request',
+  }; // TODO this cant be based on string, what about contactReason: "RFQ" | "SCRAP" | "CONTACT"
   const rfqOptions = [
     {
       id: 'certificate',
@@ -72,7 +80,7 @@ export const ContactForm: React.FC<Props> = ({
     !!emailError ||
     !phone ||
     selectedIds.length === 0 ||
-    (isRfq && (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
+    (isRFQ && (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
 
   return (
     <>
@@ -102,7 +110,7 @@ export const ContactForm: React.FC<Props> = ({
             )}
             <Input
               type='textArea'
-              label={isRfq ? 'Delivery address / Comments' : 'Comment:'}
+              label={isRFQ ? 'Delivery address / Comments' : 'Comment:'}
               value={comment}
               onChangeText={setComment}
             />
