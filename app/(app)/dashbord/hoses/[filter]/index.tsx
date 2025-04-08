@@ -88,12 +88,6 @@ const Hose: React.FC<Props> = (props) => {
       subtitle: '(add hoses to bin)',
       icon: 'Trash' as IconName,
     },
-    {
-      value: 'callToYourMother',
-      label: 'Call to your mother',
-      subtitle: '(add hoses for your mother)',
-      icon: 'Phone' as IconName,
-    },
   ];
 
   // const { listLength } = getFilteredHoses(
