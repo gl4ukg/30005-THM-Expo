@@ -108,7 +108,11 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
           <TessLines width={Dimensions.get('window').width * 0.6} />
         </View>
         <View style={styles.buttonsWrapper}>
-          <Link asChild href='/(app)/user' style={styles.button}>
+          <Link
+            asChild
+            href='/(app)/user'
+            style={[styles.button, { display: 'none' }]}
+          >
             <Pressable
               style={({ pressed }) => [pressed && {}]}
               onPress={() => setIsOpen(false)}
@@ -116,6 +120,8 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               <Icon name='User' color={colors.white} />
             </Pressable>
           </Link>
+          <View style={{ width: 30, height: 30 }} />
+
           <OpenMenu
             isOpen={isOpen}
             handlePress={() => setIsOpen((isOpen) => !isOpen)}
