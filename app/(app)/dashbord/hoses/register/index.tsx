@@ -17,17 +17,17 @@ import { useContext, useState } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 
 const RegisterHose = () => {
-  const { hoseId } = useLocalSearchParams();
+  const { hoseId, rfid: urlRfid } = useLocalSearchParams();
   const { state, dispatch } = useContext(AppContext);
   const [registerMultiple, setRegisterMultiple] = useState(false);
-  const [rfid, setRfid] = useState<string>('');
+  const [rfid, setRfid] = useState<string>(urlRfid?.toString() || '');
 
   const handleCheckboxChange = () => {
     setRegisterMultiple((prevState) => !prevState);
   };
 
   const initialHoseData: Partial<HoseData> = {
-    id: hoseId,
+    id: urlRfid || hoseId,
     generalHoseData: {} as GHD,
     universalHoseData: {} as UHD,
     tessPartNumbers: {} as TPN,
@@ -58,16 +58,25 @@ const RegisterHose = () => {
       <ScrollView>
         <View style={{ alignItems: 'center' }}>
           <Typography name='navigationBold' text='Register hose' />
-          <Typography name='navigation'>
-            Hose ID
-            <Typography name={'navigationBold'} text={String(hoseId ?? '')} />
-          </Typography>
+          {(hoseId || urlRfid) && (
+            <Typography name='navigation'>
+              Hose ID
+              <Typography
+                name={'navigationBold'}
+                text={String(urlRfid || hoseId || '')}
+              />
+            </Typography>
+          )}
         </View>
         <View>
           <TooltipWrapper
             tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
           >
-            <RFIDInput label='RFID' onRFIDScanned={handleRFIDScanned} />
+            <RFIDInput
+              label='RFID'
+              onRFIDScanned={handleRFIDScanned}
+              initialValue={rfid}
+            />
           </TooltipWrapper>
           <TooltipWrapper
             tooltipData={{

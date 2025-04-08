@@ -47,6 +47,13 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
                 icon: () => <Icon name='Upload' color={colors.primary} />,
               },
               {
+                title: 'Register hose',
+                to: '/scan?title=Register%20hose&registerHose=true',
+                icon: () => (
+                  <Icon name='RegisterHoses' color={colors.primary} />
+                ),
+              },
+              {
                 id: 'Inspection',
                 title: 'Inspection',
                 icon: () => <Icon name='Search' color={colors.primary} />,

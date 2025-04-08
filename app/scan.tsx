@@ -25,16 +25,27 @@ import { Input } from '@/components/UI/Input/input';
 import { useAppContext } from '@/context/ContextProvider';
 
 const Scan = () => {
-  const { title } = useLocalSearchParams() as { title?: string };
+  const { title, registerHose } = useLocalSearchParams() as {
+    title?: string;
+    registerHose?: string;
+  };
   const { dispatch } = useAppContext();
+
+  let displayTitle = title || 'Scan or type ID';
+  let navigationPath = '/dashbord/actions';
 
   const titleToRouteParam: Record<string, string> = {
     'Order hoses': 'rfq',
     'Scrap hoses': 'scrap',
   };
 
-  const routeParam = titleToRouteParam[title ?? 'Order hoses'];
-  const path = `/dashbord/actions/${routeParam}?source=scan`;
+  const routeParam = titleToRouteParam[title ?? ''];
+
+  if (registerHose === 'true') {
+    navigationPath = `/dashbord/hoses/register`;
+  } else if (routeParam) {
+    navigationPath = `/dashbord/actions/${routeParam}?source=scan`;
+  }
 
   const inputRef = useRef<TextInput>(null);
   const device = useCameraDevice('back');
@@ -100,6 +111,16 @@ const Scan = () => {
         setRfid(reversedId);
         setId(reversedId);
         setScanMethod(null);
+
+        if (registerHose === 'true') {
+          router.push(
+            `/dashbord/hoses/register?rfid=${reversedId}` as RelativePathString,
+          );
+        } else {
+          router.push(
+            `${navigationPath}?rfid=${reversedId}` as RelativePathString,
+          );
+        }
       } else {
         setScanError('No tag ID found.');
       }
@@ -121,7 +142,7 @@ const Scan = () => {
         setId(previousRfid.current);
       }
     }
-  }, [isNfcSupported, rfid]);
+  }, [isNfcSupported, rfid, registerHose, navigationPath]);
 
   const handleRFIDPress = () => {
     inputRef.current?.blur();
@@ -151,7 +172,7 @@ const Scan = () => {
           <Typography
             name='navigationBold'
             style={styles.headerText}
-            text={title || 'Register hose or Equipment'}
+            text={displayTitle}
           />
           <Typography
             name='navigation'
@@ -230,7 +251,7 @@ const Scan = () => {
                 type: 'SELECT_HOSE',
                 payload: `${id}`,
               });
-              router.push(`${path}` as RelativePathString);
+              router.push(`${navigationPath}?rfid=${id}` as RelativePathString);
             }}
           >
             <Icon name='Search' color={colors.primary25} size='sm' />
