@@ -116,7 +116,6 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               <Icon name='User' color={colors.white} />
             </Pressable>
           </Link>
-          <View style={{ width: 30, height: 30 }} />
           <OpenMenu
             isOpen={isOpen}
             handlePress={() => setIsOpen((isOpen) => !isOpen)}
@@ -129,7 +128,10 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               <Icon name='Search' color='#fff' />
             </Pressable>
           </Link> */}
-          <Pressable style={styles.button} onPress={() => router.back()}>
+          <Pressable
+            style={styles.button}
+            onPress={() => (isOpen ? setIsOpen(false) : router.back())}
+          >
             <Icon name='ChevronLeft' color='#fff' />
           </Pressable>
         </View>
@@ -164,6 +166,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   navigationContainer: {
+    paddingHorizontal: 20,
     width: '100%',
     position: 'absolute',
     bottom: 0,
