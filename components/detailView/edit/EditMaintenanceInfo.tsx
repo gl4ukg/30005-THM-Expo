@@ -1,20 +1,20 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Input } from '../../UI/Input/input';
 import { RadioGroup } from '@/components/detailHose/radioGroup';
 import { SelectField } from '@/components/detailHose/SelectField';
 import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
 import { Typography } from '@/components/typography';
-import Datafield from '../Datafield';
 import { colors } from '@/lib/tokens/colors';
 import { formatDate } from '@/lib/util/formatDate';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Input } from '../../UI/Input/input';
+import Datafield from '../Datafield';
 
-type EditMaintananceProps = {
+type EditMaintenanceProps = {
   hoseData: any;
   onInputChange: (field: string, value: string) => void;
 };
 
-const EditMaintananceInfo: React.FC<EditMaintananceProps> = ({
+export const EditMaintenanceInfo: React.FC<EditMaintenanceProps> = ({
   hoseData,
   onInputChange,
 }) => {
@@ -133,8 +133,6 @@ const EditMaintananceInfo: React.FC<EditMaintananceProps> = ({
     </View>
   );
 };
-
-export default EditMaintananceInfo;
 
 const styles = StyleSheet.create({
   subTitle: {

@@ -1,15 +1,19 @@
-import { HoseType } from '@/app/(app)/dashbord/hoses/[filter]';
 import {
   Action,
   ActionCONTACT,
   ActionRFQ,
   ActionSCRAP,
-  ActionsType,
+  SingleSelectionActionsType,
   AppState,
   AuthState,
   DataState,
+  Hose,
+  HoseSelection,
   initialState,
   SettingsState,
+  SingleSelection,
+  MultiSelection,
+  isMultiSelection,
 } from '@/context/state';
 import { createContext } from 'react';
 
@@ -44,21 +48,27 @@ type AuthAction =
   | ActionWithPayload<'SET_TOKEN', string>
   | ActionWithPayload<'SET_LOGIN_LOADING', boolean>;
 type DataAction =
-  | ActionWithPayload<'SET_DATA', any>
-  | ActionWithPayload<'SET_SELECTED_UNIT', string>
-  | ActionWithPayload<'REMOVE_ACTION', { id: string; actionType: ActionsType }>
+  | ActionWithPayload<'SET_ASSIGNED_UNITS', DataState['assignedUnits']>
+  | ActionWithPayload<'SET_WORKING_UNIT', string>
+  | ActionWithPayload<
+      'REMOVE_ACTION',
+      { id: string; actionType: SingleSelectionActionsType }
+    >
   | ActionWithPayload<
       'ADD_ACTION',
       {
         action: Action & (ActionRFQ | ActionCONTACT | ActionSCRAP);
-        actionType: ActionsType;
+        actionType: SingleSelectionActionsType;
       }
     >
+  | ActionWithPayload<'SET_HOSE_DATA', Hose[]>
   | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: string; hoseData: any }>
-  | ActionWithPayload<'SELECT_HOSE', string>
-  | ActionWithPayload<'DESELECT_HOSE', string>
-  | ActionWithPayload<'SELECT_ALL_HOSES', string[]>
-  | ActionWithoutPayload<'DESELECT_ALL_HOSES'>;
+  | ActionWithPayload<'SELECT_ONE_HOSE', SingleSelection>
+  | ActionWithPayload<'START_MULTI_SELECTION', MultiSelection['type']>
+  | ActionWithPayload<'TOGGLE_HOSE_MULTI_SELECTION', string>
+  | ActionWithoutPayload<'FINISH_SELECTION'>
+  | ActionWithPayload<'SELECT_MANY_HOSES_MULTI_SELECTION', string[]>
+  | ActionWithoutPayload<'DESELECT_ALL_HOSES_MULTI_SELECTION'>;
 type SettingsAction = ActionWithPayload<'UPDATE_SETTINGS', any>;
 
 // Reducers for each slice of the app state (these should be defined elsewhere)
@@ -92,25 +102,20 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
 
 const dataReducer = (state: DataState, action: DataAction): DataState => {
   switch (action.type) {
-    case 'SET_DATA':
+    case 'SET_ASSIGNED_UNITS':
       return {
         ...state,
         assignedUnits: action.payload,
       };
-    case 'SET_SELECTED_UNIT':
+    case 'SET_WORKING_UNIT':
       return {
         ...state,
-        selectedUnitId: action.payload,
+        workingUnitId: action.payload,
       };
-    case 'REMOVE_ACTION':
+    case 'SET_HOSE_DATA':
       return {
         ...state,
-        actions: {
-          ...state.actions,
-          [action.payload.actionType]: state.actions[
-            action.payload.actionType
-          ].filter((a) => a.id === action.payload.id),
-        },
+        hoses: action.payload,
       };
     case 'SAVE_HOSE_DATA':
       return {
@@ -126,30 +131,62 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
             }, {})
           : state.assignedUnits,
       };
-    case 'SELECT_HOSE':
+    case 'START_MULTI_SELECTION':
       return {
         ...state,
-        selectedHoses: [...state.selectedHoses, action.payload],
+        selection: {
+          type: action.payload,
+          ids: [],
+        } as MultiSelection,
       };
-    case 'DESELECT_HOSE':
+    case 'SELECT_ONE_HOSE':
       return {
         ...state,
-        selectedHoses: state.selectedHoses.filter(
-          (hose) => hose !== action.payload,
-        ),
+        selection: action.payload,
       };
-    case 'SELECT_ALL_HOSES':
+    case 'TOGGLE_HOSE_MULTI_SELECTION':
+      const selection = state.selection;
+      if (isMultiSelection(selection)) {
+        let selectedIds = selection.ids;
+        if (selectedIds.includes(action.payload)) {
+          selectedIds = selectedIds.filter((id) => id !== action.payload);
+        } else {
+          selectedIds.push(action.payload);
+        }
+        return {
+          ...state,
+          selection: {
+            ...state.selection,
+            ids: selectedIds,
+          } as MultiSelection,
+        };
+      }
+    case 'SELECT_MANY_HOSES_MULTI_SELECTION':
       return {
         ...state,
-        selectedHoses: action.payload,
+        selection: {
+          ...state.selection,
+          ids: action.payload,
+        } as MultiSelection,
       };
-    case 'DESELECT_ALL_HOSES':
+    case 'DESELECT_ALL_HOSES_MULTI_SELECTION':
       return {
         ...state,
-        selectedHoses: [],
+        selection: {
+          ...state.selection,
+          ids: [],
+        } as MultiSelection,
       };
-    default:
+
+    case 'FINISH_SELECTION':
+      return {
+        ...state,
+        selection: null,
+      };
+    default: {
+      // console.error('Unknown action type:', action.type);
       return state;
+    }
   }
 };
 
@@ -173,7 +210,7 @@ const rootReducer: React.Reducer<AppState, AppAction> = combineReducers({
   auth: authReducer,
   data: dataReducer,
   settings: settingReducer,
-} as any);
+}) as any; // TODO
 
 const AppContext = createContext<{
   state: AppState;
@@ -191,111 +228,3 @@ export {
   SettingsAction,
   rootReducer,
 };
-
-// {
-
-// export type SetUserAction = ActionWithPayload<'SET_USER', THSStateType['user']>;
-
-// export type ResetAction = ActionWithoutPayload<'RESET_USER'>;
-// export type ResetUnits = ActionWithoutPayload<'RESET_UNITS'>;
-// export type SetUnits = ActionWithPayload<
-//   'SET_UNITS',
-//   THSStateType['units']['availableUnits']
-// >;
-// export type AddUnit = ActionWithPayload<
-//   'ADD_UNIT',
-//   THSStateType['units']['availableUnits'][0]
-// >;
-// export type RemoveUnit = ActionWithPayload<
-//   'REMOVE_UNIT',
-//   THSStateType['units']['availableUnits'][0]['id']
-// >;
-// export type SetChosenUnit = ActionWithPayload<
-//   'SET_CHOSEN_UNIT',
-//   THSStateType['units']['chosenUnitId']
-// >;
-
-// export type Action =
-//   | SetUserAction
-//   | ResetAction
-//   | SetUnits
-//   | SetChosenUnit
-//   | ResetUnits
-//   | AddUnit
-//   | RemoveUnit;
-
-// export const THSReducer = (
-//   state: THSStateType,
-//   action: Action,
-// ): THSStateType => {
-//   switch (action.type) {
-//     case 'SET_USER': {
-//       console.log('SET_USER', action.payload);
-//       return {
-//         ...state,
-//         user: action.payload,
-//       };
-//     }
-//     case 'RESET_USER': {
-//       console.log('RESET_USER');
-//       console.log({
-//         ...state,
-//         user: null,
-//       });
-//       return {
-//         ...state,
-//         user: null,
-//       };
-//     }
-//     case 'SET_UNITS': {
-//       return {
-//         ...state,
-//         units: {
-//           ...state.units,
-//           availableUnits: action.payload,
-//         },
-//       };
-//     }
-//     case 'SET_CHOSEN_UNIT': {
-//       return {
-//         ...state,
-//         units: {
-//           ...state.units,
-//           chosenUnitId: action.payload,
-//         },
-//       };
-//     }
-//     case 'RESET_UNITS': {
-//       return {
-//         ...state,
-//         units: {
-//           ...state.units,
-//           chosenUnitId: null,
-//           availableUnits: [],
-//         },
-//       };
-//     }
-//     case 'ADD_UNIT': {
-//       return {
-//         ...state,
-//         units: {
-//           ...state.units,
-//           availableUnits: [...state.units.availableUnits, action.payload],
-//         },
-//       };
-//     }
-//     case 'REMOVE_UNIT': {
-//       return {
-//         ...state,
-//         units: {
-//           ...state.units,
-//           availableUnits: state.units.availableUnits.filter(
-//             (unit) => unit.id !== action.payload,
-//           ),
-//         },
-//       };
-//     }
-//   }
-// };
-
-// }

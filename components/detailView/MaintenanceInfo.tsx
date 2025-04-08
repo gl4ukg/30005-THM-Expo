@@ -5,15 +5,15 @@ import { StyleSheet, View } from 'react-native';
 import { Typography } from '../typography';
 import Bookmark from './Bookmark';
 import Datafield from './Datafield';
-import EditMaintananceInfo from './edit/EditMaintananceInfo';
 import { HID } from './types';
+import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
 
-type MaintananceProps = {
+type MaintenanceProps = {
   hoseData: HID;
   editMode: boolean;
   onInputChange: (field: string, value: string) => void;
 };
-const MaintananceInfo: React.FC<MaintananceProps> = ({
+const MaintenanceInfo: React.FC<MaintenanceProps> = ({
   hoseData,
   editMode,
   onInputChange,
@@ -23,7 +23,7 @@ const MaintananceInfo: React.FC<MaintananceProps> = ({
 
   return (
     <View style={styles.container}>
-      <Bookmark title='Maintanance Info' />
+      <Bookmark title='Maintenance Info' />
       <Typography
         name={'navigationBold'}
         text='Inspection'
@@ -34,7 +34,7 @@ const MaintananceInfo: React.FC<MaintananceProps> = ({
         value={formatDate(hoseData.inspectedDate)}
       />
       {editMode ? (
-        <EditMaintananceInfo
+        <EditMaintenanceInfo
           hoseData={hoseData}
           onInputChange={onInputChange}
         />
@@ -87,7 +87,7 @@ const MaintananceInfo: React.FC<MaintananceProps> = ({
   );
 };
 
-export default MaintananceInfo;
+export default MaintenanceInfo;
 
 const styles = StyleSheet.create({
   inspectionDetails: {

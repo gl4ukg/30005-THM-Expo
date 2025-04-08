@@ -1,14 +1,14 @@
 import BarToPsiInput from '@/components/detailHose/BarToPsiInput';
 import { SelectField } from '@/components/detailHose/SelectField';
+import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
 import UnitInput from '@/components/detailHose/UnitInput';
 import { Typography } from '@/components/typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Input } from '@/components/UI/Input/input';
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import Bookmark from '../Bookmark';
 import { UHD } from '../types';
-import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
 
 interface UniversalHoseDataProps {
   universalHoseData: UHD;

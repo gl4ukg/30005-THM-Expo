@@ -2,10 +2,12 @@ import { BarChart, Primary, Secondary } from '@/components/dashboard';
 import { BarData } from '@/components/dashboard/barChart';
 import { Typography } from '@/components/typography';
 import { ActionMenu } from '@/components/UI/ActionMenu';
+import { AppContext } from '@/context/Reducer';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
 
 const month: BarData = [
   {
@@ -148,7 +150,15 @@ const options = [
 const Dashbord = () => {
   const [selected, setSelected] =
     useState<(typeof options)[0]['value']>('month');
-  const insets = useSafeAreaInsets();
+  const { dispatch } = useContext(AppContext);
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch({
+        type: 'FINISH_SELECTION',
+      });
+    }, [dispatch]),
+  );
 
   const [barData, setBarData] = useState<BarData>(month);
   useEffect(() => {
