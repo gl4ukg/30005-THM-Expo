@@ -13,6 +13,7 @@ import { useAppContext } from '@/context/ContextProvider';
 interface Props {
   title: string;
   subTitle: string;
+  isRFQ?: boolean;
   hoses: HoseType[];
   onSave: (arg0: any) => void;
   onAdd?: (arg0: any) => void;
@@ -20,6 +21,7 @@ interface Props {
 export const ContactTess: React.FC<Props> = ({
   title,
   subTitle,
+  isRFQ = false,
   hoses,
   onSave,
 }) => {
@@ -35,19 +37,10 @@ export const ContactTess: React.FC<Props> = ({
   const handleSelectionChange = (id: string) => {
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter((i) => i !== id));
-      dispatch({
-        type: 'DESELECT_HOSE',
-        payload: id,
-      });
     } else {
       setSelectedIds([...selectedIds, id]);
-      dispatch({
-        type: 'SELECT_HOSE_SINGEL_SELECT',
-        payload: id,
-      });
     }
   };
-  const isRfq = subTitle === 'RFQ' ? true : false;
 
   return (
     <>
@@ -66,7 +59,7 @@ export const ContactTess: React.FC<Props> = ({
         }
         ListFooterComponent={
           <View style={style.pagePadding}>
-            {isRfq && (
+            {isRFQ && (
               <SelectField
                 label={'RFQ type'}
                 value={'Choose'}

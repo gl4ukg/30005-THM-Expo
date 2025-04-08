@@ -4,15 +4,9 @@ import { IconName } from '@/components/Icon/iconMapping';
 import { Typography } from '@/components/typography';
 import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 import { useAppContext } from '@/context/ContextProvider';
-import {
-  SelectionActionsType,
-  Hose,
-  MultiSelection,
-  isMultiSelection,
-} from '@/context/state';
+import { Hose, SelectionActionsType, isMultiSelection } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 interface Props {
@@ -97,7 +91,30 @@ const FilteredHosesList: React.FC<Props> = (props) => {
       });
     }
   };
-  const handleActionContact = () => {};
+  const toggleSelectAll = () => {
+    if (isMultiSelection(state.data.selection)) {
+      const allIds = filteredList.map((item) => item.id);
+      const isAllSelected = state.data.selection.ids.length === listLength;
+
+      if (isAllSelected) {
+        dispatch({ type: 'DESELECT_ALL_HOSES_MULTI_SELECTION' });
+      } else {
+        dispatch({
+          type: 'SELECT_MANY_HOSES_MULTI_SELECTION',
+          payload: allIds,
+        });
+      }
+    }
+  };
+  const handleSelectionAction = () => {
+    if (isMultiSelection(state.data.selection)) {
+      const action = state.data.selection.type;
+      router.push({
+        pathname: `/dashbord/actions/[action]`,
+        params: { action },
+      });
+    }
+  };
   return (
     <>
       <ActionsFab
@@ -134,7 +151,7 @@ const FilteredHosesList: React.FC<Props> = (props) => {
                     ?.icon || 'Alert'
                 }
                 counter={state.data.selection.ids.length}
-                handlePress={handleActionContact}
+                handlePress={handleSelectionAction}
               />
             </View>
           </View>
@@ -149,22 +166,7 @@ const FilteredHosesList: React.FC<Props> = (props) => {
         }
         onSelectionChange={handleSelectionChange}
         canSelect={isMultiSelection(state.data.selection)}
-        onSelectAll={() => {
-          if (isMultiSelection(state.data.selection)) {
-            const allIds = filteredList.map((item) => item.id);
-            const isAllSelected =
-              state.data.selection.ids.length === listLength;
-
-            if (isAllSelected) {
-              dispatch({ type: 'DESELECT_ALL_HOSES_MULTI_SELECTION' });
-            } else {
-              dispatch({
-                type: 'SELECT_MANY_HOSES_MULTI_SELECTION',
-                payload: allIds,
-              });
-            }
-          }
-        }}
+        onSelectAll={toggleSelectAll}
       />
     </>
   );
