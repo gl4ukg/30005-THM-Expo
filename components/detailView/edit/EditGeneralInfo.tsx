@@ -1,12 +1,12 @@
-import { DateInput } from '@/components/UI/Input/DateInput';
-import { RFIDInput } from '@/components/UI/Input/RFID';
-import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { Input } from '../../UI/Input/input';
 import { SelectField } from '../../detailHose/SelectField';
 import { RadioGroup } from '../../detailHose/radioGroup';
 import { GHD } from '../types';
+import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
+import { DateInput } from '@/components/UI/Input/DateInput';
+import { RFIDInput } from '@/components/UI/Input/RFID';
 
 type EditGeneralInfoProps = {
   generalInfo: GHD;
@@ -16,114 +16,144 @@ type EditGeneralInfoProps = {
 const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
   generalInfo,
   onInputChange,
-}) => (
-  <View style={styles.container}>
-    <TooltipWrapper
-      tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
-    >
-      <RFIDInput label='RFID' />
-    </TooltipWrapper>
-    <TooltipWrapper
-      tooltipData={{
-        title: 'installation date',
-        message: 'This is the installation date',
-      }}
-    >
-      <DateInput label='Installation date:' />
-    </TooltipWrapper>
-    <TooltipWrapper
-      tooltipData={{ title: 'description', message: 'This is the description' }}
-    >
-      <Input
-        label='Description:'
-        value={generalInfo.description}
-        onChangeText={(text) => onInputChange('description', text)}
-      />
-    </TooltipWrapper>
-    <TooltipWrapper
-      tooltipData={{ title: 'Customer ID', message: 'This is the customer ID' }}
-    >
-      <Input
-        label='Customer ID:'
-        value={generalInfo.customerId}
-        onChangeText={(text) => onInputChange('customerId', text)}
-      />
-    </TooltipWrapper>
-    <TooltipWrapper
-      tooltipData={{ title: 'Location', message: 'This is the location' }}
-    >
-      <SelectField
-        label='S1 Plant, Vessel, Unit:'
-        value={generalInfo.s1PlantVesselUnit}
-        onChange={(value) => onInputChange('s1PlantVesselUnit', value)}
-        options={[]}
-      />
-    </TooltipWrapper>
-    <TooltipWrapper
-      tooltipData={{
-        title: 's2 equipment',
-        message: 'This is the s2 equipment',
-      }}
-    >
-      <SelectField
-        label='S2 Equipment:'
-        value={generalInfo.S2Equipment}
-        onChange={(value) => onInputChange('S2Equipment', value)}
-        options={[]}
-      />
-    </TooltipWrapper>
-    <TooltipWrapper
-      tooltipData={{ title: 'Equipment', message: 'This is the equipment' }}
-    >
-      <Input
-        label='Equipment Subunit:'
-        value={generalInfo.equipmentSubunit}
-        onChangeText={(text) => onInputChange('equipmentSubunit', text)}
-      />
-    </TooltipWrapper>
-    <TooltipWrapper
-      tooltipData={{ title: 'Other Info', message: 'This is the other info' }}
-    >
-      <Input
-        label='Other Info:'
-        value={generalInfo.otherInfo}
-        onChangeText={(text) => onInputChange('otherInfo', text)}
-      />
-    </TooltipWrapper>
-    <TooltipWrapper
-      tooltipData={{
-        title: 'pollution exposure',
-        message: 'This is the pollution exposure',
-      }}
-    >
-      <RadioGroup
-        label='Pollution exposure:'
-        choices={[
-          { id: 'internal', label: 'internal, not exposed' },
-          { id: 'exposed', label: 'exposed' },
-        ]}
-        selected={generalInfo.pollutionExposure}
-        onChange={(value) => onInputChange('pollutionExposure', value)}
-        type={'horizontal'}
-      />
-    </TooltipWrapper>
-    <TooltipWrapper
-      tooltipData={{ title: 'UV exposure', message: 'This is the UV exposure' }}
-    >
-      <RadioGroup
-        label='UV exposure:'
-        choices={[
-          { id: 'internal', label: 'internal, not exposed' },
-          { id: 'exposed', label: 'exposed' },
-        ]}
-        selected={generalInfo.uvExposure}
-        onChange={(value) => onInputChange('uvExposure', value)}
-        type={'horizontal'}
-      />
-    </TooltipWrapper>
-  </View>
-);
+}) => {
+  const [rfid, setRfid] = useState<string>('');
+  const [localState, setLocalState] = useState(generalInfo);
 
+  const handleRFIDScanned = (newRfid: string | null) => {
+    if (newRfid) {
+      setRfid(newRfid);
+      setLocalState((prevState) => ({
+        ...prevState,
+        id: newRfid,
+      }));
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <TooltipWrapper
+        tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
+      >
+        <RFIDInput label='RFID' onRFIDScanned={handleRFIDScanned} />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{
+          title: 'production date',
+          message: 'This is the production date',
+        }}
+      >
+        <DateInput
+          label='Production date'
+          value={localState.productionDate}
+          onChange={(date) => onInputChange('productionDate', date.toString())}
+        />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{
+          title: 'description',
+          message: 'This is the description',
+        }}
+      >
+        <Input
+          label='Description:'
+          value={generalInfo.description}
+          onChangeText={(text) => onInputChange('description', text)}
+        />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{
+          title: 'Customer ID',
+          message: 'This is the customer ID',
+        }}
+      >
+        <Input
+          label='Customer ID:'
+          value={generalInfo.customerId}
+          onChangeText={(text) => onInputChange('customerId', text)}
+        />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{ title: 'Location', message: 'This is the location' }}
+      >
+        <SelectField
+          label='S1 Plant, Vessel, Unit:'
+          value={generalInfo.s1PlantVesselUnit}
+          onChange={(value) => onInputChange('s1PlantVesselUnit', value)}
+          options={[]}
+        />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{
+          title: 's2 equipment',
+          message: 'This is the s2 equipment',
+        }}
+      >
+        <SelectField
+          label='S2 Equipment:'
+          value={generalInfo.S2Equipment}
+          onChange={(value) => onInputChange('S2Equipment', value)}
+          options={[]}
+        />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{ title: 'Equipment', message: 'This is the equipment' }}
+      >
+        <Input
+          label='Equipment Subunit:'
+          value={generalInfo.equipmentSubunit}
+          onChangeText={(text) => onInputChange('equipmentSubunit', text)}
+        />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{
+          title: 'Other Info',
+          message: 'This is the other info',
+        }}
+      >
+        <Input
+          label='Other Info:'
+          value={generalInfo.otherInfo}
+          onChangeText={(text) => onInputChange('otherInfo', text)}
+        />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{
+          title: 'pollution exposure',
+          message: 'This is the pollution exposure',
+        }}
+      >
+        <RadioGroup
+          label='Pollution exposure:'
+          choices={[
+            { id: 'internal', label: 'internal, not exposed' },
+            { id: 'exposed', label: 'exposed' },
+          ]}
+          selected={generalInfo.pollutionExposure}
+          onChange={(value) => onInputChange('pollutionExposure', value)}
+          type={'horizontal'}
+        />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{
+          title: 'UV exposure',
+          message: 'This is the UV exposure',
+        }}
+      >
+        <RadioGroup
+          label='UV exposure:'
+          choices={[
+            { id: 'internal', label: 'internal, not exposed' },
+            { id: 'exposed', label: 'exposed' },
+          ]}
+          selected={generalInfo.uvExposure}
+          onChange={(value) => onInputChange('uvExposure', value)}
+          type={'horizontal'}
+        />
+      </TooltipWrapper>
+    </View>
+  );
+};
 const styles = StyleSheet.create({
   container: {
     gap: 10,

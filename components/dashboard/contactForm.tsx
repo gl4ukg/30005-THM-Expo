@@ -8,28 +8,27 @@ import { SelectField } from '../detailHose/SelectField';
 import { Typography } from '../typography';
 import { ListTable } from './listTable';
 import { router } from 'expo-router';
-import { useAppContext } from '@/context/ContextProvider';
-import { isMultiSelection } from '@/context/state';
 
 interface Props {
   title: string;
   subTitle: string;
   isRFQ?: boolean;
   hoses: HoseType[];
+  fromScanPath?: boolean;
   onSave: (arg0: any) => void;
   onAdd?: (arg0: any) => void;
 }
-export const ContactTess: React.FC<Props> = ({
+export const ContactForm: React.FC<Props> = ({
   title,
   subTitle,
   isRFQ = false,
   hoses,
+  fromScanPath = false,
   onSave,
 }) => {
-  console.log('hoses', title);
   const [comment, setComment] = useState('');
-  const [name, setName] = useState('');
-  const [mail, setMail] = useState('');
+  const [name, setName] = useState(state.auth.user?.name || '');
+  const [mail, setMail] = useState(state.auth.user?.email || '');
   const [phone, setPhone] = useState('');
   const [rfq, setRfq] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>(
@@ -37,6 +36,14 @@ export const ContactTess: React.FC<Props> = ({
   );
   const originallySelectedHoses = useMemo(() => hoses, []);
   const { state, dispatch } = useAppContext();
+  const [emailError, setEmailError] = useState<undefined | string>(undefined);
+  function handleMail(email: string) {
+    setMail(email);
+    const isValid = emailValidation(email);
+    if (isValid === true) {
+      setEmailError(undefined);
+    } else setEmailError(isValid);
+  }
   const handleSelectionChange = (id: string) => {
     if (isMultiSelection(state.data.selection))
       dispatch({
@@ -49,6 +56,23 @@ export const ContactTess: React.FC<Props> = ({
       setSelectedIds([...selectedIds, id]);
     }
   };
+
+  const rfqOptions = [
+    {
+      id: 'certificate',
+      label: 'TESS to quote with pressure test and certificate',
+    },
+    { id: 'noPressureTest', label: 'TESS to quote without pressure test' },
+    { id: 'Unspecified', label: 'Unspecified' },
+  ];
+
+  const isButtonDisabled =
+    !name ||
+    !mail ||
+    !!emailError ||
+    !phone ||
+    selectedIds.length === 0 ||
+    (isRfq && (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
 
   return (
     <>
@@ -73,25 +97,12 @@ export const ContactTess: React.FC<Props> = ({
                 value={'Choose'}
                 onChange={setRfq}
                 onlyOptions={true}
-                options={[
-                  {
-                    id: 'certificate',
-                    label: 'TESS to quote with pressure test and certificate',
-                  },
-                  {
-                    id: 'noPressureTest',
-                    label: 'TESS to quote without pressure test',
-                  },
-                  {
-                    id: 'Unspecified',
-                    label: 'Unspecified',
-                  },
-                ]}
+                options={rfqOptions}
               />
             )}
             <Input
               type='textArea'
-              label={'Comment:'}
+              label={isRfq ? 'Delivery address / Comments' : 'Comment:'}
               value={comment}
               onChangeText={setComment}
             />
@@ -105,7 +116,8 @@ export const ContactTess: React.FC<Props> = ({
               type='email'
               label={'Mail:'}
               value={mail}
-              onChangeText={setMail}
+              onChangeText={handleMail}
+              errorMessage={emailError}
             />
             <Input
               type='tel'
@@ -117,7 +129,7 @@ export const ContactTess: React.FC<Props> = ({
               <ButtonTHS
                 title={title}
                 size='sm'
-                disabled={selectedIds.length === 0}
+                disabled={isButtonDisabled}
                 onPress={() =>
                   onSave({
                     comment,
@@ -147,6 +159,13 @@ export const ContactTess: React.FC<Props> = ({
               onSelectionChange={handleSelectionChange}
               canSelect={true}
             />
+            {fromScanPath && (
+              <LinkButton
+                variant='light'
+                title={`${responsePathMapping[subTitle ?? 'default']}`}
+                onPress={() => router.push('/scan')}
+              />
+            )}
           </>
         )}
       />
