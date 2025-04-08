@@ -60,7 +60,7 @@ export const ListTable: FC<Props> = ({
             {canSelect && !onSelectAll && (
               <Typography
                 name='fieldLabel'
-                text={`Total: ${items.length} ${items.length > 1 ? 'hoses' : 'hose'}`}
+                text={`Total: ${selectedIds.length} ${items.length > 1 ? 'hoses' : 'hose'}`}
                 style={styles.counter}
               />
             )}

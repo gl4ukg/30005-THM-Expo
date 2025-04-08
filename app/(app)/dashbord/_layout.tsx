@@ -14,10 +14,7 @@ export default function DashbordLayout() {
           name='hoses/hose/[hoseId]'
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-          name='hoses/register/[id]'
-          options={{ headerShown: false }}
-        />
+        <Stack.Screen name='hoses/register/' options={{ headerShown: false }} />
       </Stack>
     </>
   );

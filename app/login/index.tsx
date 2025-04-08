@@ -5,6 +5,7 @@ import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/linkButton';
 import { Input } from '@/components/UI/Input/input';
 import { useAppContext } from '@/context/ContextProvider';
+import { mockedData } from '@/context/mocked';
 import { colors } from '@/lib/tokens/colors';
 import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
@@ -41,6 +42,12 @@ export default function Login() {
     dispatch({
       type: 'SET_LOGIN_LOADING',
       payload: true,
+    });
+
+    // TODO: get data
+    dispatch({
+      type: 'SET_HOSE_DATA',
+      payload: mockedData,
     });
     // check if valid.
     // if valid send request to api or do something else.

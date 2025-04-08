@@ -39,13 +39,19 @@ const CouplingSection = ({
 );
 
 const UniversalHoseData = ({ universalHoseData }: UniversalHoseDataProps) => {
-  const areCouplingsSame =
-    universalHoseData.materialQuality === universalHoseData.materialQuality2 &&
-    universalHoseData.typeFitting === universalHoseData.typeFitting2 &&
-    universalHoseData.innerDiameter2 === universalHoseData.innerDiameter2 &&
-    universalHoseData.gender === universalHoseData.gender2 &&
-    universalHoseData.angle === universalHoseData.angle2 &&
-    universalHoseData.commentEnd1 === universalHoseData.commentEnd2;
+  const areCouplingsSame = [
+    'materialQuality',
+    'typeFitting',
+    'innerDiameter2',
+    'gender',
+    'angle',
+    'commentEnd1',
+  ].every((key) => {
+    const value1 = universalHoseData[key as keyof UHD];
+    const value2 = universalHoseData[`${key}2` as keyof UHD];
+
+    return value1 === value2 && value1 !== '' && value1 !== undefined;
+  });
 
   return (
     <View style={styles.container}>
@@ -62,14 +68,19 @@ const UniversalHoseData = ({ universalHoseData }: UniversalHoseDataProps) => {
         universalHoseData={universalHoseData}
         title='Coupling end 1'
       />
-      <View style={styles.checkboxContainer}>
-        <Checkbox isChecked={areCouplingsSame} disabled onChange={() => {}} />
-        <Typography name='button' text='Same as end 1' />
+      <View style={styles.sectionTitleContainer}>
+        <Typography name='navigationBold' text='Coupling end 2' />
+        <View style={styles.checkboxContainer}>
+          <Checkbox disabled isChecked={areCouplingsSame} onChange={() => {}} />
+          <Typography name='button' text='Same as end 1' />
+        </View>
       </View>
-      <CouplingSection
-        universalHoseData={universalHoseData}
-        title='Coupling end 2'
-      />
+      {!areCouplingsSame && (
+        <CouplingSection
+          universalHoseData={universalHoseData}
+          title='Coupling end 2'
+        />
+      )}
     </View>
   );
 };
