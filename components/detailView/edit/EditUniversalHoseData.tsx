@@ -9,24 +9,29 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Bookmark from '../Bookmark';
 import { UHD } from '../types';
+import { EditProps } from '@/components/detailView/edit/edit';
 
-interface UniversalHoseDataProps {
-  universalHoseData: UHD;
-  onInputChange: (field: string, value: string) => void;
-}
+type EditUniversalHoseDataProps = EditProps<
+  Pick<
+    UHD,
+    | 'materialQuality'
+    | 'typeFitting'
+    | 'innerDiameter2'
+    | 'gender'
+    | 'angle'
+    | 'commentEnd1'
+  >
+>;
 
-const EditCouplingSection = ({
-  universalHoseData,
+const EditCouplingSection: React.FC<EditUniversalHoseDataProps> = ({
+  info,
   onInputChange,
-}: {
-  universalHoseData: UHD;
-  onInputChange: (field: string, value: string) => void;
 }) => (
   <>
     <TooltipWrapper tooltipData={{ title: 'Material Quality', message: '' }}>
       <SelectField
         label='Material Quality'
-        value={universalHoseData.materialQuality}
+        value={info.materialQuality}
         onChange={(value) => onInputChange('materialQuality', value)}
         options={[]}
       />
@@ -34,7 +39,7 @@ const EditCouplingSection = ({
     <TooltipWrapper tooltipData={{ title: 'Type Fitting', message: '' }}>
       <SelectField
         label='Type Fitting'
-        value={universalHoseData.typeFitting}
+        value={info.typeFitting}
         onChange={(value) => onInputChange('typeFitting', value)}
         options={[]}
       />
@@ -42,7 +47,7 @@ const EditCouplingSection = ({
     <TooltipWrapper tooltipData={{ title: 'Inner Diameter 2', message: '' }}>
       <SelectField
         label='Inner Diameter 2'
-        value={universalHoseData.innerDiameter2}
+        value={info.innerDiameter2}
         onChange={(value) => onInputChange('innerDiameter2', value)}
         options={[]}
       />
@@ -50,7 +55,7 @@ const EditCouplingSection = ({
     <TooltipWrapper tooltipData={{ title: 'Gender', message: '' }}>
       <SelectField
         label='Gender'
-        value={universalHoseData.gender}
+        value={info.gender}
         onChange={(value) => onInputChange('gender', value)}
         options={[]}
       />
@@ -58,7 +63,7 @@ const EditCouplingSection = ({
     <TooltipWrapper tooltipData={{ title: 'Angle', message: '' }}>
       <SelectField
         label='Angle'
-        value={universalHoseData.angle}
+        value={info.angle}
         onChange={(value) => onInputChange('angle', value)}
         options={[]}
       />
@@ -66,10 +71,10 @@ const EditCouplingSection = ({
   </>
 );
 
-const EditUniversalHoseData = ({
-  universalHoseData,
+const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
+  info,
   onInputChange,
-}: UniversalHoseDataProps) => {
+}) => {
   const [sameAsEnd1, setSameAsEnd1] = useState(false);
 
   const handleCheckboxChange = useCallback(() => {
@@ -78,14 +83,14 @@ const EditUniversalHoseData = ({
 
   useEffect(() => {
     if (sameAsEnd1) {
-      onInputChange('materialQuality2', universalHoseData.materialQuality);
-      onInputChange('typeFitting2', universalHoseData.typeFitting);
-      onInputChange('innerDiameter22', universalHoseData.innerDiameter2);
-      onInputChange('gender2', universalHoseData.gender);
-      onInputChange('angle2', universalHoseData.angle);
-      onInputChange('commentEnd2', universalHoseData.commentEnd1);
+      onInputChange('materialQuality2', info.materialQuality);
+      onInputChange('typeFitting2', info.typeFitting);
+      onInputChange('innerDiameter2', info.innerDiameter2);
+      onInputChange('gender2', info.gender);
+      onInputChange('angle2', info.angle);
+      onInputChange('commentEnd2', info.commentEnd1);
     }
-  }, [sameAsEnd1, universalHoseData, onInputChange]);
+  }, [sameAsEnd1, info, onInputChange]);
 
   return (
     <View>
@@ -98,7 +103,7 @@ const EditUniversalHoseData = ({
       >
         <SelectField
           label='Hose Standard'
-          value={universalHoseData.hoseStandard}
+          value={info.hoseStandard}
           onChange={(value) => onInputChange('hoseStandard', value)}
           options={[]}
         />
@@ -111,7 +116,7 @@ const EditUniversalHoseData = ({
       >
         <SelectField
           label='Inner Diameter'
-          value={universalHoseData.innerDiameter}
+          value={info.innerDiameter}
           onChange={(value) => onInputChange('innerDiameter', value)}
           options={[]}
         />
@@ -125,7 +130,7 @@ const EditUniversalHoseData = ({
         <View style={styles.inputContainer}>
           <UnitInput
             label='Total Length'
-            value={Number(universalHoseData.totalLength)}
+            value={Number(info.totalLength)}
             onChangeText={(value: number) =>
               onInputChange('totalLength', String(value))
             }
@@ -140,7 +145,7 @@ const EditUniversalHoseData = ({
         }}
       >
         <BarToPsiInput
-          pressureInBars={Number(universalHoseData.wpBar)}
+          pressureInBars={Number(info.wpBar)}
           onChange={(pressure) => {
             onInputChange('wpBar', String(pressure.bar));
             onInputChange('wpPsi', String(pressure.psi));
@@ -150,10 +155,7 @@ const EditUniversalHoseData = ({
       <View style={styles.sectionTitleContainer}>
         <Typography name='navigationBold' text='Coupling end 1' />
       </View>
-      <EditCouplingSection
-        universalHoseData={universalHoseData}
-        onInputChange={onInputChange}
-      />
+      <EditCouplingSection info={info} onInputChange={onInputChange} />
       <TooltipWrapper
         tooltipData={{
           title: 'Comment End 1',
@@ -162,7 +164,7 @@ const EditUniversalHoseData = ({
       >
         <Input
           label='Comment End 1'
-          value={universalHoseData.commentEnd1}
+          value={info.commentEnd1}
           onChangeText={(text) => onInputChange('commentEnd2', text)}
         />
       </TooltipWrapper>
@@ -177,14 +179,11 @@ const EditUniversalHoseData = ({
       </TooltipWrapper>
       {!sameAsEnd1 && (
         <>
-          <EditCouplingSection
-            universalHoseData={universalHoseData}
-            onInputChange={onInputChange}
-          />
+          <EditCouplingSection info={info} onInputChange={onInputChange} />
           <View style={styles.inputContainer}>
             <Input
               label='Comment End 2'
-              value={universalHoseData.commentEnd1}
+              value={info.commentEnd1}
               onChangeText={(text) => onInputChange('commentEnd2', text)}
             />
           </View>

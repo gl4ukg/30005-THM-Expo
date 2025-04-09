@@ -1,39 +1,28 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import Datafield from './Datafield';
 import { GHD } from './types';
-import { formatDate } from '@/lib/util/formatDate';
 
 type GeneralInfoProps = {
-  generalInfo: GHD;
+  info: GHD;
 };
 
-const GeneralInfo: React.FC<GeneralInfoProps> = ({ generalInfo }) => {
+const GeneralInfo: React.FC<GeneralInfoProps> = ({ info }) => {
   return (
     <View>
-      <Datafield label='RFID:' value={generalInfo.RFid} />
-      <Datafield
-        label='Installation date:'
-        value={formatDate(generalInfo.installationDate)}
-      />
-
-      <Datafield label='Description:' value={generalInfo.description} />
-      <Datafield label='Customer ID:' value={generalInfo.customerId} />
+      <Datafield label='RFID:' value={info.RFid} />
+      <Datafield label='Installation date:' value={info.installationDate} />
+      <Datafield label='Description:' value={info.description} />
+      <Datafield label='Customer ID:' value={info.customerId} />
       <Datafield
         label='S1 Plant, Vessel, Unit:'
-        value={generalInfo.s1PlantVesselUnit}
+        value={info.s1PlantVesselUnit}
       />
-      <Datafield label='S2 Equipment:' value={generalInfo.S2Equipment} />
-      <Datafield
-        label='Equipment Subunit:'
-        value={generalInfo.equipmentSubunit}
-      />
-      <Datafield label='Other Info:' value={generalInfo.otherInfo} />
-      <Datafield
-        label='Pollution exposure:'
-        value={generalInfo.pollutionExposure}
-      />
-      <Datafield label='UV exposure:' value={generalInfo.uvExposure} />
+      <Datafield label='S2 Equipment:' value={info.S2Equipment} />
+      <Datafield label='Equipment Subunit:' value={info.equipmentSubunit} />
+      <Datafield label='Other Info:' value={info.otherInfo} />
+      <Datafield label='Pollution exposure:' value={info.pollutionExposure} />
+      <Datafield label='UV exposure:' value={info.uvExposure} />
     </View>
   );
 };

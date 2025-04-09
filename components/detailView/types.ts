@@ -69,9 +69,7 @@ export type HID = {
   customerArticleNumber: string;
 };
 
-export type HoseData = {
-  generalHoseData: GHD;
-  universalHoseData: UHD;
-  tessPartNumbers: TPN;
-  historyData: HID;
-};
+export type HoseData = { id: string; missingData?: boolean } & GHD &
+  UHD &
+  TPN &
+  HID;

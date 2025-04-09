@@ -9,15 +9,9 @@ import { HID } from './types';
 import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
 
 type MaintenanceProps = {
-  hoseData: HID;
-  editMode: boolean;
-  onInputChange: (field: string, value: string) => void;
+  info: HID;
 };
-const MaintenanceInfo: React.FC<MaintenanceProps> = ({
-  hoseData,
-  editMode,
-  onInputChange,
-}) => {
+const MaintenanceInfo: React.FC<MaintenanceProps> = ({ info: hoseData }) => {
   const today = new Date();
   const nextInspectionError = stringToDate(hoseData.nextInspection) < today;
 
@@ -31,31 +25,22 @@ const MaintenanceInfo: React.FC<MaintenanceProps> = ({
       />
       <Datafield
         label={'Inspected Date:'}
-        value={formatDate(hoseData.inspectedDate)}
+        value={formatDate(new Date(hoseData.inspectedDate))}
       />
-      {editMode ? (
-        <EditMaintenanceInfo
-          hoseData={hoseData}
-          onInputChange={onInputChange}
-        />
-      ) : (
-        <>
-          <Datafield label={'Inspected By:'} value={hoseData.inspectedBy} />
-          <Datafield label={'Condition:'} value={hoseData.hoseCondition} />
-          <Datafield label={'Approved:'} value={hoseData.approved} />
-          <Datafield label={'Comment:'} value={hoseData.comment} />
-          <Typography
-            name={'navigationBold'}
-            text='Criticality / Intervals'
-            style={styles.subTitle}
-          />
-          <Datafield
-            label={'Hose Production Date:'}
-            value={formatDate(hoseData.prodDate)}
-          />
-          <Datafield label={'Criticality:'} value={hoseData.criticality} />
-        </>
-      )}
+      <Datafield label={'Inspected By:'} value={hoseData.inspectedBy} />
+      <Datafield label={'Condition:'} value={hoseData.hoseCondition} />
+      <Datafield label={'Approved:'} value={hoseData.approved} />
+      <Datafield label={'Comment:'} value={hoseData.comment} />
+      <Typography
+        name={'navigationBold'}
+        text='Criticality / Intervals'
+        style={styles.subTitle}
+      />
+      <Datafield
+        label={'Hose Production Date:'}
+        value={formatDate(new Date(hoseData.prodDate))}
+      />
+      <Datafield label={'Criticality:'} value={hoseData.criticality} />
       <View style={styles.inspectionDetails}>
         <Datafield
           label={'Inspection Interval:'}
@@ -63,7 +48,7 @@ const MaintenanceInfo: React.FC<MaintenanceProps> = ({
         />
         <Datafield
           label={'Next Inspection:'}
-          value={formatDate(hoseData.nextInspection)}
+          value={formatDate(new Date(hoseData.nextInspection))}
           error={nextInspectionError}
         />
         <Datafield
@@ -72,7 +57,7 @@ const MaintenanceInfo: React.FC<MaintenanceProps> = ({
         />
         <Datafield
           label={'Replacement Date:'}
-          value={formatDate(hoseData.replacementDate)}
+          value={formatDate(new Date(hoseData.replacementDate))}
         />
       </View>
       <View style={styles.spacing}>

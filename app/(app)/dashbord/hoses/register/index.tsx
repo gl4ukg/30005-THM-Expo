@@ -1,7 +1,7 @@
 import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
 import Documents from '@/components/detailView/Documents';
 import EditGeneralInfo from '@/components/detailView/edit/EditGeneralInfo';
-import EditMaintananceInfo from '@/components/detailView/edit/EditMaintenanceInfo';
+import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
 import EditTessPartNumbers from '@/components/detailView/edit/EditTessPartNumbers';
 import EditUniversalHoseData from '@/components/detailView/edit/EditUniversalHoseData';
 import { GHD, HID, HoseData, TPN, UHD } from '@/components/detailView/types';
@@ -10,15 +10,16 @@ import { ButtonTHS } from '@/components/UI';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
-import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
 import { useLocalSearchParams } from 'expo-router';
-import { useContext, useState } from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 const RegisterHose = () => {
-  const { hoseId } = useLocalSearchParams();
-  const { state, dispatch } = useContext(AppContext);
+  const { hoseId, rfid: urlRfid } = useLocalSearchParams();
+
+  const incomingRfid = Array.isArray(urlRfid) ? urlRfid[0] : urlRfid;
+  const incomingId = Array.isArray(hoseId) ? hoseId[0] : hoseId;
   const [registerMultiple, setRegisterMultiple] = useState(false);
   const [rfid, setRfid] = useState<string>('');
 
@@ -26,12 +27,8 @@ const RegisterHose = () => {
     setRegisterMultiple((prevState) => !prevState);
   };
 
-  const initialHoseData: Partial<HoseData> = {
-    id: hoseId,
-    generalHoseData: {} as GHD,
-    universalHoseData: {} as UHD,
-    tessPartNumbers: {} as TPN,
-    maintananceInfo: {} as HID,
+  const initialHoseData: Partial<HoseData & { id: string }> = {
+    id: incomingRfid || incomingId,
   };
 
   const [localState, setLocalState] = useState(initialHoseData);
@@ -77,7 +74,11 @@ const RegisterHose = () => {
           >
             <DateInput
               label='Production date'
-              value={localState.generalHoseData?.productionDate}
+              value={
+                localState.productionDate
+                  ? new Date(localState.productionDate)
+                  : null
+              }
               onChange={(date) =>
                 handleInputChange('productionDate', date.toString())
               }
@@ -86,19 +87,19 @@ const RegisterHose = () => {
         </View>
 
         <EditGeneralInfo
-          generalInfo={localState.generalHoseData!}
+          generalInfo={localState as GHD}
           onInputChange={handleInputChange}
         />
         <EditUniversalHoseData
-          universalHoseData={localState.universalHoseData}
+          universalHoseData={localState as UHD}
           onInputChange={handleInputChange}
         />
         <EditTessPartNumbers
-          tessPartNumbersData={localState.tessPartNumbers}
+          tessPartNumbersData={localState as TPN}
           onInputChange={handleInputChange}
         />
-        <EditMaintananceInfo
-          hoseData={localState.maintananceInfo}
+        <EditMaintenanceInfo
+          hoseData={localState as HID}
           onInputChange={handleInputChange}
         />
         <Documents />
