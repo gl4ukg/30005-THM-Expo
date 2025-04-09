@@ -10,13 +10,15 @@ import { reverseHexString } from '@/lib/util/rfid';
 interface RFIDInputProps {
   label: string;
   onRFIDScanned: (rfid: string | null) => void;
+  initialValue?: string;
 }
 
 export const RFIDInput: React.FC<RFIDInputProps> = ({
   label,
   onRFIDScanned,
+  initialValue = null,
 }) => {
-  const [rfid, setRfid] = useState<string | null>(null);
+  const [rfid, setRfid] = useState<string | null>(initialValue);
   const [modalVisible, setModalVisible] = useState(false);
   const [isNfcSupported, setIsNfcSupported] = useState(false);
   const [scanning, setScanning] = useState(false);
@@ -105,6 +107,12 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
       NfcManager.cancelTechnologyRequest();
     };
   }, [checkNfc]);
+
+  useEffect(() => {
+    if (initialValue) {
+      onRFIDScanned(initialValue);
+    }
+  }, [initialValue, onRFIDScanned]);
 
   const handlePress = () => {
     handleRFIDScan();

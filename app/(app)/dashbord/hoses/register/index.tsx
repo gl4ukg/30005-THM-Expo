@@ -21,7 +21,7 @@ const RegisterHose = () => {
   const incomingRfid = Array.isArray(urlRfid) ? urlRfid[0] : urlRfid;
   const incomingId = Array.isArray(hoseId) ? hoseId[0] : hoseId;
   const [registerMultiple, setRegisterMultiple] = useState(false);
-  const [rfid, setRfid] = useState<string>('');
+  const [rfid, setRfid] = useState<string>(urlRfid?.toString() || '');
 
   const handleCheckboxChange = () => {
     setRegisterMultiple((prevState) => !prevState);
@@ -55,16 +55,25 @@ const RegisterHose = () => {
       <ScrollView>
         <View style={{ alignItems: 'center' }}>
           <Typography name='navigationBold' text='Register hose' />
-          <Typography name='navigation'>
-            Hose ID
-            <Typography name={'navigationBold'} text={String(hoseId ?? '')} />
-          </Typography>
+          {(hoseId || urlRfid) && (
+            <Typography name='navigation'>
+              Hose ID
+              <Typography
+                name={'navigationBold'}
+                text={String(urlRfid || hoseId || '')}
+              />
+            </Typography>
+          )}
         </View>
         <View>
           <TooltipWrapper
             tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
           >
-            <RFIDInput label='RFID' onRFIDScanned={handleRFIDScanned} />
+            <RFIDInput
+              label='RFID'
+              onRFIDScanned={handleRFIDScanned}
+              initialValue={rfid}
+            />
           </TooltipWrapper>
           <TooltipWrapper
             tooltipData={{
@@ -84,11 +93,26 @@ const RegisterHose = () => {
               }
             />
           </TooltipWrapper>
+          <TooltipWrapper
+            tooltipData={{
+              title: 'Installation date',
+              message: 'This is the installation date',
+            }}
+          >
+            <DateInput
+              label='Installation date'
+              value={localState.generalHoseData?.installationDate}
+              onChange={(date) =>
+                handleInputChange('installationDate', date.toString())
+              }
+            />
+          </TooltipWrapper>
         </View>
 
         <EditGeneralInfo
           generalInfo={localState as GHD}
           onInputChange={handleInputChange}
+          register
         />
         <EditUniversalHoseData
           universalHoseData={localState as UHD}

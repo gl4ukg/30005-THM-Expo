@@ -25,11 +25,29 @@ const EditGeneralInfo: React.FC<EditProps<GHD>> = ({ info, onInputChange }) => {
 
   return (
     <View style={styles.container}>
-      <TooltipWrapper
-        tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
-      >
-        <RFIDInput label='RFID' onRFIDScanned={handleRFIDScanned} />
-      </TooltipWrapper>
+      {/* {!register && ( */}
+      {/* <>
+        <TooltipWrapper
+          tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
+        >
+          <RFIDInput label='RFID' onRFIDScanned={handleRFIDScanned} />
+        </TooltipWrapper>
+        <TooltipWrapper
+          tooltipData={{
+            title: 'Installation date',
+            message: 'This is the installation date',
+          }}
+        >
+          <DateInput
+            label='Installation date'
+            value={new Date(localState.installationDate)}
+            onChange={(date) =>
+              onInputChange('installationDate', date.toString())
+            }
+          />
+        </TooltipWrapper>
+      </> */}
+      {/* )} */}
       <TooltipWrapper
         tooltipData={{
           title: 'Installation date:',
