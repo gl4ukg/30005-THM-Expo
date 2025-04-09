@@ -86,6 +86,7 @@ const HoseDetails = () => {
       payload: { hoseId: hoseData.id, hoseData },
     });
     setEditMode(false);
+    scrollViewRef.current?.scrollTo({ y: 0 });
   };
 
   const handleAction = (value: SingleSelection['type']) => {
