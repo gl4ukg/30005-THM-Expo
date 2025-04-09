@@ -27,7 +27,7 @@ const RegisterHose = () => {
     setRegisterMultiple((prevState) => !prevState);
   };
 
-  const initialHoseData: Partial<HoseData & { id: string }> = {
+  const initialHoseData: Partial<HoseData> = {
     id: incomingRfid || incomingId,
   };
 
@@ -83,11 +83,7 @@ const RegisterHose = () => {
           >
             <DateInput
               label='Production date'
-              value={
-                localState.productionDate
-                  ? new Date(localState.productionDate)
-                  : null
-              }
+              value={localState.prodDate ? new Date(localState.prodDate) : null}
               onChange={(date) =>
                 handleInputChange('productionDate', date.toString())
               }
@@ -101,7 +97,11 @@ const RegisterHose = () => {
           >
             <DateInput
               label='Installation date'
-              value={localState.generalHoseData?.installationDate}
+              value={
+                localState.installationDate
+                  ? new Date(localState.installationDate)
+                  : null
+              }
               onChange={(date) =>
                 handleInputChange('installationDate', date.toString())
               }
@@ -110,20 +110,20 @@ const RegisterHose = () => {
         </View>
 
         <EditGeneralInfo
-          generalInfo={localState as GHD}
+          info={localState as GHD}
           onInputChange={handleInputChange}
-          register
+          isRegisterView
         />
         <EditUniversalHoseData
-          universalHoseData={localState as UHD}
+          info={localState as UHD}
           onInputChange={handleInputChange}
         />
         <EditTessPartNumbers
-          tessPartNumbersData={localState as TPN}
+          info={localState as TPN}
           onInputChange={handleInputChange}
         />
         <EditMaintenanceInfo
-          hoseData={localState as HID}
+          info={localState as HID}
           onInputChange={handleInputChange}
         />
         <Documents />

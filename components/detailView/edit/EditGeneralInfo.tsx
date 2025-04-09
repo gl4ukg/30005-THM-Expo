@@ -9,7 +9,9 @@ import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
 import { EditProps } from '@/components/detailView/edit/edit';
 
-const EditGeneralInfo: React.FC<EditProps<GHD>> = ({ info, onInputChange }) => {
+const EditGeneralInfo: React.FC<
+  EditProps<GHD> & { isRegisterView?: boolean }
+> = ({ info, onInputChange, isRegisterView }) => {
   const [rfid, setRfid] = useState<string>('');
   const [localState, setLocalState] = useState(info);
 
@@ -25,43 +27,29 @@ const EditGeneralInfo: React.FC<EditProps<GHD>> = ({ info, onInputChange }) => {
 
   return (
     <View style={styles.container}>
-      {/* {!register && ( */}
-      {/* <>
-        <TooltipWrapper
-          tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
-        >
-          <RFIDInput label='RFID' onRFIDScanned={handleRFIDScanned} />
-        </TooltipWrapper>
-        <TooltipWrapper
-          tooltipData={{
-            title: 'Installation date',
-            message: 'This is the installation date',
-          }}
-        >
-          <DateInput
-            label='Installation date'
-            value={new Date(localState.installationDate)}
-            onChange={(date) =>
-              onInputChange('installationDate', date.toString())
-            }
-          />
-        </TooltipWrapper>
-      </> */}
-      {/* )} */}
-      <TooltipWrapper
-        tooltipData={{
-          title: 'Installation date:',
-          message: 'This is the Installation date:',
-        }}
-      >
-        <DateInput
-          label='Installation date:'
-          value={info.installationDate ? new Date(info.installationDate) : null}
-          onChange={(date) =>
-            onInputChange('installationDate', date.toISOString())
-          }
-        />
-      </TooltipWrapper>
+      {!isRegisterView && (
+        <>
+          <TooltipWrapper
+            tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
+          >
+            <RFIDInput label='RFID' onRFIDScanned={handleRFIDScanned} />
+          </TooltipWrapper>
+          <TooltipWrapper
+            tooltipData={{
+              title: 'Installation date',
+              message: 'This is the installation date',
+            }}
+          >
+            <DateInput
+              label='Installation date'
+              value={new Date(localState.installationDate)}
+              onChange={(date) =>
+                onInputChange('installationDate', date.toString())
+              }
+            />
+          </TooltipWrapper>
+        </>
+      )}
       <TooltipWrapper
         tooltipData={{
           title: 'description',

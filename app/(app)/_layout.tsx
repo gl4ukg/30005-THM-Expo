@@ -42,7 +42,7 @@ export default function TabLayout() {
           }}
         />
       } */}
-      <Typography name='navigation' text={state.data.selectedUnitId ?? 'tes'} />
+      {/* <Typography name='navigation' text={state.data.selectedUnitId ?? 'tes'} /> */}
       <Tabs
         screenOptions={{ headerShown: false }}
         initialRouteName='dashbord'
