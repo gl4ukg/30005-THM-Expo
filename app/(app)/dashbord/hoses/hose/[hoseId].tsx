@@ -160,7 +160,6 @@ const HoseDetails = () => {
     ];
     return structure;
   };
-
   return (
     <View style={styles.container}>
       {!isMultiSelection(state.data.selection) && !editMode && (

@@ -5,6 +5,11 @@ export const formatDate = (date: Date | undefined): string => {
   return `${date?.getDay()}-${date?.getMonth() + 1}-${date.getFullYear()}`;
 };
 
+export const convertToISOFormat = (dateString: string): string => {
+  const [day, month, year] = dateString.split('/');
+  return `${year}-${month}-${day}`;
+};
+
 export const stringToDate = (dateString: string) => {
   try {
     const parts = dateString.split('/');

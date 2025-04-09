@@ -1,6 +1,6 @@
 export type GHD = {
   description: string;
-  productionDate: string;
+  prodDate: string;
   customerId: string;
   s1PlantVesselUnit: string;
   S2Equipment: string;

@@ -53,6 +53,7 @@ const EditGeneralInfo: React.FC<EditProps<GHD>> = ({ info, onInputChange }) => {
         <Input
           label='Description:'
           value={info.description}
+          errorMessage='This is the error message'
           onChangeText={(text) => onInputChange('description', text)}
         />
       </TooltipWrapper>
@@ -64,6 +65,7 @@ const EditGeneralInfo: React.FC<EditProps<GHD>> = ({ info, onInputChange }) => {
       >
         <Input
           label='Customer ID:'
+          errorMessage='This is the error message'
           value={info.customerId}
           onChangeText={(text) => onInputChange('customerId', text)}
         />
