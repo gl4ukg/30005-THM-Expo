@@ -30,7 +30,7 @@ const DetailsHeader: React.FC<DetailsHeaderProps> = ({
       <Typography style={styles.hoseData} name={'fieldLabel'}>
         Production Date:
         <Typography name={'fieldValue'} style={styles.boldText}>
-          {formatDate(date)}
+          {formatDate(new Date(date))}
         </Typography>
       </Typography>
     </View>

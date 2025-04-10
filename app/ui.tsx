@@ -29,6 +29,7 @@ const Ui = () => {
   const [radioBtnExpanded, setRadioBtnExpanded] = useState(false);
   const [selectExpanded, setSelectExpanded] = useState(true);
   const [datePickerExpanded, setdatePickerExpanded] = useState(false);
+  const [date, setDate] = useState<Date | null>(null);
 
   const [name, setName] = useState('');
   const [genericText, setGenericText] = useState('');
@@ -664,7 +665,16 @@ const Ui = () => {
               )}
             </Pressable>
             <View style={{ display: datePickerExpanded ? 'flex' : 'none' }}>
-              <DateInput label={'What Day is it?'} />
+              <Typography
+                name={'fieldLabel'}
+                style={{ color: colors.black }}
+                text={`Date: ${date && date.toLocaleDateString()}`}
+              />
+              <DateInput
+                label={'What Day is it?'}
+                value={new Date()}
+                onChange={setDate}
+              />
             </View>
           </ScrollView>
         </View>

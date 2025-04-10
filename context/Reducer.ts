@@ -118,18 +118,24 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
         hoses: action.payload,
       };
     case 'SAVE_HOSE_DATA':
+      console.log('SAVE_HOSE_DATA', action.payload.hoseId),
+        action.payload.hoseData.installationDate;
+      if (action.payload.hoseId === undefined) {
+        console.error('hoseId is undefined', action.payload.hoseId);
+        return state;
+      }
       return {
         ...state,
-        assignedUnits: Array.isArray(state.assignedUnits)
-          ? state.assignedUnits.reduce((acc: any, hose: any) => {
-              const hoseId = hose.id;
-              acc[hoseId] =
-                hose.id === action.payload.hoseId
-                  ? { ...hose, ...action.payload.hoseData }
-                  : hose;
-              return acc;
-            }, {})
-          : state.assignedUnits,
+
+        hoses: state.hoses.map((hose) => {
+          if (hose.id === action.payload.hoseId) {
+            return {
+              ...hose,
+              ...action.payload.hoseData,
+            };
+          }
+          return hose;
+        }),
       };
     case 'START_MULTI_SELECTION':
       return {

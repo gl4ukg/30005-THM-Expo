@@ -7,19 +7,13 @@ import { GHD } from '../types';
 import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
+import { EditProps } from '@/components/detailView/edit/edit';
 
-type EditGeneralInfoProps = {
-  generalInfo: GHD;
-  onInputChange: (field: string, value: string) => void;
-  register: boolean;
-};
-
-const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
-  generalInfo,
-  register,
-}) => {
+const EditGeneralInfo: React.FC<
+  EditProps<GHD> & { isRegisterView?: boolean }
+> = ({ info, onInputChange, isRegisterView }) => {
   const [rfid, setRfid] = useState<string>('');
-  const [localState, setLocalState] = useState(generalInfo);
+  const [localState, setLocalState] = useState(info);
 
   const handleRFIDScanned = (newRfid: string | null) => {
     if (newRfid) {
@@ -33,7 +27,7 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
 
   return (
     <View style={styles.container}>
-      {!register && (
+      {!isRegisterView && (
         <>
           <TooltipWrapper
             tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
@@ -48,7 +42,7 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
           >
             <DateInput
               label='Installation date'
-              value={localState.installationDate}
+              value={new Date(localState.installationDate)}
               onChange={(date) =>
                 onInputChange('installationDate', date.toString())
               }
@@ -64,7 +58,8 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
       >
         <Input
           label='Description:'
-          value={generalInfo.description}
+          value={info.description}
+          errorMessage='This is the error message'
           onChangeText={(text) => onInputChange('description', text)}
         />
       </TooltipWrapper>
@@ -76,7 +71,8 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
       >
         <Input
           label='Customer ID:'
-          value={generalInfo.customerId}
+          errorMessage='This is the error message'
+          value={info.customerId}
           onChangeText={(text) => onInputChange('customerId', text)}
         />
       </TooltipWrapper>
@@ -85,7 +81,7 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
       >
         <SelectField
           label='S1 Plant, Vessel, Unit:'
-          value={generalInfo.s1PlantVesselUnit}
+          value={info.s1PlantVesselUnit}
           onChange={(value) => onInputChange('s1PlantVesselUnit', value)}
           options={[]}
         />
@@ -98,7 +94,7 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
       >
         <SelectField
           label='S2 Equipment:'
-          value={generalInfo.S2Equipment}
+          value={info.S2Equipment}
           onChange={(value) => onInputChange('S2Equipment', value)}
           options={[]}
         />
@@ -108,7 +104,7 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
       >
         <Input
           label='Equipment Subunit:'
-          value={generalInfo.equipmentSubunit}
+          value={info.equipmentSubunit}
           onChangeText={(text) => onInputChange('equipmentSubunit', text)}
         />
       </TooltipWrapper>
@@ -120,7 +116,7 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
       >
         <Input
           label='Other Info:'
-          value={generalInfo.otherInfo}
+          value={info.otherInfo}
           onChangeText={(text) => onInputChange('otherInfo', text)}
         />
       </TooltipWrapper>
@@ -136,7 +132,7 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
             { id: 'internal', label: 'internal, not exposed' },
             { id: 'exposed', label: 'exposed' },
           ]}
-          selected={generalInfo.pollutionExposure}
+          selected={info.pollutionExposure}
           onChange={(value) => onInputChange('pollutionExposure', value)}
           type={'horizontal'}
         />
@@ -153,7 +149,7 @@ const EditGeneralInfo: React.FC<EditGeneralInfoProps> = ({
             { id: 'internal', label: 'internal, not exposed' },
             { id: 'exposed', label: 'exposed' },
           ]}
-          selected={generalInfo.uvExposure}
+          selected={info.uvExposure}
           onChange={(value) => onInputChange('uvExposure', value)}
           type={'horizontal'}
         />

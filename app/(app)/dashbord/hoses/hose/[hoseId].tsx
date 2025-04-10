@@ -12,6 +12,8 @@ import EditGeneralInfo from '@/components/detailView/edit/EditGeneralInfo';
 import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
 import EditTessPartNumbers from '@/components/detailView/edit/EditTessPartNumbers';
 import EditUniversalHoseData from '@/components/detailView/edit/EditUniversalHoseData';
+import { EditProps } from '@/components/detailView/edit/edit';
+import { HoseData } from '@/components/detailView/types';
 import { Typography } from '@/components/typography';
 import { AppContext } from '@/context/Reducer';
 import {
@@ -25,15 +27,19 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useRef, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 
-const renderComponent = (
-  Component: React.FC<any>,
-  EditComponent: React.FC<any>,
-  props: any,
+const renderComponent = <T,>(
+  Component: React.FC<{ info: T }>,
+  EditComponent: React.FC<EditProps<T>>,
+  props: {
+    info: T;
+    editMode: boolean;
+    onInputChange: (field: keyof T, value: any) => void;
+  },
 ) => {
   return props.editMode ? (
-    <EditComponent {...props} />
+    <EditComponent info={props.info} onInputChange={props.onInputChange} />
   ) : (
-    <Component {...props} />
+    <Component info={props.info} />
   );
 };
 export type Section = {
@@ -42,23 +48,25 @@ export type Section = {
   content: JSX.Element;
 };
 
+const isHoseDataType = (hose: HoseData | {}): hose is HoseData => {
+  return 'id' in hose;
+};
+
 const HoseDetails = () => {
   const { hoseId } = useLocalSearchParams();
 
   const { state, dispatch } = useContext(AppContext);
-  // const [action, setAction] = useState<Option<SingleSelection['type']> | null>(
-  //   null,
-  // );
+
   const scrollViewRef = useRef<ScrollView>(null);
 
   const [editMode, setEditMode] = useState(false);
-  const [hoseData, setHoseData] = useState<Hose | undefined>(
-    state.data.hoses.find((hose) => hose.id === hoseId),
+  const [hoseData, setHoseData] = useState<HoseData | {}>(
+    state.data.hoses.find((hose) => hose.id === hoseId) || {},
   );
 
   const router = useRouter();
 
-  if (hoseData === undefined) {
+  if (!isHoseDataType(hoseData)) {
     return (
       <View style={styles.container}>
         <Typography name={'navigationBold'} text='Hose not found' />
@@ -144,15 +152,15 @@ const HoseDetails = () => {
     },
   ];
 
-  const getStructure = (hose: Hose) => {
+  const getStructure = (hose: HoseData) => {
     // TODO how to get structure?
-    const structure: string[] = [];
-    if (typeof hose.Customer === 'string') structure.push(hose.Customer);
-    if (hose.unit) structure.push(hose.unit as string);
-    if (hose.position) structure.push(hose.position as string);
+    const structure: string[] = [
+      hose.s1PlantVesselUnit,
+      hose.S2Equipment,
+      hose.equipmentSubunit,
+    ];
     return structure;
   };
-
   return (
     <View style={styles.container}>
       {!isMultiSelection(state.data.selection) && !editMode && (
@@ -170,22 +178,22 @@ const HoseDetails = () => {
         />
 
         {renderComponent(GeneralInfo, EditGeneralInfo, {
-          generalInfo: hoseData,
+          info: hoseData,
           onInputChange: handleInputChange,
           editMode,
         })}
         {renderComponent(UniversalHoseData, EditUniversalHoseData, {
-          universalHoseData: hoseData,
+          info: hoseData,
           onInputChange: handleInputChange,
           editMode,
         })}
         {renderComponent(TessPartNumbers, EditTessPartNumbers, {
-          tessPartNumbersData: hoseData,
+          info: hoseData,
           onInputChange: handleInputChange,
           editMode,
         })}
         {renderComponent(MaintenanceInfo, EditMaintenanceInfo, {
-          hoseData: hoseData,
+          info: hoseData,
           onInputChange: handleInputChange,
           editMode,
         })}
@@ -195,8 +203,8 @@ const HoseDetails = () => {
             <Structure
               structure={getStructure(hoseData)}
               name={
-                typeof hoseData.Description === 'string'
-                  ? hoseData.Description
+                typeof hoseData.s1PlantVesselUnit === 'string'
+                  ? hoseData.s1PlantVesselUnit
                   : ''
               }
             />

@@ -8,14 +8,12 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Input } from '../../UI/Input/input';
 import Datafield from '../Datafield';
+import Bookmark from '@/components/detailView/Bookmark';
+import { EditProps } from '@/components/detailView/edit/edit';
+import { HID } from '@/components/detailView/types';
 
-type EditMaintenanceProps = {
-  hoseData: any;
-  onInputChange: (field: string, value: string) => void;
-};
-
-export const EditMaintenanceInfo: React.FC<EditMaintenanceProps> = ({
-  hoseData,
+export const EditMaintenanceInfo: React.FC<EditProps<HID>> = ({
+  info,
   onInputChange,
 }) => {
   const handleApprovalChange = (selectedLabel: string) => {
@@ -24,10 +22,11 @@ export const EditMaintenanceInfo: React.FC<EditMaintenanceProps> = ({
 
   return (
     <View style={styles.container}>
+      <Bookmark title='Maintenance Info' />
       <TooltipWrapper>
         <Input
           label='Inspected By:'
-          value={hoseData.inspectedBy}
+          value={info.inspectedBy}
           onChangeText={(text) => onInputChange('inspectedBy', text)}
           type={'text'}
         />
@@ -35,7 +34,7 @@ export const EditMaintenanceInfo: React.FC<EditMaintenanceProps> = ({
       <TooltipWrapper tooltipData={{ title: 'Condition', message: '' }}>
         <SelectField
           label='Condition:'
-          value={hoseData.hoseCondition}
+          value={info.hoseCondition}
           onChange={(value) => onInputChange('hoseCondition', value)}
           options={[]}
         />
@@ -48,7 +47,7 @@ export const EditMaintenanceInfo: React.FC<EditMaintenanceProps> = ({
             { id: 'No', label: 'NO' },
             { id: 'NotInsepcted', label: 'Not inspected' },
           ]}
-          selected={hoseData.approved}
+          selected={info.approved}
           onChange={handleApprovalChange}
           type={'horizontal'}
         />
@@ -56,7 +55,7 @@ export const EditMaintenanceInfo: React.FC<EditMaintenanceProps> = ({
       <TooltipWrapper>
         <Input
           label={'Comment:'}
-          value={hoseData.comment}
+          value={info.comment}
           onChangeText={(text) => onInputChange('comment', text)}
           type='textArea'
         />
@@ -70,7 +69,7 @@ export const EditMaintenanceInfo: React.FC<EditMaintenanceProps> = ({
       <TooltipWrapper>
         <SelectField
           label='Criticality'
-          value={hoseData.criticality}
+          value={info.criticality}
           onChange={(value) => onInputChange('criticality', value)}
           options={[
             { id: '0 - None', label: '1 - None' },
@@ -84,19 +83,19 @@ export const EditMaintenanceInfo: React.FC<EditMaintenanceProps> = ({
         <View style={styles.inspectionDetails}>
           <Datafield
             label={'Inspection Interval:'}
-            value={hoseData.inspectionInterval}
+            value={info.inspectionInterval}
           />
           <Datafield
             label={'Next Inspection:'}
-            value={formatDate(hoseData.nextInspection)}
+            value={formatDate(new Date(info.nextInspection))}
           />
           <Datafield
             label={'Replacement Interval:'}
-            value={hoseData.replacementInterval}
+            value={info.replacementInterval}
           />
           <Datafield
             label={'Replacement Date:'}
-            value={formatDate(hoseData.replacementDate)}
+            value={formatDate(new Date(info.replacementDate))}
           />
         </View>
       </TooltipWrapper>
@@ -105,7 +104,7 @@ export const EditMaintenanceInfo: React.FC<EditMaintenanceProps> = ({
       >
         <Input
           label={'Drawing Number:'}
-          value={hoseData.drawingNumber}
+          value={info.drawingNumber}
           onChangeText={(text) => onInputChange('drawingNumber', text)}
           type='text'
         />
@@ -115,7 +114,7 @@ export const EditMaintenanceInfo: React.FC<EditMaintenanceProps> = ({
       >
         <Input
           label={'Position Number:'}
-          value={hoseData.positionNumber}
+          value={info.positionNumber}
           onChangeText={(text) => onInputChange('positionNumber', text)}
           type='text'
         />
@@ -125,7 +124,7 @@ export const EditMaintenanceInfo: React.FC<EditMaintenanceProps> = ({
       >
         <Input
           label={'Customer Article Number:'}
-          value={hoseData.customerArticleNumber}
+          value={info.customerArticleNumber}
           onChangeText={(text) => onInputChange('customerArticleNumber', text)}
           type='text'
         />
@@ -140,7 +139,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
   },
   inspectionDetails: {
     borderLeftWidth: 2,

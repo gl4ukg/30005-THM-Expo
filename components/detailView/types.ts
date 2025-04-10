@@ -1,6 +1,6 @@
 export type GHD = {
   description: string;
-  productionDate: string;
+  prodDate: string;
   customerId: string;
   s1PlantVesselUnit: string;
   S2Equipment: string;
@@ -69,9 +69,7 @@ export type HID = {
   customerArticleNumber: string;
 };
 
-export type HoseData = {
-  generalHoseData: GHD;
-  universalHoseData: UHD;
-  tessPartNumbers: TPN;
-  historyData: HID;
-};
+export type HoseData = { id: string; missingData?: boolean } & GHD &
+  UHD &
+  TPN &
+  HID;

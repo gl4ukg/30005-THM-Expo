@@ -1,3 +1,4 @@
+import { HoseData } from '@/components/detailView/types';
 import { mockedData } from '@/context/mocked';
 
 interface AppState {
@@ -103,7 +104,7 @@ interface DataState {
   //     hoses: Hose[];
   //   };
   // };
-  hoses: Hose[];
+  hoses: HoseData[];
   assignedUnits: {
     unitId: string;
     unitName: string;

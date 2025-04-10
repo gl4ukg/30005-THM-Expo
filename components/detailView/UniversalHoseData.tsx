@@ -6,39 +6,39 @@ import Datafield from './Datafield';
 import { Typography } from '../typography';
 import { Checkbox } from '../UI/Checkbox';
 
-interface UniversalHoseDataProps {
-  universalHoseData: UHD;
-}
+type UniversalHoseDataProps = {
+  info: UHD;
+};
 
-const CouplingSection = ({
-  universalHoseData,
-  title,
-}: {
-  universalHoseData: UHD;
+type CouplingSectionProps = {
+  info: Pick<
+    UHD,
+    | 'materialQuality'
+    | 'typeFitting'
+    | 'innerDiameter2'
+    | 'gender'
+    | 'angle'
+    | 'commentEnd1'
+  >;
   title: string;
-}) => (
+};
+const CouplingSection: React.FC<CouplingSectionProps> = ({ info, title }) => (
   <View style={styles.couplingSection}>
     <Typography
       name='navigationBold'
       text={title}
       style={styles.sectionTitle}
     />
-    <Datafield
-      label='Material Quality'
-      value={universalHoseData.materialQuality}
-    />
-    <Datafield label='Type Fitting' value={universalHoseData.typeFitting} />
-    <Datafield
-      label='Inner Diameter 2'
-      value={universalHoseData.innerDiameter2}
-    />
-    <Datafield label='Gender' value={universalHoseData.gender} />
-    <Datafield label='Angle' value={universalHoseData.angle} />
-    <Datafield label='Comment End 1' value={universalHoseData.commentEnd1} />
+    <Datafield label='Material Quality' value={info.materialQuality} />
+    <Datafield label='Type Fitting' value={info.typeFitting} />
+    <Datafield label='Inner Diameter 2' value={info.innerDiameter2} />
+    <Datafield label='Gender' value={info.gender} />
+    <Datafield label='Angle' value={info.angle} />
+    <Datafield label='Comment End 1' value={info.commentEnd1} />
   </View>
 );
 
-const UniversalHoseData = ({ universalHoseData }: UniversalHoseDataProps) => {
+const UniversalHoseData = ({ info }: UniversalHoseDataProps) => {
   const areCouplingsSame = [
     'materialQuality',
     'typeFitting',
@@ -47,8 +47,8 @@ const UniversalHoseData = ({ universalHoseData }: UniversalHoseDataProps) => {
     'angle',
     'commentEnd1',
   ].every((key) => {
-    const value1 = universalHoseData[key as keyof UHD];
-    const value2 = universalHoseData[`${key}2` as keyof UHD];
+    const value1 = info[key as keyof UHD];
+    const value2 = info[`${key}2` as keyof UHD];
 
     return value1 === value2 && value1 !== '' && value1 !== undefined;
   });
@@ -56,18 +56,12 @@ const UniversalHoseData = ({ universalHoseData }: UniversalHoseDataProps) => {
   return (
     <View style={styles.container}>
       <Bookmark title='Universal Hose Data' />
-      <Datafield label='Hose Standard' value={universalHoseData.hoseStandard} />
-      <Datafield
-        label='Inner Diameter'
-        value={universalHoseData.innerDiameter}
-      />
-      <Datafield label='Total Length' value={universalHoseData.totalLength} />
-      <Datafield label='WP BAR' value={universalHoseData.wpBar} />
-      <Datafield label='WP PSI' value={universalHoseData.wpPsi} />
-      <CouplingSection
-        universalHoseData={universalHoseData}
-        title='Coupling end 1'
-      />
+      <Datafield label='Hose Standard' value={info.hoseStandard} />
+      <Datafield label='Inner Diameter' value={info.innerDiameter} />
+      <Datafield label='Total Length' value={info.totalLength} />
+      <Datafield label='WP BAR' value={info.wpBar} />
+      <Datafield label='WP PSI' value={info.wpPsi} />
+      <CouplingSection info={info} title='Coupling end 1' />
       <View style={styles.sectionTitleContainer}>
         <Typography name='navigationBold' text='Coupling end 2' />
         <View style={styles.checkboxContainer}>
@@ -76,10 +70,7 @@ const UniversalHoseData = ({ universalHoseData }: UniversalHoseDataProps) => {
         </View>
       </View>
       {!areCouplingsSame && (
-        <CouplingSection
-          universalHoseData={universalHoseData}
-          title='Coupling end 2'
-        />
+        <CouplingSection info={info} title='Coupling end 2' />
       )}
     </View>
   );

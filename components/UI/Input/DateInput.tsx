@@ -7,10 +7,16 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 interface datePickerProps {
   label: string;
+  value: Date | null;
+  onChange: (value: Date) => void;
 }
 
-export const DateInput: React.FC<datePickerProps> = ({ label }) => {
-  const [date, setDate] = useState<Date | null>(null);
+export const DateInput: React.FC<datePickerProps> = ({
+  label,
+  value,
+  onChange,
+}) => {
+  const [date, setDate] = useState<Date | null>(value);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {
@@ -24,6 +30,7 @@ export const DateInput: React.FC<datePickerProps> = ({ label }) => {
   const confirm = (date: Date) => {
     setDate(date);
     hideDatePicker();
+    onChange(date);
   };
   return (
     <View>
@@ -31,7 +38,7 @@ export const DateInput: React.FC<datePickerProps> = ({ label }) => {
       <Pressable style={styles.inputContainer} onPress={showDatePicker}>
         <Typography
           name='navigation'
-          text={date ? String(date.toLocaleDateString()) : 'Select date'}
+          text={date?.toLocaleDateString() || 'Select Date'}
           style={styles.valueStyle}
         />
         <View style={styles.iconContainer}>
