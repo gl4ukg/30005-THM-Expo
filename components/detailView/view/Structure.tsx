@@ -4,11 +4,11 @@ import { Icon } from '../../Icon/Icon';
 import { Typography } from '../../typography';
 import { Bookmark } from '../common/Bookmark';
 
-type structureProps = {
+type StructureProps = {
   structure: string[];
   name: string;
 };
-export const Structure: React.FC<structureProps> = ({ structure, name }) => {
+export const Structure: React.FC<StructureProps> = ({ structure, name }) => {
   return (
     <View>
       <Bookmark title='Structure' />
