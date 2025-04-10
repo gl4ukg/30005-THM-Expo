@@ -6,15 +6,11 @@ import { Typography } from '../typography';
 import Bookmark from './Bookmark';
 import Datafield from './Datafield';
 import { HID } from './types';
-import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
 
 type MaintenanceProps = {
   info: HID;
 };
 const MaintenanceInfo: React.FC<MaintenanceProps> = ({ info: hoseData }) => {
-  const today = new Date();
-  const nextInspectionError = stringToDate(hoseData.nextInspection) < today;
-
   return (
     <View style={styles.container}>
       <Bookmark title='Maintenance Info' />
@@ -49,7 +45,7 @@ const MaintenanceInfo: React.FC<MaintenanceProps> = ({ info: hoseData }) => {
         <Datafield
           label={'Next Inspection:'}
           value={formatDate(new Date(hoseData.nextInspection))}
-          error={nextInspectionError}
+          // error={nextInspectionError} TODO
         />
         <Datafield
           label={'Replacement Interval:'}
