@@ -2,10 +2,9 @@ import { Typography } from '@/components/typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { colors } from '@/lib/tokens/colors';
 import { useRouter } from 'expo-router';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { ListElement } from './ListElement';
-import React from 'react';
+import { ListElement } from './listElement';
 
 interface Props {
   items: {
