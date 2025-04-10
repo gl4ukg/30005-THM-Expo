@@ -9,9 +9,9 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { Typography } from '../typography';
-import { ButtonTHS } from '../UI';
-import { RadioButton } from './radioButton';
+import { Typography } from '../../typography';
+import { ButtonTHS } from '../../UI';
+import { RadioButton } from '../common/RadioButton';
 
 interface PredefinedSelectProps {
   options: { id: string; label: string }[];

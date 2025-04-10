@@ -1,13 +1,14 @@
-import { RadioGroup } from '@/components/detailHose/radioGroup';
-import { SelectField } from '@/components/detailHose/SelectField';
+import { RadioGroup } from '@/components/detailView/common/RadioGroup';
+import { SelectField } from '@/components/detailView/common/SelectField';
+import { condition } from '@/components/detailView/data/lists';
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/typography';
 import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/linkButton';
+import { DateInput } from '@/components/UI/Input/DateInput';
 import { Input } from '@/components/UI/Input/input';
 import { colors } from '@/lib/tokens/colors';
 import { Link } from 'expo-router';
-import { condition } from '@/components/detailHose/data/lists';
 import { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -19,7 +20,6 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { DateInput } from '@/components/UI/Input/DateInput';
 
 const Ui = () => {
   const [iconsExpanded, setIconsExpanded] = useState(false);

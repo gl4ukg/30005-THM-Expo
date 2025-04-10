@@ -1,9 +1,8 @@
-import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
 import { colors } from '@/lib/tokens/colors';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Icon } from '../Icon/Icon';
 import { Typography } from '../typography';
-import Bookmark from './Bookmark';
+import { Bookmark } from './common/Bookmark';
 
 interface DocumentProps {
   id: string;
@@ -27,7 +26,7 @@ const DocumentItem: React.FC<DocumentProps> = ({ id, name }) => {
   );
 };
 
-const Documents = () => {
+export const Documents = () => {
   const documents = [
     { id: 'DOC-001', name: 'Hose Certificate' },
     { id: 'DOC-002', name: 'Inspection Report' },
@@ -70,5 +69,3 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
 });
-
-export default Documents;

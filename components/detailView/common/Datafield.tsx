@@ -1,8 +1,8 @@
 import { colors } from '@/lib/tokens/colors';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Typography } from '../typography';
-import { Icon } from '../Icon/Icon';
+import { Typography } from '../../typography';
+import { Icon } from '../../Icon/Icon';
 
 interface DataFieldProps {
   label: string;
@@ -10,7 +10,11 @@ interface DataFieldProps {
   error?: boolean;
 }
 
-const DataField: React.FC<DataFieldProps> = ({ label, value, error }) => {
+export const DataField: React.FC<DataFieldProps> = ({
+  label,
+  value,
+  error,
+}) => {
   const isValueEmpty = value === undefined || value === '';
   if (isValueEmpty) {
     error = true;
@@ -67,4 +71,3 @@ const styles = StyleSheet.create({
     color: colors.errorText,
   },
 });
-export default DataField;

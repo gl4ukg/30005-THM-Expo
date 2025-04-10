@@ -1,13 +1,12 @@
-import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
-import { Typography } from '@/components/typography';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { SelectField } from '../../detailHose/SelectField';
-import { TPN } from '../types';
+import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { EditProps } from '@/components/detailView/edit/edit';
-import Bookmark from '@/components/detailView/Bookmark';
+import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
+import { Typography } from '@/components/typography';
+import { StyleSheet, View } from 'react-native';
+import { SelectField } from '../common/SelectField';
+import { TPN } from '../types';
 
-const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
+export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
   info,
   onInputChange,
 }) => (
@@ -160,5 +159,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-
-export default EditTessPartNumbers;

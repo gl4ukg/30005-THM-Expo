@@ -1,6 +1,6 @@
 import { Pressable } from 'react-native';
-import { Icon, iconSize } from '../Icon/Icon';
-import { IconName } from '../Icon/iconMapping';
+import { Icon, iconSize } from '../../Icon/Icon';
+import { IconName } from '../../Icon/iconMapping';
 
 interface iconButtonProps {
   icon: IconName;

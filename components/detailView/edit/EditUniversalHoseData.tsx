@@ -1,15 +1,15 @@
-import BarToPsiInput from '@/components/detailHose/BarToPsiInput';
-import { SelectField } from '@/components/detailHose/SelectField';
-import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
-import UnitInput from '@/components/detailHose/UnitInput';
+import { SelectField } from '@/components/detailView/common/SelectField';
+import { BarToPsiInput } from '@/components/detailView/edit/BarToPsiInput';
+import { EditProps } from '@/components/detailView/edit/edit';
+import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
+import UnitInput from '@/components/detailView/edit/UnitInput';
 import { Typography } from '@/components/typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Input } from '@/components/UI/Input/input';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Bookmark from '../Bookmark';
+import { Bookmark } from '../common/Bookmark';
 import { UHD } from '../types';
-import { EditProps } from '@/components/detailView/edit/edit';
 
 type EditUniversalHoseDataProps = EditProps<
   Pick<
@@ -71,7 +71,7 @@ const EditCouplingSection: React.FC<EditUniversalHoseDataProps> = ({
   </>
 );
 
-const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
+export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
   info,
   onInputChange,
 }) => {
@@ -216,5 +216,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-export default EditUniversalHoseData;

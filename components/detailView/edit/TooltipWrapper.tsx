@@ -1,6 +1,6 @@
-import { View, StyleSheet, Alert } from 'react-native';
-import { IconButton } from './iconButton';
 import { colors } from '@/lib/tokens/colors';
+import { Alert, StyleSheet, View } from 'react-native';
+import { IconButton } from './IconButton';
 
 interface TooltipWrapperProps {
   tooltipData?: { title: string; message: string };

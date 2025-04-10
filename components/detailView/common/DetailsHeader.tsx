@@ -1,8 +1,8 @@
 import { colors } from '@/lib/tokens/colors';
 import { formatDate } from '@/lib/util/formatDate';
-import { View, StyleSheet } from 'react-native';
-import { Icon } from '../Icon/Icon';
-import { Typography } from '../typography';
+import { StyleSheet, View } from 'react-native';
+import { Icon } from '../../Icon/Icon';
+import { Typography } from '../../typography';
 
 type DetailsHeaderProps = {
   id: string;
@@ -11,7 +11,7 @@ type DetailsHeaderProps = {
   missingData?: boolean;
 };
 
-const DetailsHeader: React.FC<DetailsHeaderProps> = ({
+export const DetailsHeader: React.FC<DetailsHeaderProps> = ({
   id,
   date,
   missingData,
@@ -60,5 +60,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-export default DetailsHeader;

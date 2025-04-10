@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Input } from '../../UI/Input/input';
-import { SelectField } from '../../detailHose/SelectField';
-import { RadioGroup } from '../../detailHose/radioGroup';
-import { GHD } from '../types';
-import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
+import { EditProps } from '@/components/detailView/edit/edit';
+import { TooltipWrapper } from './TooltipWrapper';
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
-import { EditProps } from '@/components/detailView/edit/edit';
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Input } from '../../UI/Input/input';
+import { RadioGroup } from '../common/RadioGroup';
+import { SelectField } from '../common/SelectField';
+import { GHD } from '../types';
 
-const EditGeneralInfo: React.FC<
+export const EditGeneralInfo: React.FC<
   EditProps<GHD> & { isRegisterView?: boolean }
 > = ({ info, onInputChange, isRegisterView }) => {
   const [rfid, setRfid] = useState<string>('');
@@ -162,5 +162,3 @@ const styles = StyleSheet.create({
     gap: 10,
   },
 });
-
-export default EditGeneralInfo;

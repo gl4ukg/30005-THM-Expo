@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from 'react';
-import { View, TextInput, StyleSheet, KeyboardTypeOptions } from 'react-native';
-import { Typography } from '../typography';
 import { colors } from '@/lib/tokens/colors';
+import { useCallback, useState } from 'react';
+import { KeyboardTypeOptions, StyleSheet, TextInput, View } from 'react-native';
+import { Typography } from '../../typography';
 
 type UnitInputProps = {
   label?: string;

@@ -1,16 +1,15 @@
-import { RadioGroup } from '@/components/detailHose/radioGroup';
-import { SelectField } from '@/components/detailHose/SelectField';
-import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
+import { Bookmark } from '@/components/detailView/common/Bookmark';
+import { RadioGroup } from '@/components/detailView/common/RadioGroup';
+import { SelectField } from '@/components/detailView/common/SelectField';
+import { EditProps } from '@/components/detailView/edit/edit';
+import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
+import { HID } from '@/components/detailView/types';
 import { Typography } from '@/components/typography';
 import { colors } from '@/lib/tokens/colors';
 import { formatDate } from '@/lib/util/formatDate';
-import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Input } from '../../UI/Input/input';
-import Datafield from '../Datafield';
-import Bookmark from '@/components/detailView/Bookmark';
-import { EditProps } from '@/components/detailView/edit/edit';
-import { HID } from '@/components/detailView/types';
+import { DataField } from '../common/Datafield';
 
 export const EditMaintenanceInfo: React.FC<EditProps<HID>> = ({
   info,
@@ -81,19 +80,19 @@ export const EditMaintenanceInfo: React.FC<EditProps<HID>> = ({
           ]}
         />
         <View style={styles.inspectionDetails}>
-          <Datafield
+          <DataField
             label={'Inspection Interval:'}
             value={info.inspectionInterval}
           />
-          <Datafield
+          <DataField
             label={'Next Inspection:'}
             value={formatDate(new Date(info.nextInspection))}
           />
-          <Datafield
+          <DataField
             label={'Replacement Interval:'}
             value={info.replacementInterval}
           />
-          <Datafield
+          <DataField
             label={'Replacement Date:'}
             value={formatDate(new Date(info.replacementDate))}
           />

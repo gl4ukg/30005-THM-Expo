@@ -1,8 +1,8 @@
 import { View } from 'react-native';
-import Bookmark from './Bookmark';
-import { Typography } from '../typography';
+import { Typography } from '../../typography';
+import { Bookmark } from '../common/Bookmark';
 
-const HistoryView = () => {
+export const HistoryView = () => {
   return (
     <View>
       <Bookmark title='History' />
@@ -10,5 +10,3 @@ const HistoryView = () => {
     </View>
   );
 };
-
-export default HistoryView;

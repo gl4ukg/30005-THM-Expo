@@ -1,6 +1,6 @@
 import { View } from 'react-native';
-import Bookmark from './Bookmark';
 import { Typography } from '../typography';
+import { Bookmark } from './common/Bookmark';
 
 const Photos = () => {
   return (

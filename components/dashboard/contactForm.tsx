@@ -1,17 +1,17 @@
 import { HoseType } from '@/app/(app)/dashbord/hoses/[filter]';
+import { LinkButton } from '@/components/UI/Button/linkButton';
 import { useAppContext } from '@/context/ContextProvider';
+import { isMultiSelection } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
+import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { ButtonTHS } from '../UI';
 import { Input } from '../UI/Input/input';
-import { SelectField } from '../detailHose/SelectField';
+import { SelectField } from '../detailView/common/SelectField';
 import { Typography } from '../typography';
 import { ListTable } from './listTable';
-import { emailValidation } from '@/lib/util/validation';
-import { isMultiSelection } from '@/context/state';
-import { LinkButton } from '@/components/UI/Button/linkButton';
 
 interface Props {
   title: string;
