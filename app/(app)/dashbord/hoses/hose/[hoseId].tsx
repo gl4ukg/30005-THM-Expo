@@ -1,12 +1,12 @@
 import { ButtonTHS } from '@/components/UI';
 import { ActionsFab, Option } from '@/components/UI/ActionMenu/fab';
-import { Documents } from '@/components/detailView/Documents';
+import { Documents } from '@/components/detailView/common/Documents';
 import { GeneralInfo } from '@/components/detailView/view/GeneralInfo';
 import { HistoryView } from '@/components/detailView/view/History';
-import { MaintenanceInfo } from '@/components/detailView/MaintenanceInfo';
-import { Structure } from '@/components/detailView/Structure';
-import { TessPartNumbers } from '@/components/detailView/TessPartNumbers';
-import { UniversalHoseData } from '@/components/detailView/UniversalHoseData';
+import { MaintenanceInfo } from '@/components/detailView/view/MaintenanceInfo';
+import { Structure } from '@/components/detailView/view/Structure';
+import { TessPartNumbers } from '@/components/detailView/view/TessPartNumbers';
+import { UniversalHoseData } from '@/components/detailView/view/UniversalHoseData';
 import { DetailsHeader } from '@/components/detailView/common/DetailsHeader';
 import { EditGeneralInfo } from '@/components/detailView/edit/EditGeneralInfo';
 import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';

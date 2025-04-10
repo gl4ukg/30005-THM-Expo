@@ -1,4 +1,4 @@
-import { Documents } from '@/components/detailView/Documents';
+import { Documents } from '@/components/detailView/common/Documents';
 import { EditGeneralInfo } from '@/components/detailView/edit/EditGeneralInfo';
 import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
 import { EditTessPartNumbers } from '@/components/detailView/edit/EditTessPartNumbers';

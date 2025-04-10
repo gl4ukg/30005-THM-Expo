@@ -1,8 +1,8 @@
 import { colors } from '@/lib/tokens/colors';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Icon } from '../Icon/Icon';
-import { Typography } from '../typography';
-import { Bookmark } from './common/Bookmark';
+import { Icon } from '../../Icon/Icon';
+import { Typography } from '../../typography';
+import { Bookmark } from './Bookmark';
 
 interface DocumentProps {
   id: string;
