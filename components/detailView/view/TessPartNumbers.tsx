@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import { Typography } from '../../typography';
 import { Bookmark } from '../common/Bookmark';
 import { DataField } from '../common/Datafield';
-import { TPN } from '../types';
+import { TPN } from '../common/types';
 
 interface TessPartNumbersProps {
   info: TPN;

@@ -9,7 +9,7 @@ import { Input } from '@/components/UI/Input/input';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Bookmark } from '../common/Bookmark';
-import { UHD } from '../types';
+import { UHD } from '../common/types';
 
 type EditUniversalHoseDataProps = EditProps<
   Pick<

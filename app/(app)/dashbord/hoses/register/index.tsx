@@ -4,7 +4,13 @@ import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanc
 import { EditTessPartNumbers } from '@/components/detailView/edit/EditTessPartNumbers';
 import { EditUniversalHoseData } from '@/components/detailView/edit/EditUniversalHoseData';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
-import { GHD, HID, HoseData, TPN, UHD } from '@/components/detailView/types';
+import {
+  GHD,
+  HID,
+  HoseData,
+  TPN,
+  UHD,
+} from '@/components/detailView/common/types';
 import { Typography } from '@/components/typography';
 import { ButtonTHS } from '@/components/UI';
 import { Checkbox } from '@/components/UI/Checkbox';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { DataField } from '../common/Datafield';
-import { GHD } from '../types';
+import { GHD } from '../common/types';
 
 type GeneralInfoProps = {
   info: GHD;

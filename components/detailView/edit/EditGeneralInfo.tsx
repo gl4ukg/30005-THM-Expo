@@ -7,7 +7,7 @@ import { StyleSheet, View } from 'react-native';
 import { Input } from '../../UI/Input/input';
 import { RadioGroup } from '../common/RadioGroup';
 import { SelectField } from '../common/SelectField';
-import { GHD } from '../types';
+import { GHD } from '../common/types';
 
 export const EditGeneralInfo: React.FC<
   EditProps<GHD> & { isRegisterView?: boolean }

@@ -4,7 +4,7 @@ import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { Typography } from '@/components/typography';
 import { StyleSheet, View } from 'react-native';
 import { SelectField } from '../common/SelectField';
-import { TPN } from '../types';
+import { TPN } from '../common/types';
 
 export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
   info,

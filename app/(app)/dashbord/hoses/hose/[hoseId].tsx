@@ -13,7 +13,7 @@ import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanc
 import { EditTessPartNumbers } from '@/components/detailView/edit/EditTessPartNumbers';
 import { EditUniversalHoseData } from '@/components/detailView/edit/EditUniversalHoseData';
 import { EditProps } from '@/components/detailView/edit/edit';
-import { HoseData } from '@/components/detailView/types';
+import { HoseData } from '@/components/detailView/common/types';
 import { Typography } from '@/components/typography';
 import { AppContext } from '@/context/Reducer';
 import {

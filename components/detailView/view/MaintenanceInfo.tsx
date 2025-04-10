@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { Typography } from '../../typography';
 import { Bookmark } from '../common/Bookmark';
 import { DataField } from '../common/Datafield';
-import { HID } from '../types';
+import { HID } from '../common/types';
 
 type MaintenanceProps = {
   info: HID;
