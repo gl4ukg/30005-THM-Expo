@@ -9,9 +9,9 @@ import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { ButtonTHS } from '../UI';
 import { Input } from '../UI/Input/input';
+import { ListTable } from '../dashboard/listTable';
 import { SelectField } from '../detailView/common/SelectField';
 import { Typography } from '../typography';
-import { ListTable } from './listTable';
 
 interface Props {
   title: string;
