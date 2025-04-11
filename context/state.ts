@@ -1,5 +1,4 @@
-import { HoseData } from '@/components/detailView/common/types';
-import { mockedData } from '@/context/mocked';
+import { HoseData } from '@/lib/types/hose';
 
 interface AppState {
   auth: AuthState;
@@ -19,24 +18,11 @@ interface AuthState {
   token: null | string;
 }
 
-export interface Hose extends Record<string, string | boolean | number> {
-  id: string;
-  name: string;
-  position: string;
-  condition: string;
-  lastInspection: string;
-  lastInspectionDate: string;
-  nextInspection: string;
-  nextInspectionDate: string;
-  missingData: boolean;
-  prodDate: string;
-}
-
 export interface Action {
   id: string;
   createdAt: string; // TODO: change to timestamp
   actionId: string;
-  actionHoseIdList: Hose[];
+  actionHoseIdList: HoseData[];
   status: 'DRAFT' | 'SENDT';
   position: string;
 }
@@ -101,7 +87,7 @@ interface DataState {
   // assignedUnits: {
   //   [unitId: string]: {
   //     unitName: string;
-  //     hoses: Hose[];
+  //     hoses: HoseData[];
   //   };
   // };
   hoses: HoseData[];

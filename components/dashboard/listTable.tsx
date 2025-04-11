@@ -5,17 +5,10 @@ import { colors } from '@/lib/tokens/colors';
 import { FC } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { HoseData } from '@/lib/types/hose';
 
 interface Props {
-  items: {
-    id: string;
-    position: string;
-    condition: string;
-    lastInspection: string;
-    missingData?: boolean;
-    hasRFID?: boolean;
-    hasAttachment?: boolean;
-  }[];
+  items: HoseData[];
   selectedIds: string[];
   canSelect?: boolean;
   onSelectionChange?: (id: string) => void;
@@ -109,15 +102,7 @@ export const ListTable: FC<Props> = ({
 };
 
 interface ElementProps {
-  item: {
-    id: string;
-    position: string;
-    condition: string;
-    lastInspection: string;
-    missingData?: boolean;
-    hasAttachment?: boolean;
-    hasRFID?: boolean;
-  };
+  item: HoseData;
   canBeSelected?: boolean;
   isSelected?: boolean;
   onSelectedChange?: (id: string) => void;
@@ -130,19 +115,12 @@ const Element: FC<ElementProps> = ({
   onSelectedChange,
   onRowPress,
 }) => {
-  const {
-    id,
-    position,
-    condition,
-    lastInspection,
-    missingData,
-    hasAttachment,
-    hasRFID,
-  } = item;
+  const { id, s1PlantVesselUnit, RFid, missingData } = item;
   const handleSelect = () => {
     if (!canBeSelected || !onSelectedChange) return;
     onSelectedChange(id);
   };
+  const hasAttachment = Math.random() > 0.5;
   return (
     <Pressable onPress={onRowPress}>
       <View
@@ -155,7 +133,7 @@ const Element: FC<ElementProps> = ({
           <Typography name='tableContentNumber' text={id} />
           <View style={elementStyle.iconsContainer}>
             <View style={elementStyle.iconContainer}>
-              {hasRFID && (
+              {!!RFid && (
                 <Icon
                   name='RfidIdentificator'
                   color={colors.black}
@@ -178,24 +156,20 @@ const Element: FC<ElementProps> = ({
         <View style={elementStyle.columnTwo}>
           <Typography
             name='tableContent'
-            text={position}
+            text={s1PlantVesselUnit}
             numberOfLines={1}
             ellipsizeMode='tail'
           />
           <View style={elementStyle.subtitleDateContainer}>
             <Typography
               name='tableContent'
-              text={
-                condition?.length
-                  ? condition
-                  : '44-Visible leakage - and some more defects'
-              }
+              text={'44-Visible leakage - and some more defects'}
               style={elementStyle.subtitle}
               numberOfLines={1}
             />
             <Typography
               name='tableContentNumber'
-              text={lastInspection?.length ? lastInspection : 'N/A'}
+              text={'H_CODED'}
               style={elementStyle.date}
             />
           </View>

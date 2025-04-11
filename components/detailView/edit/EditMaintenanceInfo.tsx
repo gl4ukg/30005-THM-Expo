@@ -1,9 +1,9 @@
 import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
 import { SelectField } from '@/components/detailView/common/SelectField';
-import { EditProps } from '@/components/detailView/edit/edit';
+import { EditProps } from '@/lib/types/edit';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
-import { HID } from '@/components/detailView/common/types';
+import { HID } from '@/lib/types/hose';
 import { Typography } from '@/components/typography';
 import { colors } from '@/lib/tokens/colors';
 import { formatDate } from '@/lib/util/formatDate';
