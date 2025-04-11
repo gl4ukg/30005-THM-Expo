@@ -1,10 +1,9 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { UHD } from './types';
-import Bookmark from './Bookmark';
-import Datafield from './Datafield';
-import { Typography } from '../typography';
-import { Checkbox } from '../UI/Checkbox';
+import { StyleSheet, View } from 'react-native';
+import { Typography } from '../../typography';
+import { Checkbox } from '../../UI/Checkbox';
+import { Bookmark } from '../common/Bookmark';
+import { DataField } from '../common/Datafield';
+import { UHD } from '../common/types';
 
 type UniversalHoseDataProps = {
   info: UHD;
@@ -29,16 +28,16 @@ const CouplingSection: React.FC<CouplingSectionProps> = ({ info, title }) => (
       text={title}
       style={styles.sectionTitle}
     />
-    <Datafield label='Material Quality' value={info.materialQuality} />
-    <Datafield label='Type Fitting' value={info.typeFitting} />
-    <Datafield label='Inner Diameter 2' value={info.innerDiameter2} />
-    <Datafield label='Gender' value={info.gender} />
-    <Datafield label='Angle' value={info.angle} />
-    <Datafield label='Comment End 1' value={info.commentEnd1} />
+    <DataField label='Material Quality' value={info.materialQuality} />
+    <DataField label='Type Fitting' value={info.typeFitting} />
+    <DataField label='Inner Diameter 2' value={info.innerDiameter2} />
+    <DataField label='Gender' value={info.gender} />
+    <DataField label='Angle' value={info.angle} />
+    <DataField label='Comment End 1' value={info.commentEnd1} />
   </View>
 );
 
-const UniversalHoseData = ({ info }: UniversalHoseDataProps) => {
+export const UniversalHoseData = ({ info }: UniversalHoseDataProps) => {
   const areCouplingsSame = [
     'materialQuality',
     'typeFitting',
@@ -56,11 +55,11 @@ const UniversalHoseData = ({ info }: UniversalHoseDataProps) => {
   return (
     <View style={styles.container}>
       <Bookmark title='Universal Hose Data' />
-      <Datafield label='Hose Standard' value={info.hoseStandard} />
-      <Datafield label='Inner Diameter' value={info.innerDiameter} />
-      <Datafield label='Total Length' value={info.totalLength} />
-      <Datafield label='WP BAR' value={info.wpBar} />
-      <Datafield label='WP PSI' value={info.wpPsi} />
+      <DataField label='Hose Standard' value={info.hoseStandard} />
+      <DataField label='Inner Diameter' value={info.innerDiameter} />
+      <DataField label='Total Length' value={info.totalLength} />
+      <DataField label='WP BAR' value={info.wpBar} />
+      <DataField label='WP PSI' value={info.wpPsi} />
       <CouplingSection info={info} title='Coupling end 1' />
       <View style={styles.sectionTitleContainer}>
         <Typography name='navigationBold' text='Coupling end 2' />
@@ -101,5 +100,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-
-export default UniversalHoseData;

@@ -1,15 +1,15 @@
 import { Pressable } from 'react-native';
-import { Icon, iconSize } from '../Icon/Icon';
-import { IconName } from '../Icon/iconMapping';
+import { Icon, iconSize } from '../../Icon/Icon';
+import { IconName } from '../../Icon/iconMapping';
 
-interface iconButtonProps {
+interface IconButtonProps {
   icon: IconName;
   handlePress: () => void;
   color: string;
   size?: keyof typeof iconSize;
 }
 
-export const IconButton: React.FC<iconButtonProps> = ({
+export const IconButton: React.FC<IconButtonProps> = ({
   icon,
   handlePress,
   color,

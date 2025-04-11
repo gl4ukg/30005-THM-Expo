@@ -1,10 +1,16 @@
-import { TooltipWrapper } from '@/components/detailHose/tooltipWrapper';
-import Documents from '@/components/detailView/Documents';
-import EditGeneralInfo from '@/components/detailView/edit/EditGeneralInfo';
+import { Documents } from '@/components/detailView/common/Documents';
+import { EditGeneralInfo } from '@/components/detailView/edit/EditGeneralInfo';
 import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
-import EditTessPartNumbers from '@/components/detailView/edit/EditTessPartNumbers';
-import EditUniversalHoseData from '@/components/detailView/edit/EditUniversalHoseData';
-import { GHD, HID, HoseData, TPN, UHD } from '@/components/detailView/types';
+import { EditTessPartNumbers } from '@/components/detailView/edit/EditTessPartNumbers';
+import { EditUniversalHoseData } from '@/components/detailView/edit/EditUniversalHoseData';
+import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
+import {
+  GHD,
+  HID,
+  HoseData,
+  TPN,
+  UHD,
+} from '@/components/detailView/common/types';
 import { Typography } from '@/components/typography';
 import { ButtonTHS } from '@/components/UI';
 import { Checkbox } from '@/components/UI/Checkbox';

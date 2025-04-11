@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Modal, Pressable, SafeAreaView } from 'react-native';
 import { colors } from '@/lib/tokens/colors';
-import { Icon } from '../Icon/Icon';
-import { Typography } from '../typography';
-import { PredefinedSelect } from './PredefinedSelect';
+import { useState } from 'react';
+import { Modal, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Icon } from '../../Icon/Icon';
+import { Typography } from '../../typography';
+import { PredefinedSelect } from '../edit/PredefinedSelect';
 
 interface SelectFieldProps {
   label: string;

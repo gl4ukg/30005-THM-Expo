@@ -1,4 +1,4 @@
-import { HoseData } from '@/components/detailView/types';
+import { HoseData } from '@/components/detailView/common/types';
 import { mockedData } from '@/context/mocked';
 
 interface AppState {

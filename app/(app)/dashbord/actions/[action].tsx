@@ -1,4 +1,4 @@
-import { ContactForm } from '@/components/dashboard/contactForm';
+import { ContactForm } from '@/components/forms/contactForm';
 import { useAppContext } from '@/context/ContextProvider';
 import { Hose, isMultiSelection, isSingleSelection } from '@/context/state';
 import { useLocalSearchParams } from 'expo-router/build/hooks';

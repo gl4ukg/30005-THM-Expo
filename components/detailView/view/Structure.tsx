@@ -1,14 +1,14 @@
-import { View, StyleSheet } from 'react-native';
-import Bookmark from './Bookmark';
-import { Typography } from '../typography';
-import { Icon } from '../Icon/Icon';
 import { colors } from '@/lib/tokens/colors';
+import { StyleSheet, View } from 'react-native';
+import { Icon } from '../../Icon/Icon';
+import { Typography } from '../../typography';
+import { Bookmark } from '../common/Bookmark';
 
-type structureProps = {
+type StructureProps = {
   structure: string[];
   name: string;
 };
-const Structure: React.FC<structureProps> = ({ structure, name }) => {
+export const Structure: React.FC<StructureProps> = ({ structure, name }) => {
   return (
     <View>
       <Bookmark title='Structure' />
@@ -37,7 +37,6 @@ const Structure: React.FC<structureProps> = ({ structure, name }) => {
   );
 };
 
-export default Structure;
 const styles = StyleSheet.create({
   structureList: {
     gap: 10,

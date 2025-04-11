@@ -1,14 +1,13 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
 import { colors } from '@/lib/tokens/colors';
-import { Icon } from '../Icon/Icon';
-import { Typography } from '../typography';
+import { StyleSheet, View } from 'react-native';
+import { Icon } from '../../Icon/Icon';
+import { Typography } from '../../typography';
 
 interface BookmarkProps {
   title: string;
 }
 
-const Bookmark: React.FC<BookmarkProps> = ({ title }) => {
+export const Bookmark: React.FC<BookmarkProps> = ({ title }) => {
   return (
     <View style={styles.container}>
       <View style={styles.line} />
@@ -45,5 +44,3 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 });
-
-export default Bookmark;

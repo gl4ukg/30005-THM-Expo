@@ -1,7 +1,7 @@
-import { View, StyleSheet } from 'react-native';
-import { Typography } from '../typography';
-import { RadioButton } from './radioButton';
 import { colors } from '@/lib/tokens/colors';
+import { StyleSheet, View } from 'react-native';
+import { Typography } from '../../typography';
+import { RadioButton } from './RadioButton';
 
 export interface Choice {
   id: string;

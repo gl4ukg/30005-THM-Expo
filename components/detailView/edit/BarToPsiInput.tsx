@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, KeyboardTypeOptions } from 'react-native';
-import UnitInput from './UnitInput';
 import { colors } from '@/lib/tokens/colors';
-import { Typography } from '../typography';
+import { useCallback, useState } from 'react';
+import { KeyboardTypeOptions, StyleSheet, View } from 'react-native';
+import { Typography } from '../../typography';
+import UnitInput from './UnitInput';
 
 type BarToPsiInputProps = {
   pressureInBars: number;
@@ -13,7 +13,7 @@ type BarToPsiInputProps = {
 const barToPsi = (bar: number): number => bar * 14.5038;
 const psiToBar = (psi: number): number => psi / 14.5038;
 
-const BarToPsiInput: React.FC<BarToPsiInputProps> = ({
+export const BarToPsiInput: React.FC<BarToPsiInputProps> = ({
   pressureInBars,
   onChange,
 }) => {
@@ -82,5 +82,3 @@ const styles = StyleSheet.create({
     color: colors.extended666,
   },
 });
-
-export default BarToPsiInput;
