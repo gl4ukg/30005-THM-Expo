@@ -24,7 +24,6 @@ export const SelectField: React.FC<SelectFieldProps> = ({
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(value);
-  const [hasModalBeenOpened, setHasModalBeenOpened] = useState(false);
 
   const handleSelect = (selectedValue: string) => {
     setSelectedValue(selectedValue);
@@ -34,10 +33,10 @@ export const SelectField: React.FC<SelectFieldProps> = ({
 
   const handleClose = () => {
     setModalOpen(false);
-    setHasModalBeenOpened(true);
   };
 
-  const hasError = required && hasModalBeenOpened && selectedValue === '';
+  const hasError =
+    required && (selectedValue === '' || selectedValue === undefined);
 
   return (
     <View style={styles.container}>
