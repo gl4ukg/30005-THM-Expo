@@ -160,6 +160,7 @@ export const Input = forwardRef<TextInput, Props>(
                 placeholder={inputProps.placeholder}
                 inputMode={inputMode}
                 multiline={type === 'textArea'}
+                numberOfLines={type === 'textArea' ? undefined : 1} // numberofLines is set to avoid vertical growth on Android
                 scrollEnabled={type !== 'textArea'}
                 secureTextEntry={type === 'password' && !isPasswordVisible}
                 onBlur={handleUnfocused}

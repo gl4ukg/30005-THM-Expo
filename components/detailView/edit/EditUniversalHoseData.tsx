@@ -57,6 +57,7 @@ const EditCouplingSection: React.FC<EditUniversalHoseDataProps> = ({
         label='Gender'
         value={info.gender}
         onChange={(value) => onInputChange('gender', value)}
+        required={true}
         options={[]}
       />
     </TooltipWrapper>
