@@ -35,8 +35,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
     setModalOpen(false);
   };
 
-  const hasError =
-    required && (selectedValue === '' || selectedValue === undefined);
+  const isRequiredValueMissing = required && !selectedValue;
 
   return (
     <View style={styles.container}>
@@ -44,18 +43,23 @@ export const SelectField: React.FC<SelectFieldProps> = ({
         <View style={styles.labelContainer}>
           <Typography
             name={'navigation'}
-            style={[styles.label, hasError && styles.errorStyle]}
+            style={[styles.label, isRequiredValueMissing && styles.labelError]}
             text={label}
           />
-          {hasError && <Icon name='Alert' color={colors.error} size='xsm' />}
+          {isRequiredValueMissing && (
+            <Icon name='Alert' color={colors.error} size='xsm' />
+          )}
         </View>
         <Pressable
-          style={[styles.inputContainer, hasError && styles.errorBorder]}
+          style={[
+            styles.inputContainer,
+            isRequiredValueMissing && styles.inputContainerError,
+          ]}
           onPress={() => setModalOpen(true)}
         >
           <Typography
             name='navigation'
-            style={[styles.valueStyle, hasError && styles.errorStyle]}
+            style={[styles.value, isRequiredValueMissing && styles.valueError]}
             text={selectedValue || 'Select...'}
           />
 
@@ -63,15 +67,15 @@ export const SelectField: React.FC<SelectFieldProps> = ({
             <Icon
               name='CaretRight'
               size='sm'
-              color={hasError ? colors.error : colors.black}
+              color={isRequiredValueMissing ? colors.error : colors.black}
             />
           </View>
         </Pressable>
-        {hasError && (
+        {isRequiredValueMissing && (
           <Typography
             name={'navigation'}
             text='Required field'
-            style={[styles.errorStyle, { alignSelf: 'flex-end' }]}
+            style={[styles.errorMessage]}
           />
         )}
       </View>
@@ -115,6 +119,9 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     color: colors.extended666,
   },
+  labelError: {
+    color: colors.errorText,
+  },
   inputContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -127,6 +134,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     width: '100%',
   },
+  inputContainerError: {
+    borderColor: colors.errorText,
+  },
   fullScreenModal: {
     flex: 1,
     backgroundColor: colors.white,
@@ -136,8 +146,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  errorStyle: {
+  errorMessage: {
     color: colors.errorText,
+    position: 'absolute',
+    right: 0,
+    bottom: -22,
   },
   errorBorder: {
     borderColor: colors.error,
@@ -145,5 +158,6 @@ const styles = StyleSheet.create({
   tooltipStylingIfError: {
     paddingBottom: 22,
   },
-  valueStyle: { color: colors.extended333 },
+  value: { color: colors.extended333 },
+  valueError: { color: colors.errorText },
 });

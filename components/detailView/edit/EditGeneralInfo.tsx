@@ -1,4 +1,4 @@
-import { EditProps } from '@/components/detailView/edit/edit';
+import { EditProps } from '@/lib/types/edit';
 import { TooltipWrapper } from './TooltipWrapper';
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
@@ -7,7 +7,7 @@ import { StyleSheet, View } from 'react-native';
 import { Input } from '../../UI/Input/input';
 import { RadioGroup } from '../common/RadioGroup';
 import { SelectField } from '../common/SelectField';
-import { GHD } from '../common/types';
+import { GHD } from '@/lib/types/hose';
 
 export const EditGeneralInfo: React.FC<
   EditProps<GHD> & { isRegisterView?: boolean }

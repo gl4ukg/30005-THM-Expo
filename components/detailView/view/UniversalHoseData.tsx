@@ -3,7 +3,7 @@ import { Typography } from '../../typography';
 import { Checkbox } from '../../UI/Checkbox';
 import { Bookmark } from '../common/Bookmark';
 import { DataField } from '../common/Datafield';
-import { UHD } from '../common/types';
+import { UHD } from '@/lib/types/hose';
 
 type UniversalHoseDataProps = {
   info: UHD;

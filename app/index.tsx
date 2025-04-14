@@ -19,6 +19,8 @@ import { NorwegianFlag } from '@/components/decorative/norwegianFlag';
 import { LinkButton } from '@/components/UI/Button/linkButton';
 import { ButtonTHS } from '@/components/UI';
 import { LoginHeader } from '@/components/login/loginHeader';
+import { mockedData } from '@/context/mocked';
+import { useAppContext } from '@/context/ContextProvider';
 
 type LoginViews =
   | 'welcome'
@@ -28,7 +30,7 @@ type LoginViews =
   | 'createPassword';
 const Login = () => {
   const router = useRouter();
-
+  const { dispatch } = useAppContext();
   const windowHeight = Dimensions.get('window').height;
   const insets = useSafeAreaInsets();
 
@@ -64,6 +66,13 @@ const Login = () => {
                   styles.link,
                   { flex: 1, backgroundColor: colors.extendedBlue },
                 ]}
+                onPress={() => {
+                  dispatch({
+                    type: 'SET_HOSE_DATA',
+                    payload: mockedData,
+                  });
+                  router.push('/dashbord');
+                }}
               >
                 <Typography
                   name='navigation'

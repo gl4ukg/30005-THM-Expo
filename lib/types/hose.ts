@@ -1,4 +1,6 @@
-export type GHD = {
+export type HoseData = {
+  id: string;
+  missingData?: boolean;
   description: string;
   prodDate: string;
   customerId: string;
@@ -12,9 +14,6 @@ export type GHD = {
   pollutionExposure: string;
   uvExposure: string;
   installationDate: string;
-};
-
-export type UHD = {
   hoseStandard: string;
   innerDiameter: string;
   totalLength: string;
@@ -31,9 +30,6 @@ export type UHD = {
   commentEnd2: string;
   gender2: string;
   angle2: string;
-};
-
-export type TPN = {
   hoseType: string;
   ferrule1: string;
   ferrule2: string;
@@ -50,15 +46,11 @@ export type TPN = {
   whipcheck: string;
   hoseProtection: string;
   breakAwayWeakLink: string;
-};
-
-export type HID = {
   inspectedDate: string;
   inspectedBy: string;
   hoseCondition: string;
   approved: string;
   comment: string;
-  prodDate: string;
   criticality: string;
   inspectionInterval: string;
   nextInspection: string;
@@ -69,7 +61,77 @@ export type HID = {
   customerArticleNumber: string;
 };
 
-export type HoseData = { id: string; missingData?: boolean } & GHD &
-  UHD &
-  TPN &
-  HID;
+export type GHD = Pick<
+  HoseData,
+  | 'description'
+  | 'prodDate'
+  | 'customerId'
+  | 's1PlantVesselUnit'
+  | 'S2Equipment'
+  | 'equipmentSubunit'
+  | 'otherInfo'
+  | 'RFid'
+  | 'hoseMediumTemperature'
+  | 'hoseFunction'
+  | 'pollutionExposure'
+  | 'uvExposure'
+  | 'installationDate'
+>;
+
+export type UHD = Pick<
+  HoseData,
+  | 'hoseStandard'
+  | 'innerDiameter'
+  | 'totalLength'
+  | 'wpBar'
+  | 'wpPsi'
+  | 'materialQuality'
+  | 'typeFitting'
+  | 'innerDiameter2'
+  | 'gender'
+  | 'angle'
+  | 'commentEnd1'
+  | 'materialQuality2'
+  | 'typeFitting2'
+  | 'commentEnd2'
+  | 'gender2'
+  | 'angle2'
+>;
+
+export type TPN = Pick<
+  HoseData,
+  | 'hoseType'
+  | 'ferrule1'
+  | 'ferrule2'
+  | 'insert1'
+  | 'insert2'
+  | 'addAEnd1'
+  | 'addBEnd1'
+  | 'addCEnd1'
+  | 'addAEnd2'
+  | 'addBEnd2'
+  | 'addCEnd2'
+  | 'spiralGuard'
+  | 'hookie'
+  | 'whipcheck'
+  | 'hoseProtection'
+  | 'breakAwayWeakLink'
+>;
+
+export type HID = Pick<
+  HoseData,
+  | 'inspectedDate'
+  | 'inspectedBy'
+  | 'hoseCondition'
+  | 'approved'
+  | 'comment'
+  | 'prodDate'
+  | 'criticality'
+  | 'inspectionInterval'
+  | 'nextInspection'
+  | 'replacementInterval'
+  | 'replacementDate'
+  | 'drawingNumber'
+  | 'positionNumber'
+  | 'customerArticleNumber'
+>;

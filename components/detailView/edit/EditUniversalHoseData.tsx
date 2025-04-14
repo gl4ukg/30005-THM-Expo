@@ -1,6 +1,6 @@
 import { SelectField } from '@/components/detailView/common/SelectField';
 import { BarToPsiInput } from '@/components/detailView/edit/BarToPsiInput';
-import { EditProps } from '@/components/detailView/edit/edit';
+import { EditProps } from '@/lib/types/edit';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import UnitInput from '@/components/detailView/edit/UnitInput';
 import { Typography } from '@/components/typography';
@@ -9,7 +9,7 @@ import { Input } from '@/components/UI/Input/input';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Bookmark } from '../common/Bookmark';
-import { UHD } from '../common/types';
+import { UHD } from '@/lib/types/hose';
 
 type EditUniversalHoseDataProps = EditProps<
   Pick<
