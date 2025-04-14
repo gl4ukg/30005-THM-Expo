@@ -90,17 +90,7 @@ interface DataState {
     unitName: string;
   }[];
   workingUnitId: null | string;
-
   selection: HoseSelection | null;
-
-  // selectedHoses: string[] | string;
-  // selectedUnitId: null | string;
-  // actions: {
-  //   RFQ: ActionRFQ[];
-  //   SCRAP: ActionSCRAP[];
-  //   CONTACT: ActionCONTACT[];
-  // };
-  // aktiveDraft: null | (Omit<Action, 'status'> & { status: 'DRAFT' });
 }
 
 interface SettingsState {
