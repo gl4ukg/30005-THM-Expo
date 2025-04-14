@@ -1,8 +1,8 @@
-import { HoseType } from '@/app/(app)/dashbord/hoses/[filter]';
 import { LinkButton } from '@/components/UI/Button/linkButton';
 import { useAppContext } from '@/context/ContextProvider';
 import { isMultiSelection } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
+import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
@@ -17,7 +17,7 @@ interface Props {
   title: string;
   subTitle: string;
   isRFQ?: boolean;
-  hoses: HoseType[];
+  hoses: HoseData[];
   fromScanPath?: boolean;
   onSave: (arg0: any) => void;
   onAdd?: (arg0: any) => void;

@@ -1,13 +1,12 @@
 import { BarChart, Primary, Secondary } from '@/components/dashboard';
-import { BarData } from '@/components/dashboard/barChart';
+import { BarData } from '@/components/dashboard/BarChart';
 import { Typography } from '@/components/typography';
 import { ActionMenu } from '@/components/UI/ActionMenu';
 import { AppContext } from '@/context/Reducer';
-import { useRouter } from 'expo-router';
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import React from 'react';
+import { useRouter } from 'expo-router';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 const month: BarData = [
   {

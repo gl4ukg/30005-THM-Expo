@@ -676,6 +676,44 @@ const Ui = () => {
                 onChange={setDate}
               />
             </View>
+            <View style={{ display: selectExpanded ? 'flex' : 'none' }}>
+              <SelectField
+                label='Condition'
+                value={''}
+                onChange={() => {
+                  return;
+                }}
+                required={true}
+                options={condition.map((c) => ({ id: c, label: c }))}
+              />
+            </View>
+            <Pressable
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
+              onPress={() => setdatePickerExpanded(!datePickerExpanded)}
+            >
+              <Typography
+                text='Datepicker'
+                name='sectionHeaderCapslock'
+                style={{ color: colors.black }}
+              />
+              {datePickerExpanded ? (
+                <Icon name='ChevronDown' size='md' color={colors.black} />
+              ) : (
+                <Icon name='ChevronRight' size='md' color={colors.black} />
+              )}
+            </Pressable>
+            <View style={{ display: datePickerExpanded ? 'flex' : 'none' }}>
+              <Typography
+                name={'fieldLabel'}
+                style={{ color: colors.black }}
+                text={`Date: ${date && date.toLocaleDateString()}`}
+              />
+              <DateInput
+                label={'What Day is it?'}
+                value={new Date()}
+                onChange={setDate}
+              />
+            </View>
           </ScrollView>
         </View>
       </SafeAreaView>

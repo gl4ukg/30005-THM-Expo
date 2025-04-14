@@ -12,12 +12,11 @@ import { EditGeneralInfo } from '@/components/detailView/edit/EditGeneralInfo';
 import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
 import { EditTessPartNumbers } from '@/components/detailView/edit/EditTessPartNumbers';
 import { EditUniversalHoseData } from '@/components/detailView/edit/EditUniversalHoseData';
-import { EditProps } from '@/components/detailView/edit/edit';
-import { HoseData } from '@/components/detailView/common/types';
+import { EditProps } from '@/lib/types/edit';
+import { HoseData } from '@/lib/types/hose';
 import { Typography } from '@/components/typography';
 import { AppContext } from '@/context/Reducer';
 import {
-  Hose,
   isMultiSelection,
   SingleSelection,
   SingleSelectionActionsType,
@@ -74,14 +73,14 @@ const HoseDetails = () => {
     );
   }
   hoseData;
-  const handleInputChange = (field: keyof Hose, value: string) => {
-    setHoseData(
-      (prevState) =>
-        ({
-          ...prevState,
-          [field]: value,
-        }) as Hose,
-    );
+  const handleInputChange = (
+    field: keyof HoseData,
+    value: HoseData[keyof HoseData],
+  ) => {
+    setHoseData((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
   };
 
   const toggleEditMode = () => setEditMode((prev) => !prev);

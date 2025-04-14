@@ -4,13 +4,9 @@ import { IconName } from '@/components/Icon/iconMapping';
 import { Typography } from '@/components/typography';
 import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 import { useAppContext } from '@/context/ContextProvider';
-import {
-  Hose,
-  MultiSelectionActionsType,
-  SingleSelectionActionsType,
-  isMultiSelection,
-} from '@/context/state';
+import { MultiSelectionActionsType, isMultiSelection } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
+import { HoseData } from '@/lib/types/hose';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
@@ -18,19 +14,7 @@ interface Props {
   slug: string;
 }
 
-export type HoseType = {
-  id: string;
-  name: string;
-  position: string;
-  condition: string;
-  lastInspection: string;
-  lastInspectionDate: string;
-  nextInspection: string;
-  nextInspectionDate: string;
-  missingData: boolean;
-  prodDate: string;
-};
-const getFilteredHoses = (filter: string, data: Hose[]) => {
+const getFilteredHoses = (filter: string, data: HoseData[]) => {
   let filteredList = [...data];
   return {
     listLength: filteredList.length,

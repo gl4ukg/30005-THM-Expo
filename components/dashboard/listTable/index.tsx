@@ -5,17 +5,10 @@ import { useRouter } from 'expo-router';
 import React, { FC } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { ListElement } from './listElement';
+import { HoseData } from '@/lib/types/hose';
 
 interface Props {
-  items: {
-    id: string;
-    position: string;
-    condition: string;
-    lastInspection: string;
-    missingData?: boolean;
-    hasRFID?: boolean;
-    hasAttachment?: boolean;
-  }[];
+  items: HoseData[];
   selectedIds: string[];
   canSelect?: boolean;
   onSelectionChange?: (id: string) => void;

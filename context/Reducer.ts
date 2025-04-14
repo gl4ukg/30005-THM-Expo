@@ -3,18 +3,17 @@ import {
   ActionCONTACT,
   ActionRFQ,
   ActionSCRAP,
-  SingleSelectionActionsType,
   AppState,
   AuthState,
   DataState,
-  Hose,
-  HoseSelection,
   initialState,
+  isMultiSelection,
+  MultiSelection,
   SettingsState,
   SingleSelection,
-  MultiSelection,
-  isMultiSelection,
+  SingleSelectionActionsType,
 } from '@/context/state';
+import { HoseData } from '@/lib/types/hose';
 import { createContext } from 'react';
 
 interface ActionWithPayload<T extends string, Payload> {
@@ -61,7 +60,7 @@ type DataAction =
         actionType: SingleSelectionActionsType;
       }
     >
-  | ActionWithPayload<'SET_HOSE_DATA', Hose[]>
+  | ActionWithPayload<'SET_HOSE_DATA', HoseData[]>
   | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: string; hoseData: any }>
   | ActionWithPayload<'SELECT_ONE_HOSE', SingleSelection>
   | ActionWithPayload<'START_MULTI_SELECTION', MultiSelection['type']>
@@ -227,10 +226,10 @@ const AppContext = createContext<{
 });
 
 export {
-  AppContext,
   AppAction,
+  AppContext,
   AuthAction,
   DataAction,
-  SettingsAction,
   rootReducer,
+  SettingsAction,
 };
