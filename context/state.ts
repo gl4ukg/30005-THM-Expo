@@ -84,12 +84,6 @@ export const isSingleSelection = (
 
 interface DataState {
   // define data state properties
-  // assignedUnits: {
-  //   [unitId: string]: {
-  //     unitName: string;
-  //     hoses: HoseData[];
-  //   };
-  // };
   hoses: HoseData[];
   assignedUnits: {
     unitId: string;
