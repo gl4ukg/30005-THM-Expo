@@ -2,20 +2,13 @@ import { TessLines } from '@/components/decorative/tessLines';
 import { Icon } from '@/components/Icon/Icon';
 import { OpenMenu } from '@/components/UI/BottomNavigation/openMenu';
 import { NavMenu } from '@/components/UI/NavMenu/navMenu';
+import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
-import { Link, useRouter } from 'expo-router';
+import { Href, Link, useRouter } from 'expo-router';
 import { FC, useContext, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  SafeAreaView,
-  Dimensions,
-} from 'react-native';
+import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { AppContext } from '@/context/Reducer';
 
 interface BottomNavigationProps {}
 export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
@@ -24,9 +17,11 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
   const router = useRouter();
   const { dispatch } = useContext(AppContext);
 
-  const handleLinkPress = (to: string) => {
-    dispatch({ type: 'DESELECT_ALL_HOSES' });
+  const handleLinkPress = (to: Href) => {
+    console.log(to);
     setIsOpen(false);
+    router.push(to);
+    dispatch({ type: 'FINISH_SELECTION' });
   };
 
   return (
@@ -34,70 +29,42 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
       <View style={{ bottom: insets.bottom }}>
         <Collapsible collapsed={!isOpen} style={[styles.collapsible]}>
           <NavMenu
-            handleLinkPress={() => handleLinkPress}
+            handleLinkPress={handleLinkPress}
             elements={[
               {
-                title: 'Download / sync data',
-                to: '/(app)/dashbord/hoses',
-                icon: () => <Icon name='Download' color={colors.primary} />,
-              },
-              {
-                title: 'Upload your data',
+                title: 'Dashboard / Home',
                 to: '/(app)/dashbord',
-                icon: () => <Icon name='Upload' color={colors.primary} />,
+                icon: () => <Icon name='Meter' color={colors.primary} />,
               },
               {
-                title: 'Register hose',
-                to: '/scan?title=Register%20hose&registerHose=true',
+                title: 'Register hose / equipment',
+                to: '/(app)/dashbord/hoses/register',
                 icon: () => (
                   <Icon name='RegisterHoses' color={colors.primary} />
                 ),
               },
               {
-                id: 'Inspection',
-                title: 'Inspection',
-                icon: () => <Icon name='Search' color={colors.primary} />,
-                links: [
-                  {
-                    title: 'Inspect',
-                    to: '/',
-                  },
-                  {
-                    title: 'Edit hose data',
-                    to: '/(app)/user',
-                  },
-                  {
-                    title: 'Update RFID',
-                    to: '/(app)/dashbord/hoses',
-                  },
-                  {
-                    title: 'Metering',
-                    to: '/(app)/dashbord/hoses',
-                  },
-                ],
+                title: 'Inspect hose / equipment',
+                to: '/scan?title=Inspect%20hose%20/%20equipment',
+                icon: () => <Icon name='Inspect' color={colors.primary} />,
               },
               {
-                title: 'Alerts /KPIs',
-                to: '/(app)/user',
-                icon: () => <Icon name='Meter' color={colors.primary} />,
-              },
-              {
-                title: 'Order hoses',
-                to: '/scan?title=Order%20hoses',
+                title: 'Order hose',
+                to: '/scan?title=Order%20hose',
                 icon: () => <Icon name='Cart' color={colors.primary} />,
               },
               {
-                title: 'Hose replacement & pressure testing',
-                to: '/(app)/user',
+                title: 'Replace hose / pressure testing',
+                to: '/scan?title=Replace%20hose',
                 icon: () => <Icon name='Task' color={colors.primary} />,
               },
               {
-                title: 'Report ID as scrapped',
+                title: 'Scrap hose',
                 to: '/scan?title=Scrap%20hoses',
                 icon: () => <Icon name='Trash' color={colors.primary} />,
               },
               {
-                title: 'Send mail',
+                title: 'Contact TESS Support',
                 to: '/(app)/user',
                 icon: () => <Icon name='Email' color={colors.primary} />,
               },
