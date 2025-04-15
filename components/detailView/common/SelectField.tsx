@@ -1,5 +1,5 @@
 import { colors } from '@/lib/tokens/colors';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
 import { Icon } from '../../Icon/Icon';
 import { Typography } from '../../typography';
@@ -24,6 +24,10 @@ export const SelectField: React.FC<SelectFieldProps> = ({
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(value);
+
+  useEffect(() => {
+    setSelectedValue(value);
+  }, [value]);
 
   const handleSelect = (selectedValue: string) => {
     setSelectedValue(selectedValue);
@@ -122,6 +126,7 @@ const styles = StyleSheet.create({
   labelError: {
     color: colors.errorText,
   },
+
   inputContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -160,4 +165,5 @@ const styles = StyleSheet.create({
   },
   value: { color: colors.extended333 },
   valueError: { color: colors.errorText },
+  valueDisabled: { color: colors.extended666 },
 });

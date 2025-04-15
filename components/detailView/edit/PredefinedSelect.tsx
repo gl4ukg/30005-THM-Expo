@@ -108,9 +108,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
           <Typography name='navigationBold' text='Not sure what to choose?' />
           <Typography
             name='navigation'
-            text={
-              'Text, context-sensitive, for help or instructions/advice, related to what to chose in each spesific list.'
-            }
+            text='Text, context-sensitive, for help or instructions/advice, related to what to chose in each spesific list.'
           />
         </View>
         {!onlyOptions && (
@@ -171,6 +169,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
               onChangeText={handleTextChange}
               errorMessage={error}
               validateOnSave={true}
+              ref={textInputRef}
             />
           </KeyboardAvoidingView>
         )}
@@ -222,13 +221,11 @@ const styles = StyleSheet.create({
   option: {
     flexDirection: 'row',
     alignItems: 'center',
-    // paddingHorizontal: 15,
   },
   optionText: {
     fontSize: 16,
     marginLeft: 16,
   },
-
   manualInput: {
     height: 40,
     borderColor: colors.secondary95,

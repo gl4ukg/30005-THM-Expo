@@ -19,15 +19,9 @@ type CouplingSectionProps = {
     | 'angle'
     | 'commentEnd1'
   >;
-  title: string;
 };
-const CouplingSection: React.FC<CouplingSectionProps> = ({ info, title }) => (
+const CouplingSection: React.FC<CouplingSectionProps> = ({ info }) => (
   <View style={styles.couplingSection}>
-    <Typography
-      name='navigationBold'
-      text={title}
-      style={styles.sectionTitle}
-    />
     <DataField label='Material Quality' value={info.materialQuality} />
     <DataField label='Type Fitting' value={info.typeFitting} />
     <DataField label='Inner Diameter 2' value={info.innerDiameter2} />
@@ -68,9 +62,7 @@ export const UniversalHoseData = ({ info }: UniversalHoseDataProps) => {
           <Typography name='button' text='Same as end 1' />
         </View>
       </View>
-      {!areCouplingsSame && (
-        <CouplingSection info={info} title='Coupling end 2' />
-      )}
+      {!areCouplingsSame && <CouplingSection info={info} />}
     </View>
   );
 };
