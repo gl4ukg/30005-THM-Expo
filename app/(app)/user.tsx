@@ -1,8 +1,8 @@
-import { Typography } from '@/components/typography';
+import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { useAppContext } from '@/context/ContextProvider';
 import { useRouter } from 'expo-router';
-import { SafeAreaView, Text, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 
 const User = () => {
   const { state, dispatch } = useAppContext();

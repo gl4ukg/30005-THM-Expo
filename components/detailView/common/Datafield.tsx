@@ -1,8 +1,8 @@
 import { colors } from '@/lib/tokens/colors';
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Typography } from '../../typography';
+import { StyleSheet, View } from 'react-native';
 import { Icon } from '../../Icon/Icon';
+import { Typography } from '../../Typography';
 
 interface DataFieldProps {
   label: string;

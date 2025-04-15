@@ -1,20 +1,18 @@
+import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { ActionsFab, Option } from '@/components/UI/ActionMenu/fab';
+import { DetailsHeader } from '@/components/detailView/common/DetailsHeader';
 import { Documents } from '@/components/detailView/common/Documents';
+import { EditGeneralInfo } from '@/components/detailView/edit/EditGeneralInfo';
+import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
+import { EditTessPartNumbers } from '@/components/detailView/edit/EditTessPartNumbers';
+import { EditUniversalHoseData } from '@/components/detailView/edit/EditUniversalHoseData';
 import { GeneralInfo } from '@/components/detailView/view/GeneralInfo';
 import { HistoryView } from '@/components/detailView/view/History';
 import { MaintenanceInfo } from '@/components/detailView/view/MaintenanceInfo';
 import { Structure } from '@/components/detailView/view/Structure';
 import { TessPartNumbers } from '@/components/detailView/view/TessPartNumbers';
 import { UniversalHoseData } from '@/components/detailView/view/UniversalHoseData';
-import { DetailsHeader } from '@/components/detailView/common/DetailsHeader';
-import { EditGeneralInfo } from '@/components/detailView/edit/EditGeneralInfo';
-import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
-import { EditTessPartNumbers } from '@/components/detailView/edit/EditTessPartNumbers';
-import { EditUniversalHoseData } from '@/components/detailView/edit/EditUniversalHoseData';
-import { EditProps } from '@/lib/types/edit';
-import { HoseData } from '@/lib/types/hose';
-import { Typography } from '@/components/typography';
 import { AppContext } from '@/context/Reducer';
 import {
   isMultiSelection,
@@ -22,6 +20,8 @@ import {
   SingleSelectionActionsType,
 } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
+import { EditProps } from '@/lib/types/edit';
+import { HoseData } from '@/lib/types/hose';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useRef, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';

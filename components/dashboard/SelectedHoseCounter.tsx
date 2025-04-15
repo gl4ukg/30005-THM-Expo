@@ -1,8 +1,8 @@
-import { View, StyleSheet, Pressable } from 'react-native';
-import { IconName } from '../Icon/iconMapping';
-import { Icon } from '../Icon/Icon';
-import { Typography } from '../typography';
 import { colors } from '@/lib/tokens/colors';
+import { Pressable, StyleSheet } from 'react-native';
+import { Icon } from '../Icon/Icon';
+import { IconName } from '../Icon/iconMapping';
+import { Typography } from '../Typography';
 
 interface Props {
   icon: IconName;

@@ -1,7 +1,7 @@
 import { ListTable } from '@/components/dashboard/listTable';
-import { SelectedHoseCounter } from '@/components/dashboard/selectedHoseCounter';
+import { SelectedHoseCounter } from '@/components/dashboard/SelectedHoseCounter';
 import { IconName } from '@/components/Icon/iconMapping';
-import { Typography } from '@/components/typography';
+import { Typography } from '@/components/Typography';
 import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 import { useAppContext } from '@/context/ContextProvider';
 import { MultiSelectionActionsType, isMultiSelection } from '@/context/state';

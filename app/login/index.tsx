@@ -1,9 +1,9 @@
-import { HelpLinks } from '@/components/login/helpLinks';
-import { LoginHeader } from '@/components/login/loginHeader';
-import { Typography } from '@/components/typography';
+import { HelpLinks } from '@/components/login/HelpLinks';
+import { LoginHeader } from '@/components/login/LoginHeader';
+import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
-import { LinkButton } from '@/components/UI/Button/linkButton';
-import { Input } from '@/components/UI/Input/input';
+import { LinkButton } from '@/components/UI/Button/LinkButton';
+import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
 import { mockedData } from '@/context/mocked';
 import { colors } from '@/lib/tokens/colors';

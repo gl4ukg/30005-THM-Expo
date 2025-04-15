@@ -1,7 +1,7 @@
-import { Typography } from '@/components/typography';
+import { Typography } from '@/components/Typography';
 import { Href, Link } from 'expo-router';
 import { FC } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 
 interface NavElement {

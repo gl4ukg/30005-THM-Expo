@@ -1,11 +1,11 @@
-import { Typography } from '@/components/typography';
+import { Typography } from '@/components/Typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { colors } from '@/lib/tokens/colors';
+import { HoseData } from '@/lib/types/hose';
 import { useRouter } from 'expo-router';
 import React, { FC } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { ListElement } from './listElement';
-import { HoseData } from '@/lib/types/hose';
 
 interface Props {
   items: HoseData[];

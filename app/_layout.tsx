@@ -1,7 +1,7 @@
+import { ContextProvider, useAppContext } from '@/context/ContextProvider';
 import { Stack } from 'expo-router';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ContextProvider, useAppContext } from '@/context/ContextProvider';
 
 export default function RootLayout() {
   const { state } = useAppContext();

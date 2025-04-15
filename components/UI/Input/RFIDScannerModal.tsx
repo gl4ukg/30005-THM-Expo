@@ -1,15 +1,15 @@
+import { colors } from '@/lib/tokens/colors';
 import React from 'react';
 import {
-  View,
-  Modal,
-  StyleSheet,
   ActivityIndicator,
   Dimensions,
+  Modal,
+  StyleSheet,
+  View,
 } from 'react-native';
-import { Typography } from '../../typography';
-import { colors } from '@/lib/tokens/colors';
 import { Icon } from '../../Icon/Icon';
-import { ButtonTHS } from '../Button/button';
+import { Typography } from '../../Typography';
+import { ButtonTHS } from '../Button/Button';
 
 interface RFIDScannerModalProps {
   visible: boolean;
@@ -22,7 +22,7 @@ interface RFIDScannerModalProps {
 
 const { height, width } = Dimensions.get('window');
 
-const RFIDScannerModal: React.FC<RFIDScannerModalProps> = ({
+export const RFIDScannerModal: React.FC<RFIDScannerModalProps> = ({
   visible,
   onClose,
   scanning,
@@ -146,5 +146,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-export default RFIDScannerModal;

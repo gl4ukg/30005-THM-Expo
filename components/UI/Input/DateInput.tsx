@@ -1,17 +1,17 @@
-import { View, StyleSheet, Pressable } from 'react-native';
-import { Typography } from '../../typography';
 import { colors } from '@/lib/tokens/colors';
-import { Icon } from '../../Icon/Icon';
 import { useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { Icon } from '../../Icon/Icon';
+import { Typography } from '../../Typography';
 
-interface datePickerProps {
+interface DatePickerProps {
   label: string;
   value: Date | null;
   onChange: (value: Date) => void;
 }
 
-export const DateInput: React.FC<datePickerProps> = ({
+export const DateInput: React.FC<DatePickerProps> = ({
   label,
   value,
   onChange,

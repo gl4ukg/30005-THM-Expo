@@ -1,14 +1,14 @@
 import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
 import { SelectField } from '@/components/detailView/common/SelectField';
-import { EditProps } from '@/lib/types/edit';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
-import { HID } from '@/lib/types/hose';
-import { Typography } from '@/components/typography';
+import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
+import { EditProps } from '@/lib/types/edit';
+import { HID } from '@/lib/types/hose';
 import { formatDate } from '@/lib/util/formatDate';
 import { StyleSheet, View } from 'react-native';
-import { Input } from '../../UI/Input/input';
+import { Input } from '../../UI/Input/Input';
 import { DataField } from '../common/Datafield';
 
 export const EditMaintenanceInfo: React.FC<EditProps<HID>> = ({

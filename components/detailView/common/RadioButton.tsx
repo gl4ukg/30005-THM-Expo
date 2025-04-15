@@ -1,6 +1,6 @@
 import { colors } from '@/lib/tokens/colors';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Typography } from '../../typography';
+import { Typography } from '../../Typography';
 
 interface RadioButtonProps {
   isSelected: boolean;

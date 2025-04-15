@@ -1,15 +1,15 @@
-import { View, StyleSheet, Alert, Pressable } from 'react-native';
-import { useState } from 'react';
-import { colors } from '@/lib/tokens/colors';
-import { LinkButton } from '@/components/UI/Button/linkButton';
-import { Typography } from '@/components/typography';
-import { useAppContext } from '@/context/ContextProvider';
-import { router } from 'expo-router';
-import { emailValidation } from '@/lib/util/validation';
-import { LoginHeader } from '@/components/login/loginHeader';
-import { Input } from '@/components/UI/Input/input';
+import { HelpLinks } from '@/components/login/HelpLinks';
+import { LoginHeader } from '@/components/login/LoginHeader';
+import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
-import { HelpLinks } from '@/components/login/helpLinks';
+import { LinkButton } from '@/components/UI/Button/LinkButton';
+import { Input } from '@/components/UI/Input/Input';
+import { useAppContext } from '@/context/ContextProvider';
+import { colors } from '@/lib/tokens/colors';
+import { emailValidation } from '@/lib/util/validation';
+import { router } from 'expo-router';
+import { useState } from 'react';
+import { Alert, StyleSheet, View } from 'react-native';
 
 interface Props {
   nextView: (page: 'login' | 'requestAccess') => void;

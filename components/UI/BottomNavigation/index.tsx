@@ -1,5 +1,5 @@
 import { getSkanUrl } from '@/app/scan';
-import { TessLines } from '@/components/decorative/tessLines';
+import { TessLines } from '@/components/decorative/TessLines';
 import { Icon } from '@/components/Icon/Icon';
 import { OpenMenu } from '@/components/UI/BottomNavigation/openMenu';
 import { NavMenu } from '@/components/UI/NavMenu/navMenu';

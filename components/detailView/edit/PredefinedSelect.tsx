@@ -1,4 +1,4 @@
-import { Input } from '@/components/UI/Input/input';
+import { Input } from '@/components/UI/Input/Input';
 import { colors } from '@/lib/tokens/colors';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -9,7 +9,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { Typography } from '../../typography';
+import { Typography } from '../../Typography';
 import { ButtonTHS } from '../../UI';
 import { RadioButton } from '../common/RadioButton';
 

@@ -1,6 +1,6 @@
 import { Icon } from '@/components/Icon/Icon';
-import { Typography } from '@/components/typography';
-import { Input } from '@/components/UI/Input/input';
+import { Typography } from '@/components/Typography';
+import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
 import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';

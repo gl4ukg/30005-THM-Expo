@@ -1,5 +1,5 @@
 import { Link } from 'expo-router';
-import { Text, FlatList } from 'react-native';
+import { FlatList, Text } from 'react-native';
 
 const Hoses = () => {
   return (

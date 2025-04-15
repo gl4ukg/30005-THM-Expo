@@ -1,4 +1,4 @@
-import { ContactForm } from '@/components/forms/contactForm';
+import { ContactForm } from '@/components/forms/ContactForm';
 import { useAppContext } from '@/context/ContextProvider';
 import {
   isMultiSelection,
