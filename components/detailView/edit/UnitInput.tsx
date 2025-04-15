@@ -1,7 +1,7 @@
 import { colors } from '@/lib/tokens/colors';
 import { useCallback, useState } from 'react';
 import { KeyboardTypeOptions, StyleSheet, TextInput, View } from 'react-native';
-import { Typography } from '../../typography';
+import { Typography } from '../../Typography';
 
 type UnitInputProps = {
   label?: string;
@@ -12,7 +12,7 @@ type UnitInputProps = {
   keyboardType?: KeyboardTypeOptions;
 };
 
-const UnitInput: React.FC<UnitInputProps> = ({
+export const UnitInput: React.FC<UnitInputProps> = ({
   label,
   value,
   onChangeText,
@@ -89,5 +89,3 @@ const styles = StyleSheet.create({
     color: colors.extended666,
   },
 });
-
-export default UnitInput;

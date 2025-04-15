@@ -1,8 +1,8 @@
-import { HelpLinks } from '@/components/login/helpLinks';
-import { LoginHeader } from '@/components/login/loginHeader';
-import { Typography } from '@/components/typography';
+import { HelpLinks } from '@/components/login/HelpLinks';
+import { LoginHeader } from '@/components/login/LoginHeader';
+import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
-import { Input } from '@/components/UI/Input/input';
+import { Input } from '@/components/UI/Input/Input';
 import { colors } from '@/lib/tokens/colors';
 import { passwordRequirements, validatePassword } from '@/lib/util/validation';
 import { useState } from 'react';

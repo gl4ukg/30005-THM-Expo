@@ -1,21 +1,14 @@
-import { TessLines } from '@/components/decorative/tessLines';
+import { TessLines } from '@/components/decorative/TessLines';
 import { Icon } from '@/components/Icon/Icon';
 import { OpenMenu } from '@/components/UI/BottomNavigation/openMenu';
 import { NavMenu } from '@/components/UI/NavMenu/navMenu';
+import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
 import { Link, useRouter } from 'expo-router';
 import { FC, useContext, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  SafeAreaView,
-  Dimensions,
-} from 'react-native';
+import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { AppContext } from '@/context/Reducer';
 
 interface BottomNavigationProps {}
 export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {

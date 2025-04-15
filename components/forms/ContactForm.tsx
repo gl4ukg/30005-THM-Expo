@@ -1,4 +1,4 @@
-import { LinkButton } from '@/components/UI/Button/linkButton';
+import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { useAppContext } from '@/context/ContextProvider';
 import { isMultiSelection } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
@@ -8,10 +8,10 @@ import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { ButtonTHS } from '../UI';
-import { Input } from '../UI/Input/input';
+import { Input } from '../UI/Input/Input';
 import { ListTable } from '../dashboard/listTable';
 import { SelectField } from '../detailView/common/SelectField';
-import { Typography } from '../typography';
+import { Typography } from '../Typography';
 
 interface Props {
   title: string;

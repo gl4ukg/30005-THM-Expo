@@ -2,7 +2,7 @@ import { colors } from '@/lib/tokens/colors';
 import { useEffect, useState } from 'react';
 import { Modal, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
 import { Icon } from '../../Icon/Icon';
-import { Typography } from '../../typography';
+import { Typography } from '../../Typography';
 import { PredefinedSelect } from '../edit/PredefinedSelect';
 
 interface SelectFieldProps {

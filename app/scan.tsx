@@ -1,28 +1,28 @@
+import { Icon } from '@/components/Icon/Icon';
+import { Typography } from '@/components/Typography';
+import { Input } from '@/components/UI/Input/Input';
+import { useAppContext } from '@/context/ContextProvider';
+import { colors } from '@/lib/tokens/colors';
+import { reverseHexString } from '@/lib/util/rfid';
 import { RelativePathString, router } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  View,
-  StyleSheet,
-  Pressable,
   Alert,
-  SafeAreaView,
-  TextInput,
   Platform,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  TextInput,
+  View,
 } from 'react-native';
-import { Typography } from '@/components/typography';
-import { colors } from '@/lib/tokens/colors';
-import { Icon } from '@/components/Icon/Icon';
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
-import { reverseHexString } from '@/lib/util/rfid';
 import {
   Camera,
   useCameraDevice,
   useCameraPermission,
   useCodeScanner,
 } from 'react-native-vision-camera';
-import { Input } from '@/components/UI/Input/input';
-import { useAppContext } from '@/context/ContextProvider';
 
 const Scan = () => {
   const { title, registerHose } = useLocalSearchParams() as {

@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { View, StyleSheet, Pressable, Alert, Platform } from 'react-native';
-import { Typography } from '../../typography';
 import { colors } from '@/lib/tokens/colors';
-import { Icon } from '../../Icon/Icon';
-import RFIDScannerModal from './RFIDScannerModal';
-import NfcManager, { NfcTech } from 'react-native-nfc-manager';
 import { reverseHexString } from '@/lib/util/rfid';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Alert, Platform, Pressable, StyleSheet, View } from 'react-native';
+import NfcManager, { NfcTech } from 'react-native-nfc-manager';
+import { Icon } from '../../Icon/Icon';
+import { Typography } from '../../Typography';
+import { RFIDScannerModal } from './RFIDScannerModal';
 
 interface RFIDInputProps {
   label: string;

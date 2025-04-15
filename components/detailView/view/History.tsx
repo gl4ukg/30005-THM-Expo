@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Typography } from '../../typography';
+import { Typography } from '../../Typography';
 import { Bookmark } from '../common/Bookmark';
 
 export const HistoryView = () => {

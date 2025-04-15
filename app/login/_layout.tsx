@@ -1,9 +1,8 @@
-import { TessLines } from '@/components/decorative/tessLines';
-import { TessLogo } from '@/components/login/logo';
+import { TessLines } from '@/components/decorative/TessLines';
+import { TessLogo } from '@/components/login/Logo';
 import { colors } from '@/lib/tokens/colors';
-import { Slot, Stack } from 'expo-router';
+import { Slot } from 'expo-router';
 import {
-  Dimensions,
   ImageBackground,
   KeyboardAvoidingView,
   SafeAreaView,
@@ -11,7 +10,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function LoginLayout() {
   return (

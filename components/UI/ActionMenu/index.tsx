@@ -1,10 +1,10 @@
+import { Section } from '@/app/(app)/dashbord/hoses/hose/[hoseId]';
 import { Icon } from '@/components/Icon/Icon';
-import { Typography } from '@/components/typography';
+import { IconName } from '@/components/Icon/iconMapping';
+import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
 import { FC, useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
-import { IconName } from '@/components/Icon/iconMapping';
-import { Section } from '@/app/(app)/dashbord/hoses/hose/[hoseId]';
 
 type Option<T> = {
   icon?: IconName;

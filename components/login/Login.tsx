@@ -1,15 +1,15 @@
-import { View, StyleSheet, Alert } from 'react-native';
-import { ButtonTHS } from '../UI/Button/button';
-import { Input } from '../UI/Input/input';
-import { useState } from 'react';
-import { LoginHeader } from './loginHeader';
-import { colors } from '@/lib/tokens/colors';
-import { HelpLinks } from './helpLinks';
-import { Typography } from '@/components/typography';
+import { Typography } from '@/components/Typography';
+import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { useAppContext } from '@/context/ContextProvider';
-import { router } from 'expo-router';
+import { colors } from '@/lib/tokens/colors';
 import { emailValidation } from '@/lib/util/validation';
-import { LinkButton } from '@/components/UI/Button/linkButton';
+import { router } from 'expo-router';
+import { useState } from 'react';
+import { Alert, StyleSheet, View } from 'react-native';
+import { ButtonTHS } from '../UI/Button/Button';
+import { Input } from '../UI/Input/Input';
+import { HelpLinks } from './HelpLinks';
+import { LoginHeader } from './LoginHeader';
 interface Props {
   nextView: (page: 'login' | 'resetPassword') => void;
 }

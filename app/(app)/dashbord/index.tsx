@@ -1,6 +1,6 @@
 import { BarChart, Primary, Secondary } from '@/components/dashboard';
 import { BarData } from '@/components/dashboard/BarChart';
-import { Typography } from '@/components/typography';
+import { Typography } from '@/components/Typography';
 import { ActionMenu } from '@/components/UI/ActionMenu';
 import { AppContext } from '@/context/Reducer';
 import { useFocusEffect } from '@react-navigation/native';

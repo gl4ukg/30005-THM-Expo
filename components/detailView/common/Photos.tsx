@@ -1,8 +1,8 @@
 import { View } from 'react-native';
-import { Typography } from '../../typography';
+import { Typography } from '../../Typography';
 import { Bookmark } from '../common/Bookmark';
 
-const Photos = () => {
+export const Photos = () => {
   return (
     <View>
       <Bookmark title='Photos' />
@@ -10,5 +10,3 @@ const Photos = () => {
     </View>
   );
 };
-
-export default Photos;

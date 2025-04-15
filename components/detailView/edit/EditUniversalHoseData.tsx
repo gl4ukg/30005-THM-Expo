@@ -1,15 +1,15 @@
 import { SelectField } from '@/components/detailView/common/SelectField';
 import { BarToPsiInput } from '@/components/detailView/edit/BarToPsiInput';
-import { EditProps } from '@/lib/types/edit';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
-import UnitInput from '@/components/detailView/edit/UnitInput';
-import { Typography } from '@/components/typography';
+import { UnitInput } from '@/components/detailView/edit/UnitInput';
+import { Typography } from '@/components/Typography';
 import { Checkbox } from '@/components/UI/Checkbox';
-import { Input } from '@/components/UI/Input/input';
+import { Input } from '@/components/UI/Input/Input';
+import { EditProps } from '@/lib/types/edit';
+import { UHD } from '@/lib/types/hose';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Bookmark } from '../common/Bookmark';
-import { UHD } from '@/lib/types/hose';
 
 export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
   info,

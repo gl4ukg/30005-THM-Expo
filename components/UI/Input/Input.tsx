@@ -1,6 +1,6 @@
 import { Icon } from '@/components/Icon/Icon';
 import { IconName } from '@/components/Icon/iconMapping';
-import { Typography } from '@/components/typography';
+import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
 import { forwardRef, useEffect, useState } from 'react';
 import {
