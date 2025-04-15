@@ -73,9 +73,6 @@ export const ContactForm: React.FC<Props> = ({
       setSelectedIds([...selectedIds, id]);
     }
   };
-  const responsePathMapping: Record<string, string> = {
-
-  }
 
   const rfqOptions = [
     {
@@ -93,6 +90,7 @@ export const ContactForm: React.FC<Props> = ({
     !phone ||
     selectedIds.length === 0 ||
     (contactType === 'RFQ' && (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
+
 
   return (
     <>
