@@ -125,15 +125,6 @@ const Scan = () => {
         setRfid(reversedId);
         setScanMethod(null);
         handleScan();
-        // if (registerHose === 'true') {
-        //   router.push(
-        //     `/dashbord/hoses/register?rfid=${reversedId}` as RelativePathString,
-        //   );
-        // } else {
-        //   router.push(
-        //     `${navigationPath}?rfid=${reversedId}` as RelativePathString,
-        //   );
-        // }
       } else {
         setScanError('No tag ID found.');
       }

@@ -1,4 +1,5 @@
 import { Typography } from '@/components/Typography';
+import { colors } from '@/lib/tokens/colors';
 import { Href, Link } from 'expo-router';
 import { FC } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     gap: 8,
-    backgroundColor: '#BDECB9',
+    backgroundColor: colors.dashbordGreen,
   },
   containerPressed: {
     opacity: 0.6,
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     gap: 2,
-    backgroundColor: '#BDECB9',
+    backgroundColor: colors.dashbordGreen,
   },
   innerLink: {
     width: '100%',
@@ -110,14 +111,14 @@ const styles = StyleSheet.create({
     paddingLeft: 69,
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    backgroundColor: '#E2F9E0',
+    backgroundColor: colors.lightContrast25,
   },
   title: {
     fontSize: 16,
     lineHeight: 21,
     fontWeight: 'regular',
     letterSpacing: 0.25,
-    color: 'black',
+    color: colors.black,
   },
   titleOpened: {
     fontWeight: 'bold',

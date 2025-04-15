@@ -2,6 +2,7 @@ import {
   type NavElementsType,
   NavElement,
 } from '@/components/UI/NavMenu/navElement';
+import { colors } from '@/lib/tokens/colors';
 import { Href } from 'expo-router';
 import { FC, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
     marginBottom: 40,
     borderTopWidth: 2,
-    borderColor: '#009640',
-    backgroundColor: '#BDECB9',
+    borderColor: colors.primary,
+    backgroundColor: colors.dashbordGreen,
   },
 });
