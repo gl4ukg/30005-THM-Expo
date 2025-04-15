@@ -18,7 +18,7 @@ interface Props {
   subTitle: string;
   isRFQ?: boolean;
   hoses: HoseData[];
-  fromScanPath?: boolean;
+  allowScan?: boolean;
   onSave: (arg0: any) => void;
   onAdd?: (arg0: any) => void;
 }
@@ -27,7 +27,7 @@ export const ContactForm: React.FC<Props> = ({
   subTitle,
   isRFQ = false,
   hoses,
-  fromScanPath = false,
+  allowScan = false,
   onSave,
 }) => {
   const { state, dispatch } = useAppContext();
@@ -82,6 +82,7 @@ export const ContactForm: React.FC<Props> = ({
     selectedIds.length === 0 ||
     (isRFQ && (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
 
+  console.log('allowScan ->', allowScan);
   return (
     <>
       <FlatList
@@ -167,11 +168,11 @@ export const ContactForm: React.FC<Props> = ({
               onSelectionChange={handleSelectionChange}
               canSelect={true}
             />
-            {fromScanPath && (
+            {allowScan && (
               <LinkButton
                 variant='light'
                 title={`${responsePathMapping[subTitle ?? 'default']}`}
-                onPress={() => router.push('/scan')}
+                onPress={() => router.push('/scan?scanPurpose=SCRAP')}
               />
             )}
           </>

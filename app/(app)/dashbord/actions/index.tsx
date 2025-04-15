@@ -1,13 +1,23 @@
 import { ContactForm } from '@/components/forms/contactForm';
 import { useAppContext } from '@/context/ContextProvider';
-import { isMultiSelection, isSingleSelection } from '@/context/state';
+import {
+  isMultiSelection,
+  isSingleSelection,
+  MultiSelectionActionsType,
+} from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
-import { useLocalSearchParams } from 'expo-router/build/hooks';
+import { useLocalSearchParams, useSearchParams } from 'expo-router/build/hooks';
 import { Alert } from 'react-native';
 
 interface Props {}
 const Action: React.FC<Props> = (props) => {
-  let { action } = useLocalSearchParams();
+  let { action, allowScan } = useLocalSearchParams<{
+    action: MultiSelectionActionsType;
+    allowScan: 'true' | 'false';
+  }>();
+  console.log('allowScan []', allowScan, allowScan === 'true');
+
+  console.log('action', action === 'SCRAP');
   const { state } = useAppContext();
   let hoses: HoseData[] = [];
   if (isMultiSelection(state.data.selection)) {
@@ -44,6 +54,7 @@ const Action: React.FC<Props> = (props) => {
     title: '',
     subTitle: '',
   };
+  console.log('action', action);
   if (action === 'CONTACT') {
     pageData = {
       title: 'Contact TESS Team',
@@ -66,13 +77,14 @@ const Action: React.FC<Props> = (props) => {
       subTitle: '',
     };
   }
-
+  console.log('as', allowScan);
   return (
     <ContactForm
       title={pageData.title}
       subTitle={pageData.subTitle}
       isRFQ={action === 'RFQ'}
       hoses={hoses}
+      allowScan={true}
       onSave={save}
       onAdd={function (arg0: any): void {
         throw new Error('Function not implemented.');

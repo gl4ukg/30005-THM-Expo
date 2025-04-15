@@ -1,3 +1,4 @@
+import { getSkanUrl } from '@/app/scan';
 import { TessLines } from '@/components/decorative/tessLines';
 import { Icon } from '@/components/Icon/Icon';
 import { OpenMenu } from '@/components/UI/BottomNavigation/openMenu';
@@ -38,7 +39,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Register hose / equipment',
-                to: '/(app)/dashbord/hoses/register',
+                to: getSkanUrl('REGISTER_HOSE'),
                 icon: () => (
                   <Icon name='RegisterHoses' color={colors.primary} />
                 ),
@@ -50,22 +51,22 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Order hose',
-                to: '/scan?title=Order%20hose',
+                to: getSkanUrl('RFQ'),
                 icon: () => <Icon name='Cart' color={colors.primary} />,
               },
               {
                 title: 'Replace hose / pressure testing',
-                to: '/scan?title=Replace%20hose',
+                to: getSkanUrl('REGISTER_HOSE'), // TODO: change to replace hose
                 icon: () => <Icon name='Task' color={colors.primary} />,
               },
               {
                 title: 'Scrap hose',
-                to: '/scan?title=Scrap%20hoses',
+                to: getSkanUrl('SCRAP'),
                 icon: () => <Icon name='Trash' color={colors.primary} />,
               },
               {
                 title: 'Contact TESS Support',
-                to: '/(app)/user',
+                to: getSkanUrl('CONTACT'),
                 icon: () => <Icon name='Email' color={colors.primary} />,
               },
               {
