@@ -263,6 +263,7 @@ const style = StyleSheet.create({
   container: {
     justifyContent: 'flex-start',
     alignItems: 'center',
+    backgroundColor: 'transparent',
     gap: 12,
     padding: 20,
   },

@@ -6,7 +6,7 @@ import {
   MultiSelectionActionsType,
 } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
-import { useLocalSearchParams, useSearchParams } from 'expo-router/build/hooks';
+import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { Alert } from 'react-native';
 
 interface Props {}
@@ -76,15 +76,10 @@ const Action: React.FC<Props> = (props) => {
   }
   return (
     <ContactForm
-      title={pageData.title}
-      subTitle={pageData.subTitle}
-      isRFQ={action === 'RFQ'}
+      contactType={action}
       hoses={hoses}
-      allowScan={true}
+      allowScanToAdd={allowScan === 'true'}
       onSave={save}
-      onAdd={function (arg0: any): void {
-        throw new Error('Function not implemented.');
-      }}
     />
   );
 };

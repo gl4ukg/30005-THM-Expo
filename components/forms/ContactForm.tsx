@@ -1,33 +1,46 @@
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { useAppContext } from '@/context/ContextProvider';
-import { isMultiSelection } from '@/context/state';
+import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { ButtonTHS } from '../UI';
-import { Input } from '../UI/Input/Input';
 import { ListTable } from '../dashboard/listTable';
 import { SelectField } from '../detailView/common/SelectField';
 import { Typography } from '../Typography';
+import { ButtonTHS } from '../UI';
+import { Input } from '../UI/Input/Input';
+
+const formLabels: Record<MultiSelectionActionsType, { title: string, subtitle: string, confirmButton: string }> = {
+  RFQ: {
+    title: 'Order hoses',
+    subtitle: 'Request for quote',
+    confirmButton: 'Send RFQ'
+  },
+  CONTACT: {
+    title: 'Contact TESS Team',
+    subtitle: 'Message',
+    confirmButton: 'Send message'
+  },
+  SCRAP: {
+    title: 'Scrap hoses',
+    subtitle: 'Scrap report',
+    confirmButton: 'Scrap hoses'
+  },
+}
 
 interface Props {
-  title: string;
-  subTitle: string;
-  isRFQ?: boolean;
+  contactType: MultiSelectionActionsType;
   hoses: HoseData[];
-  allowScan?: boolean;
+  allowScanToAdd?: boolean;
   onSave: (arg0: any) => void;
-  onAdd?: (arg0: any) => void;
 }
 export const ContactForm: React.FC<Props> = ({
-  title,
-  subTitle,
-  isRFQ = false,
   hoses,
-  allowScan = false,
+  contactType,
+  allowScanToAdd = false,
   onSave,
 }) => {
   const { state, dispatch } = useAppContext();
@@ -61,10 +74,9 @@ export const ContactForm: React.FC<Props> = ({
     }
   };
   const responsePathMapping: Record<string, string> = {
-    'Scrap report': 'Add hose to this scrap report',
-    RFQ: 'Add hose to RFQ',
-    default: 'Add hose to this request',
-  }; // TODO this cant be based on string, what about contactReason: "RFQ" | "SCRAP" | "CONTACT"
+
+  }
+
   const rfqOptions = [
     {
       id: 'certificate',
@@ -80,26 +92,26 @@ export const ContactForm: React.FC<Props> = ({
     !!emailError ||
     !phone ||
     selectedIds.length === 0 ||
-    (isRFQ && (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
+    (contactType === 'RFQ' && (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
 
   return (
     <>
       <FlatList
         ListHeaderComponent={
-          <View style={style.selectedCounterContainer}>
-            <View style={style.selectedCounterTitle}>
-              <Typography name='navigationBold' text={title} />
+            <View style={styles.selectedCounterContainer}>
+              <Typography name='navigationBold' text={formLabels[contactType].title} style={styles.selectedCounterTitle} />
               <Typography
                 name='navigation'
-                text={subTitle}
-                style={style.selectedCounterTitle}
+                text={
+                  formLabels[contactType].subtitle
+                }
+                style={styles.selectedCounterSubtitle}
               />
             </View>
-          </View>
         }
         ListFooterComponent={
-          <View style={style.pagePadding}>
-            {isRFQ && (
+          <View style={styles.pagePadding}>
+            {contactType === 'RFQ' && (
               <SelectField
                 label={'RFQ type'}
                 value={'Choose'}
@@ -110,7 +122,7 @@ export const ContactForm: React.FC<Props> = ({
             )}
             <Input
               type='textArea'
-              label={isRFQ ? 'Delivery address / Comments' : 'Comment:'}
+              label={contactType === 'RFQ' ? 'Delivery address / Comments' : 'Comment:'}
               value={comment}
               onChangeText={setComment}
             />
@@ -133,9 +145,9 @@ export const ContactForm: React.FC<Props> = ({
               value={phone}
               onChangeText={setPhone}
             />
-            <View style={style.buttonContainer}>
+            <View style={styles.buttonContainer}>
               <ButtonTHS
-                title={title}
+                title={formLabels[contactType].confirmButton}
                 size='sm'
                 disabled={isButtonDisabled}
                 onPress={() =>
@@ -158,21 +170,25 @@ export const ContactForm: React.FC<Props> = ({
             </View>
           </View>
         }
-        data={['key']}
+        data={['one']}
         renderItem={() => (
           <>
+          { selectedIds.length > 0 && 
             <ListTable
               items={originallySelectedHoses}
               selectedIds={selectedIds}
               onSelectionChange={handleSelectionChange}
               canSelect={true}
             />
-            {allowScan && (
-              <LinkButton
-                variant='light'
-                title={`${responsePathMapping[subTitle ?? 'default']}`}
-                onPress={() => router.push('/scan?scanPurpose=SCRAP')}
-              />
+          }
+            {allowScanToAdd && (
+              <View style={styles.addHoseContainer}>
+                <LinkButton
+                  variant='light'
+                  title={`+ Add hoses to this ${formLabels[contactType].title.toLowerCase()}`}
+                  onPress={() => router.push('/scan?scanPurpose=SCRAP')}
+                />
+              </View>
             )}
           </>
         )}
@@ -180,20 +196,17 @@ export const ContactForm: React.FC<Props> = ({
     </>
   );
 };
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   selectedCounterContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    width: '100%',
-    paddingBottom: 40,
+    gap: 6,
+    paddingVertical: 30
   },
   selectedCounterTitle: {
-    alignItems: 'center',
+    color: colors.black,
   },
   selectedCounterSubtitle: {
-    color: colors.extended666,
+    color: colors.extended333,
   },
   pagePadding: {
     paddingHorizontal: 10,
@@ -203,8 +216,15 @@ const style = StyleSheet.create({
     paddingBottom: 50,
     paddingTop: 30,
   },
+  addHoseContainer: {
+    width: '100%',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingTop: 20,
+    paddingLeft: 10,
+  },
   buttonContainer: {
-    paddingTop: 50,
+    paddingTop: 30,
     width: '100%',
     flexDirection: 'column',
     gap: 20,

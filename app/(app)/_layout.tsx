@@ -3,8 +3,9 @@ import { Redirect, Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-// import SubUnitSelect from '../../components/UI/TopBarNavigation/SubUnitSelect';
+// import SubUnitSelect from '../../components/UI/TopBarNavigation/SubUnitSelect';º
 import { useAppContext } from '@/context/ContextProvider';
+import { colors } from '@/lib/tokens/colors';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
@@ -15,7 +16,7 @@ export default function TabLayout() {
   }
   return (
     <>
-      <StatusBar backgroundColor='#004637' style='light' />
+      <StatusBar backgroundColor={colors.secondary25} style='light' />
       <View
         style={[
           styles.statusBarIOS,
@@ -43,17 +44,14 @@ export default function TabLayout() {
       } */}
       {/* <Typography name='navigation' text={state.data.selectedUnitId ?? 'tes'} /> */}
       <Tabs
-        screenOptions={{ headerShown: false }}
+        screenOptions={{
+          headerShown: false,
+        }}
         initialRouteName='dashbord'
         tabBar={() => <></>}
       >
         <Tabs.Screen name='user' />
-        <Tabs.Screen
-          name='dashbord'
-          options={{
-            headerShown: false,
-          }}
-        ></Tabs.Screen>
+        <Tabs.Screen name='dashbord' />
       </Tabs>
       <BottomNavigation />
     </>
@@ -67,11 +65,11 @@ const styles = StyleSheet.create({
   },
   statusBarIOS: {
     width: '100%',
-    backgroundColor: '#004637',
+    backgroundColor: colors.secondary25,
   },
   header: {
     height: 50,
-    backgroundColor: '#004637',
+    backgroundColor: colors.secondary25,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

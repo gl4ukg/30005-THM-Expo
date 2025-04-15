@@ -1,6 +1,7 @@
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { useAppContext } from '@/context/ContextProvider';
+import { colors } from '@/lib/tokens/colors';
 import { useRouter } from 'expo-router';
 import { SafeAreaView, View } from 'react-native';
 
@@ -18,6 +19,7 @@ const User = () => {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: colors.white,
       }}
     >
       {state.auth.user === null ? (

@@ -65,7 +65,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Contact TESS Support',
-                to: getSkanUrl('CONTACT'),
+                to: '/(app)/dashbord/actions?action=CONTACT&allowScan=true',
                 icon: () => <Icon name='Email' color={colors.primary} />,
               },
               {
@@ -85,7 +85,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
           <Link
             asChild
             href='/(app)/user'
-            style={[styles.button, { display: 'none' }]}
+            style={[styles.button, { display: 'none' }]} // TODO: it is placeholder for future feature
           >
             <Pressable
               style={({ pressed }) => [pressed && {}]}
@@ -99,14 +99,6 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
             isOpen={isOpen}
             handlePress={() => setIsOpen((isOpen) => !isOpen)}
           />
-          {/* <Link asChild href='/scan' style={styles.button}>
-            <Pressable
-              style={({ pressed }) => [pressed && {}]}
-              onPress={() => setIsOpen(false)}
-            >
-              <Icon name='Search' color='#fff' />
-            </Pressable>
-          </Link> */}
           <Pressable
             style={styles.button}
             onPress={() => (isOpen ? setIsOpen(false) : router.back())}

@@ -17,15 +17,15 @@ export default function RootLayout() {
         >
           {state.auth.user === null && (
             <>
-              <Stack.Screen name='index' options={{ headerShown: false }} />
-              <Stack.Screen name='/login' options={{ headerShown: false }} />
-              <Stack.Screen name='/scan' options={{ headerShown: false }} />
+              <Stack.Screen name='index' />
+              <Stack.Screen name='/login' />
+              <Stack.Screen name='/scan' />
             </>
           )}
           {state.auth.user !== null && (
             <SafeAreaView style={styles.safeArea}>
-              <Stack.Screen name='(app)' options={{ headerShown: false }} />
-              <Stack.Screen name='ui' options={{ headerShown: true }} />
+              <Stack.Screen name='(app)' />
+              <Stack.Screen name='ui' />
             </SafeAreaView>
           )}
         </Stack>
