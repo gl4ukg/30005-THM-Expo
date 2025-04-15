@@ -19,7 +19,6 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
   const { dispatch } = useContext(AppContext);
 
   const handleLinkPress = (to: Href) => {
-    console.log(to);
     setIsOpen(false);
     router.push(to);
     dispatch({ type: 'FINISH_SELECTION' });

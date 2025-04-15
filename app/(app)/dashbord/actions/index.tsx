@@ -15,9 +15,7 @@ const Action: React.FC<Props> = (props) => {
     action: MultiSelectionActionsType;
     allowScan: 'true' | 'false';
   }>();
-  console.log('allowScan []', allowScan, allowScan === 'true');
 
-  console.log('action', action === 'SCRAP');
   const { state } = useAppContext();
   let hoses: HoseData[] = [];
   if (isMultiSelection(state.data.selection)) {
@@ -54,7 +52,6 @@ const Action: React.FC<Props> = (props) => {
     title: '',
     subTitle: '',
   };
-  console.log('action', action);
   if (action === 'CONTACT') {
     pageData = {
       title: 'Contact TESS Team',
@@ -77,7 +74,6 @@ const Action: React.FC<Props> = (props) => {
       subTitle: '',
     };
   }
-  console.log('as', allowScan);
   return (
     <ContactForm
       title={pageData.title}

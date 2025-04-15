@@ -82,7 +82,6 @@ export const ContactForm: React.FC<Props> = ({
     selectedIds.length === 0 ||
     (isRFQ && (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
 
-  console.log('allowScan ->', allowScan);
   return (
     <>
       <FlatList
