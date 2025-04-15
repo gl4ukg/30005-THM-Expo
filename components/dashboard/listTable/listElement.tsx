@@ -1,5 +1,5 @@
 import { Icon } from '@/components/Icon/Icon';
-import { Typography } from '@/components/typography';
+import { Typography } from '@/components/Typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';

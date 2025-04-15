@@ -1,15 +1,11 @@
+import { Section } from '@/app/(app)/dashbord/hoses/hose/[hoseId]';
 import { Icon } from '@/components/Icon/Icon';
-import { Typography } from '@/components/typography';
+import { IconName } from '@/components/Icon/iconMapping';
+import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
 import { FC, useState } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
-import { IconName } from '@/components/Icon/iconMapping';
-import { Section } from '@/app/(app)/dashbord/hoses/hose/[hoseId]';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-  MultiSelectionActionsType,
-  SingleSelectionActionsType,
-} from '@/context/state';
 
 export type Option<T> = {
   icon?: IconName;

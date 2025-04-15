@@ -4,7 +4,7 @@ import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Input } from '../../UI/Input/input';
+import { Input } from '../../UI/Input/Input';
 import { RadioGroup } from '../common/RadioGroup';
 import { SelectField } from '../common/SelectField';
 import { GHD } from '@/lib/types/hose';

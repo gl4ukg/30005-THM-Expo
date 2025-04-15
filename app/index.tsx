@@ -9,25 +9,19 @@ import {
   View,
 } from 'react-native';
 
-import { Typography } from '@/components/typography';
-import { TessLines } from '@/components/decorative/tessLines';
+import { NorwegianFlag } from '@/components/decorative/NorwegianFlag';
+import { TessLines } from '@/components/decorative/TessLines';
+import { LoginHeader } from '@/components/login/LoginHeader';
+import { TessLogo } from '@/components/login/Logo';
+import { Typography } from '@/components/Typography';
+import { ButtonTHS } from '@/components/UI';
+import { LinkButton } from '@/components/UI/Button/LinkButton';
+import { useAppContext } from '@/context/ContextProvider';
+import { mockedData } from '@/context/mocked';
 import { colors } from '@/lib/tokens/colors';
 import { Link, useRouter } from 'expo-router';
-import { TessLogo } from '@/components/login/logo';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { NorwegianFlag } from '@/components/decorative/norwegianFlag';
-import { LinkButton } from '@/components/UI/Button/linkButton';
-import { ButtonTHS } from '@/components/UI';
-import { LoginHeader } from '@/components/login/loginHeader';
-import { mockedData } from '@/context/mocked';
-import { useAppContext } from '@/context/ContextProvider';
 
-type LoginViews =
-  | 'welcome'
-  | 'login'
-  | 'requestAccess'
-  | 'resetPassword'
-  | 'createPassword';
 const Login = () => {
   const router = useRouter();
   const { dispatch } = useAppContext();

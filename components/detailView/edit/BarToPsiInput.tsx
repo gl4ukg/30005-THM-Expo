@@ -1,8 +1,8 @@
 import { colors } from '@/lib/tokens/colors';
 import { useCallback, useState } from 'react';
 import { KeyboardTypeOptions, StyleSheet, View } from 'react-native';
-import { Typography } from '../../typography';
-import UnitInput from './UnitInput';
+import { Typography } from '../../Typography';
+import { UnitInput } from './UnitInput';
 
 type BarToPsiInputProps = {
   pressureInBars: number;

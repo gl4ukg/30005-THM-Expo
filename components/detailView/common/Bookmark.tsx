@@ -1,7 +1,7 @@
 import { colors } from '@/lib/tokens/colors';
 import { StyleSheet, View } from 'react-native';
 import { Icon } from '../../Icon/Icon';
-import { Typography } from '../../typography';
+import { Typography } from '../../Typography';
 
 interface BookmarkProps {
   title: string;

@@ -4,13 +4,13 @@ import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanc
 import { EditTessPartNumbers } from '@/components/detailView/edit/EditTessPartNumbers';
 import { EditUniversalHoseData } from '@/components/detailView/edit/EditUniversalHoseData';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
-import { GHD, HID, HoseData, TPN, UHD } from '@/lib/types/hose';
-import { Typography } from '@/components/typography';
+import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
 import { colors } from '@/lib/tokens/colors';
+import { GHD, HID, HoseData, TPN, UHD } from '@/lib/types/hose';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';

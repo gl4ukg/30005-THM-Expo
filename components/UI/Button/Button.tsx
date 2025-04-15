@@ -1,13 +1,13 @@
-import { Typography } from '@/components/typography';
+import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
 import React, { ReactNode } from 'react';
 
 import {
   Pressable,
-  View,
-  type PressableProps,
   StyleSheet,
+  View,
   ViewStyle,
+  type PressableProps,
 } from 'react-native';
 
 interface ButtonTHSProps extends PressableProps {

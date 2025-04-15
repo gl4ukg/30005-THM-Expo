@@ -5,7 +5,6 @@ import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // import SubUnitSelect from '../../components/UI/TopBarNavigation/SubUnitSelect';
 import { useAppContext } from '@/context/ContextProvider';
-import { Typography } from '@/components/typography';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();

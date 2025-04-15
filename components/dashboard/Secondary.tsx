@@ -1,8 +1,8 @@
-import { Trend } from "@/components/dashboard/trend";
-import { Typography } from "@/components/typography";
-import { tokens } from "@/lib/tokens";
-import { FC } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Trend } from '@/components/dashboard/Trend';
+import { Typography } from '@/components/Typography';
+import { tokens } from '@/lib/tokens';
+import { FC } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 interface Props {
   label: string;
@@ -15,9 +15,9 @@ export const Secondary: FC<Props> = ({ label, value, onPress, trend }) => {
   return (
     <Pressable onPress={onPress} style={styles.pressable}>
       <View style={styles.container}>
-        <Typography name="navigation" text={label} style={styles.label} />
+        <Typography name='navigation' text={label} style={styles.label} />
         <View style={styles.value}>
-          <Typography name="numericalHighlight" text={`${value}`} />
+          <Typography name='numericalHighlight' text={`${value}`} />
           {trend && (
             <Trend
               trend={trend}
@@ -26,8 +26,8 @@ export const Secondary: FC<Props> = ({ label, value, onPress, trend }) => {
                 trend === 1
                   ? tokens.colors.errorText
                   : trend === -1
-                  ? tokens.colors.lightContrast
-                  : "transparent"
+                    ? tokens.colors.lightContrast
+                    : 'transparent'
               }
             />
           )}
@@ -39,12 +39,12 @@ export const Secondary: FC<Props> = ({ label, value, onPress, trend }) => {
 
 const styles = StyleSheet.create({
   pressable: {
-    width: "100%",
+    width: '100%',
   },
   container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     borderColor: tokens.colors.secondary95,
     borderBottomWidth: 1,
     padding: 12,
@@ -54,11 +54,11 @@ const styles = StyleSheet.create({
     color: tokens.colors.secondary75,
   },
   value: {
-    position: "relative",
+    position: 'relative',
     paddingRight: 24,
   },
   trend: {
-    position: "absolute",
+    position: 'absolute',
     right: 0,
   },
 });

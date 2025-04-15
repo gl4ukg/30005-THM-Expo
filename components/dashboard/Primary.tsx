@@ -1,21 +1,20 @@
-import { Trend } from "@/components/dashboard/trend";
-import { Icon } from "@/components/Icon/Icon";
-import { Typography } from "@/components/typography";
-import { tokens } from "@/lib/tokens";
-import { FC } from "react";
-import { Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { Trend } from '@/components/dashboard/Trend';
+import { Typography } from '@/components/Typography';
+import { tokens } from '@/lib/tokens';
+import { FC } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 interface Props {
   label: string;
   value: number;
-  state: "error" | "warning" | "success";
+  state: 'error' | 'warning' | 'success';
   trend?: 0 | 1 | -1;
   onPress: () => void;
 }
 
 export const Primary: FC<Props> = ({ value, label, onPress, trend, state }) => {
   const colors: Record<
-    Props["state"],
+    Props['state'],
     { backgroundColor: string; textColor: string }
   > = {
     error: {
@@ -42,7 +41,7 @@ export const Primary: FC<Props> = ({ value, label, onPress, trend, state }) => {
       <View style={style.valueContainer}>
         <View style={style.spacer}></View>
         <Typography
-          name="numericalHighlight"
+          name='numericalHighlight'
           text={`${value}`}
           style={[{ color: colors[state].textColor }]}
         />
@@ -53,32 +52,32 @@ export const Primary: FC<Props> = ({ value, label, onPress, trend, state }) => {
           style={style.trend}
         />
       </View>
-      <Typography name="fieldValue" text={label} />
+      <Typography name='fieldValue' text={label} />
     </Pressable>
   );
 };
 
 const style = StyleSheet.create({
   container: {
-    justifyContent: "center",
+    justifyContent: 'center',
     flex: 1,
-    alignItems: "center",
-    backgroundColor: "red",
+    alignItems: 'center',
+    backgroundColor: 'red',
     padding: 4,
     gap: 4,
   },
   valueContainer: {
-    flexDirection: "row",
-    position: "relative",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
     gap: 0,
   },
   spacer: {
     width: 24,
   },
   trend: {
-    position: "absolute",
+    position: 'absolute',
     right: 0,
   },
 });

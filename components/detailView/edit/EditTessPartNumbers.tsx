@@ -1,10 +1,10 @@
 import { Bookmark } from '@/components/detailView/common/Bookmark';
-import { EditProps } from '@/lib/types/edit';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
-import { Typography } from '@/components/typography';
+import { Typography } from '@/components/Typography';
+import { EditProps } from '@/lib/types/edit';
+import { TPN } from '@/lib/types/hose';
 import { StyleSheet, View } from 'react-native';
 import { SelectField } from '../common/SelectField';
-import { TPN } from '@/lib/types/hose';
 
 export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
   info,

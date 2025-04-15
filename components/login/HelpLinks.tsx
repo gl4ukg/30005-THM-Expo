@@ -1,8 +1,8 @@
-import { View, Linking, Alert, StyleSheet, Pressable } from 'react-native';
-import { Typography } from '../typography';
-import { colors } from '@/lib/tokens/colors';
-import { LinkButton } from '@/components/UI/Button/linkButton';
 import { Icon } from '@/components/Icon/Icon';
+import { LinkButton } from '@/components/UI/Button/LinkButton';
+import { colors } from '@/lib/tokens/colors';
+import { Alert, Linking, Pressable, StyleSheet, View } from 'react-native';
+import { Typography } from '../Typography';
 
 interface Props {
   header: string;

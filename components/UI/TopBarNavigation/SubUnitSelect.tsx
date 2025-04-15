@@ -1,8 +1,8 @@
 import { Icon } from '@/components/Icon/Icon';
-import { Typography } from '@/components/typography';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { useState } from 'react';
+import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
+import { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 // type SubUnit = {
 //   id: number;
@@ -30,7 +30,7 @@ interface Props {
   onSelectUnit: (unit: string) => void;
 }
 
-const SubUnitSelect: React.FC<Props> = ({
+export const SubUnitSelect: React.FC<Props> = ({
   onSelectUnit,
   selectedUnit,
   optionalUnits,
@@ -78,8 +78,6 @@ const SubUnitSelect: React.FC<Props> = ({
     </>
   );
 };
-
-export default SubUnitSelect;
 
 const styles = StyleSheet.create({
   container: {

@@ -1,7 +1,7 @@
 import { colors } from '@/lib/tokens/colors';
 import { formatDate } from '@/lib/util/formatDate';
 import { StyleSheet, View } from 'react-native';
-import { Typography } from '../../typography';
+import { Typography } from '../../Typography';
 import { Bookmark } from '../common/Bookmark';
 import { DataField } from '../common/Datafield';
 import { HID } from '@/lib/types/hose';

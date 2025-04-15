@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { Typography } from '../../typography';
+import { Typography } from '../../Typography';
 import { Checkbox } from '../../UI/Checkbox';
 import { Bookmark } from '../common/Bookmark';
 import { DataField } from '../common/Datafield';
