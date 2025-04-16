@@ -4,23 +4,17 @@ import { Checkbox } from '../../UI/Checkbox';
 import { Bookmark } from '../common/Bookmark';
 import { DataField } from '../common/Datafield';
 import { UHD } from '@/lib/types/hose';
+import {
+  CouplingsFields,
+  couplingsFields,
+} from '@/components/detailView/edit/EditUniversalHoseData';
 
 type UniversalHoseDataProps = {
   info: Partial<UHD>;
 };
 
 export type CouplingSectionProps = {
-  info: Partial<
-    Pick<
-      UHD,
-      | 'materialQuality'
-      | 'typeFitting'
-      | 'innerDiameter'
-      | 'gender'
-      | 'angle'
-      | 'commentEnd'
-    >
-  >;
+  info: Partial<Pick<UHD, CouplingsFields>>;
 };
 const CouplingSection: React.FC<CouplingSectionProps> = ({ info }) => (
   <View style={styles.couplingSection}>
@@ -43,16 +37,7 @@ export const UniversalHoseData = ({ info }: UniversalHoseDataProps) => {
   ): boolean => {
     return val1 === val2 && !!val1 && !!val2;
   };
-  const areCouplingsSame = (
-    [
-      'materialQuality',
-      'typeFitting',
-      'innerDiameter',
-      'gender',
-      'angle',
-      'commentEnd',
-    ] as const
-  ).every((key) => {
+  const areCouplingsSame = couplingsFields.every((key) => {
     const value1 = info[key];
     const value2 = info[`${key}2`];
     return compareValues(value1, value2);
