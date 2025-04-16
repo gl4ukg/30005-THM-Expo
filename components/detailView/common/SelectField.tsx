@@ -1,15 +1,20 @@
 import { colors } from '@/lib/tokens/colors';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
 import { Icon } from '../../Icon/Icon';
 import { Typography } from '../../Typography';
 import { PredefinedSelect } from '../edit/PredefinedSelect';
 
+type Option = {
+  id: string;
+  label: string;
+};
+
 interface SelectFieldProps {
   label: string;
   value: string;
   onChange: (value: string) => void;
-  options: { id: string; label: string }[];
+  options: Option[];
   required?: boolean;
   onlyOptions?: boolean;
 }
@@ -25,9 +30,13 @@ export const SelectField: React.FC<SelectFieldProps> = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(value);
 
-  const handleSelect = (selectedValue: string) => {
-    setSelectedValue(selectedValue);
-    onChange(selectedValue);
+  useEffect(() => {
+    setSelectedValue(value);
+  }, [value]);
+
+  const handleSelect = (newValue: string) => {
+    setSelectedValue(newValue);
+    onChange(newValue);
     setModalOpen(false);
   };
 
@@ -84,16 +93,14 @@ export const SelectField: React.FC<SelectFieldProps> = ({
         animationType='slide'
         transparent={false}
         visible={modalOpen}
-        onRequestClose={() => {
-          setModalOpen(!modalOpen);
-        }}
+        onRequestClose={handleClose}
       >
         <SafeAreaView style={styles.fullScreenModal}>
           <PredefinedSelect
             options={options}
             onSelect={handleSelect}
             selected={selectedValue}
-            onClose={() => handleClose()}
+            onClose={handleClose}
             title={label}
             onlyOptions={onlyOptions}
           />
@@ -122,6 +129,7 @@ const styles = StyleSheet.create({
   labelError: {
     color: colors.errorText,
   },
+
   inputContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -160,4 +168,5 @@ const styles = StyleSheet.create({
   },
   value: { color: colors.extended333 },
   valueError: { color: colors.errorText },
+  valueDisabled: { color: colors.extended666 },
 });

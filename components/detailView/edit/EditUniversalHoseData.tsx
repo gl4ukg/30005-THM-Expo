@@ -7,91 +7,73 @@ import { Checkbox } from '@/components/UI/Checkbox';
 import { Input } from '@/components/UI/Input/Input';
 import { EditProps } from '@/lib/types/edit';
 import { UHD } from '@/lib/types/hose';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Bookmark } from '../common/Bookmark';
+import { CouplingSectionProps } from '@/components/detailView/view/UniversalHoseData';
 
-type EditUniversalHoseDataProps = EditProps<
-  Pick<
-    UHD,
-    | 'materialQuality'
-    | 'typeFitting'
-    | 'innerDiameter2'
-    | 'gender'
-    | 'angle'
-    | 'commentEnd1'
-  >
->;
-
-const EditCouplingSection: React.FC<EditUniversalHoseDataProps> = ({
-  info,
-  onInputChange,
-}) => (
-  <>
-    <TooltipWrapper tooltipData={{ title: 'Material Quality', message: '' }}>
-      <SelectField
-        label='Material Quality'
-        value={info.materialQuality}
-        onChange={(value) => onInputChange('materialQuality', value)}
-        options={[]}
-      />
-    </TooltipWrapper>
-    <TooltipWrapper tooltipData={{ title: 'Type Fitting', message: '' }}>
-      <SelectField
-        label='Type Fitting'
-        value={info.typeFitting}
-        onChange={(value) => onInputChange('typeFitting', value)}
-        options={[]}
-      />
-    </TooltipWrapper>
-    <TooltipWrapper tooltipData={{ title: 'Inner Diameter 2', message: '' }}>
-      <SelectField
-        label='Inner Diameter 2'
-        value={info.innerDiameter2}
-        onChange={(value) => onInputChange('innerDiameter2', value)}
-        options={[]}
-      />
-    </TooltipWrapper>
-    <TooltipWrapper tooltipData={{ title: 'Gender', message: '' }}>
-      <SelectField
-        label='Gender'
-        value={info.gender}
-        onChange={(value) => onInputChange('gender', value)}
-        required={true}
-        options={[]}
-      />
-    </TooltipWrapper>
-    <TooltipWrapper tooltipData={{ title: 'Angle', message: '' }}>
-      <SelectField
-        label='Angle'
-        value={info.angle}
-        onChange={(value) => onInputChange('angle', value)}
-        options={[]}
-      />
-    </TooltipWrapper>
-  </>
-);
-
-export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
+export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
   info,
   onInputChange,
 }) => {
+  const [localInfo, setLocalInfo] = useState<Partial<UHD>>(info);
   const [sameAsEnd1, setSameAsEnd1] = useState(false);
 
-  const handleCheckboxChange = useCallback(() => {
-    setSameAsEnd1((prev) => !prev);
-  }, [setSameAsEnd1]);
-
   useEffect(() => {
-    if (sameAsEnd1) {
-      onInputChange('materialQuality2', info.materialQuality);
-      onInputChange('typeFitting2', info.typeFitting);
-      onInputChange('innerDiameter2', info.innerDiameter2);
-      onInputChange('gender2', info.gender);
-      onInputChange('angle2', info.angle);
-      onInputChange('commentEnd2', info.commentEnd1);
+    setLocalInfo(info);
+  }, [info]);
+
+  const fieldMappings = {
+    materialQuality: 'materialQuality2',
+    typeFitting: 'typeFitting2',
+    innerDiameter: 'innerDiameter2',
+    gender: 'gender2',
+    angle: 'angle2',
+    commentEnd: 'commentEnd2',
+  };
+
+  const syncEndFields = () => {
+    const updatedInfo = { ...localInfo };
+    (
+      [
+        'materialQuality',
+        'typeFitting',
+        'innerDiameter',
+        'gender',
+        'angle',
+        'commentEnd',
+      ] as const
+    ).every((key) => {
+      updatedInfo[`${key}2`] = updatedInfo[key];
+    });
+    setLocalInfo(updatedInfo);
+  };
+
+  const handleCheckboxChange = () => {
+    const newSameAsEnd1 = !sameAsEnd1;
+    setSameAsEnd1(newSameAsEnd1);
+    syncEndFields();
+  };
+
+  const handleFieldChange = (field: keyof UHD, value: any) => {
+    const updatedInfo = { ...localInfo, [field]: value };
+
+    if (sameAsEnd1 && field in fieldMappings) {
+      const end2Field = fieldMappings[field as keyof typeof fieldMappings];
+      const end2Key = end2Field as keyof UHD;
+
+      updatedInfo[end2Key] = value;
+      onInputChange(end2Key, value);
     }
-  }, [sameAsEnd1, info, onInputChange]);
+    const values = Object.values(fieldMappings);
+    const isEnd2Field = values.includes(field);
+    if (sameAsEnd1 && isEnd2Field) {
+      setSameAsEnd1(false);
+    }
+
+    setLocalInfo(updatedInfo);
+    onInputChange(field, value);
+  };
 
   return (
     <View>
@@ -104,24 +86,12 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       >
         <SelectField
           label='Hose Standard'
-          value={info.hoseStandard}
-          onChange={(value) => onInputChange('hoseStandard', value)}
+          value={localInfo.hoseStandard || ''}
+          onChange={(value) => handleFieldChange('hoseStandard', value)}
           options={[]}
         />
       </TooltipWrapper>
-      <TooltipWrapper
-        tooltipData={{
-          title: 'Inner Diameter',
-          message: 'This is the inner diameter',
-        }}
-      >
-        <SelectField
-          label='Inner Diameter'
-          value={info.innerDiameter}
-          onChange={(value) => onInputChange('innerDiameter', value)}
-          options={[]}
-        />
-      </TooltipWrapper>
+
       <TooltipWrapper
         tooltipData={{
           title: 'Total Length',
@@ -131,14 +101,15 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
         <View style={styles.inputContainer}>
           <UnitInput
             label='Total Length'
-            value={Number(info.totalLength)}
+            value={Number(localInfo.totalLength)}
             onChangeText={(value: number) =>
-              onInputChange('totalLength', String(value))
+              handleFieldChange('totalLength', String(value))
             }
             unit={'mm'}
           />
         </View>
       </TooltipWrapper>
+
       <TooltipWrapper
         tooltipData={{
           title: 'Working pressure',
@@ -146,17 +117,69 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
         }}
       >
         <BarToPsiInput
-          pressureInBars={Number(info.wpBar)}
+          pressureInBars={Number(localInfo.wpBar)}
           onChange={(pressure) => {
-            onInputChange('wpBar', String(pressure.bar));
-            onInputChange('wpPsi', String(pressure.psi));
+            handleFieldChange('wpBar', String(pressure.bar));
+            handleFieldChange('wpPsi', String(pressure.psi));
           }}
         />
       </TooltipWrapper>
+
       <View style={styles.sectionTitleContainer}>
         <Typography name='navigationBold' text='Coupling end 1' />
       </View>
-      <EditCouplingSection info={info} onInputChange={onInputChange} />
+
+      <TooltipWrapper tooltipData={{ title: 'Material Quality', message: '' }}>
+        <SelectField
+          label='Material Quality'
+          value={localInfo.materialQuality || ''}
+          onChange={(value) => handleFieldChange('materialQuality', value)}
+          options={[]}
+        />
+      </TooltipWrapper>
+
+      <TooltipWrapper tooltipData={{ title: 'Type Fitting', message: '' }}>
+        <SelectField
+          label='Type Fitting'
+          value={localInfo.typeFitting || ''}
+          onChange={(value) => handleFieldChange('typeFitting', value)}
+          options={[]}
+        />
+      </TooltipWrapper>
+
+      <TooltipWrapper
+        tooltipData={{
+          title: 'Inner Diameter',
+          message: 'This is the inner diameter for end 1',
+        }}
+      >
+        <SelectField
+          label='Inner Diameter'
+          value={localInfo.innerDiameter || ''}
+          onChange={(value) => handleFieldChange('innerDiameter', value)}
+          options={[]}
+        />
+      </TooltipWrapper>
+
+      <TooltipWrapper tooltipData={{ title: 'Gender', message: '' }}>
+        <SelectField
+          label='Gender'
+          value={localInfo.gender || ''}
+          onChange={(value) => handleFieldChange('gender', value)}
+          required={true}
+          options={[]}
+        />
+      </TooltipWrapper>
+
+      <TooltipWrapper tooltipData={{ title: 'Angle', message: '' }}>
+        <SelectField
+          label='Angle'
+          value={localInfo.angle || ''}
+          onChange={(value) => handleFieldChange('angle', value)}
+          options={[]}
+        />
+      </TooltipWrapper>
+
       <TooltipWrapper
         tooltipData={{
           title: 'Comment End 1',
@@ -165,10 +188,11 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       >
         <Input
           label='Comment End 1'
-          value={info.commentEnd1}
-          onChangeText={(text) => onInputChange('commentEnd2', text)}
+          value={localInfo.commentEnd || ''}
+          onChangeText={(text) => handleFieldChange('commentEnd', text)}
         />
       </TooltipWrapper>
+
       <TooltipWrapper tooltipData={{ title: 'Coupling end 2', message: '' }}>
         <View style={styles.sectionTitleContainer}>
           <Typography name='navigationBold' text='Coupling end 2' />
@@ -178,18 +202,62 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
           </View>
         </View>
       </TooltipWrapper>
-      {!sameAsEnd1 && (
-        <>
-          <EditCouplingSection info={info} onInputChange={onInputChange} />
-          <View style={styles.inputContainer}>
-            <Input
-              label='Comment End 2'
-              value={info.commentEnd1}
-              onChangeText={(text) => onInputChange('commentEnd2', text)}
-            />
-          </View>
-        </>
-      )}
+
+      <TooltipWrapper
+        tooltipData={{ title: 'Material Quality 2', message: '' }}
+      >
+        <SelectField
+          label='Material Quality'
+          value={localInfo.materialQuality2 || ''}
+          onChange={(value) => handleFieldChange('materialQuality2', value)}
+          options={[]}
+        />
+      </TooltipWrapper>
+
+      <TooltipWrapper tooltipData={{ title: 'Type Fitting 2', message: '' }}>
+        <SelectField
+          label='Type Fitting'
+          value={localInfo.typeFitting2 || ''}
+          onChange={(value) => handleFieldChange('typeFitting2', value)}
+          options={[]}
+        />
+      </TooltipWrapper>
+
+      <TooltipWrapper tooltipData={{ title: 'Inner Diameter 2', message: '' }}>
+        <SelectField
+          label='Inner Diameter 2'
+          value={localInfo.innerDiameter2 || ''}
+          onChange={(value) => handleFieldChange('innerDiameter2', value)}
+          options={[]}
+        />
+      </TooltipWrapper>
+
+      <TooltipWrapper tooltipData={{ title: 'Gender 2', message: '' }}>
+        <SelectField
+          label='Gender'
+          value={localInfo.gender2 || ''}
+          onChange={(value) => handleFieldChange('gender2', value)}
+          required={true}
+          options={[]}
+        />
+      </TooltipWrapper>
+
+      <TooltipWrapper tooltipData={{ title: 'Angle 2', message: '' }}>
+        <SelectField
+          label='Angle'
+          value={localInfo.angle2 || ''}
+          onChange={(value) => handleFieldChange('angle2', value)}
+          options={[]}
+        />
+      </TooltipWrapper>
+
+      <View style={styles.inputContainer}>
+        <Input
+          label='Comment End 2'
+          value={localInfo.commentEnd2 || ''}
+          onChangeText={(text) => handleFieldChange('commentEnd2', text)}
+        />
+      </View>
     </View>
   );
 };
@@ -202,14 +270,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 20,
     marginBottom: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
+    paddingTop: 10,
   },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 0,
-    marginLeft: 25,
   },
   tooltipContainer: {
     marginRight: 'auto',

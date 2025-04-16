@@ -24,7 +24,7 @@ export type HoseData = {
   innerDiameter2: string;
   gender: string;
   angle: string;
-  commentEnd1: string;
+  commentEnd: string;
   materialQuality2: string;
   typeFitting2: string;
   commentEnd2: string;
@@ -87,11 +87,12 @@ export type UHD = Pick<
   | 'wpPsi'
   | 'materialQuality'
   | 'typeFitting'
-  | 'innerDiameter2'
+  | 'innerDiameter'
   | 'gender'
   | 'angle'
-  | 'commentEnd1'
+  | 'commentEnd'
   | 'materialQuality2'
+  | 'innerDiameter2'
   | 'typeFitting2'
   | 'commentEnd2'
   | 'gender2'
