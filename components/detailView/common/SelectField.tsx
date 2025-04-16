@@ -5,11 +5,16 @@ import { Icon } from '../../Icon/Icon';
 import { Typography } from '../../Typography';
 import { PredefinedSelect } from '../edit/PredefinedSelect';
 
+type Option = {
+  id: string;
+  label: string;
+};
+
 interface SelectFieldProps {
   label: string;
   value: string;
   onChange: (value: string) => void;
-  options: { id: string; label: string }[];
+  options: Option[];
   required?: boolean;
   onlyOptions?: boolean;
 }
@@ -29,9 +34,9 @@ export const SelectField: React.FC<SelectFieldProps> = ({
     setSelectedValue(value);
   }, [value]);
 
-  const handleSelect = (selectedValue: string) => {
-    setSelectedValue(selectedValue);
-    onChange(selectedValue);
+  const handleSelect = (newValue: string) => {
+    setSelectedValue(newValue);
+    onChange(newValue);
     setModalOpen(false);
   };
 
@@ -88,16 +93,14 @@ export const SelectField: React.FC<SelectFieldProps> = ({
         animationType='slide'
         transparent={false}
         visible={modalOpen}
-        onRequestClose={() => {
-          setModalOpen(!modalOpen);
-        }}
+        onRequestClose={handleClose}
       >
         <SafeAreaView style={styles.fullScreenModal}>
           <PredefinedSelect
             options={options}
             onSelect={handleSelect}
             selected={selectedValue}
-            onClose={() => handleClose()}
+            onClose={handleClose}
             title={label}
             onlyOptions={onlyOptions}
           />

@@ -10,12 +10,13 @@ import { UHD } from '@/lib/types/hose';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Bookmark } from '../common/Bookmark';
+import { CouplingSectionProps } from '@/components/detailView/view/UniversalHoseData';
 
-export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
+export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
   info,
   onInputChange,
 }) => {
-  const [localInfo, setLocalInfo] = useState<UHD>(info);
+  const [localInfo, setLocalInfo] = useState<Partial<UHD>>(info);
   const [sameAsEnd1, setSameAsEnd1] = useState(false);
 
   useEffect(() => {
@@ -28,31 +29,30 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
     innerDiameter: 'innerDiameter2',
     gender: 'gender2',
     angle: 'angle2',
-    commentEnd1: 'commentEnd2',
+    commentEnd: 'commentEnd2',
   };
 
-  const syncEndFields = (shouldSync: boolean) => {
-    if (shouldSync) {
-      const updatedInfo = { ...localInfo };
-
-      Object.entries(fieldMappings).forEach(([end1Field, end2Field]) => {
-        const end1Key = end1Field as keyof UHD;
-        const end2Key = end2Field as keyof UHD;
-        const value = localInfo[end1Key];
-
-        updatedInfo[end2Key] = value;
-        onInputChange(end2Key, value);
-      });
-
-      setLocalInfo(updatedInfo);
-    }
+  const syncEndFields = () => {
+    const updatedInfo = { ...localInfo };
+    (
+      [
+        'materialQuality',
+        'typeFitting',
+        'innerDiameter',
+        'gender',
+        'angle',
+        'commentEnd',
+      ] as const
+    ).every((key) => {
+      updatedInfo[`${key}2`] = updatedInfo[key];
+    });
+    setLocalInfo(updatedInfo);
   };
 
   const handleCheckboxChange = () => {
     const newSameAsEnd1 = !sameAsEnd1;
     setSameAsEnd1(newSameAsEnd1);
-
-    syncEndFields(newSameAsEnd1);
+    syncEndFields();
   };
 
   const handleFieldChange = (field: keyof UHD, value: any) => {
@@ -65,8 +65,8 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       updatedInfo[end2Key] = value;
       onInputChange(end2Key, value);
     }
-
-    const isEnd2Field = Object.values(fieldMappings).includes(field as string);
+    const values = Object.values(fieldMappings);
+    const isEnd2Field = values.includes(field);
     if (sameAsEnd1 && isEnd2Field) {
       setSameAsEnd1(false);
     }
@@ -86,7 +86,7 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       >
         <SelectField
           label='Hose Standard'
-          value={localInfo.hoseStandard}
+          value={localInfo.hoseStandard || ''}
           onChange={(value) => handleFieldChange('hoseStandard', value)}
           options={[]}
         />
@@ -132,7 +132,7 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       <TooltipWrapper tooltipData={{ title: 'Material Quality', message: '' }}>
         <SelectField
           label='Material Quality'
-          value={localInfo.materialQuality}
+          value={localInfo.materialQuality || ''}
           onChange={(value) => handleFieldChange('materialQuality', value)}
           options={[]}
         />
@@ -141,7 +141,7 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       <TooltipWrapper tooltipData={{ title: 'Type Fitting', message: '' }}>
         <SelectField
           label='Type Fitting'
-          value={localInfo.typeFitting}
+          value={localInfo.typeFitting || ''}
           onChange={(value) => handleFieldChange('typeFitting', value)}
           options={[]}
         />
@@ -155,7 +155,7 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       >
         <SelectField
           label='Inner Diameter'
-          value={localInfo.innerDiameter}
+          value={localInfo.innerDiameter || ''}
           onChange={(value) => handleFieldChange('innerDiameter', value)}
           options={[]}
         />
@@ -164,7 +164,7 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       <TooltipWrapper tooltipData={{ title: 'Gender', message: '' }}>
         <SelectField
           label='Gender'
-          value={localInfo.gender}
+          value={localInfo.gender || ''}
           onChange={(value) => handleFieldChange('gender', value)}
           required={true}
           options={[]}
@@ -174,7 +174,7 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       <TooltipWrapper tooltipData={{ title: 'Angle', message: '' }}>
         <SelectField
           label='Angle'
-          value={localInfo.angle}
+          value={localInfo.angle || ''}
           onChange={(value) => handleFieldChange('angle', value)}
           options={[]}
         />
@@ -188,8 +188,8 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       >
         <Input
           label='Comment End 1'
-          value={localInfo.commentEnd1}
-          onChangeText={(text) => handleFieldChange('commentEnd1', text)}
+          value={localInfo.commentEnd || ''}
+          onChangeText={(text) => handleFieldChange('commentEnd', text)}
         />
       </TooltipWrapper>
 
@@ -208,7 +208,7 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       >
         <SelectField
           label='Material Quality'
-          value={localInfo.materialQuality2}
+          value={localInfo.materialQuality2 || ''}
           onChange={(value) => handleFieldChange('materialQuality2', value)}
           options={[]}
         />
@@ -217,7 +217,7 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       <TooltipWrapper tooltipData={{ title: 'Type Fitting 2', message: '' }}>
         <SelectField
           label='Type Fitting'
-          value={localInfo.typeFitting2}
+          value={localInfo.typeFitting2 || ''}
           onChange={(value) => handleFieldChange('typeFitting2', value)}
           options={[]}
         />
@@ -226,7 +226,7 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       <TooltipWrapper tooltipData={{ title: 'Inner Diameter 2', message: '' }}>
         <SelectField
           label='Inner Diameter 2'
-          value={localInfo.innerDiameter2}
+          value={localInfo.innerDiameter2 || ''}
           onChange={(value) => handleFieldChange('innerDiameter2', value)}
           options={[]}
         />
@@ -235,7 +235,7 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       <TooltipWrapper tooltipData={{ title: 'Gender 2', message: '' }}>
         <SelectField
           label='Gender'
-          value={localInfo.gender2}
+          value={localInfo.gender2 || ''}
           onChange={(value) => handleFieldChange('gender2', value)}
           required={true}
           options={[]}
@@ -245,7 +245,7 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       <TooltipWrapper tooltipData={{ title: 'Angle 2', message: '' }}>
         <SelectField
           label='Angle'
-          value={localInfo.angle2}
+          value={localInfo.angle2 || ''}
           onChange={(value) => handleFieldChange('angle2', value)}
           options={[]}
         />
@@ -254,7 +254,7 @@ export const EditUniversalHoseData: React.FC<EditProps<UHD>> = ({
       <View style={styles.inputContainer}>
         <Input
           label='Comment End 2'
-          value={localInfo.commentEnd2}
+          value={localInfo.commentEnd2 || ''}
           onChangeText={(text) => handleFieldChange('commentEnd2', text)}
         />
       </View>
