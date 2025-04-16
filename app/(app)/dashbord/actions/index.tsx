@@ -1,13 +1,21 @@
 import { ContactForm } from '@/components/forms/ContactForm';
 import { useAppContext } from '@/context/ContextProvider';
-import { isMultiSelection, isSingleSelection } from '@/context/state';
+import {
+  isMultiSelection,
+  isSingleSelection,
+  MultiSelectionActionsType,
+} from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { Alert } from 'react-native';
 
 interface Props {}
 const Action: React.FC<Props> = (props) => {
-  let { action } = useLocalSearchParams();
+  let { action, allowScan } = useLocalSearchParams<{
+    action: MultiSelectionActionsType;
+    allowScan: 'true' | 'false';
+  }>();
+
   const { state } = useAppContext();
   let hoses: HoseData[] = [];
   if (isMultiSelection(state.data.selection)) {
@@ -66,17 +74,12 @@ const Action: React.FC<Props> = (props) => {
       subTitle: '',
     };
   }
-
   return (
     <ContactForm
-      title={pageData.title}
-      subTitle={pageData.subTitle}
-      isRFQ={action === 'RFQ'}
+      contactType={action}
       hoses={hoses}
+      allowScanToAdd={allowScan === 'true'}
       onSave={save}
-      onAdd={function (arg0: any): void {
-        throw new Error('Function not implemented.');
-      }}
     />
   );
 };

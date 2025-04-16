@@ -21,6 +21,7 @@ import { mockedData } from '@/context/mocked';
 import { colors } from '@/lib/tokens/colors';
 import { Link, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { HoseData } from '@/lib/types/hose';
 
 const Login = () => {
   const router = useRouter();
@@ -63,7 +64,7 @@ const Login = () => {
                 onPress={() => {
                   dispatch({
                     type: 'SET_HOSE_DATA',
-                    payload: mockedData,
+                    payload: mockedData as HoseData[],
                   });
                   router.push('/dashbord');
                 }}
@@ -202,7 +203,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    // zIndex: 10,
     paddingBottom: 30,
   },
   viewContainer: {

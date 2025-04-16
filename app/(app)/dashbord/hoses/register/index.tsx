@@ -16,19 +16,20 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 const RegisterHose = () => {
-  const { hoseId, rfid: urlRfid } = useLocalSearchParams();
+  const { hoseId: incomingId, hoseRfid: incomingRfid } = useLocalSearchParams<{
+    hoseId?: string;
+    hoseRfid?: string;
+  }>();
 
-  const incomingRfid = Array.isArray(urlRfid) ? urlRfid[0] : urlRfid;
-  const incomingId = Array.isArray(hoseId) ? hoseId[0] : hoseId;
   const [registerMultiple, setRegisterMultiple] = useState(false);
-  const [rfid, setRfid] = useState<string>(urlRfid?.toString() || '');
+  const [rfid, setRfid] = useState<string | undefined>(incomingRfid);
 
   const handleCheckboxChange = () => {
     setRegisterMultiple((prevState) => !prevState);
   };
 
   const initialHoseData: Partial<HoseData> = {
-    id: incomingRfid || incomingId,
+    id: incomingId,
   };
 
   const [localState, setLocalState] = useState(initialHoseData);
@@ -53,15 +54,12 @@ const RegisterHose = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <View style={{ alignItems: 'center' }}>
+        <View style={styles.header}>
           <Typography name='navigationBold' text='Register hose' />
-          {(hoseId || urlRfid) && (
+          {incomingId && (
             <Typography name='navigation'>
-              Hose ID
-              <Typography
-                name={'navigationBold'}
-                text={String(urlRfid || hoseId || '')}
-              />
+              Hose ID:
+              <Typography name={'navigationBold'} text={` ${incomingId}`} />
             </Typography>
           )}
         </View>
@@ -162,7 +160,7 @@ export default RegisterHose;
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    paddingHorizontal: 50,
+    alignItems: 'center',
     gap: 20,
   },
   checkboxContainer: {
@@ -182,6 +180,9 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
+    width: '100%',
+    paddingVertical: 30,
+    gap: 10,
   },
   container: {
     padding: 10,

@@ -2,9 +2,10 @@ import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
+import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { reverseHexString } from '@/lib/util/rfid';
-import { RelativePathString, router } from 'expo-router';
+import { Href, router } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -24,45 +25,58 @@ import {
   useCodeScanner,
 } from 'react-native-vision-camera';
 
+export type ScanPurpose = MultiSelectionActionsType | 'REGISTER_HOSE';
+export const getSkanUrl = (scanPurpose: ScanPurpose): Href =>
+  `/scan?scanPurpose=${scanPurpose}`;
+
 const Scan = () => {
-  const { title, registerHose } = useLocalSearchParams() as {
-    title?: string;
-    registerHose?: string;
-  };
-  const { dispatch } = useAppContext();
-
-  let displayTitle = title || 'Scan or type ID';
-  let navigationPath = '/dashbord/actions';
-
-  const titleToRouteParam: Record<string, string> = {
-    'Order hoses': 'rfq',
-    'Scrap hoses': 'scrap',
-  };
-
-  const routeParam = titleToRouteParam[title ?? ''];
-
-  if (registerHose === 'true') {
-    navigationPath = `/dashbord/hoses/register`;
-  } else if (routeParam) {
-    navigationPath = `/dashbord/actions/${routeParam}?source=scan`;
-  }
-
+  const { scanPurpose } = useLocalSearchParams<{
+    scanPurpose?: ScanPurpose;
+  }>();
+  // TODO what if not scanPurpose
+  const { state, dispatch } = useAppContext();
+  const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(
+    'Barcode',
+  );
   const inputRef = useRef<TextInput>(null);
+  const cameraRef = useRef<Camera>(null);
   const device = useCameraDevice('back');
   const { hasPermission, requestPermission } = useCameraPermission();
-  const cameraRef = useRef<Camera>(null);
-  const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(null);
-  const [id, setId] = useState<string | null>(null);
-  const [rfid, setRfid] = useState<string | null>(null);
   const [showRfidScanView, setShowRfidScanView] = useState(false);
   const [isNfcSupported, setIsNfcSupported] = useState(false);
-  const [scanError, setScanError] = useState<string | null>(null);
+  const [id, setId] = useState<string | null>(null);
+  const [rfid, setRfid] = useState<string | null>(null);
   const previousRfid = useRef<string | null>(null);
+  const [scanError, setScanError] = useState<string | null>(null);
+
+  const [title, setTitle] = useState<string>('Scanner');
+  const [subTitle, setSubTitle] = useState<string>('Scann or enter ID');
+
+  useEffect(() => {
+    if (scanPurpose) {
+      switch (scanPurpose) {
+        case 'REGISTER_HOSE':
+          setTitle('Register Hose');
+          break;
+        case 'RFQ':
+          setTitle('Order hoses');
+          break;
+        case 'SCRAP':
+          setTitle('Scrap hoses');
+          break;
+        case 'CONTACT':
+          setTitle('Contact TESS Team');
+        default:
+          break;
+      }
+    }
+  }, [scanPurpose]);
 
   const codeScanner = useCodeScanner({
     codeTypes: ['code-39'],
     onCodeScanned: (codes) => {
       setId(typeof codes[0].value === 'string' ? codes[0].value : '');
+      handleScan();
       setScanMethod(null);
     },
   });
@@ -109,18 +123,8 @@ const Scan = () => {
       if (tag?.id) {
         const reversedId = reverseHexString(tag.id);
         setRfid(reversedId);
-        setId(reversedId);
         setScanMethod(null);
-
-        if (registerHose === 'true') {
-          router.push(
-            `/dashbord/hoses/register?rfid=${reversedId}` as RelativePathString,
-          );
-        } else {
-          router.push(
-            `${navigationPath}?rfid=${reversedId}` as RelativePathString,
-          );
-        }
+        handleScan();
       } else {
         setScanError('No tag ID found.');
       }
@@ -142,7 +146,7 @@ const Scan = () => {
         setId(previousRfid.current);
       }
     }
-  }, [isNfcSupported, rfid, registerHose, navigationPath]);
+  }, [isNfcSupported, rfid]);
 
   const handleRFIDPress = () => {
     inputRef.current?.blur();
@@ -165,6 +169,51 @@ const Scan = () => {
     );
   }
 
+  const handleScan = () => {
+    cameraRef.current?.stopRecording();
+    setScanMethod(null);
+    if (scanPurpose === 'REGISTER_HOSE') {
+      router.push({
+        pathname: '/dashbord/hoses/register',
+        params: {
+          hoseRfid: rfid,
+          hoseId: id,
+        },
+      });
+      return;
+    }
+    // find hose ID by matching RFID to hose Id
+    const hose = state.data.hoses.find((hose) => {
+      if (scanMethod === 'RFID') {
+        return hose.RFid === id;
+      } else if (id) {
+        return hose.id === id;
+      }
+    });
+    // if found add hose to selection and navigate to action
+    if (hose) {
+      setId(hose.id);
+      if (!isMultiSelection(state.data.selection) && !!scanPurpose) {
+        dispatch({
+          type: 'START_MULTI_SELECTION',
+          payload: scanPurpose,
+        });
+      }
+      dispatch({
+        type: 'ADD_HOSE_TO_EXISTING_MULTI_SELECTION',
+        payload: hose.id,
+      });
+      router.push(
+        `/(app)/dashbord/actions?action=${scanPurpose}&allowScan=true`,
+      );
+    }
+    // navigate to action
+    // if not found show alert
+    else {
+      Alert.alert('Hose not found', 'Please enter a valid hose ID.');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.headerContainer}>
@@ -172,12 +221,12 @@ const Scan = () => {
           <Typography
             name='navigationBold'
             style={styles.headerText}
-            text={displayTitle}
+            text={title}
           />
           <Typography
             name='navigation'
             style={styles.headerText}
-            text='Scan or type ID'
+            text={subTitle}
           />
         </View>
         <View style={styles.inputsWrapper}>
@@ -246,13 +295,8 @@ const Scan = () => {
               styles.searchButton,
               pressed && styles.searchButtonPressed,
             ]}
-            onPress={() => {
-              dispatch({
-                type: 'SELECT_HOSE',
-                payload: `${id}`,
-              });
-              router.push(`${navigationPath}?rfid=${id}` as RelativePathString);
-            }}
+            disabled={!id}
+            onPress={handleScan}
           >
             <Icon name='Search' color={colors.primary25} size='sm' />
           </Pressable>

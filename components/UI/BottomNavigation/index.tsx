@@ -1,10 +1,11 @@
+import { getSkanUrl } from '@/app/scan';
 import { TessLines } from '@/components/decorative/TessLines';
 import { Icon } from '@/components/Icon/Icon';
 import { OpenMenu } from '@/components/UI/BottomNavigation/openMenu';
 import { NavMenu } from '@/components/UI/NavMenu/navMenu';
 import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
-import { Link, useRouter } from 'expo-router';
+import { Href, Link, useRouter } from 'expo-router';
 import { FC, useContext, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import Collapsible from 'react-native-collapsible';
@@ -17,9 +18,10 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
   const router = useRouter();
   const { dispatch } = useContext(AppContext);
 
-  const handleLinkPress = (to: string) => {
-    dispatch({ type: 'DESELECT_ALL_HOSES' });
+  const handleLinkPress = (to: Href) => {
     setIsOpen(false);
+    router.push(to);
+    dispatch({ type: 'FINISH_SELECTION' });
   };
 
   return (
@@ -27,71 +29,43 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
       <View style={{ bottom: insets.bottom }}>
         <Collapsible collapsed={!isOpen} style={[styles.collapsible]}>
           <NavMenu
-            handleLinkPress={() => handleLinkPress}
+            handleLinkPress={handleLinkPress}
             elements={[
               {
-                title: 'Download / sync data',
-                to: '/(app)/dashbord/hoses',
-                icon: () => <Icon name='Download' color={colors.primary} />,
-              },
-              {
-                title: 'Upload your data',
+                title: 'Dashboard / Home',
                 to: '/(app)/dashbord',
-                icon: () => <Icon name='Upload' color={colors.primary} />,
+                icon: () => <Icon name='Meter' color={colors.primary} />,
               },
               {
-                title: 'Register hose',
-                to: '/scan?title=Register%20hose&registerHose=true',
+                title: 'Register hose / equipment',
+                to: getSkanUrl('REGISTER_HOSE'),
                 icon: () => (
                   <Icon name='RegisterHoses' color={colors.primary} />
                 ),
               },
               {
-                id: 'Inspection',
-                title: 'Inspection',
-                icon: () => <Icon name='Search' color={colors.primary} />,
-                links: [
-                  {
-                    title: 'Inspect',
-                    to: '/',
-                  },
-                  {
-                    title: 'Edit hose data',
-                    to: '/(app)/user',
-                  },
-                  {
-                    title: 'Update RFID',
-                    to: '/(app)/dashbord/hoses',
-                  },
-                  {
-                    title: 'Metering',
-                    to: '/(app)/dashbord/hoses',
-                  },
-                ],
+                title: 'Inspect hose / equipment',
+                to: '/scan?title=Inspect%20hose%20/%20equipment',
+                icon: () => <Icon name='Inspect' color={colors.primary} />,
               },
               {
-                title: 'Alerts /KPIs',
-                to: '/(app)/user',
-                icon: () => <Icon name='Meter' color={colors.primary} />,
-              },
-              {
-                title: 'Order hoses',
-                to: '/scan?title=Order%20hoses',
+                title: 'Order hose',
+                to: getSkanUrl('RFQ'),
                 icon: () => <Icon name='Cart' color={colors.primary} />,
               },
               {
-                title: 'Hose replacement & pressure testing',
-                to: '/(app)/user',
+                title: 'Replace hose / pressure testing',
+                to: getSkanUrl('REGISTER_HOSE'), // TODO: change to replace hose
                 icon: () => <Icon name='Task' color={colors.primary} />,
               },
               {
-                title: 'Report ID as scrapped',
-                to: '/scan?title=Scrap%20hoses',
+                title: 'Scrap hose',
+                to: getSkanUrl('SCRAP'),
                 icon: () => <Icon name='Trash' color={colors.primary} />,
               },
               {
-                title: 'Send mail',
-                to: '/(app)/user',
+                title: 'Contact TESS Support',
+                to: '/(app)/dashbord/actions?action=CONTACT&allowScan=true',
                 icon: () => <Icon name='Email' color={colors.primary} />,
               },
               {
@@ -111,7 +85,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
           <Link
             asChild
             href='/(app)/user'
-            style={[styles.button, { display: 'none' }]}
+            style={[styles.button, { display: 'none' }]} // TODO: it is placeholder for future feature
           >
             <Pressable
               style={({ pressed }) => [pressed && {}]}
@@ -125,14 +99,6 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
             isOpen={isOpen}
             handlePress={() => setIsOpen((isOpen) => !isOpen)}
           />
-          {/* <Link asChild href='/scan' style={styles.button}>
-            <Pressable
-              style={({ pressed }) => [pressed && {}]}
-              onPress={() => setIsOpen(false)}
-            >
-              <Icon name='Search' color='#fff' />
-            </Pressable>
-          </Link> */}
           <Pressable
             style={styles.button}
             onPress={() => (isOpen ? setIsOpen(false) : router.back())}

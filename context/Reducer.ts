@@ -64,6 +64,7 @@ type DataAction =
   | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: string; hoseData: any }>
   | ActionWithPayload<'SELECT_ONE_HOSE', SingleSelection>
   | ActionWithPayload<'START_MULTI_SELECTION', MultiSelection['type']>
+  | ActionWithPayload<'ADD_HOSE_TO_EXISTING_MULTI_SELECTION', string>
   | ActionWithPayload<'TOGGLE_HOSE_MULTI_SELECTION', string>
   | ActionWithoutPayload<'FINISH_SELECTION'>
   | ActionWithPayload<'SELECT_MANY_HOSES_MULTI_SELECTION', string[]>
@@ -149,6 +150,17 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
         ...state,
         selection: action.payload,
       };
+    case 'ADD_HOSE_TO_EXISTING_MULTI_SELECTION': {
+      if (!isMultiSelection(state.selection)) return state;
+      if (state.selection.ids.includes(action.payload)) return state;
+      return {
+        ...state,
+        selection: {
+          ...state.selection,
+          ids: [...state.selection.ids, action.payload],
+        } as MultiSelection,
+      };
+    }
     case 'TOGGLE_HOSE_MULTI_SELECTION':
       const selection = state.selection;
       if (isMultiSelection(selection)) {
