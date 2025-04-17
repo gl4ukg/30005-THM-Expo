@@ -12,6 +12,31 @@ import { StyleSheet, View } from 'react-native';
 import { Bookmark } from '../common/Bookmark';
 import { CouplingSectionProps } from '@/components/detailView/view/UniversalHoseData';
 
+export const couplingsFields = [
+  'materialQuality',
+  'typeFitting',
+  'innerDiameter',
+  'gender',
+  'angle',
+  'commentEnd',
+] as const;
+
+const couplingsFieldsEnd = couplingsFields.map((field) => `${field}2` as const);
+
+export type CouplingsFields = (typeof couplingsFields)[number];
+export type CouplingsFieldsEnd = (typeof couplingsFieldsEnd)[number];
+
+export const isFieldACouplingField = (
+  field: keyof UHD,
+): field is CouplingsFields => {
+  return !!couplingsFields.find((f) => f === field);
+};
+export const isFieldACouplingFieldEnd = (
+  field: keyof UHD,
+): field is CouplingsFieldsEnd => {
+  return !!couplingsFieldsEnd.find((f) => f === field);
+};
+
 export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
   info,
   onInputChange,
@@ -34,16 +59,7 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
 
   const syncEndFields = () => {
     const updatedInfo = { ...localInfo };
-    (
-      [
-        'materialQuality',
-        'typeFitting',
-        'innerDiameter',
-        'gender',
-        'angle',
-        'commentEnd',
-      ] as const
-    ).every((key) => {
+    couplingsFields.every((key) => {
       updatedInfo[`${key}2`] = updatedInfo[key];
     });
     setLocalInfo(updatedInfo);
@@ -58,16 +74,13 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
   const handleFieldChange = (field: keyof UHD, value: any) => {
     const updatedInfo = { ...localInfo, [field]: value };
 
-    if (sameAsEnd1 && field in fieldMappings) {
-      const end2Field = fieldMappings[field as keyof typeof fieldMappings];
-      const end2Key = end2Field as keyof UHD;
-
-      updatedInfo[end2Key] = value;
-      onInputChange(end2Key, value);
+    if (sameAsEnd1 && isFieldACouplingField(field)) {
+      const end2Field = `${field}2` as const;
+      updatedInfo[end2Field] = value;
+      onInputChange(end2Field, value);
     }
-    const values = Object.values(fieldMappings);
-    const isEnd2Field = values.includes(field);
-    if (sameAsEnd1 && isEnd2Field) {
+
+    if (sameAsEnd1 && isFieldACouplingFieldEnd(field)) {
       setSameAsEnd1(false);
     }
 
