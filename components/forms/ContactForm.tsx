@@ -13,26 +13,29 @@ import { Typography } from '../Typography';
 import { ButtonTHS } from '../UI';
 import { Input } from '../UI/Input/Input';
 
-const formLabels: Record<MultiSelectionActionsType, { title: string, subtitle: string, confirmButton: string }> = {
+const formLabels: Record<
+  Exclude<MultiSelectionActionsType, 'CONTACT_SUPPORT'>,
+  { title: string; subtitle: string; confirmButton: string }
+> = {
   RFQ: {
     title: 'Order hoses',
     subtitle: 'Request for quote',
-    confirmButton: 'Send RFQ'
+    confirmButton: 'Send RFQ',
   },
   CONTACT: {
     title: 'Contact TESS Team',
     subtitle: 'Message',
-    confirmButton: 'Send message'
+    confirmButton: 'Send message',
   },
   SCRAP: {
     title: 'Scrap hoses',
     subtitle: 'Scrap report',
-    confirmButton: 'Scrap hoses'
+    confirmButton: 'Scrap hoses',
   },
-}
+};
 
 interface Props {
-  contactType: MultiSelectionActionsType;
+  contactType: Exclude<MultiSelectionActionsType, 'CONTACT_SUPPORT'>;
   hoses: HoseData[];
   allowScanToAdd?: boolean;
   onSave: (arg0: any) => void;
@@ -89,26 +92,28 @@ export const ContactForm: React.FC<Props> = ({
     !!emailError ||
     !phone ||
     selectedIds.length === 0 ||
-    (contactType === 'RFQ' && (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
-
+    (contactType === 'RFQ' &&
+      (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
 
   return (
     <>
       <FlatList
         ListHeaderComponent={
-            <View style={styles.selectedCounterContainer}>
-              <Typography name='navigationBold' text={formLabels[contactType].title} style={styles.selectedCounterTitle} />
-              <Typography
-                name='navigation'
-                text={
-                  formLabels[contactType].subtitle
-                }
-                style={styles.selectedCounterSubtitle}
-              />
-            </View>
+          <View style={styles.listHeaderComponent}>
+            <Typography
+              name='navigationBold'
+              text={formLabels[contactType].title}
+              style={styles.contactTitle}
+            />
+            <Typography
+              name='navigation'
+              text={formLabels[contactType].subtitle}
+              style={styles.contactSubtitle}
+            />
+          </View>
         }
         ListFooterComponent={
-          <View style={styles.pagePadding}>
+          <View style={styles.inputsContainer}>
             {contactType === 'RFQ' && (
               <SelectField
                 label={'RFQ type'}
@@ -120,7 +125,11 @@ export const ContactForm: React.FC<Props> = ({
             )}
             <Input
               type='textArea'
-              label={contactType === 'RFQ' ? 'Delivery address / Comments' : 'Comment:'}
+              label={
+                contactType === 'RFQ'
+                  ? 'Delivery address / Comments'
+                  : 'Comment:'
+              }
               value={comment}
               onChangeText={setComment}
             />
@@ -171,20 +180,22 @@ export const ContactForm: React.FC<Props> = ({
         data={['one']}
         renderItem={() => (
           <>
-          { selectedIds.length > 0 && 
-            <ListTable
-              items={originallySelectedHoses}
-              selectedIds={selectedIds}
-              onSelectionChange={handleSelectionChange}
-              canSelect={true}
-            />
-          }
+            {selectedIds.length > 0 && (
+              <ListTable
+                items={originallySelectedHoses}
+                selectedIds={selectedIds}
+                onSelectionChange={handleSelectionChange}
+                canSelect={true}
+              />
+            )}
             {allowScanToAdd && (
               <View style={styles.addHoseContainer}>
                 <LinkButton
                   variant='light'
                   title={`+ Add hoses to this ${formLabels[contactType].title.toLowerCase()}`}
-                  onPress={() => router.push('/scan?scanPurpose=SCRAP')}
+                  onPress={() =>
+                    router.push(`/scan?scanPurpose=${contactType}`)
+                  }
                 />
               </View>
             )}
@@ -195,18 +206,18 @@ export const ContactForm: React.FC<Props> = ({
   );
 };
 const styles = StyleSheet.create({
-  selectedCounterContainer: {
+  listHeaderComponent: {
     alignItems: 'center',
     gap: 6,
-    paddingVertical: 30
+    paddingVertical: 30,
   },
-  selectedCounterTitle: {
+  contactTitle: {
     color: colors.black,
   },
-  selectedCounterSubtitle: {
+  contactSubtitle: {
     color: colors.extended333,
   },
-  pagePadding: {
+  inputsContainer: {
     paddingHorizontal: 10,
     flexDirection: 'column',
     alignItems: 'center',
