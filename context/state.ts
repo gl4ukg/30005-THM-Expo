@@ -44,7 +44,11 @@ export type SingleSelectionActionsType =
   | 'INSPECT'
   | 'EDIT';
 
-export type MultiSelectionActionsType = 'RFQ' | 'SCRAP' | 'CONTACT';
+export type MultiSelectionActionsType =
+  | 'RFQ'
+  | 'SCRAP'
+  | 'CONTACT'
+  | 'CONTACT_SUPPORT';
 
 type MultiHosesSelection<T extends MultiSelectionActionsType> = {
   type: T;
@@ -61,6 +65,7 @@ type InspectSingleHoseSelection = SingleHoseSelection<'INSPECT'>;
 type EditSingleHoseSelection = SingleHoseSelection<'EDIT'>;
 type ScrapMultiHosesSelection = MultiHosesSelection<'SCRAP'>;
 type ContactMultiHosesSelection = MultiHosesSelection<'CONTACT'>;
+type ContactSupportMultiHosesSelection = MultiHosesSelection<'CONTACT_SUPPORT'>;
 type RFQMultiHosesSelection = MultiHosesSelection<'RFQ'>;
 export type SingleSelection =
   | ScrapSingleHoseSelection
