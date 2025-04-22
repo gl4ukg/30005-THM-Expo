@@ -185,7 +185,7 @@ export const ContactForm: React.FC<Props> = ({
                 items={originallySelectedHoses}
                 selectedIds={selectedIds}
                 onSelectionChange={handleSelectionChange}
-                canSelect={true}
+                canSelect={isMultiSelection(state.data.selection)}
               />
             )}
             {allowScanToAdd && (
