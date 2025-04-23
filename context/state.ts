@@ -91,6 +91,7 @@ interface DataState {
   }[];
   workingUnitId: null | string;
   selection: HoseSelection | null;
+  hoseTemplate?: Partial<HoseData>;
 }
 
 interface SettingsState {
@@ -115,6 +116,7 @@ const initialDataState: DataState = {
   assignedUnits: [],
   workingUnitId: null,
   selection: null,
+  hoseTemplate: undefined,
 };
 
 const initialSettingsState: SettingsState = {
