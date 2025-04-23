@@ -8,14 +8,13 @@ import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { ListTable } from '../dashboard/listTable';
-
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { Input } from '@/components/UI/Input/Input';
 import { SelectField } from '@/components/UI/SelectModal/SelectField';
 
 const formLabels: Record<
-  MultiSelectionActionsType,
+  Exclude<MultiSelectionActionsType, 'CONTACT_SUPPORT' | 'REPLACE_HOSE'>,
   { title: string; subtitle: string; confirmButton: string }
 > = {
   RFQ: {
@@ -36,7 +35,10 @@ const formLabels: Record<
 };
 
 interface Props {
-  contactType: MultiSelectionActionsType;
+  contactType: Exclude<
+    MultiSelectionActionsType,
+    'CONTACT_SUPPORT' | 'REPLACE_HOSE'
+  >;
   hoses: HoseData[];
   allowScanToAdd?: boolean;
   onSave: (arg0: any) => void;
@@ -100,21 +102,21 @@ export const ContactForm: React.FC<Props> = ({
     <>
       <FlatList
         ListHeaderComponent={
-          <View style={styles.selectedCounterContainer}>
+          <View style={styles.listHeaderComponent}>
             <Typography
               name='navigationBold'
               text={formLabels[contactType].title}
-              style={styles.selectedCounterTitle}
+              style={styles.contactTitle}
             />
             <Typography
               name='navigation'
               text={formLabels[contactType].subtitle}
-              style={styles.selectedCounterSubtitle}
+              style={styles.contactSubtitle}
             />
           </View>
         }
         ListFooterComponent={
-          <View style={styles.pagePadding}>
+          <View style={styles.inputsContainer}>
             {contactType === 'RFQ' && (
               <SelectField
                 label={'RFQ type'}
@@ -186,7 +188,7 @@ export const ContactForm: React.FC<Props> = ({
                 items={originallySelectedHoses}
                 selectedIds={selectedIds}
                 onSelectionChange={handleSelectionChange}
-                canSelect={true}
+                canSelect={isMultiSelection(state.data.selection)}
               />
             )}
             {allowScanToAdd && (
@@ -194,7 +196,9 @@ export const ContactForm: React.FC<Props> = ({
                 <LinkButton
                   variant='light'
                   title={`+ Add hoses to this ${formLabels[contactType].title.toLowerCase()}`}
-                  onPress={() => router.push('/scan?scanPurpose=SCRAP')}
+                  onPress={() =>
+                    router.push(`/scan?scanPurpose=${contactType}`)
+                  }
                 />
               </View>
             )}
@@ -205,18 +209,18 @@ export const ContactForm: React.FC<Props> = ({
   );
 };
 const styles = StyleSheet.create({
-  selectedCounterContainer: {
+  listHeaderComponent: {
     alignItems: 'center',
     gap: 6,
     paddingVertical: 30,
   },
-  selectedCounterTitle: {
+  contactTitle: {
     color: colors.black,
   },
-  selectedCounterSubtitle: {
+  contactSubtitle: {
     color: colors.extended333,
   },
-  pagePadding: {
+  inputsContainer: {
     paddingHorizontal: 10,
     flexDirection: 'column',
     alignItems: 'center',
