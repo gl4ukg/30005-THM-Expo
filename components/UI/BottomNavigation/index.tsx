@@ -65,7 +65,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Contact TESS Support',
-                to: '/(app)/dashbord/actions?action=CONTACT&allowScan=true',
+                to: '/(app)/dashbord/actions?action=CONTACT_SUPPORT',
                 icon: () => <Icon name='Email' color={colors.primary} />,
               },
               {

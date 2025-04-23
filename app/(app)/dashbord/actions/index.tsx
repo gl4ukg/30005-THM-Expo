@@ -1,4 +1,5 @@
 import { ContactForm } from '@/components/forms/ContactForm';
+import { SendMailForm } from '@/components/forms/SendMailForm';
 import { useAppContext } from '@/context/ContextProvider';
 import {
   isMultiSelection,
@@ -48,40 +49,18 @@ const Action: React.FC<Props> = (props) => {
       `,
     );
   }
-  let pageData = {
-    title: '',
-    subTitle: '',
-  };
-  if (action === 'CONTACT') {
-    pageData = {
-      title: 'Contact TESS Team',
-      subTitle: 'Message details',
-    };
-  } else if (action === 'RFQ') {
-    pageData = {
-      title: 'Order hoses - RFQ',
-      subTitle: 'RFQ',
-    };
-  } else if (action === 'SCRAP') {
-    pageData = {
-      title: 'Scrap hoses',
-      subTitle: 'Scrap report',
-    };
+  if (action === 'CONTACT_SUPPORT') {
+    return <SendMailForm hoses={hoses} onSave={save} />;
   } else {
-    console.error('Unknown action');
-    pageData = {
-      title: '',
-      subTitle: '',
-    };
+    return (
+      <ContactForm
+        contactType={action}
+        hoses={hoses}
+        allowScanToAdd={allowScan === 'true'}
+        onSave={save}
+      />
+    );
   }
-  return (
-    <ContactForm
-      contactType={action}
-      hoses={hoses}
-      allowScanToAdd={allowScan === 'true'}
-      onSave={save}
-    />
-  );
 };
 
 export default Action;

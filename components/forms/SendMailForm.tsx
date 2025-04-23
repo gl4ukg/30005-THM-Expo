@@ -8,50 +8,21 @@ import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { ListTable } from '../dashboard/listTable';
-import { SelectField } from '../detailView/common/SelectField';
 import { Typography } from '../Typography';
 import { ButtonTHS } from '../UI';
 import { Input } from '../UI/Input/Input';
 
-const formLabels: Record<
-  Exclude<MultiSelectionActionsType, 'CONTACT_SUPPORT'>,
-  { title: string; subtitle: string; confirmButton: string }
-> = {
-  RFQ: {
-    title: 'Order hoses',
-    subtitle: 'Request for quote',
-    confirmButton: 'Send RFQ',
-  },
-  CONTACT: {
-    title: 'Contact TESS Team',
-    subtitle: 'Message',
-    confirmButton: 'Send message',
-  },
-  SCRAP: {
-    title: 'Scrap hoses',
-    subtitle: 'Scrap report',
-    confirmButton: 'Scrap hoses',
-  },
-};
-
 interface Props {
-  contactType: Exclude<MultiSelectionActionsType, 'CONTACT_SUPPORT'>;
   hoses: HoseData[];
-  allowScanToAdd?: boolean;
   onSave: (arg0: any) => void;
 }
-export const ContactForm: React.FC<Props> = ({
-  hoses,
-  contactType,
-  allowScanToAdd = false,
-  onSave,
-}) => {
+export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
   const { state, dispatch } = useAppContext();
-  const [comment, setComment] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
   const [name, setName] = useState(state.auth.user?.name || '');
   const [mail, setMail] = useState(state.auth.user?.email || '');
   const [phone, setPhone] = useState('');
-  const [rfq, setRfq] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>(
     hoses.map((h) => h.id),
   );
@@ -77,71 +48,47 @@ export const ContactForm: React.FC<Props> = ({
     }
   };
 
-  const rfqOptions = [
-    {
-      id: 'certificate',
-      label: 'TESS to quote with pressure test and certificate',
-    },
-    { id: 'noPressureTest', label: 'TESS to quote without pressure test' },
-    { id: 'Unspecified', label: 'Unspecified' },
-  ];
-
   const isButtonDisabled =
-    !name ||
-    !mail ||
-    !!emailError ||
-    !phone ||
-    selectedIds.length === 0 ||
-    (contactType === 'RFQ' &&
-      (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
+    !name || !mail || !!emailError || !phone || selectedIds.length === 0;
 
   return (
     <>
       <FlatList
         ListHeaderComponent={
-          <View style={styles.listHeaderComponent}>
+          <View style={[styles.listHeaderComponent, styles.paddingHorizontal]}>
             <Typography
               name='navigationBold'
-              text={formLabels[contactType].title}
-              style={styles.contactTitle}
+              text='Contact TESS Support'
+              style={styles.title}
             />
-            <Typography
-              name='navigation'
-              text={formLabels[contactType].subtitle}
-              style={styles.contactSubtitle}
-            />
+            <View style={styles.inputsContainer}>
+              <Input
+                type='text'
+                label={'Subject:'}
+                value={subject}
+                onChangeText={setSubject}
+              />
+              <Input
+                type='textArea'
+                label='Message'
+                placeholder='Message...'
+                value={message}
+                onChangeText={setMessage}
+              />
+            </View>
           </View>
         }
         ListFooterComponent={
-          <View style={styles.inputsContainer}>
-            {contactType === 'RFQ' && (
-              <SelectField
-                label={'RFQ type'}
-                value={'Choose'}
-                onChange={setRfq}
-                onlyOptions={true}
-                options={rfqOptions}
-              />
-            )}
-            <Input
-              type='textArea'
-              label={
-                contactType === 'RFQ'
-                  ? 'Delivery address / Comments'
-                  : 'Comment:'
-              }
-              value={comment}
-              onChangeText={setComment}
-            />
+          <View style={[styles.inputsContainer, styles.paddingHorizontal]}>
             <Input
               type='text'
-              label={'Name:'}
+              label={'From (your name):'}
               value={name}
               onChangeText={setName}
             />
             <Input
               type='email'
-              label={'Mail:'}
+              label={'Your email address:'}
               value={mail}
               onChangeText={handleMail}
               errorMessage={emailError}
@@ -154,16 +101,15 @@ export const ContactForm: React.FC<Props> = ({
             />
             <View style={styles.buttonContainer}>
               <ButtonTHS
-                title={formLabels[contactType].confirmButton}
+                title='Send'
                 size='sm'
                 disabled={isButtonDisabled}
                 onPress={() =>
                   onSave({
-                    comment,
+                    comment: message,
                     name,
                     mail,
                     phone,
-                    rfq,
                     selectedIds,
                   })
                 }
@@ -172,34 +118,36 @@ export const ContactForm: React.FC<Props> = ({
                 title='Cancel'
                 variant='tertiary'
                 size='sm'
-                onPress={() => router.back()}
+                onPress={() => router.push('/(app)/dashbord')}
               />
             </View>
           </View>
         }
         data={['one']}
         renderItem={() => (
-          <>
+          <View style={styles.listContainer}>
             {selectedIds.length > 0 && (
-              <ListTable
-                items={originallySelectedHoses}
-                selectedIds={selectedIds}
-                onSelectionChange={handleSelectionChange}
-                canSelect={isMultiSelection(state.data.selection)}
-              />
-            )}
-            {allowScanToAdd && (
-              <View style={styles.addHoseContainer}>
-                <LinkButton
-                  variant='light'
-                  title={`+ Add hoses to this ${formLabels[contactType].title.toLowerCase()}`}
-                  onPress={() =>
-                    router.push(`/scan?scanPurpose=${contactType}`)
-                  }
+              <>
+                <Typography
+                  name='fieldLabel'
+                  text='Attachments:'
+                  style={[styles.label, styles.paddingHorizontal]}
                 />
-              </View>
+                <ListTable
+                  items={originallySelectedHoses}
+                  selectedIds={selectedIds}
+                  onSelectionChange={handleSelectionChange}
+                  canSelect={true}
+                />
+              </>
             )}
-          </>
+            <LinkButton
+              variant='light'
+              hSpace={10}
+              title={`+ Add hoses as attachment`}
+              onPress={() => router.push('/scan?scanPurpose=CONTACT_SUPPORT')}
+            />
+          </View>
         )}
       />
     </>
@@ -208,32 +156,33 @@ export const ContactForm: React.FC<Props> = ({
 const styles = StyleSheet.create({
   listHeaderComponent: {
     alignItems: 'center',
-    gap: 6,
+    gap: 30,
     paddingVertical: 30,
   },
-  contactTitle: {
+  title: {
     color: colors.black,
   },
-  contactSubtitle: {
-    color: colors.extended333,
-  },
   inputsContainer: {
-    paddingHorizontal: 10,
     flexDirection: 'column',
     alignItems: 'center',
     gap: 20,
-    paddingBottom: 50,
-    paddingTop: 30,
   },
-  addHoseContainer: {
+  paddingHorizontal: {
+    paddingHorizontal: 10,
+  },
+  listContainer: {
     width: '100%',
     alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingTop: 20,
-    paddingLeft: 10,
+    gap: 20,
+    paddingBottom: 30,
+  },
+  label: {
+    color: colors.extended666,
   },
   buttonContainer: {
     paddingTop: 30,
+    paddingBottom: 30,
     width: '100%',
     flexDirection: 'column',
     gap: 20,
