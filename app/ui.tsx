@@ -1,5 +1,4 @@
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
-import { SelectField } from '@/components/detailView/common/SelectField';
 import { condition } from '@/components/detailView/data/lists';
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
@@ -7,10 +6,12 @@ import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { Input } from '@/components/UI/Input/Input';
+import { SelectField } from '@/components/UI/SelectModal/SelectField';
 import { colors } from '@/lib/tokens/colors';
 import { Link } from 'expo-router';
 import { useRef, useState } from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
   Pressable,
   SafeAreaView,
@@ -642,8 +643,8 @@ const Ui = () => {
               <SelectField
                 label='Condition'
                 value={''}
-                onChange={() => {
-                  return;
+                onChange={(value) => {
+                  Alert.alert('You answer is:', value);
                 }}
                 required={true}
                 options={condition.map((c) => ({ id: c, label: c }))}

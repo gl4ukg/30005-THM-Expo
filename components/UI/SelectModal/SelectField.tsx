@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Modal, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
 import { Icon } from '../../Icon/Icon';
 import { Typography } from '../../Typography';
-import { PredefinedSelect } from '../edit/PredefinedSelect';
+import { PredefinedSelect } from '@/components/UI/SelectModal/PredefinedSelect';
 
 type Option = {
   id: string;

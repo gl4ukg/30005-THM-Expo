@@ -1,4 +1,3 @@
-import { SelectField } from '@/components/detailView/common/SelectField';
 import { BarToPsiInput } from '@/components/detailView/edit/BarToPsiInput';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { UnitInput } from '@/components/detailView/edit/UnitInput';
@@ -10,7 +9,7 @@ import { UHD } from '@/lib/types/hose';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Bookmark } from '../common/Bookmark';
-import { CouplingSectionProps } from '@/components/detailView/view/UniversalHoseData';
+import { SelectField } from '@/components/UI/SelectModal/SelectField';
 
 export const couplingsFields = [
   'materialQuality',

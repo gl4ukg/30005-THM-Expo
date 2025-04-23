@@ -8,28 +8,32 @@ import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { ListTable } from '../dashboard/listTable';
-import { SelectField } from '../detailView/common/SelectField';
-import { Typography } from '../Typography';
-import { ButtonTHS } from '../UI';
-import { Input } from '../UI/Input/Input';
 
-const formLabels: Record<MultiSelectionActionsType, { title: string, subtitle: string, confirmButton: string }> = {
+import { Typography } from '@/components/Typography';
+import { ButtonTHS } from '@/components/UI';
+import { Input } from '@/components/UI/Input/Input';
+import { SelectField } from '@/components/UI/SelectModal/SelectField';
+
+const formLabels: Record<
+  MultiSelectionActionsType,
+  { title: string; subtitle: string; confirmButton: string }
+> = {
   RFQ: {
     title: 'Order hoses',
     subtitle: 'Request for quote',
-    confirmButton: 'Send RFQ'
+    confirmButton: 'Send RFQ',
   },
   CONTACT: {
     title: 'Contact TESS Team',
     subtitle: 'Message',
-    confirmButton: 'Send message'
+    confirmButton: 'Send message',
   },
   SCRAP: {
     title: 'Scrap hoses',
     subtitle: 'Scrap report',
-    confirmButton: 'Scrap hoses'
+    confirmButton: 'Scrap hoses',
   },
-}
+};
 
 interface Props {
   contactType: MultiSelectionActionsType;
@@ -89,23 +93,25 @@ export const ContactForm: React.FC<Props> = ({
     !!emailError ||
     !phone ||
     selectedIds.length === 0 ||
-    (contactType === 'RFQ' && (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
-
+    (contactType === 'RFQ' &&
+      (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
 
   return (
     <>
       <FlatList
         ListHeaderComponent={
-            <View style={styles.selectedCounterContainer}>
-              <Typography name='navigationBold' text={formLabels[contactType].title} style={styles.selectedCounterTitle} />
-              <Typography
-                name='navigation'
-                text={
-                  formLabels[contactType].subtitle
-                }
-                style={styles.selectedCounterSubtitle}
-              />
-            </View>
+          <View style={styles.selectedCounterContainer}>
+            <Typography
+              name='navigationBold'
+              text={formLabels[contactType].title}
+              style={styles.selectedCounterTitle}
+            />
+            <Typography
+              name='navigation'
+              text={formLabels[contactType].subtitle}
+              style={styles.selectedCounterSubtitle}
+            />
+          </View>
         }
         ListFooterComponent={
           <View style={styles.pagePadding}>
@@ -120,7 +126,11 @@ export const ContactForm: React.FC<Props> = ({
             )}
             <Input
               type='textArea'
-              label={contactType === 'RFQ' ? 'Delivery address / Comments' : 'Comment:'}
+              label={
+                contactType === 'RFQ'
+                  ? 'Delivery address / Comments'
+                  : 'Comment:'
+              }
               value={comment}
               onChangeText={setComment}
             />
@@ -171,14 +181,14 @@ export const ContactForm: React.FC<Props> = ({
         data={['one']}
         renderItem={() => (
           <>
-          { selectedIds.length > 0 && 
-            <ListTable
-              items={originallySelectedHoses}
-              selectedIds={selectedIds}
-              onSelectionChange={handleSelectionChange}
-              canSelect={true}
-            />
-          }
+            {selectedIds.length > 0 && (
+              <ListTable
+                items={originallySelectedHoses}
+                selectedIds={selectedIds}
+                onSelectionChange={handleSelectionChange}
+                canSelect={true}
+              />
+            )}
             {allowScanToAdd && (
               <View style={styles.addHoseContainer}>
                 <LinkButton
@@ -198,7 +208,7 @@ const styles = StyleSheet.create({
   selectedCounterContainer: {
     alignItems: 'center',
     gap: 6,
-    paddingVertical: 30
+    paddingVertical: 30,
   },
   selectedCounterTitle: {
     color: colors.black,

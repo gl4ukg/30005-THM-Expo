@@ -1,3 +1,6 @@
+import { RadioButton } from '@/components/detailView/common/RadioButton';
+import { Typography } from '@/components/Typography';
+import { ButtonTHS } from '@/components/UI/Button/Button';
 import { Input } from '@/components/UI/Input/Input';
 import { colors } from '@/lib/tokens/colors';
 import React, { useEffect, useRef, useState } from 'react';
@@ -9,9 +12,6 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { Typography } from '../../Typography';
-import { ButtonTHS } from '../../UI';
-import { RadioButton } from '../common/RadioButton';
 
 interface PredefinedSelectProps {
   options: { id: string; label: string }[];
@@ -108,7 +108,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
           <Typography name='navigationBold' text='Not sure what to choose?' />
           <Typography
             name='navigation'
-            text='Text, context-sensitive, for help or instructions/advice, related to what to chose in each spesific list.'
+            text='Text, context-sensitive, for help or instructions/advice, related to what to chose in each specific list.'
           />
         </View>
         {!onlyOptions && (

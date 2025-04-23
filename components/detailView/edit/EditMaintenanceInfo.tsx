@@ -1,8 +1,8 @@
 import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
-import { SelectField } from '@/components/detailView/common/SelectField';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { Typography } from '@/components/Typography';
+import { SelectField } from '@/components/UI/SelectModal/SelectField';
 import { colors } from '@/lib/tokens/colors';
 import { EditProps } from '@/lib/types/edit';
 import { HID } from '@/lib/types/hose';

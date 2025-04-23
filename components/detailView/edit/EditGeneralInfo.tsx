@@ -1,12 +1,13 @@
-import { EditProps } from '@/lib/types/edit';
-import { TooltipWrapper } from './TooltipWrapper';
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
+import { EditProps } from '@/lib/types/edit';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Input } from '../../UI/Input/Input';
-import { RadioGroup } from '../common/RadioGroup';
-import { SelectField } from '../common/SelectField';
+
+import { Input } from '@/components/UI/Input/Input';
+import { SelectField } from '@/components/UI/SelectModal/SelectField';
+import { RadioGroup } from '@/components/detailView/common/RadioGroup';
+import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { GHD } from '@/lib/types/hose';
 
 export const EditGeneralInfo: React.FC<
