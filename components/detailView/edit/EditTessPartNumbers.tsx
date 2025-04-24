@@ -23,7 +23,7 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
     <TooltipWrapper tooltipData={{ title: 'Ferrule 1', message: '' }}>
       <Select
         label='Ferrule 1'
-        selectedOption={null}
+        selectedOption={info.ferrule1}
         onChange={(value) => onInputChange('ferrule1', value)}
         options={[]}
       />
