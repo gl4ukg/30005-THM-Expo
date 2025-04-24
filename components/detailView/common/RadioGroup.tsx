@@ -11,7 +11,7 @@ export interface Choice {
 interface RadioGroupProps {
   label: string;
   choices: Choice[];
-  selected: string;
+  selected: string | null;
   onChange: (selectedId: string) => void;
   type: 'horizontal' | 'vertical' | 'menu';
 }

@@ -2,7 +2,7 @@ import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { Typography } from '@/components/Typography';
-import { SelectField } from '@/components/UI/SelectModal/SelectField';
+import { Select } from '@/components/UI/SelectModal/Select';
 import { colors } from '@/lib/tokens/colors';
 import { EditProps } from '@/lib/types/edit';
 import { HID } from '@/lib/types/hose';
@@ -31,9 +31,9 @@ export const EditMaintenanceInfo: React.FC<EditProps<HID>> = ({
         />
       </TooltipWrapper>
       <TooltipWrapper tooltipData={{ title: 'Condition', message: '' }}>
-        <SelectField
+        <Select
           label='Condition:'
-          value={info.hoseCondition}
+          selectedOption={info.hoseCondition}
           onChange={(value) => onInputChange('hoseCondition', value)}
           options={[]}
         />
@@ -66,9 +66,9 @@ export const EditMaintenanceInfo: React.FC<EditProps<HID>> = ({
         style={styles.subTitle}
       />
       <TooltipWrapper>
-        <SelectField
+        <Select
           label='Criticality'
-          value={info.criticality}
+          selectedOption={info.criticality}
           onChange={(value) => onInputChange('criticality', value)}
           options={[
             { id: '0 - None', label: '1 - None' },

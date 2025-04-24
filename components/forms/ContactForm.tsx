@@ -11,7 +11,7 @@ import { ListTable } from '../dashboard/listTable';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { Input } from '@/components/UI/Input/Input';
-import { SelectField } from '@/components/UI/SelectModal/SelectField';
+import { Select } from '@/components/UI/SelectModal/Select';
 
 const formLabels: Record<
   Exclude<MultiSelectionActionsType, 'CONTACT_SUPPORT' | 'REPLACE_HOSE'>,
@@ -118,11 +118,11 @@ export const ContactForm: React.FC<Props> = ({
         ListFooterComponent={
           <View style={styles.inputsContainer}>
             {contactType === 'RFQ' && (
-              <SelectField
+              <Select
                 label={'RFQ type'}
-                value={'Choose'}
+                selectedOption={'Choose'}
                 onChange={setRfq}
-                onlyOptions={true}
+                hasAlternativeOption={false}
                 options={rfqOptions}
               />
             )}

@@ -2,6 +2,7 @@ import { RadioButton } from '@/components/detailView/common/RadioButton';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI/Button/Button';
 import { Input } from '@/components/UI/Input/Input';
+import { Option } from '@/components/UI/SelectModal/Select';
 import { colors } from '@/lib/tokens/colors';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -13,92 +14,33 @@ import {
   View,
 } from 'react-native';
 
-interface PredefinedSelectProps {
-  options: { id: string; label: string }[];
-  onSelect: (value: string) => void;
-  selected: string;
-  onClose: () => void;
+interface Props {
   title: string;
-  onlyOptions?: boolean;
+  options: Option[];
+  onSelect: (option: Option) => void;
+  selected: Option | null;
+  onClose: () => void;
+  hasAlternativeOption?: boolean;
 }
 
-export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
+export const RadioSelect: React.FC<Props> = ({
   options,
   onSelect,
   selected,
   onClose,
   title,
-  onlyOptions = false,
+  hasAlternativeOption = true,
 }) => {
-  const [selectedValue, setSelectedValue] = useState(selected);
-  const [initialValue, setInitialValue] = useState(selected);
-  const [manualInput, setManualInput] = useState('');
+  const [isAlternativeOption, setIsAlternativeOption] = useState(
+    selected?.id === 'alternativeOption',
+  );
+  const [manualInput, setManualInput] = useState(
+    selected?.id ? selected.value : '',
+  );
   const [searchText, setSearchText] = useState('');
   const [error, setError] = useState('');
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
-
-  useEffect(() => {
-    setInitialValue(selected);
-    setSelectedValue(selected);
-    if (
-      !options.some((option) => option.id === selected) &&
-      selected !== 'N/A' &&
-      selected !== ''
-    ) {
-      setManualInput(selected);
-      setSelectedValue('N/A');
-    } else {
-      setManualInput('');
-    }
-  }, [selected, options]);
-
-  const handleSave = () => {
-    if (
-      selectedValue === 'N/A' &&
-      (!manualInput || manualInput.trim() === '')
-    ) {
-      setError('Please enter a value');
-      return;
-    } else if (selectedValue === 'N/A') {
-      setError('');
-      onSelect(manualInput);
-    } else {
-      setError('');
-      onSelect(selectedValue);
-    }
-    onClose();
-  };
-
-  const handleCancel = () => {
-    setSelectedValue(initialValue);
-    setManualInput('');
-    onSelect(initialValue);
-    onClose();
-  };
-
-  const handleOptionPress = (optionId: string) => {
-    setSelectedValue(optionId);
-    setManualInput('');
-    onSelect(optionId);
-    onClose();
-  };
-
-  const handleNAPress = () => {
-    setSelectedValue('N/A');
-    setTimeout(() => {
-      textInputRef.current?.focus();
-      scrollViewRef.current?.scrollToEnd({ animated: true });
-    }, 100);
-  };
-
-  const handleTextChange = (text: string) => {
-    setManualInput(text);
-  };
-
-  const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchText.toLowerCase()),
-  );
 
   return (
     <View style={styles.container}>
@@ -111,7 +53,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
             text='Text, context-sensitive, for help or instructions/advice, related to what to chose in each specific list.'
           />
         </View>
-        {!onlyOptions && (
+        {hasAlternativeOption && (
           <Input
             value={searchText}
             onChangeText={setSearchText}
@@ -120,53 +62,53 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
           />
         )}
       </View>
-      <ScrollView ref={scrollViewRef} style={styles.optionsContainer}>
-        {filteredOptions
-          .sort((a, b) => a.label.localeCompare(b.label))
+      <ScrollView
+        ref={scrollViewRef}
+        contentContainerStyle={styles.optionsContainer}
+      >
+        {options
+          .filter((opt) =>
+            opt.value.toLowerCase().includes(searchText.toLowerCase()),
+          )
+          .sort((a, b) => a.value.localeCompare(b.value))
           .map((option) => (
-            <Pressable
-              key={option.id}
-              style={[
-                styles.option,
-                selectedValue === option.id && styles.selectedOption,
-              ]}
-              onPress={() => handleOptionPress(option.id)}
-            >
-              <RadioButton
-                isSelected={selectedValue === option.id}
-                onChange={() => handleOptionPress(option.id)}
-                id={''}
-                label={option.label}
-                menu
-              />
-            </Pressable>
-          ))}
-        {!onlyOptions && (
-          <Pressable
-            key={'N/A'}
-            style={[
-              styles.option,
-              selectedValue === 'N/A' && styles.selectedOption,
-            ]}
-            onPress={() => handleNAPress()}
-          >
             <RadioButton
-              isSelected={selectedValue === 'N/A'}
-              onChange={() => handleNAPress()}
-              id={'na'}
-              label={'N/A'}
+              key={option.id}
+              isSelected={selected?.id === option.id && !isAlternativeOption}
+              onChange={() => {
+                setError('');
+                onSelect(option);
+              }}
+              id={option.id}
+              label={option.value}
               menu
             />
-          </Pressable>
+          ))}
+        {hasAlternativeOption && (
+          <RadioButton
+            isSelected={isAlternativeOption}
+            onChange={() => {
+              scrollViewRef.current?.scrollToEnd({ animated: true });
+              setError('');
+              setIsAlternativeOption(true);
+              setManualInput('');
+            }}
+            id={'alternativeOption'}
+            label={'N/A'}
+            menu
+          />
         )}
-        {selectedValue === 'N/A' && !onlyOptions && (
+        {isAlternativeOption && hasAlternativeOption && (
           <KeyboardAvoidingView>
             <Input
               type='textArea'
               label='Comment:'
               placeholder='Enter manual option'
               value={manualInput}
-              onChangeText={handleTextChange}
+              onChangeText={(text) => {
+                setError('');
+                setManualInput(text);
+              }}
               errorMessage={error}
               validateOnSave={true}
               ref={textInputRef}
@@ -175,10 +117,18 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
         )}
       </ScrollView>
       <View style={styles.buttonsContainer}>
-        {selectedValue === 'N/A' && (
+        {isAlternativeOption && (
           <ButtonTHS
             title='Save & close'
-            onPress={handleSave}
+            onPress={() => {
+              scrollViewRef.current?.scrollToEnd({ animated: true });
+              if (!manualInput.trim() && isAlternativeOption) {
+                setError('Please enter a value');
+                textInputRef.current?.focus();
+                return;
+              }
+              onSelect({ id: 'alternativeOption', value: manualInput });
+            }}
             variant='secondary'
             size='sm'
             style={styles.button}
@@ -186,7 +136,7 @@ export const PredefinedSelect: React.FC<PredefinedSelectProps> = ({
         )}
         <ButtonTHS
           title='Cancel'
-          onPress={handleCancel}
+          onPress={onClose}
           variant='tertiary'
           size='sm'
           style={styles.button}
@@ -213,7 +163,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '100%',
   },
-  optionsContainer: {},
+  optionsContainer: {
+    gap: 1,
+  },
   selectedOption: {
     borderRadius: 10,
     borderColor: colors.primary,

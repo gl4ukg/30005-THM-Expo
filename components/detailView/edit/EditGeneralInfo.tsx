@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Input } from '@/components/UI/Input/Input';
-import { SelectField } from '@/components/UI/SelectModal/SelectField';
+import { Select } from '@/components/UI/SelectModal/Select';
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { GHD } from '@/lib/types/hose';
@@ -80,9 +80,9 @@ export const EditGeneralInfo: React.FC<
       <TooltipWrapper
         tooltipData={{ title: 'Location', message: 'This is the location' }}
       >
-        <SelectField
+        <Select
           label='S1 Plant, Vessel, Unit:'
-          value={info.s1PlantVesselUnit}
+          selectedOption={info.s1PlantVesselUnit}
           onChange={(value) => onInputChange('s1PlantVesselUnit', value)}
           options={[]}
         />
@@ -93,9 +93,9 @@ export const EditGeneralInfo: React.FC<
           message: 'This is the s2 equipment',
         }}
       >
-        <SelectField
+        <Select
           label='S2 Equipment:'
-          value={info.S2Equipment}
+          selectedOption={info.S2Equipment}
           onChange={(value) => onInputChange('S2Equipment', value)}
           options={[]}
         />

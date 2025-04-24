@@ -1,12 +1,13 @@
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
-import { condition } from '@/components/detailView/data/lists';
+import { condition, replaceReasons } from '@/components/detailView/data/lists';
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { Input } from '@/components/UI/Input/Input';
-import { SelectField } from '@/components/UI/SelectModal/SelectField';
+import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
+import { Option, Select } from '@/components/UI/SelectModal/Select';
 import { colors } from '@/lib/tokens/colors';
 import { Link } from 'expo-router';
 import { useRef, useState } from 'react';
@@ -37,7 +38,9 @@ const Ui = () => {
   const [phone, setPhone] = useState('');
 
   const [error, setError] = useState<undefined | string>(undefined);
-  const [selectedChoiceId, setSelectedChoiceId] = useState<string>('');
+  const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
 
   const passInputRef = useRef<TextInput>(null);
 
@@ -639,53 +642,43 @@ const Ui = () => {
                 <Icon name='ChevronRight' size='md' color={colors.black} />
               )}
             </Pressable>
-            <View style={{ display: selectExpanded ? 'flex' : 'none' }}>
-              <SelectField
-                label='Condition'
-                value={''}
-                onChange={(value) => {
-                  Alert.alert('You answer is:', value);
-                }}
-                required={true}
-                options={condition.map((c) => ({ id: c, label: c }))}
-              />
-            </View>
-            <Pressable
-              style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
-              onPress={() => setdatePickerExpanded(!datePickerExpanded)}
+            <View
+              style={{
+                display: selectExpanded ? 'flex' : 'none',
+                paddingBottom: 30,
+                gap: 30,
+              }}
             >
-              <Typography
-                text='Datepicker'
-                name='sectionHeaderCapslock'
-                style={{ color: colors.black }}
-              />
-              {datePickerExpanded ? (
-                <Icon name='ChevronDown' size='md' color={colors.black} />
-              ) : (
-                <Icon name='ChevronRight' size='md' color={colors.black} />
-              )}
-            </Pressable>
-            <View style={{ display: datePickerExpanded ? 'flex' : 'none' }}>
-              <Typography
-                name={'fieldLabel'}
-                style={{ color: colors.black }}
-                text={`Date: ${date && date.toLocaleDateString()}`}
-              />
-              <DateInput
-                label={'What Day is it?'}
-                value={new Date()}
-                onChange={setDate}
-              />
-            </View>
-            <View style={{ display: selectExpanded ? 'flex' : 'none' }}>
-              <SelectField
+              <Select
                 label='Condition'
-                value={''}
-                onChange={() => {
-                  return;
+                selectedOption={selectedOption}
+                onChange={(opt) => {
+                  setSelectedOption(opt);
+                  Alert.alert('You answer is:', opt.value);
+                }}
+                required={false}
+                options={condition.map((c) => ({ id: c, value: c }))}
+              />
+              <Select
+                label='Condition'
+                selectedOption={selectedOption}
+                onChange={(opt) => {
+                  setSelectedOption(opt);
+                  Alert.alert('You answer is:', opt.value);
                 }}
                 required={true}
-                options={condition.map((c) => ({ id: c, label: c }))}
+                options={condition.map((c) => ({ id: c, value: c }))}
+                hasAlternativeOption={true}
+              />
+              <MultiSelect
+                label='Condition'
+                options={replaceReasons.map((c) => ({
+                  id: c.toLocaleUpperCase().split(' ').join('_'),
+                  value: c,
+                }))}
+                selectedOptions={selectedOptions}
+                onSave={setSelectedOptions}
+                required={true}
               />
             </View>
             <Pressable
