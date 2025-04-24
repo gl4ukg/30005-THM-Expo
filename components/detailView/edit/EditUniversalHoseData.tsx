@@ -47,15 +47,6 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
     setLocalInfo(info);
   }, [info]);
 
-  const fieldMappings = {
-    materialQuality: 'materialQuality2',
-    typeFitting: 'typeFitting2',
-    innerDiameter: 'innerDiameter2',
-    gender: 'gender2',
-    angle: 'angle2',
-    commentEnd: 'commentEnd2',
-  };
-
   const syncEndFields = () => {
     const updatedInfo = { ...localInfo };
     couplingsFields.every((key) => {

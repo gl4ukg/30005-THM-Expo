@@ -11,14 +11,16 @@ interface RFIDInputProps {
   label: string;
   onRFIDScanned: (rfid: string | null) => void;
   initialValue?: string;
+  disableScan?: boolean;
 }
 
 export const RFIDInput: React.FC<RFIDInputProps> = ({
   label,
   onRFIDScanned,
-  initialValue = null,
+  initialValue,
+  disableScan = false,
 }) => {
-  const [rfid, setRfid] = useState<string | null>(initialValue);
+  const [rfid, setRfid] = useState<string | null>(initialValue ?? null);
   const [modalVisible, setModalVisible] = useState(false);
   const [isNfcSupported, setIsNfcSupported] = useState(false);
   const [scanning, setScanning] = useState(false);
@@ -109,12 +111,11 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
   }, [checkNfc]);
 
   useEffect(() => {
-    if (initialValue) {
-      onRFIDScanned(initialValue);
-    }
-  }, [initialValue, onRFIDScanned]);
+    setRfid(initialValue ?? null);
+  }, [initialValue]);
 
   const handlePress = () => {
+    if (disableScan) return;
     handleRFIDScan();
   };
 
@@ -133,17 +134,25 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
     <View>
       <Typography name={'navigation'} style={styles.label} text={label} />
       <Pressable
-        style={styles.inputContainer}
-        onPress={isNfcSupported ? handlePress : undefined}
-        disabled={!isNfcSupported}
+        style={({ pressed }) => [
+          styles.inputContainer,
+          disableScan && styles.disabledInputContainer,
+          pressed && !disableScan && styles.pressedInputContainer,
+        ]}
+        onPress={handlePress}
+        disabled={!isNfcSupported || disableScan}
       >
         <Typography
           name='navigation'
-          text={rfid ? rfid : 'Scan...'}
-          style={styles.valueStyle}
+          text={rfid ?? 'Scan...'}
+          style={[styles.valueStyle, disableScan && styles.disabledValueStyle]}
         />
         <View style={styles.iconContainer}>
-          <Icon name='RFID' size='md' color={colors.extended666} />
+          <Icon
+            name='RFID'
+            size='md'
+            color={disableScan ? colors.secondary95 : colors.extended666}
+          />
         </View>
       </Pressable>
       {Platform.OS === 'android' && (
@@ -176,4 +185,13 @@ const styles = StyleSheet.create({
   },
   iconContainer: { flexDirection: 'row', alignItems: 'center' },
   valueStyle: { color: colors.extended333 },
+  disabledInputContainer: {
+    backgroundColor: colors.secondary95,
+  },
+  pressedInputContainer: {
+    backgroundColor: colors.secondary95,
+  },
+  disabledValueStyle: {
+    color: colors.extended666,
+  },
 });

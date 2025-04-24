@@ -1,4 +1,4 @@
-import { getSkanUrl } from '@/app/scan';
+import { getScanUrl } from '@/app/scan';
 import { TessLines } from '@/components/decorative/TessLines';
 import { Icon } from '@/components/Icon/Icon';
 import { OpenMenu } from '@/components/UI/BottomNavigation/openMenu';
@@ -38,7 +38,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Register hose / equipment',
-                to: getSkanUrl('REGISTER_HOSE'),
+                to: getScanUrl('REGISTER_HOSE'),
                 icon: () => (
                   <Icon name='RegisterHoses' color={colors.primary} />
                 ),
@@ -50,7 +50,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Order hose',
-                to: getSkanUrl('RFQ'),
+                to: getScanUrl('RFQ'),
                 icon: () => <Icon name='Cart' color={colors.primary} />,
               },
               {
@@ -60,7 +60,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Scrap hose',
-                to: getSkanUrl('SCRAP'),
+                to: getScanUrl('SCRAP'),
                 icon: () => <Icon name='Trash' color={colors.primary} />,
               },
               {
@@ -85,7 +85,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
           <Link
             asChild
             href='/(app)/user'
-            style={[styles.button, { display: 'none' }]} // TODO: it is placeholder for future feature
+            style={[styles.button, { display: 'none' }]}
           >
             <Pressable
               style={({ pressed }) => [pressed && {}]}
