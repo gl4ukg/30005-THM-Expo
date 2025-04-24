@@ -34,7 +34,7 @@ const RegisterHose = () => {
 
   const [localState, setLocalState] = useState(initialHoseData);
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | undefined) => {
     setLocalState((prevState) => ({
       ...prevState,
       [field]: value,

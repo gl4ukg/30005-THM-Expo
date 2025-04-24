@@ -10,7 +10,6 @@ import { UHD } from '@/lib/types/hose';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Bookmark } from '../common/Bookmark';
-import { CouplingSectionProps } from '@/components/detailView/view/UniversalHoseData';
 
 export const couplingsFields = [
   'materialQuality',
@@ -37,6 +36,14 @@ export const isFieldACouplingFieldEnd = (
   return !!couplingsFieldsEnd.find((f) => f === field);
 };
 
+const calculateDefaultDescription = (data: Partial<UHD>): string => {
+  const { hoseStandard, innerDiameter, totalLength } = data;
+  if (hoseStandard && innerDiameter && totalLength) {
+    return `${hoseStandard}-${innerDiameter} x ${totalLength} mm`;
+  }
+  return '';
+};
+
 export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
   info,
   onInputChange,
@@ -45,17 +52,30 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
   const [sameAsEnd1, setSameAsEnd1] = useState(false);
 
   useEffect(() => {
-    setLocalInfo(info);
-  }, [info]);
+    const initialDefaultDesc = calculateDefaultDescription(info);
+    const initialDescription = info.description || initialDefaultDesc;
+    const newLocalInfo = { ...info, description: initialDescription };
+    setLocalInfo(newLocalInfo);
 
-  const fieldMappings = {
-    materialQuality: 'materialQuality2',
-    typeFitting: 'typeFitting2',
-    innerDiameter: 'innerDiameter2',
-    gender: 'gender2',
-    angle: 'angle2',
-    commentEnd: 'commentEnd2',
-  };
+    if (initialDescription !== info.description && initialDescription) {
+      onInputChange('description', initialDescription);
+    }
+
+    let endsMatch = couplingsFields.length > 0;
+    if (endsMatch) {
+      for (const key of couplingsFields) {
+        const key2 = `${key}2` as keyof UHD;
+        if (info[key] !== info[key2]) {
+          endsMatch = false;
+          break;
+        }
+      }
+    }
+    const end1HasValues = couplingsFields.some(
+      (key) => info[key] != null && info[key] !== '',
+    );
+    setSameAsEnd1(endsMatch && end1HasValues);
+  }, [info]);
 
   const syncEndFields = () => {
     const updatedInfo = { ...localInfo };
@@ -72,20 +92,49 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
   };
 
   const handleFieldChange = (field: keyof UHD, value: any) => {
-    const updatedInfo = { ...localInfo, [field]: value };
+    const oldInfo = { ...localInfo };
+    let nextInfo = { ...oldInfo, [field]: value };
+
+    const newDefaultDescription = calculateDefaultDescription(nextInfo);
+
+    let descriptionToSet = nextInfo.description;
+
+    if (field === 'description') {
+      descriptionToSet = value;
+    } else if (
+      ['hoseStandard', 'innerDiameter', 'totalLength'].includes(field)
+    ) {
+      if (newDefaultDescription) {
+        descriptionToSet = newDefaultDescription;
+      }
+    }
+
+    nextInfo.description = descriptionToSet;
 
     if (sameAsEnd1 && isFieldACouplingField(field)) {
       const end2Field = `${field}2` as const;
-      updatedInfo[end2Field] = value;
+      nextInfo[end2Field] = value;
+    }
+
+    setLocalInfo(nextInfo);
+
+    onInputChange(field, value);
+
+    if (nextInfo.description !== oldInfo.description) {
+      onInputChange('description', nextInfo.description);
+    }
+
+    if (sameAsEnd1 && isFieldACouplingField(field)) {
+      const end2Field = `${field}2` as const;
       onInputChange(end2Field, value);
     }
 
     if (sameAsEnd1 && isFieldACouplingFieldEnd(field)) {
-      setSameAsEnd1(false);
+      const baseField = field.substring(0, field.length - 1) as CouplingsFields;
+      if (value !== nextInfo[baseField]) {
+        setSameAsEnd1(false);
+      }
     }
-
-    setLocalInfo(updatedInfo);
-    onInputChange(field, value);
   };
 
   return (
@@ -101,6 +150,19 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
           label='Hose Standard'
           value={localInfo.hoseStandard || ''}
           onChange={(value) => handleFieldChange('hoseStandard', value)}
+          options={[]}
+        />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{
+          title: 'Inner Diameter',
+          message: 'This is the inner diameter',
+        }}
+      >
+        <SelectField
+          label='Inner Diameter'
+          value={localInfo.innerDiameter || ''}
+          onChange={(value) => handleFieldChange('innerDiameter', value)}
           options={[]}
         />
       </TooltipWrapper>
@@ -121,6 +183,19 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
             unit={'mm'}
           />
         </View>
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{
+          title: 'description',
+          message: 'This is the description',
+        }}
+      >
+        <Input
+          label='Description:'
+          value={localInfo.description || ''}
+          errorMessage='This is the error message'
+          onChangeText={(text) => handleFieldChange('description', text)}
+        />
       </TooltipWrapper>
 
       <TooltipWrapper

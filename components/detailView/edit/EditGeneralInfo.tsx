@@ -52,19 +52,6 @@ export const EditGeneralInfo: React.FC<
       )}
       <TooltipWrapper
         tooltipData={{
-          title: 'description',
-          message: 'This is the description',
-        }}
-      >
-        <Input
-          label='Description:'
-          value={info.description}
-          errorMessage='This is the error message'
-          onChangeText={(text) => onInputChange('description', text)}
-        />
-      </TooltipWrapper>
-      <TooltipWrapper
-        tooltipData={{
           title: 'Customer ID',
           message: 'This is the customer ID',
         }}
