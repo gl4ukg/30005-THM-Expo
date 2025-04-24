@@ -1,15 +1,15 @@
+import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { BarToPsiInput } from '@/components/detailView/edit/BarToPsiInput';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { UnitInput } from '@/components/detailView/edit/UnitInput';
 import { Typography } from '@/components/Typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Input } from '@/components/UI/Input/Input';
+import { Select } from '@/components/UI/SelectModal/Select';
 import { EditProps } from '@/lib/types/edit';
 import { UHD } from '@/lib/types/hose';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Bookmark } from '../common/Bookmark';
-import { Select } from '@/components/UI/SelectModal/Select';
 
 export const couplingsFields = [
   'materialQuality',

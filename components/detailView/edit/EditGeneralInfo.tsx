@@ -1,14 +1,13 @@
 import { DateInput } from '@/components/UI/Input/DateInput';
-import { RFIDInput } from '@/components/UI/Input/RFID';
-import { EditProps } from '@/lib/types/edit';
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-
 import { Input } from '@/components/UI/Input/Input';
+import { RFIDInput } from '@/components/UI/Input/RFID';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
+import { EditProps } from '@/lib/types/edit';
 import { GHD } from '@/lib/types/hose';
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 export const EditGeneralInfo: React.FC<
   EditProps<GHD> & { isRegisterView?: boolean }
