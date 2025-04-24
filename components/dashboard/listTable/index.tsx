@@ -93,7 +93,7 @@ export const ListTable: FC<Props> = ({
             isSelected={selectedIds.includes(item.id)}
             onSelectedChange={onSelectionChange}
             canBeSelected={canSelect}
-            onRowPress={() => (canSelect ? handleRowPress(item) : {})}
+            onRowPress={() => handleRowPress(item)}
           />
         )}
       />

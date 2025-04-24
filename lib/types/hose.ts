@@ -83,6 +83,7 @@ export type UHD = Pick<
   | 'hoseStandard'
   | 'innerDiameter'
   | 'totalLength'
+  | 'description'
   | 'wpBar'
   | 'wpPsi'
   | 'materialQuality'
