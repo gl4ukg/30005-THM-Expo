@@ -107,10 +107,10 @@ export const Input = forwardRef<TextInput, Props>(
 
     // for use when validateOnSave is true, to display error message without relying on blur
     useEffect(() => {
-      if (validateOnSave && errorMessage) {
+      if (errorMessage) {
         setDisplayError(true);
       }
-    }, [validateOnSave, errorMessage]);
+    }, [errorMessage]);
 
     useEffect(() => {
       if (ref && 'current' in ref && ref.current) {

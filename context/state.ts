@@ -48,7 +48,8 @@ export type MultiSelectionActionsType =
   | 'RFQ'
   | 'SCRAP'
   | 'CONTACT'
-  | 'CONTACT_SUPPORT';
+  | 'CONTACT_SUPPORT'
+  | 'REPLACE_HOSE';
 
 type MultiHosesSelection<T extends MultiSelectionActionsType> = {
   type: T;
@@ -67,6 +68,7 @@ type ScrapMultiHosesSelection = MultiHosesSelection<'SCRAP'>;
 type ContactMultiHosesSelection = MultiHosesSelection<'CONTACT'>;
 type ContactSupportMultiHosesSelection = MultiHosesSelection<'CONTACT_SUPPORT'>;
 type RFQMultiHosesSelection = MultiHosesSelection<'RFQ'>;
+type ReplaceMultiHosesSelection = MultiHosesSelection<'REPLACE_HOSE'>;
 export type SingleSelection =
   | ScrapSingleHoseSelection
   | ContactSingleHoseSelection
@@ -77,7 +79,8 @@ export type MultiSelection =
   | ScrapMultiHosesSelection
   | ContactMultiHosesSelection
   | RFQMultiHosesSelection
-  | ContactSupportMultiHosesSelection;
+  | ContactSupportMultiHosesSelection
+  | ReplaceMultiHosesSelection;
 export type HoseSelection = SingleSelection | MultiSelection;
 
 export const isMultiSelection = (

@@ -143,3 +143,10 @@ export const hoseType = [
   '5254-04 - HYDRAULIC HOSE TESS254 EN853/2SN 1/4”',
   'Not set',
 ];
+
+export const replaceReasons = [
+  'Leakage',
+  'Abrasion / wear',
+  'Burst hose',
+  'Connection failure',
+];

@@ -1,10 +1,10 @@
 import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { Typography } from '@/components/Typography';
+import { Select } from '@/components/UI/SelectModal/Select';
 import { EditProps } from '@/lib/types/edit';
 import { TPN } from '@/lib/types/hose';
 import { StyleSheet, View } from 'react-native';
-import { SelectField } from '../common/SelectField';
 
 export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
   info,
@@ -13,41 +13,41 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
   <View>
     <Bookmark title='Tess Part Numbers' />
     <TooltipWrapper tooltipData={{ title: 'Hose Type', message: '' }}>
-      <SelectField
+      <Select
         label='Hose Type'
-        value={info.hoseType}
+        selectedOption={info.hoseType}
         onChange={(value) => onInputChange('hoseType', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Ferrule 1', message: '' }}>
-      <SelectField
+      <Select
         label='Ferrule 1'
-        value={info.ferrule1}
+        selectedOption={null}
         onChange={(value) => onInputChange('ferrule1', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Ferrule 2', message: '' }}>
-      <SelectField
+      <Select
         label='Ferrule 2'
-        value={info.ferrule2}
+        selectedOption={info.ferrule2}
         onChange={(value) => onInputChange('ferrule2', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Insert 1', message: '' }}>
-      <SelectField
+      <Select
         label='Insert 1'
-        value={info.insert1}
+        selectedOption={info.insert1}
         onChange={(value) => onInputChange('insert1', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Insert 2', message: '' }}>
-      <SelectField
+      <Select
         label='Insert 2'
-        value={info.insert2}
+        selectedOption={info.insert2}
         onChange={(value) => onInputChange('insert2', value)}
         options={[]}
       />
@@ -59,49 +59,49 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
       />
     </View>
     <TooltipWrapper tooltipData={{ title: 'Add A End 1', message: '' }}>
-      <SelectField
+      <Select
         label='Add A End 1'
-        value={info.addAEnd1}
+        selectedOption={info.addAEnd1}
         onChange={(value) => onInputChange('addAEnd1', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Add B End 1', message: '' }}>
-      <SelectField
+      <Select
         label='Add B End 1'
-        value={info.addBEnd1}
+        selectedOption={info.addBEnd1}
         onChange={(value) => onInputChange('addBEnd1', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Add C End 1', message: '' }}>
-      <SelectField
+      <Select
         label='Add C End 1'
-        value={info.addCEnd1}
+        selectedOption={info.addCEnd1}
         onChange={(value) => onInputChange('addCEnd1', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Add A End 2', message: '' }}>
-      <SelectField
+      <Select
         label='Add A End 2'
-        value={info.addAEnd2}
+        selectedOption={info.addAEnd2}
         onChange={(value) => onInputChange('addAEnd2', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Add B End 2', message: '' }}>
-      <SelectField
+      <Select
         label='Add B End 2'
-        value={info.addBEnd2}
+        selectedOption={info.addBEnd2}
         onChange={(value) => onInputChange('addBEnd2', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Add C End 2', message: '' }}>
-      <SelectField
+      <Select
         label='Add C End 2'
-        value={info.addCEnd2}
+        selectedOption={info.addCEnd2}
         onChange={(value) => onInputChange('addCEnd2', value)}
         options={[]}
       />
@@ -110,33 +110,33 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
       <Typography name='navigationBold' text='Safety & Protection' />
     </View>
     <TooltipWrapper tooltipData={{ title: 'Spiral Guard', message: '' }}>
-      <SelectField
+      <Select
         label='Spiral Guard'
-        value={info.spiralGuard}
+        selectedOption={info.spiralGuard}
         onChange={(value) => onInputChange('spiralGuard', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Hookie', message: '' }}>
-      <SelectField
+      <Select
         label='Hookie'
-        value={info.hookie}
+        selectedOption={info.hookie}
         onChange={(value) => onInputChange('hookie', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Whipcheck', message: '' }}>
-      <SelectField
+      <Select
         label='Whipcheck'
-        value={info.whipcheck}
+        selectedOption={info.whipcheck}
         onChange={(value) => onInputChange('whipcheck', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Hose Protection', message: '' }}>
-      <SelectField
+      <Select
         label='Hose Protection'
-        value={info.hoseProtection}
+        selectedOption={info.hoseProtection}
         onChange={(value) => onInputChange('hoseProtection', value)}
         options={[]}
       />
@@ -144,9 +144,9 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
     <TooltipWrapper
       tooltipData={{ title: 'Break Away/Weak Link', message: '' }}
     >
-      <SelectField
+      <Select
         label='Break Away/Weak Link'
-        value={info.breakAwayWeakLink}
+        selectedOption={info.breakAwayWeakLink}
         onChange={(value) => onInputChange('breakAwayWeakLink', value)}
         options={[]}
       />

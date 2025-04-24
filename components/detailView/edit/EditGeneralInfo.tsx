@@ -1,13 +1,13 @@
-import { EditProps } from '@/lib/types/edit';
-import { TooltipWrapper } from './TooltipWrapper';
 import { DateInput } from '@/components/UI/Input/DateInput';
+import { Input } from '@/components/UI/Input/Input';
 import { RFIDInput } from '@/components/UI/Input/RFID';
+import { Select } from '@/components/UI/SelectModal/Select';
+import { RadioGroup } from '@/components/detailView/common/RadioGroup';
+import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
+import { EditProps } from '@/lib/types/edit';
+import { GHD } from '@/lib/types/hose';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Input } from '../../UI/Input/Input';
-import { RadioGroup } from '../common/RadioGroup';
-import { SelectField } from '../common/SelectField';
-import { GHD } from '@/lib/types/hose';
 
 export const EditGeneralInfo: React.FC<
   EditProps<GHD> & { isRegisterView?: boolean }
@@ -66,10 +66,10 @@ export const EditGeneralInfo: React.FC<
       <TooltipWrapper
         tooltipData={{ title: 'Location', message: 'This is the location' }}
       >
-        <SelectField
+        <Select
           label='S1 Plant, Vessel, Unit:'
-          value={info.s1PlantVesselUnit}
-          onChange={(value) => onInputChange('s1PlantVesselUnit', value)}
+          selectedOption={null}
+          onChange={(option) => onInputChange('s1PlantVesselUnit', option)}
           options={[]}
         />
       </TooltipWrapper>
@@ -79,9 +79,9 @@ export const EditGeneralInfo: React.FC<
           message: 'This is the s2 equipment',
         }}
       >
-        <SelectField
+        <Select
           label='S2 Equipment:'
-          value={info.S2Equipment}
+          selectedOption={info.S2Equipment}
           onChange={(value) => onInputChange('S2Equipment', value)}
           options={[]}
         />

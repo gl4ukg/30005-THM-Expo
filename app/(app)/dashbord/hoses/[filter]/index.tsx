@@ -73,7 +73,6 @@ const FilteredHosesList: React.FC<Props> = (props) => {
   const handleSelectionChange = (id: string) => {
     const selection = state.data.selection;
     if (isMultiSelection(selection)) {
-      console.log('handleSelectionChange', id);
       dispatch({
         type: 'TOGGLE_HOSE_MULTI_SELECTION',
         payload: id,

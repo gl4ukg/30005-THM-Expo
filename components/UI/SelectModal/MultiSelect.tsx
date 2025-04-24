@@ -1,51 +1,53 @@
 import { colors } from '@/lib/tokens/colors';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Modal, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
 import { Icon } from '../../Icon/Icon';
 import { Typography } from '../../Typography';
-import { PredefinedSelect } from '../edit/PredefinedSelect';
+import { CheckboxSelect } from '@/components/UI/SelectModal/CheckboxSelect';
 
-type Option = {
-  id: string;
+interface Props {
   label: string;
-};
-
-interface SelectFieldProps {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  options: Option[];
+  selectedOptions: string[];
+  onSave: (options: string[]) => void;
+  options: string[];
   required?: boolean;
-  onlyOptions?: boolean;
 }
 
-export const SelectField: React.FC<SelectFieldProps> = ({
+export const MultiSelect: React.FC<Props> = ({
   label,
-  value,
-  onChange,
+  selectedOptions,
+  onSave,
   options,
   required,
-  onlyOptions,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(value);
+  const [selected, setSelected] = useState(selectedOptions);
 
-  useEffect(() => {
-    setSelectedValue(value);
-  }, [value]);
-
-  const handleSelect = (newValue: string) => {
-    setSelectedValue(newValue);
-    onChange(newValue);
-    setModalOpen(false);
+  const handleSelect = (option: string) => {
+    setSelected((prev) => {
+      if (prev.includes(option)) {
+        return prev.filter((o) => o !== option);
+      } else {
+        return [...prev, option];
+      }
+    });
   };
 
   const handleClose = () => {
+    onSave(selectedOptions);
     setModalOpen(false);
   };
 
-  const isRequiredValueMissing = required && !selectedValue;
+  const handleSave = (alternativeOption?: string) => {
+    const newSelected = alternativeOption
+      ? selected.map((o) => (!options.includes(o) ? alternativeOption : o))
+      : selected;
+    setSelected(newSelected);
+    onSave(newSelected);
+    setModalOpen(false);
+  };
 
+  const isRequiredValueMissing = required && !selectedOptions?.length;
   return (
     <View style={styles.container}>
       <View>
@@ -68,8 +70,16 @@ export const SelectField: React.FC<SelectFieldProps> = ({
         >
           <Typography
             name='navigation'
-            style={[styles.value, isRequiredValueMissing && styles.valueError]}
-            text={selectedValue || 'Select...'}
+            style={[
+              styles.value,
+              !selectedOptions?.length && styles.valueNotSelected,
+              isRequiredValueMissing && styles.valueError,
+            ]}
+            text={
+              selectedOptions?.length
+                ? selectedOptions?.map((option) => option).join('\n')
+                : 'Select...'
+            }
           />
 
           <View style={styles.iconContainer}>
@@ -96,13 +106,13 @@ export const SelectField: React.FC<SelectFieldProps> = ({
         onRequestClose={handleClose}
       >
         <SafeAreaView style={styles.fullScreenModal}>
-          <PredefinedSelect
-            options={options}
-            onSelect={handleSelect}
-            selected={selectedValue}
-            onClose={handleClose}
+          <CheckboxSelect
             title={label}
-            onlyOptions={onlyOptions}
+            options={options}
+            onSave={handleSave}
+            onSelect={handleSelect}
+            onClose={handleClose}
+            selected={selected}
           />
         </SafeAreaView>
       </Modal>
@@ -167,6 +177,7 @@ const styles = StyleSheet.create({
     paddingBottom: 22,
   },
   value: { color: colors.extended333 },
+  valueNotSelected: { color: colors.extended666 },
   valueError: { color: colors.errorText },
   valueDisabled: { color: colors.extended666 },
 });

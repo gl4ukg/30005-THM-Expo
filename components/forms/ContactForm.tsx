@@ -8,13 +8,13 @@ import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { ListTable } from '../dashboard/listTable';
-import { SelectField } from '../detailView/common/SelectField';
-import { Typography } from '../Typography';
-import { ButtonTHS } from '../UI';
-import { Input } from '../UI/Input/Input';
+import { Typography } from '@/components/Typography';
+import { ButtonTHS } from '@/components/UI';
+import { Input } from '@/components/UI/Input/Input';
+import { Select } from '@/components/UI/SelectModal/Select';
 
 const formLabels: Record<
-  Exclude<MultiSelectionActionsType, 'CONTACT_SUPPORT'>,
+  Exclude<MultiSelectionActionsType, 'CONTACT_SUPPORT' | 'REPLACE_HOSE'>,
   { title: string; subtitle: string; confirmButton: string }
 > = {
   RFQ: {
@@ -35,7 +35,10 @@ const formLabels: Record<
 };
 
 interface Props {
-  contactType: Exclude<MultiSelectionActionsType, 'CONTACT_SUPPORT'>;
+  contactType: Exclude<
+    MultiSelectionActionsType,
+    'CONTACT_SUPPORT' | 'REPLACE_HOSE'
+  >;
   hoses: HoseData[];
   allowScanToAdd?: boolean;
   onSave: (arg0: any) => void;
@@ -115,11 +118,11 @@ export const ContactForm: React.FC<Props> = ({
         ListFooterComponent={
           <View style={styles.inputsContainer}>
             {contactType === 'RFQ' && (
-              <SelectField
+              <Select
                 label={'RFQ type'}
-                value={'Choose'}
+                selectedOption={'Choose'}
                 onChange={setRfq}
-                onlyOptions={true}
+                hasAlternativeOption={false}
                 options={rfqOptions}
               />
             )}

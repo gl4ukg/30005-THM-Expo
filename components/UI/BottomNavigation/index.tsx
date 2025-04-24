@@ -55,7 +55,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Replace hose / pressure testing',
-                to: getScanUrl('REGISTER_HOSE'),
+                to: getScanUrl('REPLACE_HOSE'), // TODO: change to replace hose
                 icon: () => <Icon name='Task' color={colors.primary} />,
               },
               {
