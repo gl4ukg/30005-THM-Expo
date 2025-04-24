@@ -76,7 +76,8 @@ export type SingleSelection =
 export type MultiSelection =
   | ScrapMultiHosesSelection
   | ContactMultiHosesSelection
-  | RFQMultiHosesSelection;
+  | RFQMultiHosesSelection
+  | ContactSupportMultiHosesSelection;
 export type HoseSelection = SingleSelection | MultiSelection;
 
 export const isMultiSelection = (
