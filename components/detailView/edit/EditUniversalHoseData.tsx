@@ -52,8 +52,8 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
   const [sameAsEnd1, setSameAsEnd1] = useState(false);
 
   useEffect(() => {
-    const initialDefaultDesc = calculateDefaultDescription(info);
-    const initialDescription = info.description || initialDefaultDesc;
+    const initialDescription =
+      info.description || calculateDefaultDescription(info);
     const newLocalInfo = { ...info, description: initialDescription };
     setLocalInfo(newLocalInfo);
 
@@ -104,9 +104,7 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
     } else if (
       ['hoseStandard', 'innerDiameter', 'totalLength'].includes(field)
     ) {
-      if (newDefaultDescription) {
-        descriptionToSet = newDefaultDescription;
-      }
+      descriptionToSet = calculateDefaultDescription(nextInfo);
     }
 
     nextInfo.description = descriptionToSet;
