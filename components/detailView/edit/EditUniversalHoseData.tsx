@@ -89,7 +89,7 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
       >
         <Select
           label='Hose Standard'
-          selectedOption={localInfo.hoseStandard || ''}
+          selectedOption={localInfo.hoseStandard}
           onChange={(value) => handleFieldChange('hoseStandard', value)}
           options={[]}
         />
