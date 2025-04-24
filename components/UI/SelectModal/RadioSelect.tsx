@@ -2,7 +2,6 @@ import { RadioButton } from '@/components/detailView/common/RadioButton';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI/Button/Button';
 import { Input } from '@/components/UI/Input/Input';
-import { Option } from '@/components/UI/SelectModal/Select';
 import { colors } from '@/lib/tokens/colors';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -16,9 +15,9 @@ import {
 
 interface Props {
   title: string;
-  options: Option[];
-  onSelect: (option: Option) => void;
-  selected: Option | null;
+  options: string[];
+  selected: string | null;
+  onSelect: (option: string) => void;
   onClose: () => void;
   hasAlternativeOption?: boolean;
 }
@@ -32,10 +31,10 @@ export const RadioSelect: React.FC<Props> = ({
   hasAlternativeOption = true,
 }) => {
   const [isAlternativeOption, setIsAlternativeOption] = useState(
-    selected?.id === 'alternativeOption',
+    selected && options.includes(selected) ? false : true,
   );
   const [manualInput, setManualInput] = useState(
-    selected?.id ? selected.value : '',
+    !selected ? '' : !options.includes(selected) ? selected : '',
   );
   const [searchText, setSearchText] = useState('');
   const [error, setError] = useState('');
@@ -67,23 +66,24 @@ export const RadioSelect: React.FC<Props> = ({
         contentContainerStyle={styles.optionsContainer}
       >
         {options
-          .filter((opt) =>
-            opt.value.toLowerCase().includes(searchText.toLowerCase()),
-          )
-          .sort((a, b) => a.value.localeCompare(b.value))
-          .map((option) => (
-            <RadioButton
-              key={option.id}
-              isSelected={selected?.id === option.id && !isAlternativeOption}
-              onChange={() => {
-                setError('');
-                onSelect(option);
-              }}
-              id={option.id}
-              label={option.value}
-              menu
-            />
-          ))}
+          .filter((opt) => opt.toLowerCase().includes(searchText.toLowerCase()))
+          .sort((a, b) => a.localeCompare(b))
+          .map((option) => {
+            const id = option.toLowerCase().split(' ').join('-');
+            return (
+              <RadioButton
+                key={id}
+                isSelected={!isAlternativeOption && selected === option}
+                onChange={() => {
+                  setError('');
+                  onSelect(option);
+                }}
+                id={id}
+                label={option}
+                menu
+              />
+            );
+          })}
         {hasAlternativeOption && (
           <RadioButton
             isSelected={isAlternativeOption}
@@ -127,7 +127,7 @@ export const RadioSelect: React.FC<Props> = ({
                 textInputRef.current?.focus();
                 return;
               }
-              onSelect({ id: 'alternativeOption', value: manualInput });
+              onSelect(manualInput);
             }}
             variant='secondary'
             size='sm'

@@ -5,16 +5,11 @@ import { Icon } from '../../Icon/Icon';
 import { Typography } from '../../Typography';
 import { CheckboxSelect } from '@/components/UI/SelectModal/CheckboxSelect';
 
-export type Option = {
-  id: string | 'alternativeOption';
-  value: string;
-};
-
 interface Props {
   label: string;
-  selectedOptions: Option[];
-  onSave: (options: Option[]) => void;
-  options: Option[];
+  selectedOptions: string[];
+  onSave: (options: string[]) => void;
+  options: string[];
   required?: boolean;
 }
 
@@ -28,10 +23,10 @@ export const MultiSelect: React.FC<Props> = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [selected, setSelected] = useState(selectedOptions);
 
-  const handleSelect = (option: Option) => {
+  const handleSelect = (option: string) => {
     setSelected((prev) => {
-      if (prev?.findIndex((o) => o.id === option.id) > -1) {
-        return prev.filter((o) => o.id !== option.id);
+      if (prev.includes(option)) {
+        return prev.filter((o) => o !== option);
       } else {
         return [...prev, option];
       }
@@ -43,11 +38,9 @@ export const MultiSelect: React.FC<Props> = ({
     setModalOpen(false);
   };
 
-  const handleSave = (alternativeOption?: Option) => {
+  const handleSave = (alternativeOption?: string) => {
     const newSelected = alternativeOption
-      ? selected.map((o) =>
-          o.id === 'alternativeOption' ? alternativeOption : o,
-        )
+      ? selected.map((o) => (!options.includes(o) ? alternativeOption : o))
       : selected;
     setSelected(newSelected);
     onSave(newSelected);
@@ -84,7 +77,7 @@ export const MultiSelect: React.FC<Props> = ({
             ]}
             text={
               selectedOptions?.length
-                ? selectedOptions?.map((option) => option.value).join('\n')
+                ? selectedOptions?.map((option) => option).join('\n')
                 : 'Select...'
             }
           />

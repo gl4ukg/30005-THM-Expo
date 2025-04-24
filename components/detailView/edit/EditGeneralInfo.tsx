@@ -82,8 +82,8 @@ export const EditGeneralInfo: React.FC<
       >
         <Select
           label='S1 Plant, Vessel, Unit:'
-          selectedOption={info.s1PlantVesselUnit}
-          onChange={(value) => onInputChange('s1PlantVesselUnit', value)}
+          selectedOption={null}
+          onChange={(option) => onInputChange('s1PlantVesselUnit', option)}
           options={[]}
         />
       </TooltipWrapper>

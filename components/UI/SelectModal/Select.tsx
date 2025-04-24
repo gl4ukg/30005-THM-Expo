@@ -6,16 +6,16 @@ import { Typography } from '../../Typography';
 import { RadioSelect } from '@/components/UI/SelectModal/RadioSelect';
 import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
 
-export type Option = {
-  id: string | 'alternativeOption';
-  value: string;
-};
+// export type Option = {
+//   id: string | 'alternativeOption';
+//   value: string;
+// };
 
 interface Props {
   label: string;
-  selectedOption: Option | null;
-  onChange: (option: Option) => void;
-  options: Option[];
+  selectedOption: string | null;
+  onChange: (option: string) => void;
+  options: string[];
   isMultiSelect?: boolean;
   required?: boolean;
   hasAlternativeOption?: boolean;
@@ -32,7 +32,7 @@ export const Select: React.FC<Props> = ({
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleSelect = (option: Option) => {
+  const handleSelect = (option: string) => {
     // setSelectedValue(newValue);
     onChange(option);
     setModalOpen(false);
@@ -43,7 +43,6 @@ export const Select: React.FC<Props> = ({
   };
 
   const isRequiredValueMissing = required && !selectedOption;
-  console.log(selectedOption);
   return (
     <View style={styles.container}>
       <View>
@@ -71,7 +70,7 @@ export const Select: React.FC<Props> = ({
               !selectedOption && styles.valueNotSelected,
               isRequiredValueMissing && styles.valueError,
             ]}
-            text={selectedOption?.value || 'Select...'}
+            text={selectedOption?.trim() || 'Select...'}
           />
 
           <View style={styles.iconContainer}>
@@ -99,11 +98,11 @@ export const Select: React.FC<Props> = ({
       >
         <SafeAreaView style={styles.fullScreenModal}>
           <RadioSelect
-            options={options}
-            onSelect={handleSelect}
-            selected={selectedOption || null}
-            onClose={handleClose}
             title={label}
+            options={options}
+            selected={selectedOption || null}
+            onSelect={handleSelect}
+            onClose={handleClose}
             hasAlternativeOption={hasAlternativeOption}
           />
         </SafeAreaView>

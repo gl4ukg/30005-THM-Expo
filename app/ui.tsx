@@ -7,7 +7,7 @@ import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { Input } from '@/components/UI/Input/Input';
 import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
-import { Option, Select } from '@/components/UI/SelectModal/Select';
+import { Select } from '@/components/UI/SelectModal/Select';
 import { colors } from '@/lib/tokens/colors';
 import { Link } from 'expo-router';
 import { useRef, useState } from 'react';
@@ -39,8 +39,8 @@ const Ui = () => {
 
   const [error, setError] = useState<undefined | string>(undefined);
   const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
-  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
-  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   const passInputRef = useRef<TextInput>(null);
 
@@ -566,7 +566,6 @@ const Ui = () => {
                 title={'focus on password'}
                 onPress={() => {
                   if (passInputRef.current) {
-                    // console.log('focus on password');
                     passInputRef.current.isFocused()
                       ? passInputRef.current.blur()
                       : passInputRef.current?.focus();
@@ -654,28 +653,25 @@ const Ui = () => {
                 selectedOption={selectedOption}
                 onChange={(opt) => {
                   setSelectedOption(opt);
-                  Alert.alert('You answer is:', opt.value);
+                  Alert.alert('You answer is:', opt);
                 }}
                 required={false}
-                options={condition.map((c) => ({ id: c, value: c }))}
+                options={condition}
               />
               <Select
                 label='Condition'
                 selectedOption={selectedOption}
                 onChange={(opt) => {
                   setSelectedOption(opt);
-                  Alert.alert('You answer is:', opt.value);
+                  Alert.alert('You answer is:', opt);
                 }}
                 required={true}
-                options={condition.map((c) => ({ id: c, value: c }))}
+                options={condition}
                 hasAlternativeOption={true}
               />
               <MultiSelect
                 label='Condition'
-                options={replaceReasons.map((c) => ({
-                  id: c.toLocaleUpperCase().split(' ').join('_'),
-                  value: c,
-                }))}
+                options={replaceReasons}
                 selectedOptions={selectedOptions}
                 onSave={setSelectedOptions}
                 required={true}

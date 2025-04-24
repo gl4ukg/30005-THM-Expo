@@ -2,7 +2,6 @@ import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI/Button/Button';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Input } from '@/components/UI/Input/Input';
-import { Option } from '@/components/UI/SelectModal/Select';
 import { colors } from '@/lib/tokens/colors';
 import React, { useRef, useState } from 'react';
 import {
@@ -15,11 +14,11 @@ import {
 
 interface Props {
   title: string;
-  options: Option[];
-  selected: Option[];
-  onSelect: (option: Option) => void;
+  options: string[];
+  selected: string[];
+  onSelect: (option: string) => void;
   onClose: () => void;
-  onSave: (alternativeOption?: Option) => void;
+  onSave: (alternativeOption?: string) => void;
   hasAlternativeOption?: boolean;
 }
 
@@ -33,16 +32,12 @@ export const CheckboxSelect: React.FC<Props> = ({
   hasAlternativeOption = true,
 }) => {
   const [isAlternativeOption, setIsAlternativeOption] = useState(
-    selected?.findIndex((o) => o.id === 'alternativeOption') > -1,
+    !selected.every((o) => options.includes(o)),
   );
   const [manualInput, setManualInput] = useState(
-    selected?.find((o) => o.id === 'alternativeOption')?.value || '',
+    selected.find((o) => !options.includes(o)) || '',
   );
-  console.log(
-    'manualInput',
-    selected?.find((o) => o.id === 'alternativeOption'),
-  );
-  const [searchText, setSearchText] = useState('');
+
   const [error, setError] = useState('');
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
@@ -58,31 +53,28 @@ export const CheckboxSelect: React.FC<Props> = ({
         contentContainerStyle={styles.optionsContainer}
       >
         {options
-          .filter((opt) =>
-            opt.value.toLowerCase().includes(searchText.toLowerCase()),
-          )
-          .sort((a, b) => a.value.localeCompare(b.value))
-          .map((option) => (
-            <Checkbox
-              key={option.id}
-              label={option.value}
-              isChecked={selected.findIndex((o) => o.id === option.id) > -1}
-              onChange={() => {
-                console.log('option', option.id);
-                onSelect(option);
-              }}
-            />
-          ))}
+          .sort((a, b) => a.localeCompare(b))
+          .map((option) => {
+            return (
+              <Checkbox
+                key={option.toLowerCase().replace(/\s/g, '-')}
+                label={option}
+                isChecked={selected.includes(option)}
+                onChange={() => {
+                  onSelect(option);
+                }}
+              />
+            );
+          })}
         {hasAlternativeOption && (
           <Checkbox
-            label={'Ohter (please specify)'}
+            label={'Other (please specify)'}
             isChecked={isAlternativeOption}
             onChange={() => {
-              console.log('option', 'alternativeOption');
               scrollViewRef.current?.scrollToEnd({ animated: true });
               setError('');
               setIsAlternativeOption((prev) => !prev);
-              onSelect({ id: 'alternativeOption', value: manualInput });
+              onSelect(manualInput);
             }}
           />
         )}
@@ -114,8 +106,7 @@ export const CheckboxSelect: React.FC<Props> = ({
               textInputRef.current?.focus();
               return;
             } else if (isAlternativeOption) {
-              console.log('manualInput', manualInput);
-              onSave({ id: 'alternativeOption', value: manualInput });
+              onSave(manualInput);
               return;
             }
             onSave();
