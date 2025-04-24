@@ -95,8 +95,6 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
     const oldInfo = { ...localInfo };
     let nextInfo = { ...oldInfo, [field]: value };
 
-    const newDefaultDescription = calculateDefaultDescription(nextInfo);
-
     let descriptionToSet = nextInfo.description;
 
     if (field === 'description') {

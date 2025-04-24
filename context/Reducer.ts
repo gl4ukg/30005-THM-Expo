@@ -68,7 +68,8 @@ type DataAction =
   | ActionWithPayload<'TOGGLE_HOSE_MULTI_SELECTION', string>
   | ActionWithoutPayload<'FINISH_SELECTION'>
   | ActionWithPayload<'SELECT_MANY_HOSES_MULTI_SELECTION', string[]>
-  | ActionWithoutPayload<'DESELECT_ALL_HOSES_MULTI_SELECTION'>;
+  | ActionWithoutPayload<'DESELECT_ALL_HOSES_MULTI_SELECTION'>
+  | ActionWithPayload<'SET_HOSE_TEMPLATE', Partial<HoseData>>;
 type SettingsAction = ActionWithPayload<'UPDATE_SETTINGS', any>;
 
 // Reducers for each slice of the app state (these should be defined elsewhere)
@@ -199,6 +200,11 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
       return {
         ...state,
         selection: null,
+      };
+    case 'SET_HOSE_TEMPLATE':
+      return {
+        ...state,
+        hoseTemplate: action.payload,
       };
     default: {
       // console.error('Unknown action type:', action.type);
