@@ -10,7 +10,6 @@ import { UHD } from '@/lib/types/hose';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Bookmark } from '../common/Bookmark';
-import { CouplingSectionProps } from '@/components/detailView/view/UniversalHoseData';
 
 export const couplingsFields = [
   'materialQuality',
@@ -47,15 +46,6 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
   useEffect(() => {
     setLocalInfo(info);
   }, [info]);
-
-  const fieldMappings = {
-    materialQuality: 'materialQuality2',
-    typeFitting: 'typeFitting2',
-    innerDiameter: 'innerDiameter2',
-    gender: 'gender2',
-    angle: 'angle2',
-    commentEnd: 'commentEnd2',
-  };
 
   const syncEndFields = () => {
     const updatedInfo = { ...localInfo };

@@ -9,61 +9,172 @@ import { ButtonTHS } from '@/components/UI';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
+import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { GHD, HID, HoseData, TPN, UHD } from '@/lib/types/hose';
-import { useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState, useCallback } from 'react';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { getScanUrl } from '@/app/scan';
+import { BarcodeInput } from '@/components/UI/Input/BarcodeInput';
+import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
+
+const excludedTemplateFields: (keyof HoseData)[] = [
+  'customerId',
+  'RFid',
+  'hoseCondition',
+  'approved',
+  'comment',
+  'id',
+];
 
 const RegisterHose = () => {
-  const { hoseId: incomingId, hoseRfid: incomingRfid } = useLocalSearchParams<{
+  const {
+    hoseId: incomingId,
+    rfid: incomingRfid,
+    scanMethod,
+  } = useLocalSearchParams<{
     hoseId?: string;
-    hoseRfid?: string;
+    rfid?: string;
+    scanMethod?: 'RFID' | 'Barcode';
   }>();
 
+  const { state, dispatch } = useAppContext();
   const [registerMultiple, setRegisterMultiple] = useState(false);
   const [rfid, setRfid] = useState<string | undefined>(incomingRfid);
+  const [isBarcodeModalVisible, setIsBarcodeModalVisible] = useState(false);
+
+  const initialHoseData: Partial<HoseData> = {
+    ...state.data.hoseTemplate,
+    id: incomingId,
+    RFid: incomingRfid,
+  };
+
+  const [localState, setLocalState] = useState(initialHoseData);
 
   const handleCheckboxChange = () => {
     setRegisterMultiple((prevState) => !prevState);
   };
 
-  const initialHoseData: Partial<HoseData> = {
-    id: incomingId,
-  };
+  useEffect(() => {
+    if (state.data.hoseTemplate) {
+      setLocalState((prevState) => ({
+        ...state.data.hoseTemplate,
+        ...prevState,
+        id: incomingId ?? prevState.id ?? state.data.hoseTemplate?.id,
+        RFid: incomingRfid ?? prevState.RFid ?? state.data.hoseTemplate?.RFid,
+      }));
+    }
+  }, [state.data.hoseTemplate, incomingId, incomingRfid]);
 
-  const [localState, setLocalState] = useState(initialHoseData);
-
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | undefined) => {
     setLocalState((prevState) => ({
       ...prevState,
       [field]: value,
     }));
   };
 
-  const handleRFIDScanned = (newRfid: string | null) => {
+  const handleRFIDScanned = useCallback((newRfid: string | null) => {
     if (newRfid) {
       setRfid(newRfid);
       setLocalState((prevState) => ({
         ...prevState,
-        id: newRfid,
+
+        RFid: newRfid,
+      }));
+    } else {
+      setRfid(undefined);
+      setLocalState((prevState) => ({
+        ...prevState,
+        RFid: undefined,
       }));
     }
+  }, []);
+
+  const openBarcodeModal = () => {
+    if (scanMethod === 'Barcode' && !!incomingId) return;
+    setIsBarcodeModalVisible(true);
   };
+
+  const handleBarcodeScannedFromModal = (barcode: string | null) => {
+    if (barcode) {
+      setLocalState((prevState) => ({
+        ...prevState,
+        id: barcode,
+      }));
+    }
+    setIsBarcodeModalVisible(false);
+  };
+
+  const handleSave = () => {
+    if (!localState.id) {
+      Alert.alert('Error', 'Hose ID is required');
+      return;
+    }
+
+    Alert.alert('Success', `Hose ${localState.id} registered successfully`);
+
+    if (registerMultiple) {
+      const template: Partial<HoseData> = { ...localState };
+
+      excludedTemplateFields.forEach((field) => {
+        if (field in template) {
+          delete template[field];
+        }
+      });
+
+      dispatch({
+        type: 'SET_HOSE_TEMPLATE',
+        payload: template,
+      });
+
+      router.push(getScanUrl('REGISTER_HOSE'));
+    } else {
+      dispatch({
+        type: 'SET_HOSE_TEMPLATE',
+        payload: {},
+      });
+      router.push('/(app)/dashbord');
+    }
+  };
+
+  const handleSaveAsDraft = () => {
+    Alert.alert('Draft saved', 'Hose registration saved as draft');
+    router.push('/(app)/dashbord');
+  };
+
+  const handleCancel = () => {
+    router.push('/(app)/dashbord');
+  };
+
+  console.log(incomingId, incomingRfid, scanMethod);
 
   return (
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.header}>
           <Typography name='navigationBold' text='Register hose' />
-          {incomingId && (
-            <Typography name='navigation'>
-              Hose ID:
-              <Typography name={'navigationBold'} text={` ${incomingId}`} />
-            </Typography>
-          )}
+          <Typography name='navigation'>
+            Hose ID:
+            <Typography name={'navigationBold'} text={localState.id || ''} />
+          </Typography>
         </View>
+
         <View>
+          <TooltipWrapper
+            tooltipData={{
+              title: 'Barcode Scanner',
+              message: 'Scan barcode to enter hose ID',
+            }}
+          >
+            <BarcodeInput
+              label='Barcode (Hose ID)'
+              onPress={openBarcodeModal}
+              value={localState.id || ''}
+              disableScan={scanMethod === 'Barcode' && !!incomingId}
+            />
+          </TooltipWrapper>
+
           <TooltipWrapper
             tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
           >
@@ -71,6 +182,7 @@ const RegisterHose = () => {
               label='RFID'
               onRFIDScanned={handleRFIDScanned}
               initialValue={rfid}
+              disableScan={scanMethod === 'RFID' && !!incomingRfid}
             />
           </TooltipWrapper>
           <TooltipWrapper
@@ -83,7 +195,7 @@ const RegisterHose = () => {
               label='Production date'
               value={localState.prodDate ? new Date(localState.prodDate) : null}
               onChange={(date) =>
-                handleInputChange('productionDate', date.toString())
+                handleInputChange('prodDate', date.toString())
               }
             />
           </TooltipWrapper>
@@ -137,21 +249,27 @@ const RegisterHose = () => {
           />
         </View>
         <View style={styles.buttonContainer}>
-          <ButtonTHS title='Save & close' size='sm' onPress={() => {}} />
+          <ButtonTHS title='Save & close' size='sm' onPress={handleSave} />
           <ButtonTHS
             title='Save as draft'
-            onPress={() => {}}
+            onPress={handleSaveAsDraft}
             variant='secondary'
             size='sm'
           />
           <ButtonTHS
             title='Cancel'
-            onPress={() => {}}
+            onPress={handleCancel}
             variant='tertiary'
             size='sm'
           />
         </View>
       </ScrollView>
+
+      <BarcodeScannerModal
+        visible={isBarcodeModalVisible}
+        onClose={() => setIsBarcodeModalVisible(false)}
+        onBarcodeScanned={handleBarcodeScannedFromModal}
+      />
     </View>
   );
 };

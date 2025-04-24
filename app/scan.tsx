@@ -26,14 +26,13 @@ import {
 } from 'react-native-vision-camera';
 
 export type ScanPurpose = MultiSelectionActionsType | 'REGISTER_HOSE';
-export const getSkanUrl = (scanPurpose: ScanPurpose): Href =>
+export const getScanUrl = (scanPurpose: ScanPurpose): Href =>
   `/scan?scanPurpose=${scanPurpose}`;
 
 const Scan = () => {
   const { scanPurpose } = useLocalSearchParams<{
     scanPurpose?: ScanPurpose;
   }>();
-  // TODO what if not scanPurpose
   const { state, dispatch } = useAppContext();
   const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(
     'Barcode',
@@ -66,6 +65,7 @@ const Scan = () => {
           break;
         case 'CONTACT':
           setTitle('Contact TESS Team');
+          break;
         default:
           break;
       }
@@ -75,33 +75,106 @@ const Scan = () => {
   const codeScanner = useCodeScanner({
     codeTypes: ['code-39'],
     onCodeScanned: (codes) => {
-      setId(typeof codes[0].value === 'string' ? codes[0].value : '');
-      handleScan();
-      setScanMethod(null);
+      const scannedId =
+        typeof codes[0].value === 'string' ? codes[0].value : '';
+      setId(scannedId);
+      setScanMethod('Barcode');
+      handleScan(scannedId, null, 'Barcode');
     },
   });
 
   useEffect(() => {
+    let isMounted = true;
+
     const initNFC = async () => {
+      if (!isMounted) return;
+
       try {
         await NfcManager.start();
         const supported = await NfcManager.isSupported();
-        setIsNfcSupported(supported);
-        if (!supported) {
+        if (isMounted) setIsNfcSupported(supported);
+        if (!supported && isMounted) {
           Alert.alert('NFC not supported', 'This device does not support NFC.');
         }
       } catch (error) {
-        console.error('Error checking NFC support:', error);
-        Alert.alert('Error', 'Failed to check NFC support. Please try again.');
+        if (isMounted) {
+          console.error('Error checking NFC support:', error);
+          Alert.alert(
+            'Error',
+            'Failed to check NFC support. Please try again.',
+          );
+        }
       }
     };
 
     initNFC();
 
     return () => {
-      NfcManager.cancelTechnologyRequest();
+      isMounted = false;
+      NfcManager.cancelTechnologyRequest().catch(() => {});
     };
   }, []);
+
+  const handleScan = useCallback(
+    (
+      scannedId: string | null,
+      scannedRfid: string | null,
+      method: 'RFID' | 'Barcode' | null,
+    ) => {
+      if (scanPurpose === 'REGISTER_HOSE') {
+        const params: { [key: string]: any } = {
+          hoseId: scannedId || undefined,
+          rfid: scannedRfid || undefined,
+          scanMethod: method,
+        };
+
+        router.push({
+          pathname: '/dashbord/hoses/register',
+          params,
+        });
+        return;
+      }
+
+      setScanMethod(null);
+
+      const currentId = scannedId ?? id;
+      const currentRfid = scannedRfid ?? rfid;
+
+      const hose = state.data.hoses.find((h) => {
+        if (method === 'RFID') {
+          return h.RFid === currentRfid;
+        } else if (currentId) {
+          return h.id === currentId;
+        }
+        return false;
+      });
+
+      if (hose) {
+        if (method === 'RFID') {
+          setId(hose.id);
+        }
+        if (!isMultiSelection(state.data.selection) && !!scanPurpose) {
+          dispatch({
+            type: 'START_MULTI_SELECTION',
+            payload: scanPurpose,
+          });
+        }
+        dispatch({
+          type: 'ADD_HOSE_TO_EXISTING_MULTI_SELECTION',
+          payload: hose.id,
+        });
+
+        setTimeout(() => {
+          router.push(
+            `/(app)/dashbord/actions?action=${scanPurpose}&allowScan=true`,
+          );
+        }, 0);
+      } else {
+        Alert.alert('Hose not found', 'Please enter a valid hose ID.');
+      }
+    },
+    [scanPurpose, id, rfid],
+  );
 
   const handleRFIDScan = useCallback(async () => {
     if (!isNfcSupported) return;
@@ -123,8 +196,8 @@ const Scan = () => {
       if (tag?.id) {
         const reversedId = reverseHexString(tag.id);
         setRfid(reversedId);
-        setScanMethod(null);
-        handleScan();
+        setScanMethod('RFID');
+        handleScan(null, reversedId, 'RFID');
       } else {
         setScanError('No tag ID found.');
       }
@@ -138,7 +211,7 @@ const Scan = () => {
         setId(previousRfid.current);
       }
     } finally {
-      NfcManager.cancelTechnologyRequest();
+      NfcManager.cancelTechnologyRequest().catch(() => {});
       setShowRfidScanView(false);
 
       if (rfid === null && previousRfid.current) {
@@ -146,7 +219,7 @@ const Scan = () => {
         setId(previousRfid.current);
       }
     }
-  }, [isNfcSupported, rfid]);
+  }, [isNfcSupported, rfid, handleScan]);
 
   const handleRFIDPress = () => {
     inputRef.current?.blur();
@@ -168,51 +241,6 @@ const Scan = () => {
       'Please use a device with a camera or use other scan methods.',
     );
   }
-
-  const handleScan = () => {
-    cameraRef.current?.stopRecording();
-    setScanMethod(null);
-    if (scanPurpose === 'REGISTER_HOSE') {
-      router.push({
-        pathname: '/dashbord/hoses/register',
-        params: {
-          hoseRfid: rfid,
-          hoseId: id,
-        },
-      });
-      return;
-    }
-    // find hose ID by matching RFID to hose Id
-    const hose = state.data.hoses.find((hose) => {
-      if (scanMethod === 'RFID') {
-        return hose.RFid === id;
-      } else if (id) {
-        return hose.id === id;
-      }
-    });
-    // if found add hose to selection and navigate to action
-    if (hose) {
-      setId(hose.id);
-      if (!isMultiSelection(state.data.selection) && !!scanPurpose) {
-        dispatch({
-          type: 'START_MULTI_SELECTION',
-          payload: scanPurpose,
-        });
-      }
-      dispatch({
-        type: 'ADD_HOSE_TO_EXISTING_MULTI_SELECTION',
-        payload: hose.id,
-      });
-      router.push(
-        `/(app)/dashbord/actions?action=${scanPurpose}&allowScan=true`,
-      );
-    }
-    // navigate to action
-    // if not found show alert
-    else {
-      Alert.alert('Hose not found', 'Please enter a valid hose ID.');
-    }
-  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -295,8 +323,8 @@ const Scan = () => {
               styles.searchButton,
               pressed && styles.searchButtonPressed,
             ]}
-            disabled={!id}
-            onPress={handleScan}
+            disabled={!id && scanMethod !== 'RFID'}
+            onPress={() => handleScan(id, rfid, 'Barcode')}
           >
             <Icon name='Search' color={colors.primary25} size='sm' />
           </Pressable>
