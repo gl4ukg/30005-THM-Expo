@@ -31,7 +31,7 @@ export const RadioSelect: React.FC<Props> = ({
   hasAlternativeOption = true,
 }) => {
   const [isAlternativeOption, setIsAlternativeOption] = useState(
-    selected && options.includes(selected) ? false : true,
+    !selected || options.includes(selected) ? false : true,
   );
   const [manualInput, setManualInput] = useState(
     !selected ? '' : !options.includes(selected) ? selected : '',

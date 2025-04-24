@@ -26,7 +26,6 @@ export const Select: React.FC<Props> = ({
   selectedOption,
   onChange,
   options,
-  isMultiSelect = false,
   required,
   hasAlternativeOption,
 }) => {
