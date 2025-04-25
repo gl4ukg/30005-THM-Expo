@@ -21,20 +21,20 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [name, setName] = useState(state.auth.user?.name || '');
-  const [mail, setMail] = useState(state.auth.user?.email || '');
+  const [email, setEmail] = useState(state.auth.user?.email || '');
   const [phone, setPhone] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>(
     hoses.map((h) => h.id),
   );
   const originallySelectedHoses = useMemo(() => hoses, []);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
-  function handleMail(email: string) {
-    setMail(email);
-    const isValid = emailValidation(email);
-    if (isValid === true) {
+  const handleEmail = (email: string) => {
+    setEmail(email);
+    const validation = emailValidation(email);
+    if (validation === true) {
       setEmailError(undefined);
-    } else setEmailError(isValid);
-  }
+    } else setEmailError(validation);
+  };
   const handleSelectionChange = (id: string) => {
     if (isMultiSelection(state.data.selection))
       dispatch({
@@ -49,7 +49,7 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
   };
 
   const isButtonDisabled =
-    !name || !mail || !!emailError || !phone || selectedIds.length === 0;
+    !name || !email || !!emailError || !phone || selectedIds.length === 0;
 
   return (
     <>
@@ -89,8 +89,8 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
             <Input
               type='email'
               label={'Your email address:'}
-              value={mail}
-              onChangeText={handleMail}
+              value={email}
+              onChangeText={handleEmail}
               errorMessage={emailError}
             />
             <Input
@@ -108,7 +108,7 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
                   onSave({
                     comment: message,
                     name,
-                    mail,
+                    mail: email,
                     phone,
                     selectedIds,
                   })

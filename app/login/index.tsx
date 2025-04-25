@@ -21,22 +21,22 @@ export default function Login() {
 
   const { state, dispatch } = useAppContext();
 
-  function handleEmail(email: string) {
+  const handleEmail = (email: string) => {
     setEmail(email);
     const validation = emailValidation(email);
     if (validation === true) {
       setEmailError(undefined);
     } else setEmailError(validation);
-  }
+  };
 
-  function handleName(name: string) {
+  const handleName = (name: string) => {
     setFullName(name);
     if (!/^[\p{L}\s]+$/u.test(fullName) && fullName !== '') {
       setNameError('Invalid Name: Please enter a valid name.');
     } else if (name.length < 4) {
       setNameError('too short');
     } else setNameError(undefined);
-  }
+  };
 
   const handleLogin = () => {
     dispatch({

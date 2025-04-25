@@ -35,18 +35,18 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
   const [downtime, setDowntime] = useState('');
   const [comment, setComment] = useState('');
   const [name, setName] = useState(state.auth.user?.name || '');
-  const [mail, setMail] = useState(state.auth.user?.email || '');
+  const [email, setEmail] = useState(state.auth.user?.email || '');
   const [phone, setPhone] = useState('');
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const originallySelectedHoses = useMemo(() => hoses, []);
 
-  function handleMail(email: string) {
-    setMail(email);
-    const isValid = emailValidation(email);
-    if (isValid === true) {
+  const handleEmail = (email: string) => {
+    setEmail(email);
+    const validation = emailValidation(email);
+    if (validation === true) {
       setEmailError(undefined);
-    } else setEmailError(isValid);
-  }
+    } else setEmailError(validation);
+  };
 
   const handleSelectionChange = (id: string) => {
     if (!isMultiSelection(state.data.selection)) {
@@ -59,7 +59,7 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
     });
   };
 
-  const isButtonDisabled = !name || !mail || !!emailError || !phone;
+  const isButtonDisabled = !name || !email || !!emailError || !phone;
   return (
     <FlatList
       ListHeaderComponent={
@@ -136,8 +136,8 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
           <Input
             type='email'
             label={'Mail:'}
-            value={mail}
-            onChangeText={handleMail}
+            value={email}
+            onChangeText={handleEmail}
             errorMessage={emailError}
           />
           <Input
@@ -154,7 +154,7 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
               onPress={() =>
                 onSave({
                   name,
-                  mail,
+                  mail: email,
                   phone,
                   comment,
                   selectedIds: selectedIds.join(','),

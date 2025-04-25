@@ -44,7 +44,7 @@ const Ui = () => {
 
   const passInputRef = useRef<TextInput>(null);
 
-  function handleChangeName(input: string) {
+  const handleChangeName = (input: string) => {
     setName(input);
 
     if (input.length < 4) {
@@ -54,7 +54,7 @@ const Ui = () => {
     } else {
       setError(undefined);
     }
-  }
+  };
 
   return (
     <KeyboardAvoidingView style={{ height: '100%', flex: 1 }}>

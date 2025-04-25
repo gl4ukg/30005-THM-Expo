@@ -31,20 +31,21 @@ export const TooltipWrapper: React.FC<
 // TODO: Fix tooltipl placement
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     marginBottom: 5,
+    gap: 5,
   },
   fieldContainer: {
     marginBottom: 10,
-    width: '88%',
+    flex: 1,
   },
   iconContainer: {
     flexDirection: 'row',
-    width: '15%',
-    paddingTop: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: 32,
+    flexShrink: 0,
+    paddingTop: 26,
   },
 });

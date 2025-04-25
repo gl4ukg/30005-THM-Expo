@@ -55,22 +55,21 @@ export default function ForgotPassword() {
   const [nameError, setNameError] = useState<undefined | string>(undefined);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
 
-  function handleEmail(email: string) {
+  const handleEmail = (email: string) => {
     setEmail(email);
     const validation = emailValidation(email);
     if (validation === true) {
       setEmailError(undefined);
     } else setEmailError(validation);
-  }
-
-  function handleNameChange(name: string) {
+  };
+  const handleNameChange = (name: string) => {
     setFullName(name);
     if (!/^[\p{L}\s]+$/u.test(fullName) && fullName !== '') {
       setNameError('Invalid Name: Please enter a valid name.');
     } else if (name.length < 4) {
       setNameError('too short');
     } else setNameError(undefined);
-  }
+  };
 
   const handleRequest = async () => {
     try {

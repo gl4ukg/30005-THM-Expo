@@ -14,7 +14,7 @@ import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 const formLabels: Record<
-  Exclude<MultiSelectionActionsType, 'CONTACT_SUPPORT' | 'REPLACE_HOSE'>,
+  Extract<MultiSelectionActionsType, 'RFQ' | 'CONTACT' | 'SCRAP'>,
   { title: string; subtitle: string; confirmButton: string }
 > = {
   RFQ: {
@@ -60,13 +60,13 @@ export const ContactForm: React.FC<Props> = ({
   );
   const originallySelectedHoses = useMemo(() => hoses, []);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
-  function handleMail(email: string) {
+  const handleMail = (email: string) => {
     setMail(email);
     const isValid = emailValidation(email);
     if (isValid === true) {
       setEmailError(undefined);
     } else setEmailError(isValid);
-  }
+  };
   const handleSelectionChange = (id: string) => {
     if (isMultiSelection(state.data.selection))
       dispatch({
