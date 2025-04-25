@@ -3,6 +3,7 @@ import {
   replaceImpacts,
   replaceReasons,
 } from '@/components/detailView/data/lists';
+import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
@@ -31,6 +32,7 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
   const [replacementType, setReplacementType] = useState('Planned');
   const [replacementReasons, setReplacementReasons] = useState<string[]>([]);
   const [replacementImpacts, setReplacementImpacts] = useState<string[]>([]);
+  const [downtime, setDowntime] = useState('');
   const [comment, setComment] = useState('');
   const [name, setName] = useState(state.auth.user?.name || '');
   const [mail, setMail] = useState(state.auth.user?.email || '');
@@ -76,27 +78,47 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
       }
       ListFooterComponent={
         <View style={styles.inputsContainer}>
-          <Select
-            label='Replacement type:'
-            selectedOption={replacementType}
-            onChange={setReplacementType}
-            hasAlternativeOption={false}
-            options={['Planned', 'Unplanned']}
-          />
+          <TooltipWrapper
+            tooltipData={{ title: 'Replacement type', message: '' }}
+          >
+            <Select
+              label='Replacement type:'
+              selectedOption={replacementType}
+              onChange={setReplacementType}
+              hasAlternativeOption={false}
+              options={['Planned', 'Unplanned']}
+            />
+          </TooltipWrapper>
           {replacementType === 'Unplanned' && (
             <>
-              <MultiSelect
-                label='Reason:'
-                options={replaceReasons}
-                selectedOptions={replacementReasons}
-                onSave={setReplacementReasons}
-              />
-              <MultiSelect
-                label='Impact:'
-                options={replaceImpacts}
-                selectedOptions={replacementImpacts}
-                onSave={setReplacementImpacts}
-              />
+              <TooltipWrapper
+                tooltipData={{ title: 'Reason for replacement', message: '' }}
+              >
+                <MultiSelect
+                  label='Reason:'
+                  options={replaceReasons}
+                  selectedOptions={replacementReasons}
+                  onSave={setReplacementReasons}
+                />
+              </TooltipWrapper>
+              <TooltipWrapper
+                tooltipData={{ title: 'Impact of replacement', message: '' }}
+              >
+                <MultiSelect
+                  label='Impact:'
+                  options={replaceImpacts}
+                  selectedOptions={replacementImpacts}
+                  onSave={setReplacementImpacts}
+                />
+              </TooltipWrapper>
+              <TooltipWrapper tooltipData={{ title: 'Downtime', message: '' }}>
+                <Input
+                  type='numeric'
+                  label='Did it cause any downtime? (hours)'
+                  value={downtime}
+                  onChangeText={setDowntime}
+                />
+              </TooltipWrapper>
             </>
           )}
           <Input
