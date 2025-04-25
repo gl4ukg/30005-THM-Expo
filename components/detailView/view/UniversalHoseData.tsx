@@ -1,13 +1,13 @@
-import { StyleSheet, View } from 'react-native';
-import { Typography } from '../../Typography';
-import { Checkbox } from '../../UI/Checkbox';
-import { Bookmark } from '../common/Bookmark';
-import { DataField } from '../common/Datafield';
-import { UHD } from '@/lib/types/hose';
+import { Bookmark } from '@/components/detailView/common/Bookmark';
+import { DataField } from '@/components/detailView/common/Datafield';
 import {
   CouplingsFields,
   couplingsFields,
 } from '@/components/detailView/edit/EditUniversalHoseData';
+import { Typography } from '@/components/Typography';
+import { Checkbox } from '@/components/UI/Checkbox';
+import { UHD } from '@/lib/types/hose';
+import { StyleSheet, View } from 'react-native';
 
 type UniversalHoseDataProps = {
   info: Partial<UHD>;

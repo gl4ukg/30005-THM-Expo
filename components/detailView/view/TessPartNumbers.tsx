@@ -1,8 +1,8 @@
-import { StyleSheet, View } from 'react-native';
-import { Typography } from '../../Typography';
-import { Bookmark } from '../common/Bookmark';
-import { DataField } from '../common/Datafield';
+import { Bookmark } from '@/components/detailView/common/Bookmark';
+import { DataField } from '@/components/detailView/common/Datafield';
+import { Typography } from '@/components/Typography';
 import { TPN } from '@/lib/types/hose';
+import { StyleSheet, View } from 'react-native';
 interface TessPartNumbersProps {
   info: TPN;
 }

@@ -1,4 +1,5 @@
 import { ContactForm } from '@/components/forms/ContactForm';
+import { ReplaceHoseForm } from '@/components/forms/ReplaceHoseForm';
 import { SendMailForm } from '@/components/forms/SendMailForm';
 import { useAppContext } from '@/context/ContextProvider';
 import {
@@ -51,6 +52,8 @@ const Action: React.FC<Props> = (props) => {
   }
   if (action === 'CONTACT_SUPPORT') {
     return <SendMailForm hoses={hoses} onSave={save} />;
+  } else if (action === 'REPLACE_HOSE') {
+    <ReplaceHoseForm />;
   } else {
     return (
       <ContactForm

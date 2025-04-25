@@ -1,7 +1,7 @@
+import { DataField } from '@/components/detailView/common/Datafield';
+import { GHD } from '@/lib/types/hose';
 import React from 'react';
 import { View } from 'react-native';
-import { DataField } from '../common/Datafield';
-import { GHD } from '@/lib/types/hose';
 
 type GeneralInfoProps = {
   info: GHD;
