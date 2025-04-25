@@ -1,6 +1,6 @@
+import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
 import { StyleSheet, View, ViewStyle } from 'react-native';
-import { Typography } from '../Typography';
 
 interface Props extends React.PropsWithChildren {
   header: string;

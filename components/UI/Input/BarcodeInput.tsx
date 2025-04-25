@@ -1,7 +1,7 @@
+import { Icon } from '@/components/Icon/Icon';
+import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Icon } from '../../Icon/Icon';
-import { Typography } from '../../Typography';
 
 interface BarcodeScannerProps {
   label: string;

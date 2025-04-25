@@ -1,13 +1,14 @@
+import { Icon } from '@/components/Icon/Icon';
+import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
 import React, { useEffect } from 'react';
 import {
+  Alert,
   Modal,
   Pressable,
   SafeAreaView,
   StyleSheet,
   View,
-  Text,
-  Alert,
 } from 'react-native';
 import {
   Camera,
@@ -15,8 +16,6 @@ import {
   useCameraPermission,
   useCodeScanner,
 } from 'react-native-vision-camera';
-import { Icon } from '../../Icon/Icon';
-import { Typography } from '../../Typography';
 
 interface BarcodeScannerModalProps {
   visible: boolean;

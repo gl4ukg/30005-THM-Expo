@@ -1,3 +1,6 @@
+import { Icon } from '@/components/Icon/Icon';
+import { Typography } from '@/components/Typography';
+import { ButtonTHS } from '@/components/UI/Button/Button';
 import { colors } from '@/lib/tokens/colors';
 import React from 'react';
 import {
@@ -7,9 +10,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Icon } from '../../Icon/Icon';
-import { Typography } from '../../Typography';
-import { ButtonTHS } from '../Button/Button';
 
 interface RFIDScannerModalProps {
   visible: boolean;

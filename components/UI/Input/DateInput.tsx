@@ -1,9 +1,9 @@
+import { Icon } from '@/components/Icon/Icon';
+import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { Icon } from '../../Icon/Icon';
-import { Typography } from '../../Typography';
 
 interface DatePickerProps {
   label: string;
