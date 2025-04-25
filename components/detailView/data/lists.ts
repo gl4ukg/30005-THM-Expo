@@ -150,3 +150,10 @@ export const replaceReasons = [
   'Burst hose',
   'Connection failure',
 ];
+
+export const replaceImpacts = [
+  'Fluid spill (oil, diesel, cooling etc)',
+  'Equipment damage',
+  'Other environmental impact',
+  'Safety risk',
+];

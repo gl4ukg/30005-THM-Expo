@@ -14,7 +14,7 @@ import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
 interface Props {
   label: string;
   selectedOption: string | null;
-  onChange: (option: string) => void;
+  onChange: <T extends string>(option: T) => void;
   options: string[];
   isMultiSelect?: boolean;
   required?: boolean;
