@@ -116,6 +116,6 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     borderTopWidth: 2,
     borderColor: colors.primary,
-    backgroundColor: colors.dashbordGreen,
+    backgroundColor: colors.dashboardGreen,
   },
 });

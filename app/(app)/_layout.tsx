@@ -47,11 +47,11 @@ export default function TabLayout() {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName='dashbord'
+        initialRouteName='dashboard'
         tabBar={() => <></>}
       >
         <Tabs.Screen name='user' />
-        <Tabs.Screen name='dashbord' />
+        <Tabs.Screen name='dashboard' />
       </Tabs>
       <BottomNavigation />
     </>

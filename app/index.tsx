@@ -40,7 +40,7 @@ const Login = () => {
           <View style={{ flexDirection: 'row', gap: 5 }}>
             <Link
               href={{
-                pathname: '/(app)/dashbord/hoses/register',
+                pathname: '/(app)/dashboard/hoses/register',
                 params: { id: '2209045' },
               }}
               style={{ backgroundColor: 'hotpink' }}
@@ -49,11 +49,11 @@ const Login = () => {
             </Link>
 
             <Link
-              href={'/dashbord'}
+              href={'/dashboard'}
               asChild
               style={[
                 styles.link,
-                { flex: 1, backgroundColor: colors.dashbordGreen },
+                { flex: 1, backgroundColor: colors.dashboardGreen },
               ]}
             >
               <Pressable
@@ -66,7 +66,7 @@ const Login = () => {
                     type: 'SET_HOSE_DATA',
                     payload: mockedData as HoseData[],
                   });
-                  router.push('/dashbord');
+                  router.push('/dashboard');
                 }}
               >
                 <Typography
@@ -81,7 +81,7 @@ const Login = () => {
               asChild
               style={[
                 styles.link,
-                { flex: 1, backgroundColor: colors.dashbordGreen },
+                { flex: 1, backgroundColor: colors.dashboardGreen },
               ]}
             >
               <Pressable
@@ -98,13 +98,13 @@ const Login = () => {
               asChild
               style={[
                 styles.link,
-                { flex: 1, backgroundColor: colors.dashbordGreen },
+                { flex: 1, backgroundColor: colors.dashboardGreen },
               ]}
             >
               <Pressable
                 style={[
                   styles.link,
-                  { flex: 1, backgroundColor: colors.dashbordRed },
+                  { flex: 1, backgroundColor: colors.dashboardRed },
                 ]}
               >
                 <Typography name='navigation' text='Ui' numberOfLines={1} />

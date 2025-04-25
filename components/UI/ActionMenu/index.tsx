@@ -1,4 +1,4 @@
-import { Section } from '@/app/(app)/dashbord/hoses/hose/[hoseId]';
+import { Section } from '@/app/(app)/dashboard/hoses/hose/[hoseId]';
 import { Icon } from '@/components/Icon/Icon';
 import { IconName } from '@/components/Icon/iconMapping';
 import { Typography } from '@/components/Typography';
@@ -116,7 +116,7 @@ const style = StyleSheet.create({
     color: colors.primary,
   },
   options: {
-    backgroundColor: colors.dashbordGreen,
+    backgroundColor: colors.dashboardGreen,
     width: '90%',
     position: 'absolute',
     top: '20%',

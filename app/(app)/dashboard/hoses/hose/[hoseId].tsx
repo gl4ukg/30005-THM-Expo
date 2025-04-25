@@ -117,7 +117,7 @@ const HoseDetails = () => {
         });
       }
       router.push({
-        pathname: `/dashbord/actions`,
+        pathname: `/dashboard/actions`,
         params: { hoseId: hoseData.id, action: value },
       });
     }

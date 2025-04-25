@@ -25,7 +25,10 @@ import {
   useCodeScanner,
 } from 'react-native-vision-camera';
 
-export type ScanPurpose = MultiSelectionActionsType | 'REGISTER_HOSE';
+export type ScanPurpose =
+  | MultiSelectionActionsType
+  | 'REGISTER_HOSE'
+  | 'INSPECT_HOSE';
 export const getScanUrl = (scanPurpose: ScanPurpose): Href =>
   `/scan?scanPurpose=${scanPurpose}`;
 
@@ -56,6 +59,9 @@ const Scan = () => {
       switch (scanPurpose) {
         case 'REGISTER_HOSE':
           setTitle('Register Hose');
+          break;
+        case 'INSPECT_HOSE':
+          setTitle('Inspect Hose');
           break;
         case 'RFQ':
           setTitle('Order hoses');
@@ -129,8 +135,14 @@ const Scan = () => {
         };
 
         router.push({
-          pathname: '/dashbord/hoses/register',
+          pathname: '/dashboard/hoses/register',
           params,
+        });
+        return;
+      }
+      if (scanPurpose === 'INSPECT_HOSE') {
+        router.push({
+          pathname: '/dashboard/hoses/inspect',
         });
         return;
       }
@@ -166,7 +178,7 @@ const Scan = () => {
 
         setTimeout(() => {
           router.push(
-            `/(app)/dashbord/actions?action=${scanPurpose}&allowScan=true`,
+            `/(app)/dashboard/actions?action=${scanPurpose}&allowScan=true`,
           );
         }, 0);
       } else {
@@ -388,7 +400,7 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   searchButtonPressed: {
-    backgroundColor: colors.dashbordYellow,
+    backgroundColor: colors.dashboardYellow,
   },
   switchButton: {
     flexDirection: 'row',

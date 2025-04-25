@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     gap: 8,
-    backgroundColor: colors.dashbordGreen,
+    backgroundColor: colors.dashboardGreen,
   },
   containerPressed: {
     opacity: 0.6,
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     gap: 2,
-    backgroundColor: colors.dashbordGreen,
+    backgroundColor: colors.dashboardGreen,
   },
   innerLink: {
     width: '100%',

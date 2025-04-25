@@ -98,7 +98,7 @@ const FilteredHosesList: React.FC<Props> = (props) => {
     if (isMultiSelection(state.data.selection)) {
       const action = state.data.selection.type;
       router.push({
-        pathname: `/dashbord/actions`,
+        pathname: `/dashboard/actions`,
         params: { action },
       });
     }
