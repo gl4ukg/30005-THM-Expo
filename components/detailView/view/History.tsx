@@ -1,6 +1,6 @@
+import { Bookmark } from '@/components/detailView/common/Bookmark';
+import { Typography } from '@/components/Typography';
 import { View } from 'react-native';
-import { Typography } from '../../Typography';
-import { Bookmark } from '../common/Bookmark';
 
 export const HistoryView = () => {
   return (

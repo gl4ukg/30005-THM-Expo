@@ -1,4 +1,9 @@
+import { ListTable } from '@/components/dashboard/listTable';
+import { Typography } from '@/components/Typography';
+import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
+import { Input } from '@/components/UI/Input/Input';
+import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
 import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
@@ -7,11 +12,6 @@ import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { ListTable } from '../dashboard/listTable';
-import { Typography } from '@/components/Typography';
-import { ButtonTHS } from '@/components/UI';
-import { Input } from '@/components/UI/Input/Input';
-import { Select } from '@/components/UI/SelectModal/Select';
 
 const formLabels: Record<
   Exclude<MultiSelectionActionsType, 'CONTACT_SUPPORT' | 'REPLACE_HOSE'>,
@@ -81,12 +81,9 @@ export const ContactForm: React.FC<Props> = ({
   };
 
   const rfqOptions = [
-    {
-      id: 'certificate',
-      label: 'TESS to quote with pressure test and certificate',
-    },
-    { id: 'noPressureTest', label: 'TESS to quote without pressure test' },
-    { id: 'Unspecified', label: 'Unspecified' },
+    'TESS to quote with pressure test and certificate',
+    'TESS to quote without pressure test',
+    'Unspecified',
   ];
 
   const isButtonDisabled =
@@ -96,7 +93,7 @@ export const ContactForm: React.FC<Props> = ({
     !phone ||
     selectedIds.length === 0 ||
     (contactType === 'RFQ' &&
-      (!rfq || !rfqOptions.map((option) => option.id).includes(rfq)));
+      (!rfq || !rfqOptions.map((option) => option).includes(rfq)));
 
   return (
     <>

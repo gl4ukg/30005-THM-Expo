@@ -1,15 +1,16 @@
+import { HelpLinks } from '@/components/login/HelpLinks';
+import { LoginHeader } from '@/components/login/LoginHeader';
 import { Typography } from '@/components/Typography';
+import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
+import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
-import { ButtonTHS } from '../UI/Button/Button';
-import { Input } from '../UI/Input/Input';
-import { HelpLinks } from './HelpLinks';
-import { LoginHeader } from './LoginHeader';
+
 interface Props {
   nextView: (page: 'login' | 'resetPassword') => void;
 }
@@ -122,7 +123,7 @@ export const LoginScreen: React.FC<Props> = ({ nextView }) => {
           <LinkButton
             variant='dark'
             title='Forgot Password?'
-            onPress={() => router.push('/(app)/login/forgotpassword')}
+            onPress={() => router.push('/login/forgotPassword')}
           />
         </View>
       </View>
