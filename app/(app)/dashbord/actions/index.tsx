@@ -28,14 +28,14 @@ const Action: React.FC<Props> = (props) => {
     const id = state.data.selection.id;
     hoses = [state.data.hoses.find((hose) => hose.id === id)!];
   }
-  function save(formData: {
+  const sendMail = async (formData: {
     comment: string;
     name: string;
     mail: string;
     phone: string;
     rfq: string | null;
     selectedIds: string[];
-  }) {
+  }) => {
     Alert.alert(
       'Save',
       `
@@ -49,18 +49,26 @@ const Action: React.FC<Props> = (props) => {
       Selected ids: ${formData.selectedIds.join(',')}
       `,
     );
-  }
+  };
+  const replaceHose = async (formData: Record<string, string | undefined>) => {
+    Alert.alert(
+      'Replace',
+      Object.keys(formData)
+        .map((key) => `${key}: ${formData[key]}`)
+        .join('\n'),
+    );
+  };
   if (action === 'CONTACT_SUPPORT') {
-    return <SendMailForm hoses={hoses} onSave={save} />;
+    return <SendMailForm hoses={hoses} onSave={sendMail} />;
   } else if (action === 'REPLACE_HOSE') {
-    <ReplaceHoseForm />;
+    return <ReplaceHoseForm hoses={hoses} onSave={replaceHose} />;
   } else {
     return (
       <ContactForm
         contactType={action}
         hoses={hoses}
         allowScanToAdd={allowScan === 'true'}
-        onSave={save}
+        onSave={sendMail}
       />
     );
   }
