@@ -71,7 +71,7 @@ export const InspectHose = () => {
         <View style={styles.headerRow}>
           <Typography name='navigationBold' text='Inspect hose:' />
         </View>
-        <Typography name={'fieldLabel'} text='Inspection# 00001' />
+        <Typography name={'fieldLabel'} text='Inspection#' />
       </View>
       <SingleHoseDisplay item={hoseData} />
       <View style={styles.infoSection}>
@@ -100,12 +100,7 @@ export const InspectHose = () => {
           variant='primary'
           size='sm'
         />
-        <ButtonTHS
-          title='Save as Draft'
-          onPress={handleSaveDraft}
-          variant='secondary'
-          size='sm'
-        />
+
         <ButtonTHS
           title='Cancel'
           onPress={handleCancel}
