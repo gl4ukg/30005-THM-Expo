@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // import SubUnitSelect from '../../components/UI/TopBarNavigation/SubUnitSelect';º
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
+import { TopBarNavigation } from '@/components/UI/TopBarNavigation';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
@@ -25,24 +26,16 @@ export default function TabLayout() {
           },
         ]}
       />
-      {/* {
-        <SubUnitSelect
-          selectedUnit={state.data.selectedUnitId}
-          optionalUnits={Object.keys(state.data.assignedUnits).map((unitId) => {
-            return {
-              id: unitId,
-              name: state.data.assignedUnits[unitId].unitName,
-            };
-          })}
-          onSelectUnit={(unit) => {
-            dispatch({
-              type: 'SET_SELECTED_UNIT',
-              payload: unit,
-            });
-          }}
-        />
-      } */}
-      {/* <Typography name='navigation' text={state.data.selectedUnitId ?? 'tes'} /> */}
+      <TopBarNavigation
+        selectedUnit={state.data.workingUnitId}
+        optionalUnits={state.data.assignedUnits}
+        onSelectUnit={(unit) => {
+          dispatch({
+            type: 'SET_WORKING_UNIT',
+            payload: unit,
+          });
+        }}
+      />
       <Tabs
         screenOptions={{
           headerShown: false,
@@ -59,21 +52,8 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    width: '100%',
-    position: 'relative',
-  },
   statusBarIOS: {
     width: '100%',
     backgroundColor: colors.secondary25,
   },
-  header: {
-    height: 50,
-    backgroundColor: colors.secondary25,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 10,
-  },
-  headerText: { color: 'white' },
 });

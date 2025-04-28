@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   primary: {
     backgroundColor: colors.primary50,
     color: colors.white,
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: {
       width: 0,
       height: -2,
