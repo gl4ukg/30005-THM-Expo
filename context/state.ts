@@ -122,8 +122,11 @@ const initialAuthState: AuthState = {
 const initialDataState: DataState = {
   // initial data state values
   hoses: [],
-  assignedUnits: [],
-  workingUnitId: null,
+  assignedUnits: [
+    { unitId: '1', unitName: 'Test Princess' },
+    { unitId: '2', unitName: 'Test Prince' },
+  ],
+  workingUnitId: '1',
   selection: null,
   hoseTemplate: undefined,
 };
