@@ -58,7 +58,6 @@ export const EditGeneralInfo: React.FC<
       >
         <Input
           label='Customer ID:'
-          errorMessage='This is the error message'
           value={info.customerId}
           onChangeText={(text) => onInputChange('customerId', text)}
         />

@@ -36,14 +36,17 @@ export const isFieldACouplingFieldEnd = (
   return !!couplingsFieldsEnd.find((f) => f === field);
 };
 
-const calculateDefaultDescription = (data: Partial<UHD>): string => {
-  const { hoseStandard, innerDiameter, totalLength } = data;
-  if (hoseStandard && innerDiameter && totalLength) {
-    return `${hoseStandard}-${innerDiameter} x ${totalLength} mm`;
-  }
-  return '';
+const buildDescription = (data: {
+  hoseStandard?: string;
+  innerDiameter?: string;
+  totalLength?: string;
+  description?: string;
+}): string => {
+  const { hoseStandard, innerDiameter, totalLength, description } = data;
+  return hoseStandard && innerDiameter && totalLength
+    ? `${hoseStandard}-${innerDiameter} x ${totalLength} mm`
+    : (description ?? '');
 };
-
 export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
   info,
   onInputChange,
@@ -52,14 +55,8 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
   const [sameAsEnd1, setSameAsEnd1] = useState(false);
 
   useEffect(() => {
-    const initialDescription =
-      info.description || calculateDefaultDescription(info);
-    const newLocalInfo = { ...info, description: initialDescription };
+    const newLocalInfo = { ...info };
     setLocalInfo(newLocalInfo);
-
-    if (initialDescription !== info.description && initialDescription) {
-      onInputChange('description', initialDescription);
-    }
 
     let endsMatch = couplingsFields.length > 0;
     if (endsMatch) {
@@ -102,7 +99,7 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
     } else if (
       ['hoseStandard', 'innerDiameter', 'totalLength'].includes(field)
     ) {
-      descriptionToSet = calculateDefaultDescription(nextInfo);
+      descriptionToSet = buildDescription(nextInfo);
     }
 
     nextInfo.description = descriptionToSet;
@@ -189,7 +186,6 @@ export const EditUniversalHoseData: React.FC<EditProps<Partial<UHD>>> = ({
         <Input
           label='Description:'
           value={localInfo.description || ''}
-          errorMessage='This is the error message'
           onChangeText={(text) => handleFieldChange('description', text)}
         />
       </TooltipWrapper>
