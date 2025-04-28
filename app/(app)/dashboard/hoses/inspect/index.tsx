@@ -1,6 +1,6 @@
 import { Photos } from '@/components/detailView/common/Photos';
 import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
-import { ListTable } from '@/components/dashboard/listTable';
+import { SingleHoseDisplay } from '@/components/dashboard/listTable/SingleHoseDisplay';
 import { Typography } from '@/components/Typography';
 import { HoseData } from '@/lib/types/hose';
 import React, { useState } from 'react';
@@ -8,16 +8,20 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { ButtonTHS } from '@/components/UI';
 import { useLocalSearchParams } from 'expo-router';
 import { useAppContext } from '@/context/ContextProvider';
+import { DataField } from '@/components/detailView/common/Datafield';
+import { colors } from '@/lib/tokens/colors';
 
 export const InspectHose = () => {
   const { state, dispatch } = useAppContext();
   const { hoseId, rfid, scanMethod } = useLocalSearchParams();
-  const [hoseData, setHoseData] = useState(() => {
-    if (scanMethod === 'rfid') {
+  const [hoseData, setHoseData] = useState<HoseData | undefined>(() => {
+    if (!state.data.hoses) return undefined;
+    if (scanMethod === 'RFID' && rfid) {
       return state.data.hoses.find((hose) => hose.RFid === rfid);
-    } else {
+    } else if (hoseId) {
       return state.data.hoses.find((hose) => hose.id === hoseId);
     }
+    return undefined;
   });
 
   const handleInputChange = <T extends keyof HoseData>(
@@ -48,42 +52,47 @@ export const InspectHose = () => {
   };
 
   if (!hoseData) {
-    return <Typography name={'navigation'}>Hose is not registered.</Typography>;
+    return (
+      <View style={styles.centeredContainer}>
+        <Typography
+          name={'navigation'}
+          text='Hose not found or not registered.'
+        />
+      </View>
+    );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <ListTable items={[hoseData]} selectedIds={[]} canSelect={false} />
-
-      <View style={styles.infoSection}>
-        <Typography name='fieldLabel'>Description:</Typography>
-        <Typography name='fieldValue'>{hoseData.description}</Typography>
-        <Typography name='fieldLabel' style={styles.fieldMargin}>
-          S1 Plant, Vessel, Unit:
-        </Typography>
-        <Typography name='fieldValue'>{hoseData.s1PlantVesselUnit}</Typography>
-        <Typography name='fieldLabel' style={styles.fieldMargin}>
-          S2 Equipment:
-        </Typography>
-        <Typography name='fieldValue'>{hoseData.S2Equipment}</Typography>
-        <Typography name='fieldLabel' style={styles.fieldMargin}>
-          Equipment Subunit:
-        </Typography>
-        <Typography name='fieldValue'>{hoseData.equipmentSubunit}</Typography>
-        <Typography name='fieldLabel' style={styles.fieldMargin}>
-          Other Info:
-        </Typography>
-        <Typography name='fieldValue'>{hoseData.otherInfo}</Typography>
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.contentContainer}
+    >
+      <View style={styles.header}>
+        <View style={styles.headerRow}>
+          <Typography name='navigationBold' text='Inspect hose:' />
+        </View>
+        <Typography name={'fieldLabel'} text='Inspection# 00001' />
       </View>
-
+      <SingleHoseDisplay item={hoseData} />
+      <View style={styles.infoSection}>
+        <DataField label='Description:' value={hoseData.description} />
+        <DataField
+          label='S1 Plant, Vessel, Unit:'
+          value={hoseData.s1PlantVesselUnit}
+        />
+        <DataField label='S2 Equipment:' value={hoseData.S2Equipment} />
+        <DataField
+          label='Equipment Subunit:'
+          value={hoseData.equipmentSubunit}
+        />
+        <DataField label='Other Info:' value={hoseData.otherInfo} />
+      </View>
       <EditMaintenanceInfo
         info={hoseData}
         onInputChange={handleInputChange}
         isInspect
       />
-
       <Photos />
-
       <View style={styles.buttonContainer}>
         <ButtonTHS
           title='Complete Inspection'
@@ -109,15 +118,25 @@ export const InspectHose = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  scrollView: {
     flex: 1,
+  },
+  contentContainer: {
+    padding: 10,
+    backgroundColor: colors.white,
+  },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 10,
   },
   infoSection: {
     paddingVertical: 15,
     paddingHorizontal: 5,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: colors.strokeInputField,
+    marginTop: 15,
     marginBottom: 15,
   },
   fieldMargin: {
@@ -128,6 +147,20 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingBottom: 30,
     alignItems: 'center',
+  },
+  header: {
+    marginTop: 16,
+    marginBottom: 16,
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 8,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 5,
+    gap: 5,
   },
 });
 
