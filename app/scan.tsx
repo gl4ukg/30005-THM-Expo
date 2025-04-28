@@ -52,7 +52,7 @@ const Scan = () => {
   const [scanError, setScanError] = useState<string | null>(null);
 
   const [title, setTitle] = useState<string>('Scanner');
-  const [subTitle, setSubTitle] = useState<string>('Scann or enter ID');
+  const [subTitle, setSubTitle] = useState<string>('Scan or enter ID');
 
   useEffect(() => {
     if (scanPurpose) {
@@ -143,6 +143,11 @@ const Scan = () => {
       if (scanPurpose === 'INSPECT_HOSE') {
         router.push({
           pathname: '/dashboard/hoses/inspect',
+          params: {
+            hoseId: scannedId || undefined,
+            rfid: scannedRfid || undefined,
+            scanMethod: method,
+          },
         });
         return;
       }

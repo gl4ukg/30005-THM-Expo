@@ -11,10 +11,9 @@ import { HID } from '@/lib/types/hose';
 import { formatDate } from '@/lib/util/formatDate';
 import { StyleSheet, View } from 'react-native';
 
-export const EditMaintenanceInfo: React.FC<EditProps<HID>> = ({
-  info,
-  onInputChange,
-}) => {
+export const EditMaintenanceInfo: React.FC<
+  EditProps<HID> & { isInspect?: boolean }
+> = ({ info, onInputChange, isInspect }) => {
   const handleApprovalChange = (selectedLabel: string) => {
     onInputChange('approved', selectedLabel);
   };
@@ -65,39 +64,64 @@ export const EditMaintenanceInfo: React.FC<EditProps<HID>> = ({
         text='Criticality / Intervals'
         style={styles.subTitle}
       />
-      <TooltipWrapper>
-        <Select
-          label='Criticality'
-          selectedOption={info.criticality}
-          onChange={(value) => onInputChange('criticality', value)}
-          options={[
-            '1 - None',
-            '2 - Very low',
-            '3 - Low',
-            '4 - Medium',
-            '5 - High',
-            '6 - Very high',
-          ]}
-        />
-        <View style={styles.inspectionDetails}>
-          <DataField
-            label={'Inspection Interval:'}
-            value={info.inspectionInterval}
+
+      {isInspect ? (
+        <>
+          <DataField label={'Criticality:'} value={info.criticality} />
+          <View style={styles.inspectionDetails}>
+            <DataField
+              label={'Inspection Interval:'}
+              value={info.inspectionInterval}
+            />
+            <DataField
+              label={'Next Inspection:'}
+              value={formatDate(new Date(info.nextInspection))}
+            />
+            <DataField
+              label={'Replacement Interval:'}
+              value={info.replacementInterval}
+            />
+            <DataField
+              label={'Replacement Date:'}
+              value={formatDate(new Date(info.replacementDate))}
+            />
+          </View>
+        </>
+      ) : (
+        <TooltipWrapper>
+          <Select
+            label='Criticality'
+            selectedOption={info.criticality}
+            onChange={(value) => onInputChange('criticality', value)}
+            options={[
+              '1 - None',
+              '2 - Very low',
+              '3 - Low',
+              '4 - Medium',
+              '5 - High',
+              '6 - Very high',
+            ]}
           />
-          <DataField
-            label={'Next Inspection:'}
-            value={formatDate(new Date(info.nextInspection))}
-          />
-          <DataField
-            label={'Replacement Interval:'}
-            value={info.replacementInterval}
-          />
-          <DataField
-            label={'Replacement Date:'}
-            value={formatDate(new Date(info.replacementDate))}
-          />
-        </View>
-      </TooltipWrapper>
+          <View style={styles.inspectionDetails}>
+            <DataField
+              label={'Inspection Interval:'}
+              value={info.inspectionInterval}
+            />
+            <DataField
+              label={'Next Inspection:'}
+              value={formatDate(new Date(info.nextInspection))}
+            />
+            <DataField
+              label={'Replacement Interval:'}
+              value={info.replacementInterval}
+            />
+            <DataField
+              label={'Replacement Date:'}
+              value={formatDate(new Date(info.replacementDate))}
+            />
+          </View>
+        </TooltipWrapper>
+      )}
       <TooltipWrapper
         tooltipData={{ title: 'Inspection Interval', message: '' }}
       >
