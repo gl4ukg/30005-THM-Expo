@@ -1,5 +1,6 @@
 import { View, ViewStyle } from 'react-native';
 import { iconMapping } from './iconMapping';
+import { colors } from '@/lib/tokens/colors';
 
 type IconProps = {
   name: keyof typeof iconMapping;
@@ -23,7 +24,7 @@ export const iconSize = {
 export const Icon: React.FC<IconProps> = ({
   name,
   size = 'sm',
-  color = '#000',
+  color = colors.black,
   styles,
 }) => {
   const IconComponent = iconMapping[name];
