@@ -134,17 +134,17 @@ const RegisterHose = () => {
         type: 'SET_HOSE_TEMPLATE',
         payload: {},
       });
-      router.push('/(app)/dashbord');
+      router.push('/(app)/dashboard');
     }
   };
 
   const handleSaveAsDraft = () => {
     Alert.alert('Draft saved', 'Hose registration saved as draft');
-    router.push('/(app)/dashbord');
+    router.push('/(app)/dashboard');
   };
 
   const handleCancel = () => {
-    router.push('/(app)/dashbord');
+    router.push('/(app)/dashboard');
   };
 
   console.log(incomingId, incomingRfid, scanMethod);

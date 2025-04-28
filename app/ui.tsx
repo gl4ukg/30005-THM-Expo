@@ -77,7 +77,7 @@ const Ui = () => {
           >
             <Link
               href='/'
-              style={{ padding: 5, backgroundColor: colors.dashbordGreen }}
+              style={{ padding: 5, backgroundColor: colors.dashboardGreen }}
             >
               <Text>Dashboard</Text>
             </Link>

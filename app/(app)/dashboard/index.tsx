@@ -146,7 +146,7 @@ const options = [
   },
 ];
 
-const Dashbord = () => {
+const Dashboard = () => {
   const [selected, setSelected] =
     useState<(typeof options)[0]['value']>('month');
   const { dispatch } = useContext(AppContext);
@@ -179,7 +179,7 @@ const Dashbord = () => {
   const router = useRouter();
 
   const goToFilter = (filter: string) => {
-    router.push(`/(app)/dashbord/hoses/${filter}`);
+    router.push(`/(app)/dashboard/hoses/${filter}`);
   };
 
   return (
@@ -288,4 +288,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default Dashbord;
+export default Dashboard;

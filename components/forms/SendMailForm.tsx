@@ -118,7 +118,7 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
                 title='Cancel'
                 variant='tertiary'
                 size='sm'
-                onPress={() => router.push('/(app)/dashbord')}
+                onPress={() => router.push('/(app)/dashboard')}
               />
             </View>
           </View>

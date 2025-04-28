@@ -5,7 +5,7 @@ import { useAppContext } from '@/context/ContextProvider';
 import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { reverseHexString } from '@/lib/util/rfid';
-import { Href, router } from 'expo-router';
+import { Href, router, useFocusEffect } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -25,7 +25,10 @@ import {
   useCodeScanner,
 } from 'react-native-vision-camera';
 
-export type ScanPurpose = MultiSelectionActionsType | 'REGISTER_HOSE';
+export type ScanPurpose =
+  | MultiSelectionActionsType
+  | 'REGISTER_HOSE'
+  | 'INSPECT_HOSE';
 export const getScanUrl = (scanPurpose: ScanPurpose): Href =>
   `/scan?scanPurpose=${scanPurpose}`;
 
@@ -49,13 +52,24 @@ const Scan = () => {
   const [scanError, setScanError] = useState<string | null>(null);
 
   const [title, setTitle] = useState<string>('Scanner');
-  const [subTitle, setSubTitle] = useState<string>('Scann or enter ID');
+  const [subTitle, setSubTitle] = useState<string>('Scan or enter ID');
+  const isNavigatingRef = useRef(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      isNavigatingRef.current = false;
+      return () => {};
+    }, []),
+  );
 
   useEffect(() => {
     if (scanPurpose) {
       switch (scanPurpose) {
         case 'REGISTER_HOSE':
           setTitle('Register Hose');
+          break;
+        case 'INSPECT_HOSE':
+          setTitle('Inspect Hose');
           break;
         case 'RFQ':
           setTitle('Order hoses');
@@ -75,11 +89,18 @@ const Scan = () => {
   const codeScanner = useCodeScanner({
     codeTypes: ['code-39'],
     onCodeScanned: (codes) => {
-      const scannedId =
-        typeof codes[0].value === 'string' ? codes[0].value : '';
-      setId(scannedId);
-      setScanMethod('Barcode');
-      handleScan(scannedId, null, 'Barcode');
+      if (isNavigatingRef.current) {
+        return;
+      }
+      if (codes.length > 0 && codes[0].value) {
+        const scannedId =
+          typeof codes[0].value === 'string' ? codes[0].value : '';
+
+        if (isNavigatingRef.current) return;
+        setId(scannedId);
+        setScanMethod('Barcode');
+        handleScan(scannedId, null, 'Barcode');
+      }
     },
   });
 
@@ -121,16 +142,31 @@ const Scan = () => {
       scannedRfid: string | null,
       method: 'RFID' | 'Barcode' | null,
     ) => {
+      if (isNavigatingRef.current) {
+        return;
+      }
+      isNavigatingRef.current = true;
+
       if (scanPurpose === 'REGISTER_HOSE') {
         const params: { [key: string]: any } = {
           hoseId: scannedId || undefined,
           rfid: scannedRfid || undefined,
           scanMethod: method,
         };
-
         router.push({
-          pathname: '/dashbord/hoses/register',
+          pathname: '/dashboard/hoses/register',
           params,
+        });
+        return;
+      }
+      if (scanPurpose === 'INSPECT_HOSE') {
+        router.push({
+          pathname: '/dashboard/hoses/inspect',
+          params: {
+            hoseId: scannedId || undefined,
+            rfid: scannedRfid || undefined,
+            scanMethod: method,
+          },
         });
         return;
       }
@@ -141,15 +177,18 @@ const Scan = () => {
       const currentRfid = scannedRfid ?? rfid;
 
       const hose = state.data.hoses.find((h) => {
-        if (method === 'RFID') {
+        if (method === 'RFID' && currentRfid) {
           return h.RFid === currentRfid;
-        } else if (currentId) {
+        } else if (method === 'Barcode' && currentId) {
+          return h.id === currentId;
+        } else if (currentId && !method) {
           return h.id === currentId;
         }
         return false;
       });
 
       if (hose) {
+        console.log(`Hose found: ${hose.id}. Handling multi-selection.`);
         if (method === 'RFID') {
           setId(hose.id);
         }
@@ -165,26 +204,41 @@ const Scan = () => {
         });
 
         setTimeout(() => {
+          console.log(
+            `Navigating to actions screen for purpose: ${scanPurpose}`,
+          );
           router.push(
-            `/(app)/dashbord/actions?action=${scanPurpose}&allowScan=true`,
+            `/(app)/dashboard/actions?action=${scanPurpose}&allowScan=true`,
           );
         }, 0);
       } else {
+        console.log('Hose not found. Displaying alert.');
         Alert.alert('Hose not found', 'Please enter a valid hose ID.');
+
+        isNavigatingRef.current = false;
+        console.log('handleScan: Lock released due to hose not found.');
       }
     },
-    [scanPurpose, id, rfid],
+
+    [
+      scanPurpose,
+      id,
+      rfid,
+      state.data.hoses,
+      state.data.selection,
+      dispatch,
+      router,
+    ],
   );
 
   const handleRFIDScan = useCallback(async () => {
+    if (isNavigatingRef.current) {
+      console.log('RFID scan initiated, but navigation already in progress.');
+      return;
+    }
     if (!isNfcSupported) return;
 
     try {
-      if (!(await NfcManager.isEnabled())) {
-        Alert.alert('NFC disabled', 'Enable NFC in your device settings.');
-        return;
-      }
-
       previousRfid.current = rfid;
       setScanError(null);
       setId(null);
@@ -193,31 +247,26 @@ const Scan = () => {
       await NfcManager.requestTechnology(NfcTech.Iso15693IOS);
       const tag = await NfcManager.getTag();
 
+      if (isNavigatingRef.current) {
+        console.log('RFID tag read, but navigation already initiated.');
+        NfcManager.cancelTechnologyRequest().catch(() => {});
+        setShowRfidScanView(false);
+        return;
+      }
+
       if (tag?.id) {
         const reversedId = reverseHexString(tag.id);
         setRfid(reversedId);
         setScanMethod('RFID');
+
         handleScan(null, reversedId, 'RFID');
       } else {
         setScanError('No tag ID found.');
       }
     } catch (ex: any) {
-      console.log('Error Message:', ex.message);
-      if (ex.message && !ex.message.includes('User cancelled')) {
-        setScanError('Error reading NFC tag.');
-        Alert.alert('Error reading NFC', 'Please try again.');
-      } else if (previousRfid.current) {
-        setRfid(previousRfid.current);
-        setId(previousRfid.current);
-      }
     } finally {
       NfcManager.cancelTechnologyRequest().catch(() => {});
       setShowRfidScanView(false);
-
-      if (rfid === null && previousRfid.current) {
-        setRfid(previousRfid.current);
-        setId(previousRfid.current);
-      }
     }
   }, [isNfcSupported, rfid, handleScan]);
 
@@ -322,11 +371,21 @@ const Scan = () => {
             style={({ pressed }) => [
               styles.searchButton,
               pressed && styles.searchButtonPressed,
+
+              !id && scanMethod !== 'RFID' && styles.searchButtonDisabled,
             ]}
-            disabled={!id && scanMethod !== 'RFID'}
-            onPress={() => handleScan(id, rfid, 'Barcode')}
+            disabled={!id || isNavigatingRef.current}
+            onPress={() => handleScan(id, null, 'Barcode')}
           >
-            <Icon name='Search' color={colors.primary25} size='sm' />
+            <Icon
+              name='Search'
+              color={
+                !id || isNavigatingRef.current
+                  ? colors.extended666
+                  : colors.primary25
+              }
+              size='sm'
+            />
           </Pressable>
         </View>
       </View>
@@ -374,6 +433,9 @@ const styles = StyleSheet.create({
     height: 36,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.primary25,
+    borderRadius: 4,
   },
   inputsWrapper: { flexDirection: 'row', gap: 5 },
   inputs: { gap: 5, flex: 1 },
@@ -388,7 +450,10 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   searchButtonPressed: {
-    backgroundColor: colors.dashbordYellow,
+    backgroundColor: colors.primary25,
+  },
+  searchButtonDisabled: {
+    borderColor: colors.extended666,
   },
   switchButton: {
     flexDirection: 'row',

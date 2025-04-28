@@ -81,7 +81,7 @@ export const LoginScreen: React.FC<Props> = ({ nextView }) => {
           type: 'SET_LOGIN_LOADING',
           payload: false,
         });
-        router.push('/(app)/dashbord');
+        router.push('/(app)/dashboard');
       }
     }, 3000);
   };

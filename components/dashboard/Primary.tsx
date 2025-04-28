@@ -18,16 +18,16 @@ export const Primary: FC<Props> = ({ value, label, onPress, trend, state }) => {
     { backgroundColor: string; textColor: string }
   > = {
     error: {
-      backgroundColor: tokens.colors.dashbordRed,
-      textColor: tokens.colors.dashbordRedText,
+      backgroundColor: tokens.colors.dashboardRed,
+      textColor: tokens.colors.dashboardRedText,
     },
     warning: {
-      backgroundColor: tokens.colors.dashbordYellow,
-      textColor: tokens.colors.dashbordYellowText,
+      backgroundColor: tokens.colors.dashboardYellow,
+      textColor: tokens.colors.dashboardYellowText,
     },
     success: {
-      backgroundColor: tokens.colors.dashbordGreen,
-      textColor: tokens.colors.dashbordGreenText,
+      backgroundColor: tokens.colors.dashboardGreen,
+      textColor: tokens.colors.dashboardGreenText,
     },
   };
   return (

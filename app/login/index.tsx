@@ -85,7 +85,7 @@ export default function Login() {
           type: 'SET_LOGIN_LOADING',
           payload: false,
         });
-        router.push('/(app)/dashbord');
+        router.push('/(app)/dashboard');
       }
     }, 3000);
   };

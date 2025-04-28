@@ -33,7 +33,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
             elements={[
               {
                 title: 'Dashboard / Home',
-                to: '/(app)/dashbord',
+                to: '/(app)/dashboard',
                 icon: () => <Icon name='Meter' color={colors.primary} />,
               },
               {
@@ -45,7 +45,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Inspect hose / equipment',
-                to: '/scan?title=Inspect%20hose%20/%20equipment',
+                to: getScanUrl('INSPECT_HOSE'),
                 icon: () => <Icon name='Inspect' color={colors.primary} />,
               },
               {
@@ -65,7 +65,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Contact TESS Support',
-                to: '/(app)/dashbord/actions?action=CONTACT_SUPPORT',
+                to: '/(app)/dashboard/actions?action=CONTACT_SUPPORT',
                 icon: () => <Icon name='Email' color={colors.primary} />,
               },
               {
