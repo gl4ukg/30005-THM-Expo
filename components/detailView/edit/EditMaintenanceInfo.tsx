@@ -75,7 +75,11 @@ export const EditMaintenanceInfo: React.FC<
             />
             <DataField
               label={'Next Inspection:'}
-              value={formatDate(new Date(info.nextInspection))}
+              value={
+                info.nextInspection
+                  ? formatDate(new Date(info.nextInspection))
+                  : ''
+              }
             />
             <DataField
               label={'Replacement Interval:'}
@@ -83,7 +87,11 @@ export const EditMaintenanceInfo: React.FC<
             />
             <DataField
               label={'Replacement Date:'}
-              value={formatDate(new Date(info.replacementDate))}
+              value={
+                info.replacementDate
+                  ? formatDate(new Date(info.replacementDate))
+                  : ''
+              }
             />
           </View>
         </>
@@ -117,7 +125,11 @@ export const EditMaintenanceInfo: React.FC<
             />
             <DataField
               label={'Replacement Date:'}
-              value={formatDate(new Date(info.replacementDate))}
+              value={
+                info.replacementDate
+                  ? formatDate(new Date(info.replacementDate))
+                  : ''
+              }
             />
           </View>
         </TooltipWrapper>

@@ -15,18 +15,64 @@ import { GHD, HID, HoseData, TPN, UHD } from '@/lib/types/hose';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useCallback } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
-import { getScanUrl } from '@/app/scan';
 import { BarcodeInput } from '@/components/UI/Input/BarcodeInput';
 import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
-  'customerId',
+  'customerID',
   'RFid',
   'hoseCondition',
   'approved',
-  'comment',
+  'generalComment',
   'id',
 ];
+
+const getDefaultRequiredHoseData = (): Pick<
+  HoseData,
+  | 'description'
+  | 'prodDate'
+  | 'installedDate'
+  | 'criticality'
+  | 'hoseType'
+  | 'hoseLength'
+  | 'wp'
+  | 'ferrule1'
+  | 'ferrule2'
+  | 'insert1'
+  | 'insert2'
+  | 'genericHoseType'
+  | 'typeFittingEnd1'
+  | 'generalDimensionEnd1'
+  | 'genderEnd1'
+  | 'angleEnd1'
+  | 'materialQualityEnd1'
+  | 'typeFittingEnd2'
+  | 'genericDimensionEnd2'
+  | 'genderEnd2'
+  | 'angleEnd2'
+> => ({
+  description: '',
+  prodDate: new Date().toISOString(),
+  installedDate: new Date().toISOString(),
+  criticality: 0,
+  hoseType: '',
+  hoseLength: '',
+  wp: '',
+  ferrule1: '',
+  ferrule2: '',
+  insert1: '',
+  insert2: '',
+  genericHoseType: '',
+  typeFittingEnd1: '',
+  generalDimensionEnd1: '',
+  genderEnd1: '',
+  angleEnd1: '',
+  materialQualityEnd1: '',
+  typeFittingEnd2: '',
+  genericDimensionEnd2: '',
+  genderEnd2: '',
+  angleEnd2: '',
+});
 
 const RegisterHose = () => {
   const {
@@ -50,7 +96,22 @@ const RegisterHose = () => {
     RFid: incomingRfid,
   };
 
-  const [localState, setLocalState] = useState(initialHoseData);
+  const [localState, setLocalState] = useState<Partial<HoseData>>(() => {
+    const templateData = state.data.hoseTemplate || {};
+    const defaultRequired = getDefaultRequiredHoseData();
+
+    const mergedTemplate = { ...defaultRequired, ...templateData };
+
+    excludedTemplateFields.forEach((field) => {
+      // delete mergedTemplate[field];
+    });
+
+    return {
+      ...mergedTemplate,
+      id: incomingId,
+      RFid: incomingRfid,
+    };
+  });
 
   const handleCheckboxChange = () => {
     setRegisterMultiple((prevState) => !prevState);
@@ -58,11 +119,15 @@ const RegisterHose = () => {
 
   useEffect(() => {
     if (state.data.hoseTemplate) {
+      const templateData = state.data.hoseTemplate || {};
+      const defaultRequired = getDefaultRequiredHoseData();
+      const mergedTemplate = { ...defaultRequired, ...templateData };
+
       setLocalState((prevState) => ({
-        ...state.data.hoseTemplate,
+        ...mergedTemplate,
         ...prevState,
-        id: incomingId ?? prevState.id ?? state.data.hoseTemplate?.id,
-        RFid: incomingRfid ?? prevState.RFid ?? state.data.hoseTemplate?.RFid,
+        id: incomingId ?? prevState.id ?? mergedTemplate?.id,
+        RFid: incomingRfid ?? prevState.RFid ?? mergedTemplate?.RFid,
       }));
     }
   }, [state.data.hoseTemplate, incomingId, incomingRfid]);
@@ -79,7 +144,6 @@ const RegisterHose = () => {
       setRfid(newRfid);
       setLocalState((prevState) => ({
         ...prevState,
-
         RFid: newRfid,
       }));
     } else {
@@ -106,37 +170,51 @@ const RegisterHose = () => {
     setIsBarcodeModalVisible(false);
   };
 
-  const handleSave = () => {
-    if (!localState.id) {
-      Alert.alert('Error', 'Hose ID is required');
+  const handleSave = useCallback(() => {
+    const requiredFieldsList: (keyof HoseData)[] = [
+      'description',
+      'prodDate',
+      'installedDate',
+      'criticality',
+      'hoseType',
+      'hoseLength',
+      'wp',
+      'ferrule1',
+      'ferrule2',
+      'insert1',
+      'insert2',
+      'genericHoseType',
+      'typeFittingEnd1',
+      'generalDimensionEnd1',
+      'genderEnd1',
+      'angleEnd1',
+      'materialQualityEnd1',
+      'typeFittingEnd2',
+      'genericDimensionEnd2',
+      'genderEnd2',
+      'angleEnd2',
+    ];
+    const missing = requiredFieldsList.filter(
+      (field) =>
+        localState[field] === undefined ||
+        localState[field] === null ||
+        localState[field] === '',
+    );
+
+    if (missing.length > 0) {
+      Alert.alert(
+        'Missing Required Fields',
+        `Please fill in the following fields: ${missing.join(', ')}`,
+      );
       return;
     }
 
-    Alert.alert('Success', `Hose ${localState.id} registered successfully`);
+    const newHoseData = localState as HoseData;
 
-    if (registerMultiple) {
-      const template: Partial<HoseData> = { ...localState };
-
-      excludedTemplateFields.forEach((field) => {
-        if (field in template) {
-          delete template[field];
-        }
-      });
-
-      dispatch({
-        type: 'SET_HOSE_TEMPLATE',
-        payload: template,
-      });
-
-      router.push(getScanUrl('REGISTER_HOSE'));
-    } else {
-      dispatch({
-        type: 'SET_HOSE_TEMPLATE',
-        payload: {},
-      });
-      router.push('/(app)/dashboard');
-    }
-  };
+    dispatch({ type: 'ADD_HOSE', payload: newHoseData });
+    Alert.alert('Success', 'Hose registered successfully.');
+    router.back();
+  }, [localState, dispatch, router]);
 
   const handleSaveAsDraft = () => {
     Alert.alert('Draft saved', 'Hose registration saved as draft');
@@ -208,32 +286,32 @@ const RegisterHose = () => {
             <DateInput
               label='Installation date'
               value={
-                localState.installationDate
-                  ? new Date(localState.installationDate)
+                localState.installedDate
+                  ? new Date(localState.installedDate)
                   : null
               }
               onChange={(date) =>
-                handleInputChange('installationDate', date.toString())
+                handleInputChange('installedDate', date?.toISOString())
               }
             />
           </TooltipWrapper>
         </View>
 
         <EditGeneralInfo
-          info={localState as GHD}
+          info={localState as Partial<GHD>}
           onInputChange={handleInputChange}
           isRegisterView
         />
         <EditUniversalHoseData
-          info={localState as UHD}
+          info={localState as Partial<UHD>}
           onInputChange={handleInputChange}
         />
         <EditTessPartNumbers
-          info={localState as TPN}
+          info={localState as Partial<TPN>}
           onInputChange={handleInputChange}
         />
         <EditMaintenanceInfo
-          info={localState as HID}
+          info={localState as Partial<HID>}
           onInputChange={handleInputChange}
         />
         <Documents />

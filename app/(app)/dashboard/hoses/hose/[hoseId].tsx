@@ -21,7 +21,7 @@ import {
 } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { EditProps } from '@/lib/types/edit';
-import { HoseData } from '@/lib/types/hose';
+import { HoseData, GHD, UHD, TPN, HID } from '@/lib/types/hose';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useRef, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
@@ -101,8 +101,10 @@ const HoseDetails = () => {
       setEditMode(true);
       return;
     } else if (value === 'INSPECT') {
-      // TODO implement inspection page
-      Alert.alert('Not implemented', 'This feature is not implemented yet');
+      router.push({
+        pathname: `/dashboard/hoses/inspect`,
+        params: { rfid: hoseData.RFid, hoseId: hoseData.id },
+      });
       return;
     } else {
       if (!hoseData.id) return;
@@ -152,14 +154,14 @@ const HoseDetails = () => {
   ];
 
   const getStructure = (hose: HoseData) => {
-    // TODO how to get structure?
-    const structure: string[] = [
+    const structure: (string | undefined)[] = [
       hose.s1PlantVesselUnit,
       hose.S2Equipment,
       hose.equipmentSubunit,
     ];
-    return structure;
+    return structure.filter((s): s is string => !!s);
   };
+
   return (
     <View style={styles.container}>
       {!isMultiSelection(state.data.selection) && !editMode && (
@@ -177,22 +179,22 @@ const HoseDetails = () => {
         />
 
         {renderComponent(GeneralInfo, EditGeneralInfo, {
-          info: hoseData,
+          info: hoseData as GHD,
           onInputChange: handleInputChange,
           editMode,
         })}
         {renderComponent(UniversalHoseData, EditUniversalHoseData, {
-          info: hoseData,
+          info: hoseData as UHD,
           onInputChange: handleInputChange,
           editMode,
         })}
         {renderComponent(TessPartNumbers, EditTessPartNumbers, {
-          info: hoseData,
+          info: hoseData as TPN,
           onInputChange: handleInputChange,
           editMode,
         })}
         {renderComponent(MaintenanceInfo, EditMaintenanceInfo, {
-          info: hoseData,
+          info: hoseData as HID,
           onInputChange: handleInputChange,
           editMode,
         })}
