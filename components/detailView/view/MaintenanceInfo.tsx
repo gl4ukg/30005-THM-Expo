@@ -21,12 +21,25 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
       />
       <DataField
         label={'Inspected Date:'}
-        value={formatDate(new Date(hoseData.inspectedDate))}
+        value={
+          hoseData.inspectedDate
+            ? formatDate(new Date(hoseData.inspectedDate))
+            : ''
+        }
       />
       <DataField label={'Inspected By:'} value={hoseData.inspectedBy} />
       <DataField label={'Condition:'} value={hoseData.hoseCondition} />
-      <DataField label={'Approved:'} value={hoseData.approved} />
-      <DataField label={'Comment:'} value={hoseData.comment} />
+      <DataField
+        label={'Approved:'}
+        value={
+          hoseData.approved === undefined
+            ? ''
+            : hoseData.approved
+              ? 'Yes'
+              : 'No'
+        }
+      />
+      <DataField label={'Comment:'} value={hoseData.generalComment} />
       <Typography
         name={'navigationBold'}
         text='Criticality / Intervals'
@@ -34,7 +47,7 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
       />
       <DataField
         label={'Hose Production Date:'}
-        value={formatDate(new Date(hoseData.prodDate))}
+        value={hoseData.prodDate ? formatDate(new Date(hoseData.prodDate)) : ''}
       />
       <DataField label={'Criticality:'} value={hoseData.criticality} />
       <View style={styles.inspectionDetails}>
@@ -44,8 +57,11 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
         />
         <DataField
           label={'Next Inspection:'}
-          value={formatDate(new Date(hoseData.nextInspection))}
-          // error={nextInspectionError} TODO
+          value={
+            hoseData.nextInspection
+              ? formatDate(new Date(hoseData.nextInspection))
+              : ''
+          }
         />
         <DataField
           label={'Replacement Interval:'}
@@ -53,7 +69,11 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
         />
         <DataField
           label={'Replacement Date:'}
-          value={formatDate(new Date(hoseData.replacementDate))}
+          value={
+            hoseData.replacementDate
+              ? formatDate(new Date(hoseData.replacementDate))
+              : ''
+          }
         />
       </View>
       <View style={styles.spacing}>

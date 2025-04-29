@@ -10,7 +10,7 @@ type BarToPsiInputProps = {
   keyboardType?: KeyboardTypeOptions;
 };
 
-const barToPsi = (bar: number): number => bar * 14.5038;
+export const barToPsi = (bar: number): number => bar * 14.5038;
 const psiToBar = (psi: number): number => psi / 14.5038;
 
 export const BarToPsiInput: React.FC<BarToPsiInputProps> = ({

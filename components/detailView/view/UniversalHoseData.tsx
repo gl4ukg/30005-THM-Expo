@@ -14,32 +14,56 @@ type UniversalHoseDataProps = {
 };
 
 export type CouplingSectionProps = {
-  info: Partial<Pick<UHD, CouplingsFields>>;
+  info: Partial<UHD>;
+  endSuffix: 'End1' | 'End2';
 };
-const CouplingSection: React.FC<CouplingSectionProps> = ({ info }) => (
+const CouplingSection: React.FC<CouplingSectionProps> = ({
+  info,
+  endSuffix,
+}) => (
   <View style={styles.couplingSection}>
     <DataField
       label='Material Quality'
-      value={info.materialQuality || undefined}
+      value={info[`materialQuality${endSuffix}` as keyof UHD] || undefined}
     />
-    <DataField label='Type Fitting' value={info.typeFitting || undefined} />
-    <DataField label='Inner Diameter' value={info.innerDiameter || undefined} />
-    <DataField label='Gender' value={info.gender || undefined} />
-    <DataField label='Angle' value={info.angle || undefined} />
-    <DataField label='Comment End 1' value={info.commentEnd || undefined} />
+    <DataField
+      label='Type Fitting'
+      value={info[`typeFitting${endSuffix}` as keyof UHD] || undefined}
+    />
+    <DataField
+      label='Inner Diameter'
+      value={info[`innerDiameter${endSuffix}` as keyof UHD] || undefined}
+    />
+    <DataField
+      label='Gender'
+      value={info[`gender${endSuffix}` as keyof UHD] || undefined}
+    />
+    <DataField
+      label='Angle'
+      value={info[`angle${endSuffix}` as keyof UHD] || undefined}
+    />
+    <DataField
+      label={`Comment ${endSuffix.replace('End', 'End ')}`}
+      value={info[`comment${endSuffix}` as keyof UHD] || undefined}
+    />
   </View>
 );
 
 export const UniversalHoseData = ({ info }: UniversalHoseDataProps) => {
   const compareValues = (
-    val1: (typeof info)[keyof typeof info],
-    val2: (typeof info)[keyof typeof info],
+    val1: string | number | undefined | null,
+    val2: string | number | undefined | null,
   ): boolean => {
-    return val1 === val2 && !!val1 && !!val2;
+    const v1 = val1 || '';
+    const v2 = val2 || '';
+    return v1 === v2 && (!!val1 || !!val2);
   };
+
   const areCouplingsSame = couplingsFields.every((key) => {
-    const value1 = info[key];
-    const value2 = info[`${key}2`];
+    const keyEnd1 = `${key}End1` as keyof UHD;
+    const keyEnd2 = `${key}End2` as keyof UHD;
+    const value1 = info[keyEnd1];
+    const value2 = info[keyEnd2];
     return compareValues(value1, value2);
   });
 
@@ -47,11 +71,11 @@ export const UniversalHoseData = ({ info }: UniversalHoseDataProps) => {
     <View style={styles.container}>
       <Bookmark title='Universal Hose Data' />
       <DataField label='Hose Standard' value={info.hoseStandard} />
-      <DataField label='Inner Diameter' value={info.innerDiameter} />
-      <DataField label='Total Length' value={info.totalLength} />
-      <DataField label='WP BAR' value={info.wpBar} />
+      <DataField label='Inner Diameter' value={info.generalDimensionEnd1} />
+      <DataField label='Total Length' value={info.hoseLength} />
+      <DataField label='WP BAR' value={info.wp} />
       <DataField label='WP PSI' value={info.wpPsi} />
-      <CouplingSection info={info} />
+      <CouplingSection info={info} endSuffix='End1' />
       <View style={styles.sectionTitleContainer}>
         <Typography name='navigationBold' text='Coupling end 2' />
         <View style={styles.checkboxContainer}>
@@ -59,7 +83,7 @@ export const UniversalHoseData = ({ info }: UniversalHoseDataProps) => {
           <Typography name='button' text='Same as end 1' />
         </View>
       </View>
-      {!areCouplingsSame && <CouplingSection info={info} />}
+      {!areCouplingsSame && <CouplingSection info={info} endSuffix='End2' />}
     </View>
   );
 };
