@@ -90,21 +90,15 @@ const RegisterHose = () => {
   const [rfid, setRfid] = useState<string | undefined>(incomingRfid);
   const [isBarcodeModalVisible, setIsBarcodeModalVisible] = useState(false);
 
-  const initialHoseData: Partial<HoseData> = {
-    ...state.data.hoseTemplate,
-    id: incomingId,
-    RFid: incomingRfid,
-  };
-
   const [localState, setLocalState] = useState<Partial<HoseData>>(() => {
     const templateData = state.data.hoseTemplate || {};
     const defaultRequired = getDefaultRequiredHoseData();
 
-    const mergedTemplate = { ...defaultRequired, ...templateData };
-
     excludedTemplateFields.forEach((field) => {
-      // delete mergedTemplate[field];
+      delete mergedTemplate[field];
     });
+
+    const mergedTemplate = { ...defaultRequired, ...templateData };
 
     return {
       ...mergedTemplate,
@@ -132,7 +126,10 @@ const RegisterHose = () => {
     }
   }, [state.data.hoseTemplate, incomingId, incomingRfid]);
 
-  const handleInputChange = (field: string, value: string | undefined) => {
+  const handleInputChange = (
+    field: keyof HoseData,
+    value: HoseData[keyof HoseData] | undefined,
+  ) => {
     setLocalState((prevState) => ({
       ...prevState,
       [field]: value,
@@ -216,11 +213,6 @@ const RegisterHose = () => {
     router.back();
   }, [localState, dispatch, router]);
 
-  const handleSaveAsDraft = () => {
-    Alert.alert('Draft saved', 'Hose registration saved as draft');
-    router.push('/(app)/dashboard');
-  };
-
   const handleCancel = () => {
     router.push('/(app)/dashboard');
   };
@@ -273,7 +265,7 @@ const RegisterHose = () => {
               label='Production date'
               value={localState.prodDate ? new Date(localState.prodDate) : null}
               onChange={(date) =>
-                handleInputChange('prodDate', date.toString())
+                handleInputChange('prodDate', date?.toISOString())
               }
             />
           </TooltipWrapper>
@@ -298,20 +290,20 @@ const RegisterHose = () => {
         </View>
 
         <EditGeneralInfo
-          info={localState as Partial<GHD>}
+          info={localState as GHD}
           onInputChange={handleInputChange}
           isRegisterView
         />
         <EditUniversalHoseData
-          info={localState as Partial<UHD>}
+          info={localState as UHD}
           onInputChange={handleInputChange}
         />
         <EditTessPartNumbers
-          info={localState as Partial<TPN>}
+          info={localState as TPN}
           onInputChange={handleInputChange}
         />
         <EditMaintenanceInfo
-          info={localState as Partial<HID>}
+          info={localState as HID}
           onInputChange={handleInputChange}
         />
         <Documents />
@@ -328,12 +320,6 @@ const RegisterHose = () => {
         </View>
         <View style={styles.buttonContainer}>
           <ButtonTHS title='Save & close' size='sm' onPress={handleSave} />
-          <ButtonTHS
-            title='Save as draft'
-            onPress={handleSaveAsDraft}
-            variant='secondary'
-            size='sm'
-          />
           <ButtonTHS
             title='Cancel'
             onPress={handleCancel}

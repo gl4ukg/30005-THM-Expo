@@ -90,7 +90,8 @@ export const InspectHose = () => {
             text: 'Yes, update now',
             onPress: () => {
               router.push({
-                pathname: `/dashboard/hoses/hose/${hoseData.id}`,
+                pathname: '/dashboard/hoses/hose/[hoseId]',
+                params: { hoseId: hoseData.id! },
               });
             },
           },
@@ -139,14 +140,14 @@ export const InspectHose = () => {
         <DataField label='Description:' value={hoseData.description} />
         <DataField
           label='S1 Plant, Vessel, Unit:'
-          value={hoseData.s1PlantVesselUnit}
+          value={hoseData.s1PlantVesselUnit ?? ''}
         />
-        <DataField label='S2 Equipment:' value={hoseData.S2Equipment} />
+        <DataField label='S2 Equipment:' value={hoseData.S2Equipment ?? ''} />
         <DataField
           label='Equipment Subunit:'
-          value={hoseData.equipmentSubunit}
+          value={hoseData.equipmentSubunit ?? ''}
         />
-        <DataField label='Other Info:' value={hoseData.otherInfo} />
+        <DataField label='Other Info:' value={hoseData.otherInfo ?? ''} />
       </View>
       <EditMaintenanceInfo
         info={hoseData}

@@ -159,7 +159,7 @@ const HoseDetails = () => {
       hose.S2Equipment,
       hose.equipmentSubunit,
     ];
-    return structure.filter((s): s is string => !!s);
+    return structure.filter((s): s is string => !!s && s.trim() !== '');
   };
 
   return (
@@ -173,28 +173,28 @@ const HoseDetails = () => {
       )}
       <ScrollView ref={scrollViewRef}>
         <DetailsHeader
-          id={hoseData.id}
+          id={hoseData.id ?? ''}
           date={hoseData.prodDate}
           missingData={hoseData.missingData}
         />
 
         {renderComponent(GeneralInfo, EditGeneralInfo, {
-          info: hoseData as GHD,
+          info: hoseData as Partial<GHD>,
           onInputChange: handleInputChange,
           editMode,
         })}
         {renderComponent(UniversalHoseData, EditUniversalHoseData, {
-          info: hoseData as UHD,
+          info: hoseData as Partial<UHD>,
           onInputChange: handleInputChange,
           editMode,
         })}
         {renderComponent(TessPartNumbers, EditTessPartNumbers, {
-          info: hoseData as TPN,
+          info: hoseData as Partial<TPN>,
           onInputChange: handleInputChange,
           editMode,
         })}
         {renderComponent(MaintenanceInfo, EditMaintenanceInfo, {
-          info: hoseData as HID,
+          info: hoseData as Partial<HID>,
           onInputChange: handleInputChange,
           editMode,
         })}
@@ -203,11 +203,7 @@ const HoseDetails = () => {
             <Documents />
             <Structure
               structure={getStructure(hoseData)}
-              name={
-                typeof hoseData.s1PlantVesselUnit === 'string'
-                  ? hoseData.s1PlantVesselUnit
-                  : ''
-              }
+              name={hoseData.s1PlantVesselUnit ?? ''}
             />
             <HistoryView />
           </>
