@@ -78,13 +78,15 @@ export const InspectHose = () => {
     const missingFields = requiredFields.filter((field) => {
       const value = hoseData[field];
 
-      return value === null || value === undefined || value === '';
+      return (
+        value === null || value === undefined || String(value).trim() === ''
+      );
     });
 
     if (missingFields.length > 0) {
       Alert.alert(
         'Missing Hose Details',
-        'Updating now means better maintenance and ordering later. Want to add the missing info?',
+        `Updating now means better maintenance and ordering later. The following fields are missing: ${missingFields.join(', ')}. Want to add the missing info?`,
         [
           {
             text: 'Yes, update now',

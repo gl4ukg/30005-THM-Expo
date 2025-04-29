@@ -1,56 +1,8 @@
 import { HoseData } from '@/lib/types/hose';
 
-const createDefaultRequiredFields = (): Pick<
-  HoseData,
-  | 'description'
-  | 'prodDate'
-  | 'installedDate'
-  | 'criticality'
-  | 'hoseType'
-  | 'hoseLength'
-  | 'wp'
-  | 'ferrule1'
-  | 'ferrule2'
-  | 'insert1'
-  | 'insert2'
-  | 'genericHoseType'
-  | 'typeFittingEnd1'
-  | 'generalDimensionEnd1'
-  | 'genderEnd1'
-  | 'angleEnd1'
-  | 'materialQualityEnd1'
-  | 'typeFittingEnd2'
-  | 'genericDimensionEnd2'
-  | 'genderEnd2'
-  | 'angleEnd2'
-> => ({
-  description: 'Default Description',
-  prodDate: new Date().toISOString(),
-  installedDate: new Date().toISOString(),
-  criticality: 3,
-  hoseType: 'Default Hose Type',
-  hoseLength: '1000 mm',
-  wp: '200 BAR',
-  ferrule1: 'Default Ferrule 1',
-  ferrule2: 'Default Ferrule 2',
-  insert1: 'Default Insert 1',
-  insert2: 'Default Insert 2',
-  genericHoseType: 'Default Generic Type',
-  typeFittingEnd1: 'Default Type Fitting 1',
-  generalDimensionEnd1: 'Default Dimension 1',
-  genderEnd1: 'Default Gender 1',
-  angleEnd1: 'Default Angle 1',
-  materialQualityEnd1: 'Default Material 1',
-  typeFittingEnd2: 'Default Type Fitting 2',
-  genericDimensionEnd2: 'Default Dimension 2',
-  genderEnd2: 'Default Gender 2',
-  angleEnd2: 'Default Angle 2',
-});
-
 export const mockedData: HoseData[] = [
   {
     id: '1244951',
-    ...createDefaultRequiredFields(),
 
     description: 'Hydraulic hose for heavy machinery',
     prodDate: '2022-01-01T00:00:00.000Z',
@@ -86,10 +38,9 @@ export const mockedData: HoseData[] = [
   },
   {
     id: '1154917',
-    ...createDefaultRequiredFields(),
 
-    description: 'Hydraulic hose for heavy machinery',
-    prodDate: '2022-01-01T00:00:00.000Z',
+    description: '',
+    prodDate: '',
     installedDate: '2022-02-01T00:00:00.000Z',
     customerId: 'CUST-1234',
     hoseType: 'Hydraulic',
@@ -97,7 +48,7 @@ export const mockedData: HoseData[] = [
     S2Equipment: 'S2-456',
     equipmentSubunit: 'E1-789',
     otherInfo: 'High-pressure hose',
-    RFid: 'RFID-1234',
+    RFid: '',
     hoseMediumTemperature: '150°C',
     hoseFunction: 'Hydraulic fluid transfer',
     pollutionExposure: 'Low',
@@ -121,7 +72,6 @@ export const mockedData: HoseData[] = [
   },
   {
     id: '1',
-    ...createDefaultRequiredFields(),
 
     description: 'Hydraulic hose for heavy machinery',
     prodDate: '2022-01-01T00:00:00.000Z',
@@ -156,8 +106,6 @@ export const mockedData: HoseData[] = [
   },
   {
     id: '2',
-    ...createDefaultRequiredFields(),
-
     description: 'Industrial hose for chemical transfer',
     prodDate: '2022-02-01T00:00:00.000Z',
     installedDate: '2022-03-01T00:00:00.000Z',
@@ -189,4 +137,4 @@ export const mockedData: HoseData[] = [
     angle2: '45°',
     commentEnd2: 'End 2 comment',
   },
-].map((hose) => hose as HoseData);
+].map((hose) => hose as unknown as HoseData);
