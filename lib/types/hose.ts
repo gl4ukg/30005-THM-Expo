@@ -34,11 +34,14 @@ export interface HoseData {
   class?: string;
   status?: string;
   type?: string;
+  pollutionExposure?: string;
+  uvExposure?: string;
   hoseLengthInch?: number | string;
   wpPsi?: number | string;
   couplingOrientation?: number;
   pinpricked?: boolean;
   hoseMediumTemperature?: number | string;
+  hoseStandard?: string;
   hoseFunction?: string;
   hoseWarranty?: string;
   hoseWarrantyComment?: string;
@@ -84,12 +87,14 @@ export interface HoseData {
   hoseCondition?: string;
   inspectedDate?: string;
   inspectedBy?: string;
+  innerDiameter?: string;
 }
 
 export type GHD = Pick<
   HoseData,
   | 'description'
   | 'prodDate'
+  | 'installedDate'
   | 'customerID'
   | 's1PlantVesselUnit'
   | 'S2Equipment'
@@ -98,25 +103,30 @@ export type GHD = Pick<
   | 'RFid'
   | 'hoseMediumTemperature'
   | 'hoseFunction'
-  | 'installedDate'
+  | 'pollutionExposure'
+  | 'uvExposure'
 >;
 
 export type UHD = Pick<
   HoseData,
   | 'description'
-  | 'wpPsi'
+  | 'wp'
+  | 'hoseLength'
   | 'materialQualityEnd1'
   | 'typeFittingEnd1'
   | 'generalDimensionEnd1'
   | 'genderEnd1'
   | 'angleEnd1'
-  | 'commentEnd1PTC'
   | 'materialQualityEnd2'
   | 'genericDimensionEnd2'
   | 'typeFittingEnd2'
-  | 'commentEnd2PTC'
   | 'genderEnd2'
   | 'angleEnd2'
+  | 'wpPsi'
+  | 'commentEnd1PTC'
+  | 'commentEnd2PTC'
+  | 'hoseStandard'
+  | 'innerDiameter'
 >;
 
 export type TPN = Pick<
@@ -141,13 +151,13 @@ export type TPN = Pick<
 
 export type HID = Pick<
   HoseData,
+  | 'prodDate'
+  | 'criticality'
   | 'inspectedDate'
   | 'inspectedBy'
   | 'hoseCondition'
   | 'approved'
   | 'generalComment'
-  | 'prodDate'
-  | 'criticality'
   | 'inspectionInterval'
   | 'nextInspection'
   | 'replacementInterval'
