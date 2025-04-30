@@ -1,6 +1,6 @@
 export const formatDate = (date: Date | undefined): string => {
   if (!date || isNaN(date.getTime())) {
-    return 'Invalid Date';
+    return '';
   }
   return `${date?.getDay()}-${date?.getMonth() + 1}-${date.getFullYear()}`;
 };
@@ -16,6 +16,6 @@ export const stringToDate = (dateString: string) => {
     return new Date(Number(parts[2]), Number(parts[0]) - 1, Number(parts[1]));
   } catch (error) {
     console.error('Error formatting date:', error);
-    return 'Invalid Date';
+    return '';
   }
 };
