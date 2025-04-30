@@ -54,6 +54,7 @@ export const BarToPsiInput: React.FC<BarToPsiInputProps> = ({
             value={bar}
             onChangeText={handleBarChange}
             keyboardType='numeric'
+            required
           />
         </View>
         <View style={styles.inputWrapper}>

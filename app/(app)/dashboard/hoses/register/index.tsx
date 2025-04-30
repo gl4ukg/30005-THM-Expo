@@ -180,7 +180,7 @@ const RegisterHose = () => {
       'ferrule2',
       'insert1',
       'insert2',
-      'genericHoseType',
+      'genericHoseType', // Not sure what this is
       'typeFittingEnd1',
       'generalDimensionEnd1',
       'genderEnd1',

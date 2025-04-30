@@ -41,7 +41,7 @@ export const mockedData: HoseData[] = [
 
     description: '',
     prodDate: '',
-    installedDate: '2022-02-01T00:00:00.000Z',
+    installedDate: '',
     customerId: 'CUST-1234',
     hoseType: 'Hydraulic',
     s1PlantVesselUnit: 'S1-123 Pump-Manifold Block P1 starboard',

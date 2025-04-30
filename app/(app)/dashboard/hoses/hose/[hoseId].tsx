@@ -23,24 +23,34 @@ import { colors } from '@/lib/tokens/colors';
 import { EditProps } from '@/lib/types/edit';
 import { HoseData, GHD, UHD, TPN, HID } from '@/lib/types/hose';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useContext, useRef, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
+
+type ExtendedEditProps<T> = EditProps<T> & {
+  missingFields?: string[];
+};
 
 const renderComponent = <T,>(
   Component: React.FC<{ info: T }>,
-  EditComponent: React.FC<EditProps<T>>,
+  EditComponent: React.FC<ExtendedEditProps<T>>,
   props: {
     info: T;
     editMode: boolean;
     onInputChange: (field: keyof T, value: any) => void;
+    missingFields?: string[];
   },
 ) => {
   return props.editMode ? (
-    <EditComponent info={props.info} onInputChange={props.onInputChange} />
+    <EditComponent
+      info={props.info}
+      onInputChange={props.onInputChange}
+      missingFields={props.missingFields}
+    />
   ) : (
     <Component info={props.info} />
   );
 };
+
 export type Section = {
   id: string;
   title: string;
@@ -52,18 +62,41 @@ const isHoseDataType = (hose: HoseData | {}): hose is HoseData => {
 };
 
 const HoseDetails = () => {
-  const { hoseId } = useLocalSearchParams();
+  const {
+    hoseId,
+    startInEditMode,
+    missingFields: missingFieldsParam,
+  } = useLocalSearchParams<{
+    hoseId: string;
+    startInEditMode?: string;
+    missingFields?: string;
+  }>();
 
   const { state, dispatch } = useContext(AppContext);
 
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(startInEditMode === 'true');
+  const [missingFields, setMissingFields] = useState<string[]>([]);
+
   const [hoseData, setHoseData] = useState<HoseData | {}>(
     state.data.hoses.find((hose) => hose.id === hoseId) || {},
   );
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (missingFieldsParam) {
+      try {
+        const parsedFields = JSON.parse(missingFieldsParam);
+        if (Array.isArray(parsedFields)) {
+          setMissingFields(parsedFields);
+        }
+      } catch (error) {
+        console.error('Failed to parse missingFields parameter:', error);
+      }
+    }
+  }, [missingFieldsParam]);
 
   if (!isHoseDataType(hoseData)) {
     return (
@@ -72,7 +105,9 @@ const HoseDetails = () => {
       </View>
     );
   }
-  hoseData;
+
+  const isDataMissing = missingFields.length > 0 || hoseData.missingData;
+
   const handleInputChange = (
     field: keyof HoseData,
     value: HoseData[keyof HoseData],
@@ -83,16 +118,24 @@ const HoseDetails = () => {
     }));
   };
 
-  const toggleEditMode = () => setEditMode((prev) => !prev);
+  const toggleEditMode = () => {
+    setEditMode((prev) => !prev);
+    if (editMode) {
+      setMissingFields([]);
+    }
+  };
 
   const handleSave = () => {
     if (hoseData.id === undefined) return;
 
+    const updatedHoseData = { ...hoseData, missingData: false };
+
     dispatch({
       type: 'SAVE_HOSE_DATA',
-      payload: { hoseId: hoseData.id, hoseData },
+      payload: { hoseId: hoseData.id, hoseData: updatedHoseData },
     });
     setEditMode(false);
+    setMissingFields([]);
     scrollViewRef.current?.scrollTo({ y: 0 });
   };
 
@@ -108,7 +151,6 @@ const HoseDetails = () => {
       return;
     } else {
       if (!hoseData.id) return;
-      // setAction({ label: value, value: value });
       if (!state.data.selection) {
         dispatch({
           type: 'SELECT_ONE_HOSE',
@@ -175,28 +217,32 @@ const HoseDetails = () => {
         <DetailsHeader
           id={hoseData.id ?? ''}
           date={hoseData.prodDate}
-          missingData={hoseData.missingData}
+          missingData={isDataMissing}
         />
 
         {renderComponent(GeneralInfo, EditGeneralInfo, {
           info: hoseData as Partial<GHD>,
           onInputChange: handleInputChange,
           editMode,
+          missingFields: editMode ? missingFields : undefined,
         })}
         {renderComponent(UniversalHoseData, EditUniversalHoseData, {
           info: hoseData as Partial<UHD>,
           onInputChange: handleInputChange,
           editMode,
+          missingFields: editMode ? missingFields : undefined,
         })}
         {renderComponent(TessPartNumbers, EditTessPartNumbers, {
           info: hoseData as Partial<TPN>,
           onInputChange: handleInputChange,
           editMode,
+          missingFields: editMode ? missingFields : undefined,
         })}
         {renderComponent(MaintenanceInfo, EditMaintenanceInfo, {
           info: hoseData as Partial<HID>,
           onInputChange: handleInputChange,
           editMode,
+          missingFields: editMode ? missingFields : undefined,
         })}
         {!editMode && (
           <>

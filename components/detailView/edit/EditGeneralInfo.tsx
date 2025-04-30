@@ -44,10 +44,15 @@ export const EditGeneralInfo: React.FC<
           >
             <DateInput
               label='Installation date'
-              value={new Date(localState.installedDate ?? '')}
+              value={
+                localState.installedDate
+                  ? new Date(localState.installedDate)
+                  : null
+              }
               onChange={(date) =>
                 onInputChange('installedDate', date.toString())
               }
+              required
             />
           </TooltipWrapper>
         </>

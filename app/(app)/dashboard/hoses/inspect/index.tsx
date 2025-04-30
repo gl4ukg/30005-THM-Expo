@@ -4,10 +4,8 @@ import { SingleHoseDisplay } from '@/components/dashboard/listTable/SingleHoseDi
 import { Typography } from '@/components/Typography';
 import { HoseData } from '@/lib/types/hose';
 import React, { useState } from 'react';
-
 import { ScrollView, StyleSheet, View, Alert } from 'react-native';
 import { ButtonTHS } from '@/components/UI';
-
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAppContext } from '@/context/ContextProvider';
 import { DataField } from '@/components/detailView/common/Datafield';
@@ -86,16 +84,21 @@ export const InspectHose = () => {
     if (missingFields.length > 0) {
       Alert.alert(
         'Missing Hose Details',
-        `Updating now means better maintenance and ordering later. The following fields are missing: ${missingFields.join(', ')}. Want to add the missing info?`,
+        `Updating now means better maintenance and ordering later. Want to add the missing info?`,
         [
           {
             text: 'Yes, update now',
             onPress: () => {
               router.push({
                 pathname: '/dashboard/hoses/hose/[hoseId]',
-                params: { hoseId: hoseData.id! },
+                params: {
+                  hoseId: hoseData.id!,
+                  startInEditMode: 'true',
+                  missingFields: JSON.stringify(missingFields),
+                },
               });
             },
+            style: 'default',
           },
           {
             text: 'No, skip',
