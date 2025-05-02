@@ -6,16 +6,17 @@ import { Typography } from '@/components/Typography';
 import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { colors } from '@/lib/tokens/colors';
-import { EditProps } from '@/lib/types/edit';
 import { HID } from '@/lib/types/hose';
 import { formatDate } from '@/lib/util/formatDate';
 import { StyleSheet, View } from 'react-native';
-import { HoseData } from '@/lib/types/hose';
 
 export const EditMaintenanceInfo: React.FC<
   {
     info: Partial<HID>;
-    onInputChange: (field: keyof HoseData, value: any) => void;
+    onInputChange: (
+      field: keyof Partial<HID>,
+      value: Partial<HID>[keyof Partial<HID>],
+    ) => void;
   } & { isInspect?: boolean }
 > = ({ info, onInputChange, isInspect }) => {
   const getSelectedApprovalId = (approved: boolean | undefined): string => {

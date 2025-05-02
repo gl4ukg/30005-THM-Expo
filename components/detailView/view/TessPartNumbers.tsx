@@ -4,7 +4,7 @@ import { Typography } from '@/components/Typography';
 import { TPN } from '@/lib/types/hose';
 import { StyleSheet, View } from 'react-native';
 interface TessPartNumbersProps {
-  info: TPN;
+  info: Partial<TPN>;
 }
 
 export const TessPartNumbers: React.FC<TessPartNumbersProps> = ({ info }) => {

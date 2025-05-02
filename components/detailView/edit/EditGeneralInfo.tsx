@@ -8,12 +8,14 @@ import { GHD, HoseData } from '@/lib/types/hose';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-export const EditGeneralInfo: React.FC<
-  {
-    info: Partial<GHD>;
-    onInputChange: (field: keyof HoseData, value: any) => void;
-  } & { isRegisterView?: boolean }
-> = ({ info, onInputChange, isRegisterView }) => {
+export const EditGeneralInfo: React.FC<{
+  info: Partial<GHD>;
+  onInputChange: (
+    field: keyof Partial<GHD>,
+    value: Partial<GHD>[keyof Partial<GHD>],
+  ) => void;
+  isRegisterView?: boolean;
+}> = ({ info, onInputChange, isRegisterView }) => {
   const [rfid, setRfid] = useState<string>('');
   const [localState, setLocalState] = useState(info);
 

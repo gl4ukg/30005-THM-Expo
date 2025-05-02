@@ -21,7 +21,7 @@ import {
 } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { EditProps } from '@/lib/types/edit';
-import { HoseData, GHD, UHD, TPN, HID } from '@/lib/types/hose';
+import { HoseData } from '@/lib/types/hose';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -31,10 +31,10 @@ type ExtendedEditProps<T> = EditProps<T> & {
 };
 
 const renderComponent = <T,>(
-  Component: React.FC<{ info: T }>,
+  Component: React.FC<{ info: Partial<T> }>,
   EditComponent: React.FC<ExtendedEditProps<T>>,
   props: {
-    info: T;
+    info: Partial<T>;
     editMode: boolean;
     onInputChange: (field: keyof T, value: any) => void;
     missingFields?: string[];
@@ -79,7 +79,7 @@ const HoseDetails = () => {
   const [editMode, setEditMode] = useState(startInEditMode === 'true');
   const [missingFields, setMissingFields] = useState<string[]>([]);
 
-  const [hoseData, setHoseData] = useState<HoseData | {}>(
+  const [hoseData, setHoseData] = useState<Partial<HoseData> | {}>(
     state.data.hoses.find((hose) => hose.id === hoseId) || {},
   );
 
@@ -221,25 +221,25 @@ const HoseDetails = () => {
         />
 
         {renderComponent(GeneralInfo, EditGeneralInfo, {
-          info: hoseData as Partial<GHD>,
+          info: hoseData,
           onInputChange: handleInputChange,
           editMode,
           missingFields: editMode ? missingFields : undefined,
         })}
         {renderComponent(UniversalHoseData, EditUniversalHoseData, {
-          info: hoseData as Partial<UHD>,
+          info: hoseData,
           onInputChange: handleInputChange,
           editMode,
           missingFields: editMode ? missingFields : undefined,
         })}
         {renderComponent(TessPartNumbers, EditTessPartNumbers, {
-          info: hoseData as Partial<TPN>,
+          info: hoseData,
           onInputChange: handleInputChange,
           editMode,
           missingFields: editMode ? missingFields : undefined,
         })}
         {renderComponent(MaintenanceInfo, EditMaintenanceInfo, {
-          info: hoseData as Partial<HID>,
+          info: hoseData,
           onInputChange: handleInputChange,
           editMode,
           missingFields: editMode ? missingFields : undefined,

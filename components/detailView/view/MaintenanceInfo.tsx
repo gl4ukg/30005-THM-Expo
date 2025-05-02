@@ -6,7 +6,7 @@ import { HID } from '@/lib/types/hose';
 import { formatDate } from '@/lib/util/formatDate';
 import { StyleSheet, View } from 'react-native';
 type MaintenanceProps = {
-  info: HID;
+  info: Partial<HID>;
 };
 export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
   info: hoseData,

@@ -6,7 +6,7 @@ import { Typography } from '@/components/Typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
-import { HoseData, UHD } from '@/lib/types/hose';
+import { UHD } from '@/lib/types/hose';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -44,7 +44,10 @@ export const isFieldACouplingFieldEnd = (
 
 export const EditUniversalHoseData: React.FC<{
   info: Partial<UHD>;
-  onInputChange: (field: keyof HoseData, value: any) => void;
+  onInputChange: (
+    field: keyof Partial<UHD>,
+    value: Partial<UHD>[keyof Partial<UHD>],
+  ) => void;
 }> = ({ info, onInputChange }) => {
   const [sameAsEnd1, setSameAsEnd1] = useState(false);
 
@@ -71,7 +74,7 @@ export const EditUniversalHoseData: React.FC<{
     couplingsFields.forEach((key1, index) => {
       const key2 = couplingsFieldsEnd[index];
       const valueToSync = info[key1];
-      onInputChange(key2 as keyof HoseData, valueToSync);
+      onInputChange(key2 as keyof Partial<UHD>, valueToSync);
     });
   };
 
@@ -90,7 +93,7 @@ export const EditUniversalHoseData: React.FC<{
       const end1Index = couplingsFields.indexOf(field);
       if (end1Index !== -1) {
         const end2Field = couplingsFieldsEnd[end1Index];
-        onInputChange(end2Field as keyof HoseData, value);
+        onInputChange(end2Field as keyof Partial<UHD>, value);
       }
     }
 
