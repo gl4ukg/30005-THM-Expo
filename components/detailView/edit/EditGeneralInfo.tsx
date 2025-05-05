@@ -4,7 +4,7 @@ import { RFIDInput } from '@/components/UI/Input/RFID';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
-import { GHD, HoseData } from '@/lib/types/hose';
+import { GHD } from '@/lib/types/hose';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -12,21 +12,25 @@ export const EditGeneralInfo: React.FC<{
   info: Partial<GHD>;
   onInputChange: (
     field: keyof Partial<GHD>,
-    value: Partial<GHD>[keyof Partial<GHD>],
+
+    value: Partial<GHD>[keyof Partial<GHD>] | Date,
   ) => void;
   isRegisterView?: boolean;
 }> = ({ info, onInputChange, isRegisterView }) => {
   const [rfid, setRfid] = useState<string>('');
-  const [localState, setLocalState] = useState(info);
 
   const handleRFIDScanned = (newRfid: string | null) => {
     if (newRfid) {
       setRfid(newRfid);
-      setLocalState((prevState) => ({
-        ...prevState,
-        id: newRfid,
-      }));
+
+      onInputChange('id', newRfid);
     }
+  };
+
+  const parseDate = (dateValue: any): Date | null => {
+    if (!dateValue) return null;
+    const date = new Date(dateValue);
+    return isNaN(date.getTime()) ? null : date;
   };
 
   return (
@@ -46,14 +50,8 @@ export const EditGeneralInfo: React.FC<{
           >
             <DateInput
               label='Installation date'
-              value={
-                localState.installedDate
-                  ? new Date(localState.installedDate)
-                  : null
-              }
-              onChange={(date) =>
-                onInputChange('installedDate', date.toString())
-              }
+              value={parseDate(info.installedDate)}
+              onChange={(date) => onInputChange('installedDate', date)}
               required
             />
           </TooltipWrapper>

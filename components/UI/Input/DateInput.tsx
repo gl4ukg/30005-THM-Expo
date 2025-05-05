@@ -10,7 +10,6 @@ interface DatePickerProps {
   value: Date | null;
   onChange: (value: Date) => void;
   required?: boolean;
-  isMissing?: boolean;
 }
 
 export const DateInput: React.FC<DatePickerProps> = ({
@@ -18,9 +17,10 @@ export const DateInput: React.FC<DatePickerProps> = ({
   value,
   onChange,
   required,
-  isMissing,
 }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const showError = required && !value;
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -35,26 +35,18 @@ export const DateInput: React.FC<DatePickerProps> = ({
     onChange(selectedDate);
   };
 
-  const isRequiredValueMissing = (required && !value) || isMissing;
-
   return (
     <View>
       <View style={styles.labelContainer}>
         <Typography
           name={'navigation'}
-          style={[styles.label, isRequiredValueMissing && styles.labelError]}
+          style={[styles.label, showError && styles.labelError]}
           text={label}
         />
-        {isRequiredValueMissing && (
-          <Icon name='Alert' color={colors.error} size='xsm' />
-        )}
+        {showError && <Icon name='Alert' color={colors.error} size='xsm' />}
       </View>
       <Pressable
-        style={[
-          styles.inputContainer,
-
-          isRequiredValueMissing && styles.inputContainerError,
-        ]}
+        style={[styles.inputContainer, showError && styles.inputContainerError]}
         onPress={showDatePicker}
       >
         <Typography
@@ -63,18 +55,20 @@ export const DateInput: React.FC<DatePickerProps> = ({
           style={[
             styles.valueStyle,
             !value && styles.valueNotSelected,
-            isRequiredValueMissing && styles.valueError,
+
+            showError && styles.valueError,
           ]}
         />
         <View style={styles.iconContainer}>
           <Icon
             name='Calendar'
             size='md'
-            color={isRequiredValueMissing ? colors.error : colors.extended666}
+            color={showError ? colors.error : colors.extended666}
           />
         </View>
       </Pressable>
-      {isRequiredValueMissing && (
+      {/* Use showError for conditional rendering */}
+      {showError && (
         <Typography
           name={'navigation'}
           text='Required field'
