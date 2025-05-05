@@ -4,16 +4,41 @@ import { SingleHoseDisplay } from '@/components/dashboard/listTable/SingleHoseDi
 import { Typography } from '@/components/Typography';
 import { HoseData } from '@/lib/types/hose';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, Alert } from 'react-native';
 import { ButtonTHS } from '@/components/UI';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAppContext } from '@/context/ContextProvider';
 import { DataField } from '@/components/detailView/common/Datafield';
 import { colors } from '@/lib/tokens/colors';
 
+const requiredFields: (keyof HoseData)[] = [
+  'description',
+  'prodDate',
+  'installedDate',
+  'criticality',
+  'hoseType',
+  'hoseLength',
+  'wp',
+  'ferrule1',
+  'ferrule2',
+  'insert1',
+  'insert2',
+  'genericHoseType',
+  'typeFittingEnd1',
+  'generalDimensionEnd1',
+  'genderEnd1',
+  'angleEnd1',
+  'materialQualityEnd1',
+  'typeFittingEnd2',
+  'genericDimensionEnd2',
+  'genderEnd2',
+  'angleEnd2',
+];
+
 export const InspectHose = () => {
   const { state, dispatch } = useAppContext();
   const { hoseId, rfid, scanMethod } = useLocalSearchParams();
+  const router = useRouter();
   const [hoseData, setHoseData] = useState<HoseData | undefined>(() => {
     if (!state.data.hoses) return undefined;
     if (scanMethod === 'RFID' && rfid) {
@@ -39,16 +64,58 @@ export const InspectHose = () => {
     });
   };
 
-  const handleCompleteInspection = () => {
+  const completeInspection = () => {
     console.log('Complete Inspection:', hoseData);
+
+    router.push('/dashboard');
   };
 
-  const handleSaveDraft = () => {
-    console.log('Save Draft:', hoseData);
+  const handleCompleteInspection = () => {
+    if (!hoseData) return;
+
+    const missingFields = requiredFields.filter((field) => {
+      const value = hoseData[field];
+
+      return (
+        value === null || value === undefined || String(value).trim() === ''
+      );
+    });
+
+    if (missingFields.length > 0) {
+      Alert.alert(
+        'Missing Hose Details',
+        `Updating now means better maintenance and ordering later. Want to add the missing info?`,
+        [
+          {
+            text: 'Yes, update now',
+            onPress: () => {
+              router.push({
+                pathname: '/dashboard/hoses/hose/[hoseId]',
+                params: {
+                  hoseId: hoseData.id!,
+                  startInEditMode: 'true',
+                  missingFields: JSON.stringify(missingFields),
+                },
+              });
+            },
+            style: 'default',
+          },
+          {
+            text: 'No, skip',
+            onPress: completeInspection,
+            style: 'cancel',
+          },
+        ],
+        { cancelable: false },
+      );
+    } else {
+      completeInspection();
+    }
   };
 
   const handleCancel = () => {
     console.log('Cancel Inspection');
+    router.back();
   };
 
   if (!hoseData) {
@@ -78,14 +145,14 @@ export const InspectHose = () => {
         <DataField label='Description:' value={hoseData.description} />
         <DataField
           label='S1 Plant, Vessel, Unit:'
-          value={hoseData.s1PlantVesselUnit}
+          value={hoseData.s1PlantVesselUnit ?? ''}
         />
-        <DataField label='S2 Equipment:' value={hoseData.S2Equipment} />
+        <DataField label='S2 Equipment:' value={hoseData.S2Equipment ?? ''} />
         <DataField
           label='Equipment Subunit:'
-          value={hoseData.equipmentSubunit}
+          value={hoseData.equipmentSubunit ?? ''}
         />
-        <DataField label='Other Info:' value={hoseData.otherInfo} />
+        <DataField label='Other Info:' value={hoseData.otherInfo ?? ''} />
       </View>
       <EditMaintenanceInfo
         info={hoseData}

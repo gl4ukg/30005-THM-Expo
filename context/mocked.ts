@@ -1,10 +1,12 @@
 import { HoseData } from '@/lib/types/hose';
 
-export const mockedData: Partial<HoseData>[] = [
+export const mockedData: HoseData[] = [
   {
     id: '1244951',
+
     description: 'Hydraulic hose for heavy machinery',
     prodDate: '2022-01-01T00:00:00.000Z',
+    installedDate: '2022-02-01T00:00:00.000Z',
     customerId: 'CUST-1234',
     hoseType: 'Hydraulic',
     s1PlantVesselUnit: 'S1-123 Pump-Manifold Block P1 starboard',
@@ -16,7 +18,6 @@ export const mockedData: Partial<HoseData>[] = [
     hoseFunction: 'Hydraulic fluid transfer',
     pollutionExposure: 'Low',
     uvExposure: 'Medium',
-    installationDate: '2022-02-01T00:00:00.000Z',
     hoseStandard: 'SAE 100R1',
     innerDiameter: '1.5 inches',
     totalLength: '20 feet',
@@ -37,20 +38,21 @@ export const mockedData: Partial<HoseData>[] = [
   },
   {
     id: '1154917',
-    description: 'Hydraulic hose for heavy machinery',
-    prodDate: '2022-01-01T00:00:00.000Z',
+
+    description: '',
+    prodDate: '',
+    installedDate: '',
     customerId: 'CUST-1234',
     hoseType: 'Hydraulic',
     s1PlantVesselUnit: 'S1-123 Pump-Manifold Block P1 starboard',
     S2Equipment: 'S2-456',
     equipmentSubunit: 'E1-789',
     otherInfo: 'High-pressure hose',
-    RFid: 'RFID-1234',
+    RFid: '',
     hoseMediumTemperature: '150°C',
     hoseFunction: 'Hydraulic fluid transfer',
     pollutionExposure: 'Low',
     uvExposure: 'Medium',
-    installationDate: '2022-02-01T00:00:00.000Z',
     hoseStandard: 'SAE 100R1',
     innerDiameter: '1.5 inches',
     totalLength: '20 feet',
@@ -62,7 +64,6 @@ export const mockedData: Partial<HoseData>[] = [
     gender: 'Male',
     angle: '90°',
     commentEnd: 'End 1 comment',
-    missingData: true,
     materialQuality2: 'High-quality rubber',
     typeFitting2: 'JIC 37° flare',
     gender2: 'Female',
@@ -71,8 +72,10 @@ export const mockedData: Partial<HoseData>[] = [
   },
   {
     id: '1',
+
     description: 'Hydraulic hose for heavy machinery',
     prodDate: '2022-01-01T00:00:00.000Z',
+    installedDate: '2022-02-01T00:00:00.000Z',
     customerId: 'CUST-1234',
     hoseType: 'Hydraulic',
     s1PlantVesselUnit: 'S1-123 Pump-Manifold Block P1 starboard',
@@ -84,7 +87,6 @@ export const mockedData: Partial<HoseData>[] = [
     hoseFunction: 'Hydraulic fluid transfer',
     pollutionExposure: 'Low',
     uvExposure: 'Medium',
-    installationDate: '2022-02-01T00:00:00.000Z',
     hoseStandard: 'SAE 100R1',
     innerDiameter: '1.5 inches',
     totalLength: '20 feet',
@@ -106,6 +108,7 @@ export const mockedData: Partial<HoseData>[] = [
     id: '2',
     description: 'Industrial hose for chemical transfer',
     prodDate: '2022-02-01T00:00:00.000Z',
+    installedDate: '2022-03-01T00:00:00.000Z',
     customerId: 'CUST-5678',
     hoseType: 'Industrial',
     s1PlantVesselUnit: 'S1-901',
@@ -117,7 +120,6 @@ export const mockedData: Partial<HoseData>[] = [
     hoseFunction: 'Chemical transfer',
     pollutionExposure: 'Medium',
     uvExposure: 'High',
-    installationDate: '2022-03-01T00:00:00.000Z',
     hoseStandard: 'ANSI/ASME B31.3',
     innerDiameter: '2 inches',
     totalLength: '30 feet',
@@ -135,4 +137,4 @@ export const mockedData: Partial<HoseData>[] = [
     angle2: '45°',
     commentEnd2: 'End 2 comment',
   },
-];
+].map((hose) => hose as unknown as HoseData);

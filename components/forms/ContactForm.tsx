@@ -56,7 +56,7 @@ export const ContactForm: React.FC<Props> = ({
   const [phone, setPhone] = useState('');
   const [rfq, setRfq] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>(
-    hoses.map((h) => h.id),
+    hoses.map((h) => h.id).filter((id): id is string => id !== undefined),
   );
   const originallySelectedHoses = useMemo(() => hoses, []);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);

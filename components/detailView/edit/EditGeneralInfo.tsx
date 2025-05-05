@@ -4,25 +4,32 @@ import { RFIDInput } from '@/components/UI/Input/RFID';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
-import { EditProps } from '@/lib/types/edit';
 import { GHD } from '@/lib/types/hose';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-export const EditGeneralInfo: React.FC<
-  EditProps<GHD> & { isRegisterView?: boolean }
-> = ({ info, onInputChange, isRegisterView }) => {
+export const EditGeneralInfo: React.FC<{
+  info: Partial<GHD>;
+  onInputChange: (
+    field: keyof Partial<GHD>,
+
+    value: Partial<GHD>[keyof Partial<GHD>] | Date,
+  ) => void;
+  isRegisterView?: boolean;
+}> = ({ info, onInputChange, isRegisterView }) => {
   const [rfid, setRfid] = useState<string>('');
-  const [localState, setLocalState] = useState(info);
 
   const handleRFIDScanned = (newRfid: string | null) => {
     if (newRfid) {
       setRfid(newRfid);
-      setLocalState((prevState) => ({
-        ...prevState,
-        id: newRfid,
-      }));
+      onInputChange('RFid', newRfid);
     }
+  };
+
+  const parseDate = (dateValue: any): Date | null => {
+    if (!dateValue) return null;
+    const date = new Date(dateValue);
+    return isNaN(date.getTime()) ? null : date;
   };
 
   return (
@@ -42,10 +49,9 @@ export const EditGeneralInfo: React.FC<
           >
             <DateInput
               label='Installation date'
-              value={new Date(localState.installationDate)}
-              onChange={(date) =>
-                onInputChange('installationDate', date.toString())
-              }
+              value={parseDate(info.installedDate)}
+              onChange={(date) => onInputChange('installedDate', date)}
+              required
             />
           </TooltipWrapper>
         </>
@@ -58,8 +64,8 @@ export const EditGeneralInfo: React.FC<
       >
         <Input
           label='Customer ID:'
-          value={info.customerId}
-          onChangeText={(text) => onInputChange('customerId', text)}
+          value={info.customerID ?? ''}
+          onChangeText={(text) => onInputChange('customerID', text)}
         />
       </TooltipWrapper>
       <TooltipWrapper
@@ -80,7 +86,7 @@ export const EditGeneralInfo: React.FC<
       >
         <Select
           label='S2 Equipment:'
-          selectedOption={info.S2Equipment}
+          selectedOption={info.S2Equipment ?? null}
           onChange={(value) => onInputChange('S2Equipment', value)}
           options={[]}
         />
@@ -90,7 +96,7 @@ export const EditGeneralInfo: React.FC<
       >
         <Input
           label='Equipment Subunit:'
-          value={info.equipmentSubunit}
+          value={info.equipmentSubunit ?? ''}
           onChangeText={(text) => onInputChange('equipmentSubunit', text)}
         />
       </TooltipWrapper>
@@ -102,7 +108,7 @@ export const EditGeneralInfo: React.FC<
       >
         <Input
           label='Other Info:'
-          value={info.otherInfo}
+          value={info.otherInfo ?? ''}
           onChangeText={(text) => onInputChange('otherInfo', text)}
         />
       </TooltipWrapper>
@@ -118,7 +124,7 @@ export const EditGeneralInfo: React.FC<
             { id: 'internal', label: 'internal, not exposed' },
             { id: 'exposed', label: 'exposed' },
           ]}
-          selected={info.pollutionExposure}
+          selected={info.pollutionExposure ?? 'internal'}
           onChange={(value) => onInputChange('pollutionExposure', value)}
           type={'horizontal'}
         />
@@ -135,7 +141,7 @@ export const EditGeneralInfo: React.FC<
             { id: 'internal', label: 'internal, not exposed' },
             { id: 'exposed', label: 'exposed' },
           ]}
-          selected={info.uvExposure}
+          selected={info.uvExposure ?? null}
           onChange={(value) => onInputChange('uvExposure', value)}
           type={'horizontal'}
         />

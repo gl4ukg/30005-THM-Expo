@@ -15,41 +15,46 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
     <TooltipWrapper tooltipData={{ title: 'Hose Type', message: '' }}>
       <Select
         label='Hose Type'
-        selectedOption={info.hoseType}
+        selectedOption={info.hoseType ?? null}
         onChange={(value) => onInputChange('hoseType', value)}
         options={[]}
+        required
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Ferrule 1', message: '' }}>
       <Select
         label='Ferrule 1'
-        selectedOption={info.ferrule1}
+        selectedOption={info.ferrule1 ?? null}
         onChange={(value) => onInputChange('ferrule1', value)}
         options={[]}
+        required
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Ferrule 2', message: '' }}>
       <Select
         label='Ferrule 2'
-        selectedOption={info.ferrule2}
+        selectedOption={info.ferrule2 ?? null}
         onChange={(value) => onInputChange('ferrule2', value)}
         options={[]}
+        required
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Insert 1', message: '' }}>
       <Select
         label='Insert 1'
-        selectedOption={info.insert1}
+        selectedOption={info.insert1 ?? null}
         onChange={(value) => onInputChange('insert1', value)}
         options={[]}
+        required
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Insert 2', message: '' }}>
       <Select
         label='Insert 2'
-        selectedOption={info.insert2}
+        selectedOption={info.insert2 ?? null}
         onChange={(value) => onInputChange('insert2', value)}
         options={[]}
+        required
       />
     </TooltipWrapper>
     <View style={styles.section}>
@@ -61,48 +66,48 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
     <TooltipWrapper tooltipData={{ title: 'Add A End 1', message: '' }}>
       <Select
         label='Add A End 1'
-        selectedOption={info.addAEnd1}
-        onChange={(value) => onInputChange('addAEnd1', value)}
+        selectedOption={info.additionalsAend1 ?? null}
+        onChange={(value) => onInputChange('additionalsAend1', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Add B End 1', message: '' }}>
       <Select
         label='Add B End 1'
-        selectedOption={info.addBEnd1}
-        onChange={(value) => onInputChange('addBEnd1', value)}
+        selectedOption={info.additionalsBend1 ?? null}
+        onChange={(value) => onInputChange('additionalsBend1', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Add C End 1', message: '' }}>
       <Select
         label='Add C End 1'
-        selectedOption={info.addCEnd1}
-        onChange={(value) => onInputChange('addCEnd1', value)}
+        selectedOption={info.additionalsCend1 ?? null}
+        onChange={(value) => onInputChange('additionalsCend1', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Add A End 2', message: '' }}>
       <Select
         label='Add A End 2'
-        selectedOption={info.addAEnd2}
-        onChange={(value) => onInputChange('addAEnd2', value)}
+        selectedOption={info.additionalsAend2 ?? null}
+        onChange={(value) => onInputChange('additionalsAend2', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Add B End 2', message: '' }}>
       <Select
         label='Add B End 2'
-        selectedOption={info.addBEnd2}
-        onChange={(value) => onInputChange('addBEnd2', value)}
+        selectedOption={info.additionalsBend2 ?? null}
+        onChange={(value) => onInputChange('additionalsBend2', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Add C End 2', message: '' }}>
       <Select
         label='Add C End 2'
-        selectedOption={info.addCEnd2}
-        onChange={(value) => onInputChange('addCEnd2', value)}
+        selectedOption={info.additionalsCend2 ?? null}
+        onChange={(value) => onInputChange('additionalsCend2', value)}
         options={[]}
       />
     </TooltipWrapper>
@@ -112,7 +117,7 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
     <TooltipWrapper tooltipData={{ title: 'Spiral Guard', message: '' }}>
       <Select
         label='Spiral Guard'
-        selectedOption={info.spiralGuard}
+        selectedOption={info.spiralGuard ?? null}
         onChange={(value) => onInputChange('spiralGuard', value)}
         options={[]}
       />
@@ -120,7 +125,7 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
     <TooltipWrapper tooltipData={{ title: 'Hookie', message: '' }}>
       <Select
         label='Hookie'
-        selectedOption={info.hookie}
+        selectedOption={info.hookie ?? null}
         onChange={(value) => onInputChange('hookie', value)}
         options={[]}
       />
@@ -128,15 +133,15 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
     <TooltipWrapper tooltipData={{ title: 'Whipcheck', message: '' }}>
       <Select
         label='Whipcheck'
-        selectedOption={info.whipcheck}
-        onChange={(value) => onInputChange('whipcheck', value)}
+        selectedOption={info.whipCheck ?? null}
+        onChange={(value) => onInputChange('whipCheck', value)}
         options={[]}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Hose Protection', message: '' }}>
       <Select
         label='Hose Protection'
-        selectedOption={info.hoseProtection}
+        selectedOption={info.hoseProtection ?? null}
         onChange={(value) => onInputChange('hoseProtection', value)}
         options={[]}
       />
@@ -146,8 +151,8 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
     >
       <Select
         label='Break Away/Weak Link'
-        selectedOption={info.breakAwayWeakLink}
-        onChange={(value) => onInputChange('breakAwayWeakLink', value)}
+        selectedOption={info.breakaway ?? null}
+        onChange={(value) => onInputChange('breakaway', value)}
         options={[]}
       />
     </TooltipWrapper>

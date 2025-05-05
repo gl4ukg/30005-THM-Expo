@@ -23,24 +23,34 @@ import { colors } from '@/lib/tokens/colors';
 import { EditProps } from '@/lib/types/edit';
 import { HoseData } from '@/lib/types/hose';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useContext, useRef, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
+
+type ExtendedEditProps<T> = EditProps<T> & {
+  missingFields?: string[];
+};
 
 const renderComponent = <T,>(
-  Component: React.FC<{ info: T }>,
-  EditComponent: React.FC<EditProps<T>>,
+  Component: React.FC<{ info: Partial<T> }>,
+  EditComponent: React.FC<ExtendedEditProps<T>>,
   props: {
-    info: T;
+    info: Partial<T>;
     editMode: boolean;
     onInputChange: (field: keyof T, value: any) => void;
+    missingFields?: string[];
   },
 ) => {
   return props.editMode ? (
-    <EditComponent info={props.info} onInputChange={props.onInputChange} />
+    <EditComponent
+      info={props.info}
+      onInputChange={props.onInputChange}
+      missingFields={props.missingFields}
+    />
   ) : (
     <Component info={props.info} />
   );
 };
+
 export type Section = {
   id: string;
   title: string;
@@ -52,18 +62,41 @@ const isHoseDataType = (hose: HoseData | {}): hose is HoseData => {
 };
 
 const HoseDetails = () => {
-  const { hoseId } = useLocalSearchParams();
+  const {
+    hoseId,
+    startInEditMode,
+    missingFields: missingFieldsParam,
+  } = useLocalSearchParams<{
+    hoseId: string;
+    startInEditMode?: string;
+    missingFields?: string;
+  }>();
 
   const { state, dispatch } = useContext(AppContext);
 
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const [editMode, setEditMode] = useState(false);
-  const [hoseData, setHoseData] = useState<HoseData | {}>(
+  const [editMode, setEditMode] = useState(startInEditMode === 'true');
+  const [missingFields, setMissingFields] = useState<string[]>([]);
+
+  const [hoseData, setHoseData] = useState<Partial<HoseData> | {}>(
     state.data.hoses.find((hose) => hose.id === hoseId) || {},
   );
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (missingFieldsParam) {
+      try {
+        const parsedFields = JSON.parse(missingFieldsParam);
+        if (Array.isArray(parsedFields)) {
+          setMissingFields(parsedFields);
+        }
+      } catch (error) {
+        console.error('Failed to parse missingFields parameter:', error);
+      }
+    }
+  }, [missingFieldsParam]);
 
   if (!isHoseDataType(hoseData)) {
     return (
@@ -72,7 +105,9 @@ const HoseDetails = () => {
       </View>
     );
   }
-  hoseData;
+
+  const isDataMissing = missingFields.length > 0 || hoseData.missingData;
+
   const handleInputChange = (
     field: keyof HoseData,
     value: HoseData[keyof HoseData],
@@ -83,16 +118,24 @@ const HoseDetails = () => {
     }));
   };
 
-  const toggleEditMode = () => setEditMode((prev) => !prev);
+  const toggleEditMode = () => {
+    setEditMode((prev) => !prev);
+    if (editMode) {
+      setMissingFields([]);
+    }
+  };
 
   const handleSave = () => {
     if (hoseData.id === undefined) return;
 
+    const updatedHoseData = { ...hoseData, missingData: false };
+
     dispatch({
       type: 'SAVE_HOSE_DATA',
-      payload: { hoseId: hoseData.id, hoseData },
+      payload: { hoseId: hoseData.id, hoseData: updatedHoseData },
     });
     setEditMode(false);
+    setMissingFields([]);
     scrollViewRef.current?.scrollTo({ y: 0 });
   };
 
@@ -101,12 +144,13 @@ const HoseDetails = () => {
       setEditMode(true);
       return;
     } else if (value === 'INSPECT') {
-      // TODO implement inspection page
-      Alert.alert('Not implemented', 'This feature is not implemented yet');
+      router.push({
+        pathname: `/dashboard/hoses/inspect`,
+        params: { rfid: hoseData.RFid, hoseId: hoseData.id },
+      });
       return;
     } else {
       if (!hoseData.id) return;
-      // setAction({ label: value, value: value });
       if (!state.data.selection) {
         dispatch({
           type: 'SELECT_ONE_HOSE',
@@ -152,14 +196,14 @@ const HoseDetails = () => {
   ];
 
   const getStructure = (hose: HoseData) => {
-    // TODO how to get structure?
-    const structure: string[] = [
+    const structure: (string | undefined)[] = [
       hose.s1PlantVesselUnit,
       hose.S2Equipment,
       hose.equipmentSubunit,
     ];
-    return structure;
+    return structure.filter((s): s is string => !!s && s.trim() !== '');
   };
+
   return (
     <View style={styles.container}>
       {!isMultiSelection(state.data.selection) && !editMode && (
@@ -171,41 +215,41 @@ const HoseDetails = () => {
       )}
       <ScrollView ref={scrollViewRef}>
         <DetailsHeader
-          id={hoseData.id}
+          id={hoseData.id ?? ''}
           date={hoseData.prodDate}
-          missingData={hoseData.missingData}
+          missingData={isDataMissing}
         />
 
         {renderComponent(GeneralInfo, EditGeneralInfo, {
           info: hoseData,
           onInputChange: handleInputChange,
           editMode,
+          missingFields: editMode ? missingFields : undefined,
         })}
         {renderComponent(UniversalHoseData, EditUniversalHoseData, {
           info: hoseData,
           onInputChange: handleInputChange,
           editMode,
+          missingFields: editMode ? missingFields : undefined,
         })}
         {renderComponent(TessPartNumbers, EditTessPartNumbers, {
           info: hoseData,
           onInputChange: handleInputChange,
           editMode,
+          missingFields: editMode ? missingFields : undefined,
         })}
         {renderComponent(MaintenanceInfo, EditMaintenanceInfo, {
           info: hoseData,
           onInputChange: handleInputChange,
           editMode,
+          missingFields: editMode ? missingFields : undefined,
         })}
         {!editMode && (
           <>
             <Documents />
             <Structure
               structure={getStructure(hoseData)}
-              name={
-                typeof hoseData.s1PlantVesselUnit === 'string'
-                  ? hoseData.s1PlantVesselUnit
-                  : ''
-              }
+              name={hoseData.s1PlantVesselUnit ?? ''}
             />
             <HistoryView />
           </>

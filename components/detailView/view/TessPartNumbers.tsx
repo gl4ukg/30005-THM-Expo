@@ -4,7 +4,7 @@ import { Typography } from '@/components/Typography';
 import { TPN } from '@/lib/types/hose';
 import { StyleSheet, View } from 'react-native';
 interface TessPartNumbersProps {
-  info: TPN;
+  info: Partial<TPN>;
 }
 
 export const TessPartNumbers: React.FC<TessPartNumbersProps> = ({ info }) => {
@@ -22,20 +22,20 @@ export const TessPartNumbers: React.FC<TessPartNumbersProps> = ({ info }) => {
           text='Additional Parts Mounted On Hose'
         />
       </View>
-      <DataField label='Add A End 1' value={info.addAEnd1} />
-      <DataField label='Add B End 1' value={info.addBEnd1} />
-      <DataField label='Add C End 1' value={info.addCEnd1} />
-      <DataField label='Add A End 2' value={info.addAEnd2} />
-      <DataField label='Add B End 2' value={info.addBEnd2} />
-      <DataField label='Add C End 2' value={info.addCEnd2} />
+      <DataField label='Add A End 1' value={info.additionalsAend1} />
+      <DataField label='Add B End 1' value={info.additionalsBend1} />
+      <DataField label='Add C End 1' value={info.additionalsCend1} />
+      <DataField label='Add A End 2' value={info.additionalsAend2} />
+      <DataField label='Add B End 2' value={info.additionalsBend2} />
+      <DataField label='Add C End 2' value={info.additionalsCend2} />
       <View style={styles.section}>
         <Typography name='navigationBold' text='Safety & Protection' />
       </View>
       <DataField label='Spiral Guard' value={info.spiralGuard} />
       <DataField label='Hookie' value={info.hookie} />
-      <DataField label='Whipcheck' value={info.whipcheck} />
+      <DataField label='Whipcheck' value={info.whipCheck} />
       <DataField label='Hose Protection' value={info.hoseProtection} />
-      <DataField label='Break Away/Weak Link' value={info.breakAwayWeakLink} />
+      <DataField label='Break Away/Weak Link' value={info.breakaway} />
     </View>
   );
 };

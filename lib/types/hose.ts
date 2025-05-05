@@ -1,71 +1,101 @@
-export type HoseData = {
-  id: string;
-  missingData?: boolean;
+export interface HoseData {
   description: string;
   prodDate: string;
-  customerId: string;
-  s1PlantVesselUnit: string;
-  S2Equipment: string;
-  equipmentSubunit: string;
-  otherInfo: string;
-  RFid: string;
-  hoseMediumTemperature: string;
-  hoseFunction: string;
-  pollutionExposure: string;
-  uvExposure: string;
-  installationDate: string;
-  hoseStandard: string;
-  innerDiameter: string;
-  totalLength: string;
-  wpBar: string;
-  wpPsi: string;
-  materialQuality: string;
-  typeFitting: string;
-  innerDiameter2: string;
-  gender: string;
-  angle: string;
-  commentEnd: string;
-  materialQuality2: string;
-  typeFitting2: string;
-  commentEnd2: string;
-  gender2: string;
-  angle2: string;
+  installedDate: string;
+  criticality: number | string;
   hoseType: string;
+  hoseLength: number | string;
+  wp: number | string;
   ferrule1: string;
   ferrule2: string;
   insert1: string;
   insert2: string;
-  addAEnd1: string;
-  addBEnd1: string;
-  addCEnd1: string;
-  addAEnd2: string;
-  addBEnd2: string;
-  addCEnd2: string;
-  spiralGuard: string;
-  hookie: string;
-  whipcheck: string;
-  hoseProtection: string;
-  breakAwayWeakLink: string;
-  inspectedDate: string;
-  inspectedBy: string;
-  hoseCondition: string;
-  approved: string;
-  comment: string;
-  criticality: string;
-  inspectionInterval: string;
-  nextInspection: string;
-  replacementInterval: string;
-  replacementDate: string;
-  drawingNumber: string;
-  positionNumber: string;
-  customerArticleNumber: string;
-};
+  genericHoseType: string;
+  typeFittingEnd1: string;
+  generalDimensionEnd1: string;
+  genderEnd1: string;
+  angleEnd1: string;
+  materialQualityEnd1: string;
+  typeFittingEnd2: string;
+  genericDimensionEnd2: string;
+  genderEnd2: string;
+  angleEnd2: string;
+
+  id?: string;
+  RFid?: string;
+  parentSystem?: number;
+  s1Code?: number;
+  s2Code?: number;
+  equipmentSubunit?: string;
+  otherInfo?: string;
+  customerID?: string;
+  customerEq?: string;
+  system?: string;
+  class?: string;
+  status?: string;
+  type?: string;
+  pollutionExposure?: string;
+  uvExposure?: string;
+  hoseLengthInch?: number | string;
+  wpPsi?: number | string;
+  couplingOrientation?: number;
+  pinpricked?: boolean;
+  hoseMediumTemperature?: number | string;
+  hoseStandard?: string;
+  hoseFunction?: string;
+  hoseWarranty?: string;
+  hoseWarrantyComment?: string;
+  materialQualityEnd2?: string;
+  generalCommentPTC?: string;
+  commentEnd1PTC?: string;
+  commentEnd2PTC?: string;
+  originalHoseComment?: string;
+  additionalComment?: string;
+  pressureTest?: string;
+  testTime?: string;
+  testMedium?: string;
+  bendingRadius?: string;
+  flushingMedia?: string;
+  primarySystem?: string;
+  generalComment?: string;
+  additionalsAend1?: string;
+  additionalsBend1?: string;
+  additionalsCend1?: string;
+  hoseReel?: string;
+  spiralGuard?: string;
+  hoseProtection?: string;
+  additionalsAend2?: string;
+  additionalsBend2?: string;
+  additionalsCend2?: string;
+  hookie?: string;
+  whipCheck?: string;
+  breakaway?: string;
+
+  s1PlantVesselUnit?: string;
+  S2Equipment?: string;
+
+  missingData?: boolean;
+  approved?: boolean;
+
+  inspectionInterval?: string;
+  nextInspection?: string;
+  replacementInterval?: string;
+  replacementDate?: string;
+  drawingNumber?: string;
+  positionNumber?: string;
+  customerArticleNumber?: string;
+  hoseCondition?: string;
+  inspectedDate?: string;
+  inspectedBy?: string;
+  innerDiameter?: string;
+}
 
 export type GHD = Pick<
   HoseData,
   | 'description'
   | 'prodDate'
-  | 'customerId'
+  | 'installedDate'
+  | 'customerID'
   | 's1PlantVesselUnit'
   | 'S2Equipment'
   | 'equipmentSubunit'
@@ -75,29 +105,28 @@ export type GHD = Pick<
   | 'hoseFunction'
   | 'pollutionExposure'
   | 'uvExposure'
-  | 'installationDate'
 >;
 
 export type UHD = Pick<
   HoseData,
+  | 'description'
+  | 'wp'
+  | 'hoseLength'
+  | 'materialQualityEnd1'
+  | 'typeFittingEnd1'
+  | 'generalDimensionEnd1'
+  | 'genderEnd1'
+  | 'angleEnd1'
+  | 'materialQualityEnd2'
+  | 'genericDimensionEnd2'
+  | 'typeFittingEnd2'
+  | 'genderEnd2'
+  | 'angleEnd2'
+  | 'wpPsi'
+  | 'commentEnd1PTC'
+  | 'commentEnd2PTC'
   | 'hoseStandard'
   | 'innerDiameter'
-  | 'totalLength'
-  | 'description'
-  | 'wpBar'
-  | 'wpPsi'
-  | 'materialQuality'
-  | 'typeFitting'
-  | 'innerDiameter'
-  | 'gender'
-  | 'angle'
-  | 'commentEnd'
-  | 'materialQuality2'
-  | 'innerDiameter2'
-  | 'typeFitting2'
-  | 'commentEnd2'
-  | 'gender2'
-  | 'angle2'
 >;
 
 export type TPN = Pick<
@@ -107,28 +136,28 @@ export type TPN = Pick<
   | 'ferrule2'
   | 'insert1'
   | 'insert2'
-  | 'addAEnd1'
-  | 'addBEnd1'
-  | 'addCEnd1'
-  | 'addAEnd2'
-  | 'addBEnd2'
-  | 'addCEnd2'
+  | 'additionalsAend1'
+  | 'additionalsBend1'
+  | 'additionalsCend1'
+  | 'additionalsAend2'
+  | 'additionalsBend2'
+  | 'additionalsCend2'
   | 'spiralGuard'
   | 'hookie'
-  | 'whipcheck'
+  | 'whipCheck'
   | 'hoseProtection'
-  | 'breakAwayWeakLink'
+  | 'breakaway'
 >;
 
 export type HID = Pick<
   HoseData,
+  | 'prodDate'
+  | 'criticality'
   | 'inspectedDate'
   | 'inspectedBy'
   | 'hoseCondition'
   | 'approved'
-  | 'comment'
-  | 'prodDate'
-  | 'criticality'
+  | 'generalComment'
   | 'inspectionInterval'
   | 'nextInspection'
   | 'replacementInterval'

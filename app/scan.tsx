@@ -190,7 +190,7 @@ const Scan = () => {
       if (hose) {
         console.log(`Hose found: ${hose.id}. Handling multi-selection.`);
         if (method === 'RFID') {
-          setId(hose.id);
+          setId(hose.id!);
         }
         if (!isMultiSelection(state.data.selection) && !!scanPurpose) {
           dispatch({
@@ -200,7 +200,7 @@ const Scan = () => {
         }
         dispatch({
           type: 'ADD_HOSE_TO_EXISTING_MULTI_SELECTION',
-          payload: hose.id,
+          payload: hose.id!,
         });
 
         setTimeout(() => {

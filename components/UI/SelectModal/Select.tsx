@@ -1,15 +1,9 @@
 import { colors } from '@/lib/tokens/colors';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Modal, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
 import { Icon } from '../../Icon/Icon';
 import { Typography } from '../../Typography';
 import { RadioSelect } from '@/components/UI/SelectModal/RadioSelect';
-import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
-
-// export type Option = {
-//   id: string | 'alternativeOption';
-//   value: string;
-// };
 
 interface Props {
   label: string;
@@ -19,6 +13,7 @@ interface Props {
   isMultiSelect?: boolean;
   required?: boolean;
   hasAlternativeOption?: boolean;
+  isMissing?: boolean;
 }
 
 export const Select: React.FC<Props> = ({
@@ -28,11 +23,11 @@ export const Select: React.FC<Props> = ({
   options,
   required,
   hasAlternativeOption,
+  isMissing,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleSelect = (option: string) => {
-    // setSelectedValue(newValue);
     onChange(option);
     setModalOpen(false);
   };
@@ -41,7 +36,8 @@ export const Select: React.FC<Props> = ({
     setModalOpen(false);
   };
 
-  const isRequiredValueMissing = required && !selectedOption;
+  const isRequiredValueMissing = (required && !selectedOption) || isMissing;
+
   return (
     <View style={styles.container}>
       <View>

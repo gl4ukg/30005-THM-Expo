@@ -86,11 +86,11 @@ export const ListTable: FC<Props> = ({
           </>
         }
         data={items}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id ?? ''}
         renderItem={({ item }) => (
           <ListElement
             item={item}
-            isSelected={selectedIds.includes(item.id)}
+            isSelected={selectedIds.includes(item.id ?? '')}
             onSelectedChange={onSelectionChange}
             canBeSelected={canSelect}
             onRowPress={() => handleRowPress(item)}

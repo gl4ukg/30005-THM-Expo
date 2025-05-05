@@ -1,4 +1,4 @@
 export type EditProps<T> = {
-  info: T;
-  onInputChange: (field: keyof T, value: T[keyof T]) => void;
+  info: Partial<T>;
+  onInputChange: (field: keyof T, value: T[keyof T] | undefined) => void;
 };

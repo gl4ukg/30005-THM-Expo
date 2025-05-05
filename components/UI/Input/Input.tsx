@@ -24,6 +24,8 @@ interface Props extends TextInputProps {
   darkMode?: boolean;
   disabled?: boolean;
   validateOnSave?: boolean;
+  required?: boolean;
+  isMissing?: boolean;
 }
 
 /**
@@ -71,12 +73,15 @@ export const Input = forwardRef<TextInput, Props>(
       darkMode,
       disabled,
       validateOnSave,
+      required,
+      isMissing,
       ...inputProps
     },
     ref: React.Ref<TextInput>,
   ) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
+    const [showValidationError, setShowValidationError] = useState(false);
 
     const togglePasswordVisibility = () => {
       setIsPasswordVisible((prevState) => !prevState);
@@ -85,16 +90,18 @@ export const Input = forwardRef<TextInput, Props>(
     const inputMode =
       type === 'password' || type === 'textArea' ? 'text' : type;
 
-    const [displayError, setDisplayError] = useState(false);
+    const isRequiredValueMissing = (required && !value) || isMissing;
+
     const handleUnfocused = (
       e: NativeSyntheticEvent<TextInputFocusEventData>,
     ) => {
       inputProps.onBlur && inputProps.onBlur(e);
       setIsFocused(false);
+
       if (errorMessage && value !== '') {
-        setDisplayError(true);
+        setShowValidationError(true);
       } else {
-        setDisplayError(false);
+        setShowValidationError(false);
       }
     };
 
@@ -103,20 +110,29 @@ export const Input = forwardRef<TextInput, Props>(
     ) => {
       inputProps.onFocus && inputProps.onFocus(e);
       setIsFocused(true);
+
+      if (!isRequiredValueMissing) {
+        setShowValidationError(false);
+      }
     };
 
-    // for use when validateOnSave is true, to display error message without relying on blur
     useEffect(() => {
-      if (errorMessage) {
-        setDisplayError(true);
+      if (validateOnSave && errorMessage) {
+        setShowValidationError(true);
       }
-    }, [errorMessage]);
 
-    useEffect(() => {
-      if (ref && 'current' in ref && ref.current) {
-        ref.current.focus();
+      if (!validateOnSave && value) {
+        setShowValidationError(false);
       }
-    }, [ref]);
+    }, [errorMessage, validateOnSave, value]);
+
+    const showErrorState =
+      isRequiredValueMissing || (showValidationError && !!errorMessage);
+    const displayErrorMessage = isRequiredValueMissing
+      ? 'Required field'
+      : showValidationError && errorMessage
+        ? errorMessage
+        : null;
 
     return (
       <View>
@@ -126,22 +142,33 @@ export const Input = forwardRef<TextInput, Props>(
               <Icon
                 name={icon}
                 size='md'
-                color={darkMode ? colors.white : colors.extended666}
+                color={
+                  showErrorState && !disabled
+                    ? colors.error
+                    : darkMode
+                      ? colors.white
+                      : colors.extended666
+                }
                 styles={{ opacity: disabled ? 0.5 : 1 }}
               />
             </View>
           )}
           <View style={styles.innerView}>
             {label && (
-              <View>
+              <View style={styles.labelContainer}>
                 <Typography
                   name='navigation'
                   text={label}
-                  style={{
-                    color: darkMode ? colors.white : colors.extended666,
-                    opacity: disabled ? 0.5 : 1,
-                  }}
+                  style={[
+                    styles.labelBase,
+                    darkMode ? styles.labelDarkMode : styles.labelLightMode,
+                    showErrorState && !disabled && styles.labelError,
+                    disabled && styles.labelDisabled,
+                  ]}
                 />
+                {isRequiredValueMissing && !disabled && (
+                  <Icon name='Alert' color={colors.error} size='xsm' />
+                )}
               </View>
             )}
             <View>
@@ -149,10 +176,14 @@ export const Input = forwardRef<TextInput, Props>(
                 {...inputProps}
                 style={[
                   styles.input,
-                  isFocused && !disabled && styles.focusedBorder,
-                  displayError && !isFocused && styles.errorBorder,
                   darkMode && styles.darkMode,
                   disabled && styles.disabled,
+
+                  showErrorState && !disabled && styles.errorBorder,
+                  isFocused &&
+                    !showErrorState &&
+                    !disabled &&
+                    styles.focusedBorder,
                   type === 'textArea' && styles.textAreaStyle,
                 ]}
                 value={value}
@@ -160,7 +191,7 @@ export const Input = forwardRef<TextInput, Props>(
                 placeholder={inputProps.placeholder}
                 inputMode={inputMode}
                 multiline={type === 'textArea'}
-                numberOfLines={type === 'textArea' ? undefined : 1} // numberofLines is set to avoid vertical growth on Android
+                numberOfLines={type === 'textArea' ? undefined : 1}
                 scrollEnabled={type !== 'textArea'}
                 secureTextEntry={type === 'password' && !isPasswordVisible}
                 onBlur={handleUnfocused}
@@ -183,12 +214,13 @@ export const Input = forwardRef<TextInput, Props>(
             </View>
           </View>
         </View>
-        {errorMessage && displayError && (
+        {displayErrorMessage && !disabled && (
           <Typography
             name={'navigation'}
-            text={errorMessage}
+            text={displayErrorMessage}
             style={[
-              darkMode ? styles.errorTextDarkMode : styles.error,
+              styles.errorBase,
+              darkMode ? styles.errorTextDarkMode : styles.errorTextLightMode,
               icon && styles.errorPaddingIfIcon,
             ]}
           />
@@ -201,6 +233,7 @@ export const Input = forwardRef<TextInput, Props>(
 const styles = StyleSheet.create({
   input: {
     paddingLeft: 10,
+    paddingRight: 10,
     borderWidth: 1,
     paddingVertical: 6,
     position: 'relative',
@@ -219,9 +252,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 5,
     width: '100%',
+    alignItems: 'flex-end',
   },
   iconWrapper: {
-    justifyContent: 'flex-end',
+    paddingBottom: Platform.OS === 'ios' ? 8 : 9,
+    paddingLeft: 2,
   },
   innerView: {
     flexDirection: 'column',
@@ -230,39 +265,71 @@ const styles = StyleSheet.create({
     gap: 4,
     position: 'relative',
   },
+  labelContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  labelBase: {},
+  labelLightMode: {
+    color: colors.extended666,
+  },
+  labelDarkMode: {
+    color: colors.white,
+  },
+  labelError: {
+    color: colors.errorText,
+  },
+  labelDisabled: {
+    opacity: 0.5,
+  },
   iconContainer: {
     position: 'absolute',
     right: 10,
-    top: 11,
+    top: 0,
+    bottom: 0,
     justifyContent: 'center',
   },
-  error: {
+  errorBase: {
+    paddingTop: 4,
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  errorTextLightMode: {
     color: colors.error,
-    paddingTop: 9,
   },
   errorTextDarkMode: {
     color: colors.errorTextDarkMode,
-    paddingTop: 9,
   },
   errorPaddingIfIcon: {
     paddingLeft: 37,
   },
   errorBorder: {
     borderColor: colors.error,
+    borderWidth: 1,
+    paddingVertical: 6,
   },
   focusedBorder: {
     borderWidth: 2,
     borderColor: colors.primary,
     paddingVertical: 5,
+    paddingLeft: 9,
+    paddingRight: 9,
   },
   disabled: {
-    opacity: 1 / 2,
+    backgroundColor: colors.secondary95,
+    color: colors.extended666,
+    opacity: 1,
+    borderColor: colors.secondary95,
   },
   darkMode: {
     backgroundColor: colors.inputBackground,
+    borderColor: colors.secondary,
+    color: colors.white,
   },
   textAreaStyle: {
     minHeight: 80,
     textAlignVertical: 'top',
+    paddingTop: 6,
   },
 });

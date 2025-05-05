@@ -6,16 +6,36 @@ import { Typography } from '@/components/Typography';
 import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { colors } from '@/lib/tokens/colors';
-import { EditProps } from '@/lib/types/edit';
 import { HID } from '@/lib/types/hose';
 import { formatDate } from '@/lib/util/formatDate';
 import { StyleSheet, View } from 'react-native';
 
 export const EditMaintenanceInfo: React.FC<
-  EditProps<HID> & { isInspect?: boolean }
+  {
+    info: Partial<HID>;
+    onInputChange: (
+      field: keyof Partial<HID>,
+      value: Partial<HID>[keyof Partial<HID>],
+    ) => void;
+  } & { isInspect?: boolean }
 > = ({ info, onInputChange, isInspect }) => {
-  const handleApprovalChange = (selectedLabel: string) => {
-    onInputChange('approved', selectedLabel);
+  const getSelectedApprovalId = (approved: boolean | undefined): string => {
+    if (approved === true) return 'Yes';
+    if (approved === false) return 'No';
+    return 'NotInsepcted';
+  };
+
+  const handleApprovalChange = (selectedId: string) => {
+    let approvalValue: boolean | undefined;
+    if (selectedId === 'Yes') {
+      approvalValue = true;
+    } else if (selectedId === 'No') {
+      approvalValue = false;
+    } else {
+      approvalValue = undefined;
+    }
+
+    onInputChange('approved', approvalValue);
   };
 
   return (
@@ -24,7 +44,7 @@ export const EditMaintenanceInfo: React.FC<
       <TooltipWrapper>
         <Input
           label='Inspected By:'
-          value={info.inspectedBy}
+          value={info.inspectedBy || ''}
           onChangeText={(text) => onInputChange('inspectedBy', text)}
           type={'text'}
         />
@@ -32,7 +52,7 @@ export const EditMaintenanceInfo: React.FC<
       <TooltipWrapper tooltipData={{ title: 'Condition', message: '' }}>
         <Select
           label='Condition:'
-          selectedOption={info.hoseCondition}
+          selectedOption={info.hoseCondition || ''}
           onChange={(value) => onInputChange('hoseCondition', value)}
           options={[]}
         />
@@ -45,7 +65,7 @@ export const EditMaintenanceInfo: React.FC<
             { id: 'No', label: 'NO' },
             { id: 'NotInsepcted', label: 'Not inspected' },
           ]}
-          selected={info.approved}
+          selected={getSelectedApprovalId(info.approved)}
           onChange={handleApprovalChange}
           type={'horizontal'}
         />
@@ -53,8 +73,8 @@ export const EditMaintenanceInfo: React.FC<
       <TooltipWrapper>
         <Input
           label={'Comment:'}
-          value={info.comment}
-          onChangeText={(text) => onInputChange('comment', text)}
+          value={info.generalComment || ''}
+          onChangeText={(text) => onInputChange('generalComment', text)}
           type='textArea'
         />
       </TooltipWrapper>
@@ -67,23 +87,34 @@ export const EditMaintenanceInfo: React.FC<
 
       {isInspect ? (
         <>
-          <DataField label={'Criticality:'} value={info.criticality} />
+          <DataField
+            label={'Criticality:'}
+            value={String(info.criticality ?? '')}
+          />
           <View style={styles.inspectionDetails}>
             <DataField
               label={'Inspection Interval:'}
-              value={info.inspectionInterval}
+              value={info.inspectionInterval ?? ''}
             />
             <DataField
               label={'Next Inspection:'}
-              value={formatDate(new Date(info.nextInspection))}
+              value={
+                info.nextInspection
+                  ? formatDate(new Date(info.nextInspection))
+                  : ''
+              }
             />
             <DataField
               label={'Replacement Interval:'}
-              value={info.replacementInterval}
+              value={info.replacementInterval ?? ''}
             />
             <DataField
               label={'Replacement Date:'}
-              value={formatDate(new Date(info.replacementDate))}
+              value={
+                info.replacementDate
+                  ? formatDate(new Date(info.replacementDate))
+                  : ''
+              }
             />
           </View>
         </>
@@ -91,7 +122,7 @@ export const EditMaintenanceInfo: React.FC<
         <TooltipWrapper>
           <Select
             label='Criticality'
-            selectedOption={info.criticality}
+            selectedOption={String(info.criticality ?? '')}
             onChange={(value) => onInputChange('criticality', value)}
             options={[
               '1 - None',
@@ -101,53 +132,58 @@ export const EditMaintenanceInfo: React.FC<
               '5 - High',
               '6 - Very high',
             ]}
+            required
           />
           <View style={styles.inspectionDetails}>
             <DataField
               label={'Inspection Interval:'}
-              value={info.inspectionInterval}
+              value={info.inspectionInterval ?? ''}
             />
             <DataField
               label={'Next Inspection:'}
-              value={formatDate(new Date(info.nextInspection))}
+              value={
+                info.nextInspection
+                  ? formatDate(new Date(info.nextInspection))
+                  : ''
+              }
             />
             <DataField
               label={'Replacement Interval:'}
-              value={info.replacementInterval}
+              value={info.replacementInterval ?? ''}
             />
             <DataField
               label={'Replacement Date:'}
-              value={formatDate(new Date(info.replacementDate))}
+              value={
+                info.replacementDate
+                  ? formatDate(new Date(info.replacementDate))
+                  : ''
+              }
             />
           </View>
         </TooltipWrapper>
       )}
-      <TooltipWrapper
-        tooltipData={{ title: 'Inspection Interval', message: '' }}
-      >
+      <TooltipWrapper tooltipData={{ title: 'Drawing Number', message: '' }}>
         <Input
           label={'Drawing Number:'}
-          value={info.drawingNumber}
+          value={info.drawingNumber ?? ''}
           onChangeText={(text) => onInputChange('drawingNumber', text)}
           type='text'
         />
       </TooltipWrapper>
-      <TooltipWrapper
-        tooltipData={{ title: 'Inspection Interval', message: '' }}
-      >
+      <TooltipWrapper tooltipData={{ title: 'Position Number', message: '' }}>
         <Input
           label={'Position Number:'}
-          value={info.positionNumber}
+          value={info.positionNumber ?? ''}
           onChangeText={(text) => onInputChange('positionNumber', text)}
           type='text'
         />
       </TooltipWrapper>
       <TooltipWrapper
-        tooltipData={{ title: 'Inspection Interval', message: '' }}
+        tooltipData={{ title: 'Customer Article Number', message: '' }}
       >
         <Input
           label={'Customer Article Number:'}
-          value={info.customerArticleNumber}
+          value={info.customerArticleNumber ?? ''}
           onChangeText={(text) => onInputChange('customerArticleNumber', text)}
           type='text'
         />
