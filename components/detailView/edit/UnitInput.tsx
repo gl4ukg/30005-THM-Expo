@@ -92,8 +92,6 @@ export const UnitInput: React.FC<UnitInputProps> = ({
           onBlur={handleBlur}
           selectionColor={colors.primary}
           editable={editable}
-          placeholder={editable ? '0' : ''}
-          placeholderTextColor={colors.secondary}
         />
         <Typography
           name='navigation'

@@ -189,9 +189,6 @@ export const Input = forwardRef<TextInput, Props>(
                 value={value}
                 onChangeText={onChangeText}
                 placeholder={inputProps.placeholder}
-                placeholderTextColor={
-                  darkMode ? colors.secondary : colors.secondary
-                }
                 inputMode={inputMode}
                 multiline={type === 'textArea'}
                 numberOfLines={type === 'textArea' ? undefined : 1}

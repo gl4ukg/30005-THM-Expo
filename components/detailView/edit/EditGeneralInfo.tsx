@@ -22,8 +22,7 @@ export const EditGeneralInfo: React.FC<{
   const handleRFIDScanned = (newRfid: string | null) => {
     if (newRfid) {
       setRfid(newRfid);
-
-      onInputChange('id', newRfid);
+      onInputChange('RFid', newRfid);
     }
   };
 
