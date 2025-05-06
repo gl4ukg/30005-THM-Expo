@@ -107,7 +107,14 @@ export const EditUniversalHoseData: React.FC<{
     let nextInfo = { ...oldInfo, [field]: value };
 
     if (['hoseStandard', 'innerDiameter', 'hoseLength'].includes(field)) {
-      nextInfo.description = buildDescription(nextInfo);
+      const descriptionData = {
+        ...nextInfo,
+        hoseLength:
+          typeof nextInfo.hoseLength === 'number'
+            ? String(nextInfo.hoseLength)
+            : nextInfo.hoseLength,
+      };
+      nextInfo.description = buildDescription(descriptionData);
     }
 
     onInputChange(field, value);
