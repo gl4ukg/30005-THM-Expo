@@ -17,14 +17,14 @@ export const BarToPsiInput: React.FC<BarToPsiInputProps> = ({
   pressureInBars,
   onChange,
 }) => {
-  const [bar, setBar] = useState<number>(Math.round(pressureInBars));
-  const [psi, setPsi] = useState<number>(Math.round(barToPsi(pressureInBars)));
+  const [bar, setBar] = useState<number>(Math.floor(pressureInBars));
+  const [psi, setPsi] = useState<number>(Math.floor(barToPsi(pressureInBars)));
 
   const handleBarChange = useCallback(
     (value: number) => {
-      const roundedBar = Math.round(value);
+      const roundedBar = Math.floor(value);
       setBar(roundedBar);
-      const psiValue = Math.round(barToPsi(roundedBar));
+      const psiValue = Math.floor(barToPsi(roundedBar));
       setPsi(psiValue);
       onChange({ bar: roundedBar, psi: psiValue });
     },
@@ -33,9 +33,9 @@ export const BarToPsiInput: React.FC<BarToPsiInputProps> = ({
 
   const handlePsiChange = useCallback(
     (value: number) => {
-      const roundedPsi = Math.round(value);
+      const roundedPsi = Math.floor(value);
       setPsi(roundedPsi);
-      const barValue = Math.round(psiToBar(roundedPsi));
+      const barValue = Math.floor(psiToBar(roundedPsi));
       setBar(barValue);
       onChange({ bar: barValue, psi: roundedPsi });
     },
