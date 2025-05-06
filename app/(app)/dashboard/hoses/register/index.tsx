@@ -215,9 +215,19 @@ const RegisterHose = () => {
     const newHoseData = localState as HoseData;
 
     dispatch({ type: 'ADD_HOSE', payload: newHoseData });
-    Alert.alert('Success', 'Hose registered successfully.');
-    router.back();
-  }, [localState, dispatch, router]);
+
+    if (registerMultiple) {
+      dispatch({ type: 'SET_HOSE_TEMPLATE', payload: newHoseData });
+      Alert.alert(
+        'Success',
+        'Hose registered successfully. Ready for next hose.',
+      );
+      router.push('/scan?scanPurpose=REGISTER_HOSE');
+    } else {
+      Alert.alert('Success', 'Hose registered successfully.');
+      router.back();
+    }
+  }, [localState, dispatch, router, registerMultiple]);
 
   const handleCancel = () => {
     router.push('/(app)/dashboard');
