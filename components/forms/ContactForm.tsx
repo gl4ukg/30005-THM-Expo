@@ -117,7 +117,7 @@ export const ContactForm: React.FC<Props> = ({
             {contactType === 'RFQ' && (
               <Select
                 label={'RFQ type'}
-                selectedOption={'Choose'}
+                selectedOption={rfq}
                 onChange={setRfq}
                 hasAlternativeOption={false}
                 options={rfqOptions}

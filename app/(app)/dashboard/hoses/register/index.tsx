@@ -214,7 +214,7 @@ const RegisterHose = () => {
 
     const newHoseData = localState as HoseData;
 
-    dispatch({ type: 'ADD_HOSE', payload: newHoseData });
+    // dispatch({ type: 'ADD_HOSE', payload: newHoseData });
 
     if (registerMultiple) {
       dispatch({ type: 'SET_HOSE_TEMPLATE', payload: newHoseData });

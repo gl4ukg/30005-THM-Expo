@@ -92,6 +92,7 @@ export const isSingleSelection = (
 ): selection is SingleSelection => !!selection && 'id' in selection;
 
 interface DataState {
+  isLoading: boolean;
   // define data state properties
   hoses: HoseData[];
   assignedUnits: {
@@ -105,6 +106,7 @@ interface DataState {
 
 interface SettingsState {
   // define settings state properties
+  connectionType: 'wifi' | 'mobile' | null;
 }
 
 // Define initial states for each slice of the app state
@@ -120,6 +122,7 @@ const initialAuthState: AuthState = {
 };
 
 const initialDataState: DataState = {
+  isLoading: false,
   // initial data state values
   hoses: [],
   assignedUnits: [
@@ -133,6 +136,7 @@ const initialDataState: DataState = {
 
 const initialSettingsState: SettingsState = {
   // initial settings state values
+  connectionType: null,
 };
 
 const initialState: AppState = {

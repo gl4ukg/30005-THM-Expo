@@ -18,7 +18,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode }) => {
 const useAppContext = () => {
   const context = useContext(AppContext);
   if (context === undefined) {
-    throw new Error('useCount must be used within a ContextProvider');
+    throw new Error('useContext must be used within a ContextProvider');
   }
   return context;
 };

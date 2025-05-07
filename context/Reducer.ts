@@ -25,21 +25,36 @@ interface ActionWithoutPayload<T extends string> {
   type: T;
 }
 
-const combineReducers = <T extends Record<string, any>>(reducers: {
-  [key: string]: (state: T[keyof T], action: any) => T[keyof T];
-}) => {
-  return (state: T = {} as T, action: any) => {
-    const newState: any = {};
+type ReducerMapObject<S = any, A = any> = {
+  [K in keyof S]: React.Reducer<S[K], A>;
+};
 
-    for (const key in reducers) {
-      if (reducers.hasOwnProperty(key)) {
-        newState[key] = reducers[key](state[key], action);
-      }
+export function combineReducers<S, A>(
+  reducers: ReducerMapObject<S, A>,
+): React.Reducer<S, A> {
+  return (prevState: S, action: A): S => {
+    // Get all the keys from the reducers object
+    const reducerKeys = Object.keys(reducers) as Array<keyof S>;
+
+    // Initialize nextState as a shallow copy of prevState
+    const nextState = { ...prevState };
+
+    let hasChanged = false;
+
+    // Loop through all reducers
+    for (const key of reducerKeys) {
+      const reducer = reducers[key];
+      const previousStateForKey = prevState[key];
+      const nextStateForKey = reducer(previousStateForKey, action);
+
+      nextState[key] = nextStateForKey;
+      hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
     }
 
-    return newState as T;
+    // If nothing changed, return the original state
+    return hasChanged ? nextState : prevState;
   };
-};
+}
 
 type AuthAction =
   | ActionWithPayload<'LOGIN', { email: string; id: string; name: string }>
@@ -61,6 +76,7 @@ type DataAction =
       }
     >
   | ActionWithPayload<'SET_HOSE_DATA', HoseData[]>
+  | ActionWithPayload<'SET_DATA_LOADING', boolean>
   | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: string; hoseData: any }>
   | ActionWithPayload<'SELECT_ONE_HOSE', SingleSelection>
   | ActionWithPayload<'START_MULTI_SELECTION', MultiSelection['type']>
@@ -70,12 +86,15 @@ type DataAction =
   | ActionWithPayload<'SELECT_MANY_HOSES_MULTI_SELECTION', string[]>
   | ActionWithoutPayload<'DESELECT_ALL_HOSES_MULTI_SELECTION'>
   | ActionWithPayload<'SET_HOSE_TEMPLATE', Partial<HoseData>>;
-type SettingsAction = ActionWithPayload<'UPDATE_SETTINGS', any>;
+type SettingsAction =
+  // | ActionWithPayload<'UPDATE_SETTINGS', any>
+  ActionWithPayload<'UPDATE_CONNECTION_TYPE', 'wifi' | 'mobile' | null>;
 
 // Reducers for each slice of the app state (these should be defined elsewhere)
-const authReducer = (state: AuthState, action: AuthAction): AuthState => {
+const authReducer = (state: AuthState, action: AppAction): AuthState => {
   switch (action.type) {
     case 'LOGIN':
+      console.log('LOGIN', action.payload);
       return {
         ...state,
         user: action.payload,
@@ -101,8 +120,13 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   }
 };
 
-const dataReducer = (state: DataState, action: DataAction): DataState => {
+const dataReducer = (state: DataState, action: AppAction): DataState => {
   switch (action.type) {
+    case 'SET_DATA_LOADING':
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
     case 'SET_ASSIGNED_UNITS':
       return {
         ...state,
@@ -215,12 +239,16 @@ const dataReducer = (state: DataState, action: DataAction): DataState => {
 
 const settingReducer = (
   state: SettingsState,
-  action: SettingsAction,
+  action: AppAction,
 ): SettingsState => {
   switch (action.type) {
-    case 'UPDATE_SETTINGS':
+    // case 'UPDATE_SETTINGS':
+    //   return state;
+    case 'UPDATE_CONNECTION_TYPE':
+      console.log('UPDATE_CONNECTION_TYPE', action.payload);
       return {
-        /*update setting*/
+        ...state,
+        connectionType: action.payload,
       };
     default:
       return state;
@@ -233,7 +261,7 @@ const rootReducer: React.Reducer<AppState, AppAction> = combineReducers({
   auth: authReducer,
   data: dataReducer,
   settings: settingReducer,
-}) as any; // TODO
+});
 
 const AppContext = createContext<{
   state: AppState;
