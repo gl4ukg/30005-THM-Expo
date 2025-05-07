@@ -19,14 +19,10 @@ export const DateInput: React.FC<DatePickerProps> = ({
   required,
 }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [showValidationError, setShowValidationError] = useState(false);
+  const [showValidationError, setShowValidationError] = useState(required && !value);
 
   useEffect(() => {
-    if (required && !value) {
-      setShowValidationError(true);
-    } else {
-      setShowValidationError(false);
-    }
+    setShowValidationError(required && !value);
   }, [required, value]);
 
   const showDatePicker = () => {
