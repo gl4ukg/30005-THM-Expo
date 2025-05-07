@@ -9,6 +9,7 @@ import { StyleSheet, View } from 'react-native';
 export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
   info,
   onInputChange,
+  showValidationErrors,
 }) => (
   <View>
     <Bookmark title='Tess Part Numbers' />
@@ -18,7 +19,7 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
         selectedOption={info.hoseType ?? null}
         onChange={(value) => onInputChange('hoseType', value)}
         options={[]}
-        required
+        required={showValidationErrors}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Ferrule 1', message: '' }}>
@@ -27,7 +28,7 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
         selectedOption={info.ferrule1 ?? null}
         onChange={(value) => onInputChange('ferrule1', value)}
         options={[]}
-        required
+        required={showValidationErrors}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Ferrule 2', message: '' }}>
@@ -36,7 +37,7 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
         selectedOption={info.ferrule2 ?? null}
         onChange={(value) => onInputChange('ferrule2', value)}
         options={[]}
-        required
+        required={showValidationErrors}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Insert 1', message: '' }}>
@@ -45,7 +46,7 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
         selectedOption={info.insert1 ?? null}
         onChange={(value) => onInputChange('insert1', value)}
         options={[]}
-        required
+        required={showValidationErrors}
       />
     </TooltipWrapper>
     <TooltipWrapper tooltipData={{ title: 'Insert 2', message: '' }}>
@@ -54,7 +55,7 @@ export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
         selectedOption={info.insert2 ?? null}
         onChange={(value) => onInputChange('insert2', value)}
         options={[]}
-        required
+        required={showValidationErrors}
       />
     </TooltipWrapper>
     <View style={styles.section}>

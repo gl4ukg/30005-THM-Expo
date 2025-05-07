@@ -1,7 +1,7 @@
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
@@ -19,8 +19,11 @@ export const DateInput: React.FC<DatePickerProps> = ({
   required,
 }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [showValidationError, setShowValidationError] = useState(required && !value);
 
-  const showError = required && !value;
+  useEffect(() => {
+    setShowValidationError(required && !value);
+  }, [required, value]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -33,6 +36,7 @@ export const DateInput: React.FC<DatePickerProps> = ({
   const confirm = (selectedDate: Date) => {
     hideDatePicker();
     onChange(selectedDate);
+    setShowValidationError(false);
   };
 
   return (
@@ -40,13 +44,18 @@ export const DateInput: React.FC<DatePickerProps> = ({
       <View style={styles.labelContainer}>
         <Typography
           name={'navigation'}
-          style={[styles.label, showError && styles.labelError]}
+          style={[styles.label, showValidationError && styles.labelError]}
           text={label}
         />
-        {showError && <Icon name='Alert' color={colors.error} size='xsm' />}
+        {showValidationError && (
+          <Icon name='Alert' color={colors.error} size='xsm' />
+        )}
       </View>
       <Pressable
-        style={[styles.inputContainer, showError && styles.inputContainerError]}
+        style={[
+          styles.inputContainer,
+          showValidationError && styles.inputContainerError,
+        ]}
         onPress={showDatePicker}
       >
         <Typography
@@ -55,20 +64,18 @@ export const DateInput: React.FC<DatePickerProps> = ({
           style={[
             styles.valueStyle,
             !value && styles.valueNotSelected,
-
-            showError && styles.valueError,
+            showValidationError && styles.valueError,
           ]}
         />
         <View style={styles.iconContainer}>
           <Icon
             name='Calendar'
             size='md'
-            color={showError ? colors.error : colors.extended666}
+            color={showValidationError ? colors.error : colors.extended666}
           />
         </View>
       </Pressable>
-      {/* Use showError for conditional rendering */}
-      {showError && (
+      {showValidationError && (
         <Typography
           name={'navigation'}
           text='Required field'

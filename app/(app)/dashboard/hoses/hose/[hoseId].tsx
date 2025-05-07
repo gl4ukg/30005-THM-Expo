@@ -45,6 +45,7 @@ const renderComponent = <T,>(
       info={props.info}
       onInputChange={props.onInputChange}
       missingFields={props.missingFields}
+      showValidationErrors
     />
   ) : (
     <Component info={props.info} />

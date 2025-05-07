@@ -12,8 +12,7 @@ export const EditGeneralInfo: React.FC<{
   info: Partial<GHD>;
   onInputChange: (
     field: keyof Partial<GHD>,
-
-    value: Partial<GHD>[keyof Partial<GHD>] | Date,
+    value: Partial<GHD>[keyof Partial<GHD>],
   ) => void;
   isRegisterView?: boolean;
 }> = ({ info, onInputChange, isRegisterView }) => {
@@ -50,7 +49,7 @@ export const EditGeneralInfo: React.FC<{
             <DateInput
               label='Installation date'
               value={parseDate(info.installedDate)}
-              onChange={(date) => onInputChange('installedDate', date)}
+              onChange={(date) => onInputChange('installedDate', String(date))}
               required
             />
           </TooltipWrapper>

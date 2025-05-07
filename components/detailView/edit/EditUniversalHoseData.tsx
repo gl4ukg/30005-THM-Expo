@@ -42,16 +42,32 @@ export const isFieldACouplingFieldEnd = (
   return !!couplingsFieldsEnd.find((f) => f === field);
 };
 
+const buildDescription = (data: {
+  hoseStandard?: string;
+  innerDiameter?: string;
+  hoseLength?: string;
+  description?: string;
+}): string => {
+  const { hoseStandard, innerDiameter, hoseLength, description } = data;
+  return hoseStandard && innerDiameter && hoseLength
+    ? `${hoseStandard}-${innerDiameter} x ${hoseLength} mm`
+    : (description ?? '');
+};
+
 export const EditUniversalHoseData: React.FC<{
   info: Partial<UHD>;
   onInputChange: (
     field: keyof Partial<UHD>,
     value: Partial<UHD>[keyof Partial<UHD>],
   ) => void;
-}> = ({ info, onInputChange }) => {
+  showValidationErrors?: boolean;
+}> = ({ info, onInputChange, showValidationErrors }) => {
   const [sameAsEnd1, setSameAsEnd1] = useState(false);
+  const [localInfo, setLocalInfo] = useState<Partial<UHD>>(info);
 
   useEffect(() => {
+    const newLocalInfo = { ...info };
+    setLocalInfo(newLocalInfo);
     let endsMatch = couplingsFields.length > 0;
     if (endsMatch) {
       for (let i = 0; i < couplingsFields.length; i++) {
@@ -87,6 +103,20 @@ export const EditUniversalHoseData: React.FC<{
   };
 
   const handleFieldChange = (field: keyof UHD, value: any) => {
+    const oldInfo = { ...localInfo };
+    let nextInfo = { ...oldInfo, [field]: value };
+
+    if (['hoseStandard', 'innerDiameter', 'hoseLength'].includes(field)) {
+      const descriptionData = {
+        ...nextInfo,
+        hoseLength:
+          typeof nextInfo.hoseLength === 'number'
+            ? String(nextInfo.hoseLength)
+            : nextInfo.hoseLength,
+      };
+      nextInfo.description = buildDescription(descriptionData);
+    }
+
     onInputChange(field, value);
 
     if (sameAsEnd1 && isFieldACouplingField(field)) {
@@ -95,6 +125,12 @@ export const EditUniversalHoseData: React.FC<{
         const end2Field = couplingsFieldsEnd[end1Index];
         onInputChange(end2Field as keyof Partial<UHD>, value);
       }
+    }
+
+    setLocalInfo(nextInfo);
+
+    if (nextInfo.description !== oldInfo.description) {
+      onInputChange('description', nextInfo.description);
     }
 
     if (isFieldACouplingFieldEnd(field)) {
@@ -111,7 +147,34 @@ export const EditUniversalHoseData: React.FC<{
   return (
     <View>
       <Bookmark title='Universal Hose Data' />
-
+      <TooltipWrapper
+        tooltipData={{
+          title: 'Hose standard',
+          message: 'This is the hose standard',
+        }}
+      >
+        <Select
+          label='Hose Standard'
+          selectedOption={localInfo.hoseStandard || ''}
+          onChange={(value) => handleFieldChange('hoseStandard', value)}
+          options={[]}
+          required={showValidationErrors}
+        />
+      </TooltipWrapper>
+      <TooltipWrapper
+        tooltipData={{
+          title: 'Inner diameter',
+          message: 'This is the Inner diameter',
+        }}
+      >
+        <Select
+          label='Inner Diameter'
+          selectedOption={localInfo.innerDiameter || ''}
+          onChange={(value) => handleFieldChange('innerDiameter', value)}
+          options={[]}
+          required={showValidationErrors}
+        />
+      </TooltipWrapper>
       <TooltipWrapper
         tooltipData={{
           title: 'Hose Length',
@@ -121,12 +184,12 @@ export const EditUniversalHoseData: React.FC<{
         <View style={styles.inputContainer}>
           <UnitInput
             label='Hose Length'
-            value={Number(info.hoseLength ?? 0)}
+            value={Number(localInfo.hoseLength ?? 0)}
             onChangeText={(value: number) =>
               handleFieldChange('hoseLength', String(value))
             }
             unit={'mm'}
-            required
+            required={showValidationErrors}
           />
         </View>
       </TooltipWrapper>
@@ -138,9 +201,9 @@ export const EditUniversalHoseData: React.FC<{
       >
         <Input
           label='Description:'
-          value={info.description || ''}
+          value={localInfo.description || ''}
           onChangeText={(text) => handleFieldChange('description', text)}
-          required
+          required={showValidationErrors}
         />
       </TooltipWrapper>
 
@@ -169,7 +232,7 @@ export const EditUniversalHoseData: React.FC<{
           selectedOption={info.materialQualityEnd1 || ''}
           onChange={(value) => handleFieldChange('materialQualityEnd1', value)}
           options={[]}
-          required
+          required={showValidationErrors}
         />
       </TooltipWrapper>
 
@@ -179,7 +242,7 @@ export const EditUniversalHoseData: React.FC<{
           selectedOption={info.typeFittingEnd1 || ''}
           onChange={(value) => handleFieldChange('typeFittingEnd1', value)}
           options={[]}
-          required
+          required={showValidationErrors}
         />
       </TooltipWrapper>
 
@@ -194,7 +257,7 @@ export const EditUniversalHoseData: React.FC<{
           selectedOption={info.generalDimensionEnd1 || ''}
           onChange={(value) => handleFieldChange('generalDimensionEnd1', value)}
           options={[]}
-          required
+          required={showValidationErrors}
         />
       </TooltipWrapper>
 
@@ -203,7 +266,7 @@ export const EditUniversalHoseData: React.FC<{
           label='Gender'
           selectedOption={info.genderEnd1 || ''}
           onChange={(value) => handleFieldChange('genderEnd1', value)}
-          required
+          required={showValidationErrors}
           options={[]}
         />
       </TooltipWrapper>
@@ -214,7 +277,7 @@ export const EditUniversalHoseData: React.FC<{
           selectedOption={info.angleEnd1 || ''}
           onChange={(value) => handleFieldChange('angleEnd1', value)}
           options={[]}
-          required
+          required={showValidationErrors}
         />
       </TooltipWrapper>
 
@@ -250,7 +313,7 @@ export const EditUniversalHoseData: React.FC<{
           selectedOption={info.materialQualityEnd2 || ''}
           onChange={(value) => handleFieldChange('materialQualityEnd2', value)}
           options={[]}
-          required
+          required={showValidationErrors}
         />
       </TooltipWrapper>
 
@@ -260,7 +323,7 @@ export const EditUniversalHoseData: React.FC<{
           selectedOption={info.typeFittingEnd2 || ''}
           onChange={(value) => handleFieldChange('typeFittingEnd2', value)}
           options={[]}
-          required
+          required={showValidationErrors}
         />
       </TooltipWrapper>
 
@@ -272,7 +335,7 @@ export const EditUniversalHoseData: React.FC<{
           selectedOption={info.genericDimensionEnd2 || ''}
           onChange={(value) => handleFieldChange('genericDimensionEnd2', value)}
           options={[]}
-          required
+          required={showValidationErrors}
         />
       </TooltipWrapper>
 
@@ -281,7 +344,7 @@ export const EditUniversalHoseData: React.FC<{
           label='Gender'
           selectedOption={info.genderEnd2 || ''}
           onChange={(value) => handleFieldChange('genderEnd2', value)}
-          required
+          required={showValidationErrors}
           options={[]}
         />
       </TooltipWrapper>
@@ -292,7 +355,7 @@ export const EditUniversalHoseData: React.FC<{
           selectedOption={info.angleEnd2 || ''}
           onChange={(value) => handleFieldChange('angleEnd2', value)}
           options={[]}
-          required
+          required={showValidationErrors}
         />
       </TooltipWrapper>
 
@@ -301,7 +364,6 @@ export const EditUniversalHoseData: React.FC<{
           label='Comment End 2'
           value={info.commentEnd2PTC || ''}
           onChangeText={(text) => handleFieldChange('commentEnd2PTC', text)}
-          disabled={sameAsEnd1}
         />
       </View>
     </View>

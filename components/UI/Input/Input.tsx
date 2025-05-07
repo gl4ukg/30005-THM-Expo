@@ -324,8 +324,7 @@ const styles = StyleSheet.create({
   },
   darkMode: {
     backgroundColor: colors.inputBackground,
-    borderColor: colors.secondary,
-    color: colors.white,
+    borderColor: colors.secondary95,
   },
   textAreaStyle: {
     minHeight: 80,

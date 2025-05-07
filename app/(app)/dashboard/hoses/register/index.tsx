@@ -40,7 +40,7 @@ const getDefaultRequiredHoseData = (): Pick<
   | 'ferrule2'
   | 'insert1'
   | 'insert2'
-  | 'genericHoseType'
+  //| 'genericHoseType'
   | 'typeFittingEnd1'
   | 'generalDimensionEnd1'
   | 'genderEnd1'
@@ -62,7 +62,7 @@ const getDefaultRequiredHoseData = (): Pick<
   ferrule2: '',
   insert1: '',
   insert2: '',
-  genericHoseType: '',
+  //genericHoseType: '',
   typeFittingEnd1: '',
   generalDimensionEnd1: '',
   genderEnd1: '',
@@ -90,20 +90,22 @@ const RegisterHose = () => {
   const [rfid, setRfid] = useState<string | undefined>(incomingRfid);
   const [isBarcodeModalVisible, setIsBarcodeModalVisible] = useState(false);
 
-  const [localState, setLocalState] = useState<Partial<HoseData>>(() => {
+  const [localState, setLocalState] = useState<
+    Partial<HoseData> & { showValidationErrors?: boolean }
+  >(() => {
     const templateData = state.data.hoseTemplate || {};
     const defaultRequired = getDefaultRequiredHoseData();
+    const mergedTemplate = { ...defaultRequired, ...templateData };
 
     excludedTemplateFields.forEach((field) => {
       delete mergedTemplate[field];
     });
 
-    const mergedTemplate = { ...defaultRequired, ...templateData };
-
     return {
       ...mergedTemplate,
       id: incomingId,
       RFid: incomingRfid,
+      showValidationErrors: false,
     };
   });
 
@@ -180,7 +182,6 @@ const RegisterHose = () => {
       'ferrule2',
       'insert1',
       'insert2',
-      'genericHoseType', // Not sure what this is
       'typeFittingEnd1',
       'generalDimensionEnd1',
       'genderEnd1',
@@ -191,6 +192,7 @@ const RegisterHose = () => {
       'genderEnd2',
       'angleEnd2',
     ];
+
     const missing = requiredFieldsList.filter(
       (field) =>
         localState[field] === undefined ||
@@ -203,21 +205,33 @@ const RegisterHose = () => {
         'Missing Required Fields',
         `Please fill in the following fields: ${missing.join(', ')}`,
       );
+      setLocalState((prevState) => ({
+        ...prevState,
+        showValidationErrors: true,
+      }));
       return;
     }
 
     const newHoseData = localState as HoseData;
 
     dispatch({ type: 'ADD_HOSE', payload: newHoseData });
-    Alert.alert('Success', 'Hose registered successfully.');
-    router.back();
-  }, [localState, dispatch, router]);
+
+    if (registerMultiple) {
+      dispatch({ type: 'SET_HOSE_TEMPLATE', payload: newHoseData });
+      Alert.alert(
+        'Success',
+        'Hose registered successfully. Ready for next hose.',
+      );
+      router.push('/scan?scanPurpose=REGISTER_HOSE');
+    } else {
+      Alert.alert('Success', 'Hose registered successfully.');
+      router.back();
+    }
+  }, [localState, dispatch, router, registerMultiple]);
 
   const handleCancel = () => {
     router.push('/(app)/dashboard');
   };
-
-  console.log(incomingId, incomingRfid, scanMethod);
 
   return (
     <View style={styles.container}>
@@ -297,10 +311,12 @@ const RegisterHose = () => {
         <EditUniversalHoseData
           info={localState as UHD}
           onInputChange={handleInputChange}
+          showValidationErrors={localState.showValidationErrors}
         />
         <EditTessPartNumbers
           info={localState as TPN}
           onInputChange={handleInputChange}
+          showValidationErrors={localState.showValidationErrors}
         />
         <EditMaintenanceInfo
           info={localState as HID}
