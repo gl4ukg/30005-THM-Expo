@@ -17,6 +17,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { BarcodeInput } from '@/components/UI/Input/BarcodeInput';
 import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
+import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -26,53 +27,6 @@ const excludedTemplateFields: (keyof HoseData)[] = [
   'generalComment',
   'id',
 ];
-
-const getDefaultRequiredHoseData = (): Pick<
-  HoseData,
-  | 'description'
-  | 'prodDate'
-  | 'installedDate'
-  | 'criticality'
-  | 'hoseType'
-  | 'hoseLength'
-  | 'wp'
-  | 'ferrule1'
-  | 'ferrule2'
-  | 'insert1'
-  | 'insert2'
-  //| 'genericHoseType'
-  | 'typeFittingEnd1'
-  | 'generalDimensionEnd1'
-  | 'genderEnd1'
-  | 'angleEnd1'
-  | 'materialQualityEnd1'
-  | 'typeFittingEnd2'
-  | 'genericDimensionEnd2'
-  | 'genderEnd2'
-  | 'angleEnd2'
-> => ({
-  description: '',
-  prodDate: new Date().toISOString(),
-  installedDate: new Date().toISOString(),
-  criticality: 0,
-  hoseType: '',
-  hoseLength: '',
-  wp: '',
-  ferrule1: '',
-  ferrule2: '',
-  insert1: '',
-  insert2: '',
-  //genericHoseType: '',
-  typeFittingEnd1: '',
-  generalDimensionEnd1: '',
-  genderEnd1: '',
-  angleEnd1: '',
-  materialQualityEnd1: '',
-  typeFittingEnd2: '',
-  genericDimensionEnd2: '',
-  genderEnd2: '',
-  angleEnd2: '',
-});
 
 const RegisterHose = () => {
   const {
@@ -213,8 +167,6 @@ const RegisterHose = () => {
     }
 
     const newHoseData = localState as HoseData;
-
-    dispatch({ type: 'ADD_HOSE', payload: newHoseData });
 
     if (registerMultiple) {
       dispatch({ type: 'SET_HOSE_TEMPLATE', payload: newHoseData });
