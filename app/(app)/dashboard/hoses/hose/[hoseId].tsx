@@ -22,9 +22,10 @@ import {
 import { colors } from '@/lib/tokens/colors';
 import { EditProps } from '@/lib/types/edit';
 import { HoseData } from '@/lib/types/hose';
+import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 
 type ExtendedEditProps<T> = EditProps<T> & {
   missingFields?: string[];
@@ -127,17 +128,58 @@ const HoseDetails = () => {
   };
 
   const handleSave = () => {
-    if (hoseData.id === undefined) return;
+    if (!isHoseDataType(hoseData) || hoseData.id === undefined) return;
 
-    const updatedHoseData = { ...hoseData, missingData: false };
+    const requiredFieldsList = Object.keys(
+      getDefaultRequiredHoseData(),
+    ) as (keyof HoseData)[];
 
-    dispatch({
-      type: 'SAVE_HOSE_DATA',
-      payload: { hoseId: hoseData.id, hoseData: updatedHoseData },
-    });
-    setEditMode(false);
-    setMissingFields([]);
-    scrollViewRef.current?.scrollTo({ y: 0 });
+    const currentMissingFields = requiredFieldsList.filter(
+      (field) =>
+        hoseData[field] === undefined ||
+        hoseData[field] === null ||
+        String(hoseData[field]).trim() === '',
+    );
+
+    const proceedWithSave = (markAsMissingData: boolean) => {
+      const updatedHoseData = {
+        ...hoseData,
+        missingData: markAsMissingData,
+      } as HoseData;
+      dispatch({
+        type: 'SAVE_HOSE_DATA',
+        payload: { hoseId: hoseData.id!, hoseData: updatedHoseData },
+      });
+      setEditMode(false);
+      setMissingFields([]);
+      scrollViewRef.current?.scrollTo({ y: 0 });
+      Alert.alert(
+        'Success',
+        `Hose data saved successfully${markAsMissingData ? ' (with missing data)' : ''}.`,
+      );
+    };
+
+    if (currentMissingFields.length > 0) {
+      Alert.alert(
+        'Missing Data',
+        'This hose has missing data, do you have the ability to add and update?',
+        [
+          {
+            text: 'Update hose details',
+            onPress: () => {
+              setMissingFields(currentMissingFields);
+            },
+            style: 'cancel',
+          },
+          {
+            text: 'Continue anyway.',
+            onPress: () => proceedWithSave(true),
+          },
+        ],
+      );
+    } else {
+      proceedWithSave(false);
+    }
   };
 
   const handleAction = (value: SingleSelection['type']) => {
