@@ -61,6 +61,14 @@ const styles = StyleSheet.create({
       ios: 'OpenSans-SemiBold',
     }),
   },
+  sectionText: {
+    fontSize: 16,
+    lineHeight: 22,
+    fontFamily: Platform.select({
+      android: 'OpenSans_400Regular',
+      ios: 'OpenSans-Regular',
+    }),
+  },
   sectionHeader: {
     fontSize: 20,
     lineHeight: 22,
