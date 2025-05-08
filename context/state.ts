@@ -93,12 +93,17 @@ export const isSingleSelection = (
 
 interface DataState {
   isLoading: boolean;
+  lastUpdate: null | Date;
   // define data state properties
   hoses: HoseData[];
   assignedUnits: {
     unitId: string;
     unitName: string;
   }[];
+  customer: {
+    id: string;
+    name: string;
+  };
   workingUnitId: null | string;
   selection: HoseSelection | null;
   hoseTemplate?: Partial<HoseData>;
@@ -107,6 +112,11 @@ interface DataState {
 interface SettingsState {
   // define settings state properties
   connectionType: 'wifi' | 'mobile' | null;
+  appInfo: {
+    version: string;
+    environment: string;
+    webServiceEndpoint: string;
+  };
 }
 
 // Define initial states for each slice of the app state
@@ -123,13 +133,15 @@ const initialAuthState: AuthState = {
 
 const initialDataState: DataState = {
   isLoading: false,
+  lastUpdate: new Date(),
+  customer: { id: '223949', name: 'CUSTOMER WEB DEMO (Main)' },
   // initial data state values
   hoses: [],
   assignedUnits: [
-    { unitId: '1', unitName: 'Test Princess' },
-    { unitId: '2', unitName: 'Test Prince' },
+    { unitId: '1203108', unitName: 'Test Princess' },
+    { unitId: '2406216', unitName: 'Test Prince' },
   ],
-  workingUnitId: '1',
+  workingUnitId: '1203108',
   selection: null,
   hoseTemplate: undefined,
 };
@@ -137,6 +149,11 @@ const initialDataState: DataState = {
 const initialSettingsState: SettingsState = {
   // initial settings state values
   connectionType: null,
+  appInfo: {
+    version: '1.0.0',
+    environment: 'DEV',
+    webServiceEndpoint: 'http://localhost:3000',
+  },
 };
 
 const initialState: AppState = {

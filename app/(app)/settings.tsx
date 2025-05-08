@@ -6,7 +6,17 @@ import { useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 const User = () => {
-  const { state, dispatch } = useAppContext();
+  const router = useRouter();
+  const { state } = useAppContext();
+
+  const { user } = state.auth;
+  const { appInfo } = state.settings;
+  const { customer, workingUnitId, assignedUnits, lastUpdate } = state.data;
+  const location = assignedUnits.find((unit) => unit.unitId === workingUnitId);
+  if (!user) {
+    router.push('/');
+    return null;
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.scrollView}>
@@ -20,29 +30,35 @@ const User = () => {
       <View style={styles.section}>
         <Bookmark title='User' />
         <View style={styles.sectionData}>
-          <DataField label='User ID:' value={'223949MOB'} />
-          <DataField label='Full name:' value={'223949MOB'} />
+          <DataField label='User ID:' value={user.id} />
+          <DataField label='Full name:' value={user.name} />
         </View>
       </View>
       <View style={styles.section}>
         <Bookmark title='App settings' />
         <View style={styles.sectionData}>
-          <DataField label='Version:' value={'223949MOB'} />
-          <DataField label='Environment:' value={'223949MOB'} />
-          <DataField label='Web Service Endpoint:' value={'223949MOB'} />
+          <DataField label='Version:' value={appInfo.version} />
+          <DataField label='Environment:' value={appInfo.environment} />
+          <DataField
+            label='Web Service Endpoint:'
+            value={appInfo.webServiceEndpoint}
+          />
         </View>
       </View>
       <View style={styles.section}>
         <Bookmark title='Locations / Structures' />
         <View style={styles.sectionData}>
-          <DataField label='Customer Number:' value={'223949MOB'} />
-          <DataField label='Customer Description:' value={'223949MOB'} />
-          <DataField label='Location:' value={'223949MOB'} />
+          <DataField label='Customer Number:' value={`${customer.id}`} />
+          <DataField label='Customer Description:' value={`${customer.name}`} />
+          <DataField
+            label='Location:'
+            value={`${location?.unitId} - ${location?.unitName}`}
+          />
         </View>
       </View>
       <View style={styles.section}>
         <Bookmark title='Synchronization status' />
-        <DataField label='Last synced:' value={'223949MOB'} />
+        <DataField label='Last synced:' value={lastUpdate?.toLocaleString()} />
       </View>
     </ScrollView>
   );
