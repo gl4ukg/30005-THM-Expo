@@ -1,5 +1,10 @@
+import { Typography } from '@/components/Typography';
 import { ContextProvider, useAppContext } from '@/context/ContextProvider';
+import { colors } from '@/lib/tokens/colors';
+import { syncData } from '@/lib/util/sync';
+import { useNetInfo } from '@react-native-community/netinfo';
 import { Stack } from 'expo-router';
+import { useEffect } from 'react';
 import {
   ActivityIndicator,
   SafeAreaView,
@@ -7,11 +12,6 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { addEventListener, useNetInfo } from '@react-native-community/netinfo';
-import { useEffect } from 'react';
-import { Typography } from '@/components/Typography';
-import { colors } from '@/lib/tokens/colors';
-import { syncData } from '@/lib/util/sync';
 
 export default function RootLayout() {
   return (

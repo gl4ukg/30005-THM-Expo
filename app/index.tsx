@@ -19,11 +19,9 @@ import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { useAppContext } from '@/context/ContextProvider';
 import { mockedData } from '@/context/mocked';
 import { colors } from '@/lib/tokens/colors';
+import { HoseData } from '@/lib/types/hose';
 import { Link, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { HoseData } from '@/lib/types/hose';
-import { useEffect } from 'react';
-import { useNetInfo } from '@react-native-community/netinfo';
 
 const Login = () => {
   const router = useRouter();
@@ -149,34 +147,12 @@ const Login = () => {
                       </Typography>
                     </View>
                   </LoginHeader>
-                  <View>
-                    <Typography
-                      name={'navigation'}
-                      text={state.settings.connectionType ?? 'none connection'}
-                      style={styles.whiteText}
-                    />
-                  </View>
                   <View style={styles.content}>
                     <View style={styles.buttonWrapper}>
                       <ButtonTHS
                         title={'LOGIN'}
                         onPress={() => {
                           router.push('/login');
-                        }}
-                        variant={'primary'}
-                      />
-                      <ButtonTHS
-                        title={'Change'}
-                        onPress={() => {
-                          state.settings.connectionType === 'wifi'
-                            ? dispatch({
-                                type: 'UPDATE_CONNECTION_TYPE',
-                                payload: null,
-                              })
-                            : dispatch({
-                                type: 'UPDATE_CONNECTION_TYPE',
-                                payload: 'wifi',
-                              });
                         }}
                         variant={'primary'}
                       />
