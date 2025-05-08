@@ -123,9 +123,9 @@ interface SettingsState {
 const initialAuthState: AuthState = {
   // initial auth state values
   user: {
-    email: 'use@e.mail',
-    name: 'User',
-    id: 'id',
+    email: 'slange_mester@tess.no ',
+    name: 'Ole Slange Mester',
+    id: '223949MOB',
   },
   isLoingLoading: false,
   token: null,
