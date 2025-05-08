@@ -3,10 +3,9 @@ import { Redirect, Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-// import SubUnitSelect from '../../components/UI/TopBarNavigation/SubUnitSelect';º
+import { TopBarNavigation } from '@/components/UI/TopBarNavigation';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
-import { TopBarNavigation } from '@/components/UI/TopBarNavigation';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();

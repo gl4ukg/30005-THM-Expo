@@ -19,13 +19,13 @@ import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { useAppContext } from '@/context/ContextProvider';
 import { mockedData } from '@/context/mocked';
 import { colors } from '@/lib/tokens/colors';
+import { HoseData } from '@/lib/types/hose';
 import { Link, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { HoseData } from '@/lib/types/hose';
 
 const Login = () => {
   const router = useRouter();
-  const { dispatch } = useAppContext();
+  const { state, dispatch } = useAppContext();
   const windowHeight = Dimensions.get('window').height;
   const insets = useSafeAreaInsets();
 
