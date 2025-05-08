@@ -16,11 +16,12 @@ export default function RootLayout() {
           }}
         >
           {state.auth.user === null && (
-            <>
+            <SafeAreaView style={styles.safeArea}>
               <Stack.Screen name='index' />
               <Stack.Screen name='/login' />
+              <Stack.Screen name='/settings' />
               <Stack.Screen name='/scan' />
-            </>
+            </SafeAreaView>
           )}
           {state.auth.user !== null && (
             <SafeAreaView style={styles.safeArea}>
@@ -38,5 +39,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     height: '100%',
+    backgroundColor: 'black',
   },
 });
