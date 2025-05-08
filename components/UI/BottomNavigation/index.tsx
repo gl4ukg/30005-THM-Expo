@@ -70,7 +70,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Settings',
-                to: '/(app)/user',
+                to: '/(app)/settings',
                 icon: () => <Icon name='Settings' color={colors.primary} />,
               },
             ]}
@@ -84,7 +84,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
         <View style={styles.buttonsWrapper}>
           <Link
             asChild
-            href='/(app)/user'
+            href='/(app)/settings'
             style={[styles.button, { display: 'none' }]}
           >
             <Pressable

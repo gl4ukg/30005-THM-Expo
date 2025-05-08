@@ -18,6 +18,7 @@ export default function RootLayout() {
     <ContextProvider>
       <SafeAreaProvider>
         <App />
+        
       </SafeAreaProvider>
     </ContextProvider>
   );
@@ -71,25 +72,26 @@ const App = () => {
         </View>
       )}
       <Stack
-        screenOptions={{
-          headerShown: false,
-          animationTypeForReplace: 'push',
-        }}
-      >
-        {state.auth.user === null && (
-          <>
-            <Stack.Screen name='index' />
-            <Stack.Screen name='/login' />
-            <Stack.Screen name='/scan' />
-          </>
-        )}
-        {state.auth.user !== null && (
-          <SafeAreaView style={styles.safeArea}>
-            <Stack.Screen name='(app)' />
-            <Stack.Screen name='ui' />
-          </SafeAreaView>
-        )}
-      </Stack>
+          screenOptions={{
+            headerShown: false,
+            animationTypeForReplace: 'push',
+          }}
+        >
+          {state.auth.user === null && (
+            <SafeAreaView style={styles.safeArea}>
+              <Stack.Screen name='index' />
+              <Stack.Screen name='/login' />
+              <Stack.Screen name='/settings' />
+              <Stack.Screen name='/scan' />
+            </SafeAreaView>
+          )}
+          {state.auth.user !== null && (
+            <SafeAreaView style={styles.safeArea}>
+              <Stack.Screen name='(app)' />
+              <Stack.Screen name='ui' />
+            </SafeAreaView>
+          )}
+        </Stack>
     </>
   );
 };
@@ -97,5 +99,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     height: '100%',
+    backgroundColor: 'black',
   },
 });
