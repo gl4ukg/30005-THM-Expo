@@ -35,14 +35,16 @@ export default function TabLayout() {
         <Tabs
           screenOptions={{
             headerShown: false,
+            sceneStyle: { backgroundColor: colors.white },
           }}
           initialRouteName='dashboard'
           tabBar={() => <></>}
         >
-          <Tabs.Screen name='user' />
+          <Tabs.Screen name='settings' />
           <Tabs.Screen name='dashboard' />
         </Tabs>
       </SafeAreaView>
+          
       <BottomNavigation />
     </>
   );

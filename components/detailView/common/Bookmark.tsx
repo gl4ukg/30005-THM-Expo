@@ -10,37 +10,25 @@ interface BookmarkProps {
 export const Bookmark: React.FC<BookmarkProps> = ({ title }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.line} />
-      <View style={styles.content}>
-        <Icon name='ArrowRight' size='sm' color={colors.primary} />
-        <Typography name={'sectionHeader'} style={styles.title}>
-          {title}
-        </Typography>
-      </View>
+      <Icon name='ArrowRight' size='sm' color={colors.primary} />
+      <Typography name={'sectionHeader'} style={styles.title}>
+        {title}
+      </Typography>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginVertical: 10,
-  },
-  line: {
-    width: '100%',
-    borderBottomWidth: 3,
-    borderBottomColor: colors.primary25,
-  },
-  content: {
     flexDirection: 'row',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     gap: 6,
-    color: colors.primary25,
+    paddingTop: 11,
+    borderTopWidth: 2,
+    borderTopColor: colors.primary25,
   },
   title: {
-    fontWeight: 'bold',
     color: colors.primary25,
-    marginTop: 5,
   },
 });

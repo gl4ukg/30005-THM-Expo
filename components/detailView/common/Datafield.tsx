@@ -21,10 +21,10 @@ export const DataField: React.FC<DataFieldProps> = ({
   }
 
   return (
-    <View style={styles.container}>
+    <View>
       <Typography
         style={error ? styles.emptyValueText : styles.label}
-        name={'fieldLabel'}
+        name={'sectionText'}
       >
         {label}
       </Typography>
@@ -32,13 +32,13 @@ export const DataField: React.FC<DataFieldProps> = ({
         {isValueEmpty ? (
           <Typography
             style={[styles.value, styles.emptyValueText]}
-            name={'fieldValue'}
+            name={'sectionText'}
             text='Not set'
           />
         ) : (
           <Typography
             style={error ? styles.emptyValueText : styles.value}
-            name={'fieldValue'}
+            name={'sectionText'}
           >
             {value !== undefined ? value.toString() : 'N/A'}
           </Typography>
@@ -51,15 +51,10 @@ export const DataField: React.FC<DataFieldProps> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 10,
-  },
   label: {
-    fontSize: 16,
     color: colors.extended666,
   },
   value: {
-    fontSize: 16,
     color: colors.extended333,
   },
   emptyValueContainer: {

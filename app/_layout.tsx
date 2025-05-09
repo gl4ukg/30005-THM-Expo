@@ -13,6 +13,7 @@ export default function RootLayout() {
     <ContextProvider>
       <SafeAreaProvider>
         <App />
+        
       </SafeAreaProvider>
     </ContextProvider>
   );
@@ -75,6 +76,7 @@ const App = () => {
           <>
             <Stack.Screen name='index' />
             <Stack.Screen name='/login' />
+            <Stack.Screen name='/settings' />
             <Stack.Screen name='/scan' />
           </>
         )}
@@ -85,6 +87,7 @@ const App = () => {
           </>
         )}
       </Stack>
+              
     </>
   );
 };
@@ -92,5 +95,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     height: '100%',
+    backgroundColor: 'black',
   },
 });
