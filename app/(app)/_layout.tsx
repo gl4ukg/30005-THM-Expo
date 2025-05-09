@@ -38,6 +38,7 @@ export default function TabLayout() {
       <Tabs
         screenOptions={{
           headerShown: false,
+          sceneStyle: { backgroundColor: colors.white },
         }}
         initialRouteName='dashboard'
         tabBar={() => <></>}
