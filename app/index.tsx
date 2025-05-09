@@ -2,6 +2,7 @@ import {
   Dimensions,
   ImageBackground,
   KeyboardAvoidingView,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -22,6 +23,7 @@ import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { Link, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 
 const Login = () => {
   const router = useRouter();
@@ -34,10 +36,17 @@ const Login = () => {
       style={styles.imageBackground}
       source={require('@/assets/images/Island-Patriot-11.png')}
     >
+      <StatusBar style='light' />
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView style={styles.safeArea}>
           {/* TODO: remove View block under */}
-          <View style={{ flexDirection: 'row', gap: 5 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              gap: 5,
+              top: Platform.OS === 'ios' ? 0 : insets.top,
+            }}
+          >
             <Link
               href={{
                 pathname: '/(app)/dashboard/hoses/register',
@@ -118,7 +127,7 @@ const Login = () => {
             ]}
           >
             <ScrollView contentContainerStyle={[styles.scrollView]}>
-              <View style={[styles.viewContainer, {}]}>
+              <View style={styles.viewContainer}>
                 <TessLogo width={180} color={colors.white} />
                 <View style={styles.container}>
                   <LoginHeader header='WELCOME' style={styles.loginHeader}>
@@ -203,6 +212,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
+    paddingTop: 36,
     paddingBottom: 30,
   },
   viewContainer: {

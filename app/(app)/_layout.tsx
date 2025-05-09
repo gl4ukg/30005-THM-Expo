@@ -44,7 +44,6 @@ export default function TabLayout() {
           <Tabs.Screen name='dashboard' />
         </Tabs>
       </SafeAreaView>
-          
       <BottomNavigation />
     </>
   );
