@@ -7,23 +7,23 @@ import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
 import { Href, Link, useRouter } from 'expo-router';
 import { FC, useContext, useState } from 'react';
-import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, View, Alert } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ShowBackConfirmationDialog } from './CancelAlert';
 
 interface BottomNavigationProps {}
 export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
   const [isOpen, setIsOpen] = useState(false);
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { dispatch } = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
 
   const handleLinkPress = (to: Href) => {
     setIsOpen(false);
     router.push(to);
     dispatch({ type: 'FINISH_SELECTION' });
   };
-
   return (
     <View style={[styles.modal, isOpen && styles.modalOpen]}>
       <View style={{ bottom: insets.bottom }}>
@@ -96,7 +96,13 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
           />
           <Pressable
             style={styles.button}
-            onPress={() => (isOpen ? setIsOpen(false) : router.back())}
+            onPress={() =>
+              isOpen
+                ? setIsOpen(false)
+                : state.data.isCancelable
+                  ? ShowBackConfirmationDialog()
+                  : router.back()
+            }
           >
             <Icon name='ChevronLeft' color='#fff' />
           </Pressable>

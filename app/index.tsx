@@ -22,12 +22,20 @@ import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { Link, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useEffect } from 'react';
 
 const Login = () => {
   const router = useRouter();
   const { state, dispatch } = useAppContext();
   const windowHeight = Dimensions.get('window').height;
   const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    dispatch({
+      type: 'SET_IS_CANCELABLE',
+      payload: false,
+    });
+  }, []);
 
   return (
     <ImageBackground

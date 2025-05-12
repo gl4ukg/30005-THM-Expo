@@ -107,6 +107,7 @@ interface DataState {
   workingUnitId: null | string;
   selection: HoseSelection | null;
   hoseTemplate?: Partial<HoseData>;
+  isCancelable: boolean;
 }
 
 interface SettingsState {
@@ -144,6 +145,7 @@ const initialDataState: DataState = {
   workingUnitId: '1203108',
   selection: null,
   hoseTemplate: undefined,
+  isCancelable: false,
 };
 
 const initialSettingsState: SettingsState = {

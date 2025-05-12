@@ -14,10 +14,11 @@ import { colors } from '@/lib/tokens/colors';
 import { GHD, HID, HoseData, TPN, UHD } from '@/lib/types/hose';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useCallback } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, BackHandler, ScrollView, StyleSheet, View } from 'react-native';
 import { BarcodeInput } from '@/components/UI/Input/BarcodeInput';
 import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
+import { ShowBackConfirmationDialog } from '@/components/UI/BottomNavigation/CancelAlert';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -66,6 +67,30 @@ const RegisterHose = () => {
   const handleCheckboxChange = () => {
     setRegisterMultiple((prevState) => !prevState);
   };
+
+  const handleCancel = () => {
+    ShowBackConfirmationDialog();
+  };
+  useEffect(() => {
+    dispatch({
+      type: 'SET_IS_CANCELABLE',
+      payload: true,
+    });
+
+    const onBackPress = () => {
+      ShowBackConfirmationDialog();
+      return true;
+    };
+
+    const backHandlerSubscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      onBackPress,
+    );
+
+    return () => {
+      backHandlerSubscription.remove();
+    };
+  }, [router]);
 
   useEffect(() => {
     if (state.data.hoseTemplate) {
@@ -180,10 +205,6 @@ const RegisterHose = () => {
       router.back();
     }
   }, [localState, dispatch, router, registerMultiple]);
-
-  const handleCancel = () => {
-    router.push('/(app)/dashboard');
-  };
 
   return (
     <View style={styles.container}>
