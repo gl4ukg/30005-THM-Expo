@@ -43,8 +43,8 @@ export default function TabLayout() {
         initialRouteName='dashboard'
         tabBar={() => <></>}
       >
-        <Tabs.Screen name='user' />
         <Tabs.Screen name='dashboard' />
+        <Tabs.Screen name='user' />
       </Tabs>
       <BottomNavigation />
     </>
