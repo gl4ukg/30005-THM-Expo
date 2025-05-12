@@ -70,7 +70,7 @@ const FilteredHosesList: React.FC<Props> = (props) => {
       payload: value,
     });
   };
-  const handleSelectionChange = (id: string) => {
+  const handleSelectionChange = (id: number) => {
     const selection = state.data.selection;
     if (isMultiSelection(selection)) {
       dispatch({
@@ -81,7 +81,7 @@ const FilteredHosesList: React.FC<Props> = (props) => {
   };
   const toggleSelectAll = () => {
     if (isMultiSelection(state.data.selection)) {
-      const allIds = filteredList.map((item) => item.id);
+      const allIds = filteredList.map((item) => item.assetId);
       const isAllSelected = state.data.selection.ids.length === listLength;
 
       if (isAllSelected) {

@@ -2,20 +2,20 @@ import { HoseData } from '../types/hose';
 
 export const getDefaultRequiredHoseData = (): Pick<
   HoseData,
-  | 'description'
+  | 'itemDescription'
   | 'prodDate'
   | 'installedDate'
   | 'criticality'
   | 'hoseType'
-  | 'hoseLength'
-  | 'wp'
+  | 'hoseLength_mm'
+  | 'wp_BAR'
   | 'ferrule1'
   | 'ferrule2'
   | 'insert1'
   | 'insert2'
   //| 'genericHoseType'
   | 'typeFittingEnd1'
-  | 'generalDimensionEnd1'
+  | 'genericDimensionEnd1'
   | 'genderEnd1'
   | 'angleEnd1'
   | 'materialQualityEnd1'
@@ -24,20 +24,20 @@ export const getDefaultRequiredHoseData = (): Pick<
   | 'genderEnd2'
   | 'angleEnd2'
 > => ({
-  description: '',
+  itemDescription: '',
   prodDate: new Date().toISOString(),
   installedDate: new Date().toISOString(),
   criticality: 0,
   hoseType: '',
-  hoseLength: '',
-  wp: '',
+  hoseLength_mm: '',
+  wp_BAR: '',
   ferrule1: '',
   ferrule2: '',
   insert1: '',
   insert2: '',
   //genericHoseType: '',
   typeFittingEnd1: '',
-  generalDimensionEnd1: '',
+  genericDimensionEnd1: '',
   genderEnd1: '',
   angleEnd1: '',
   materialQualityEnd1: '',
@@ -90,4 +90,14 @@ export const validatePassword = (
     return 'Passwords do not match';
   }
   return true;
+};
+
+type PossibleType = string | number | undefined | null;
+export const areValuesEqual = (a: PossibleType, b: PossibleType): boolean => {
+  // Check if either value is null or undefined
+  if (a == null || b == null) {
+    return false;
+  }
+  // Both values exist, check strict equality
+  return a === b;
 };

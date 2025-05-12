@@ -44,8 +44,8 @@ export const EditMaintenanceInfo: React.FC<
       <TooltipWrapper>
         <Input
           label='Inspected By:'
-          value={info.inspectedBy || ''}
-          onChangeText={(text) => onInputChange('inspectedBy', text)}
+          value={info.inspector || ''}
+          onChangeText={(text) => onInputChange('inspector', text)}
           type={'text'}
         />
       </TooltipWrapper>

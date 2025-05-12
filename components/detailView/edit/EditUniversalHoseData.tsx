@@ -13,7 +13,7 @@ import { StyleSheet, View } from 'react-native';
 export const couplingsFields = [
   'materialQualityEnd1',
   'typeFittingEnd1',
-  'generalDimensionEnd1',
+  'genericDimensionEnd1',
   'genderEnd1',
   'angleEnd1',
   'commentEnd1PTC',
@@ -110,11 +110,11 @@ export const EditUniversalHoseData: React.FC<{
       const descriptionData = {
         ...nextInfo,
         hoseLength:
-          typeof nextInfo.hoseLength === 'number'
-            ? String(nextInfo.hoseLength)
-            : nextInfo.hoseLength,
+          typeof nextInfo.hoseLength_mm === 'number'
+            ? String(nextInfo.hoseLength_mm)
+            : nextInfo.hoseLength_mm,
       };
-      nextInfo.description = buildDescription(descriptionData);
+      nextInfo.itemDescription = buildDescription(descriptionData);
     }
 
     onInputChange(field, value);
@@ -129,8 +129,8 @@ export const EditUniversalHoseData: React.FC<{
 
     setLocalInfo(nextInfo);
 
-    if (nextInfo.description !== oldInfo.description) {
-      onInputChange('description', nextInfo.description);
+    if (nextInfo.itemDescription !== oldInfo.itemDescription) {
+      onInputChange('itemDescription', nextInfo.itemDescription);
     }
 
     if (isFieldACouplingFieldEnd(field)) {
@@ -184,9 +184,9 @@ export const EditUniversalHoseData: React.FC<{
         <View style={styles.inputContainer}>
           <UnitInput
             label='Hose Length'
-            value={Number(localInfo.hoseLength ?? 0)}
+            value={Number(localInfo.hoseLength_mm ?? 0)}
             onChangeText={(value: number) =>
-              handleFieldChange('hoseLength', String(value))
+              handleFieldChange('hoseLength_mm', String(value))
             }
             unit={'mm'}
             required={showValidationErrors}
@@ -201,8 +201,8 @@ export const EditUniversalHoseData: React.FC<{
       >
         <Input
           label='Description:'
-          value={localInfo.description || ''}
-          onChangeText={(text) => handleFieldChange('description', text)}
+          value={localInfo.itemDescription || ''}
+          onChangeText={(text) => handleFieldChange('itemDescription', text)}
           required={showValidationErrors}
         />
       </TooltipWrapper>
@@ -214,10 +214,10 @@ export const EditUniversalHoseData: React.FC<{
         }}
       >
         <BarToPsiInput
-          pressureInBars={Number(info.wp ?? 0)}
+          pressureInBars={Number(info.wp_BAR ?? 0)}
           onChange={(pressure) => {
-            handleFieldChange('wp', String(pressure.bar));
-            handleFieldChange('wpPsi', String(pressure.psi));
+            handleFieldChange('wp_BAR', String(pressure.bar));
+            handleFieldChange('wp_PSI', String(pressure.psi));
           }}
         />
       </TooltipWrapper>
@@ -254,8 +254,8 @@ export const EditUniversalHoseData: React.FC<{
       >
         <Select
           label='General Dimension'
-          selectedOption={info.generalDimensionEnd1 || ''}
-          onChange={(value) => handleFieldChange('generalDimensionEnd1', value)}
+          selectedOption={info.genericDimensionEnd1 || ''}
+          onChange={(value) => handleFieldChange('genericDimensionEnd1', value)}
           options={[]}
           required={showValidationErrors}
         />

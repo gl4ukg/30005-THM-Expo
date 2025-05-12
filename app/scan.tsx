@@ -178,19 +178,19 @@ const Scan = () => {
 
       const hose = state.data.hoses.find((h) => {
         if (method === 'RFID' && currentRfid) {
-          return h.RFid === currentRfid;
+          return h.RFID === currentRfid;
         } else if (method === 'Barcode' && currentId) {
-          return h.id === currentId;
+          return h.assetId === +currentId;
         } else if (currentId && !method) {
-          return h.id === currentId;
+          return h.assetId === +currentId;
         }
         return false;
       });
 
       if (hose) {
-        console.log(`Hose found: ${hose.id}. Handling multi-selection.`);
+        console.log(`Hose found: ${hose.assetId}. Handling multi-selection.`);
         if (method === 'RFID') {
-          setId(hose.id!);
+          setId(hose.assetId.toString());
         }
         if (!isMultiSelection(state.data.selection) && !!scanPurpose) {
           dispatch({
@@ -200,7 +200,7 @@ const Scan = () => {
         }
         dispatch({
           type: 'ADD_HOSE_TO_EXISTING_MULTI_SELECTION',
-          payload: hose.id!,
+          payload: hose.assetId,
         });
 
         setTimeout(() => {

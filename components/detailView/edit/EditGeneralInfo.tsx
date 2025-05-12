@@ -18,10 +18,10 @@ export const EditGeneralInfo: React.FC<{
 }> = ({ info, onInputChange, isRegisterView }) => {
   const [rfid, setRfid] = useState<string>('');
 
-  const handleRFIDScanned = (newRfid: string | null) => {
-    if (newRfid) {
-      setRfid(newRfid);
-      onInputChange('RFid', newRfid);
+  const handleRFIDScanned = (newRFID: string | null) => {
+    if (newRFID) {
+      setRfid(newRFID);
+      onInputChange('RFID', newRFID);
     }
   };
 

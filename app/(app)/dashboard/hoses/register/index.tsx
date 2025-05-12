@@ -21,11 +21,11 @@ import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
-  'RFid',
+  'RFID',
   'hoseCondition',
   'approved',
   'generalComment',
-  'id',
+  'assetId',
 ];
 
 const RegisterHose = () => {
@@ -76,8 +76,8 @@ const RegisterHose = () => {
       setLocalState((prevState) => ({
         ...mergedTemplate,
         ...prevState,
-        id: incomingId ?? prevState.id ?? mergedTemplate?.id,
-        RFid: incomingRfid ?? prevState.RFid ?? mergedTemplate?.RFid,
+        id: incomingId ?? prevState.assetId ?? mergedTemplate?.assetId,
+        RFid: incomingRfid ?? prevState.RFID ?? mergedTemplate?.RFID,
       }));
     }
   }, [state.data.hoseTemplate, incomingId, incomingRfid]);
@@ -125,19 +125,19 @@ const RegisterHose = () => {
 
   const handleSave = useCallback(() => {
     const requiredFieldsList: (keyof HoseData)[] = [
-      'description',
+      'itemDescription',
       'prodDate',
       'installedDate',
       'criticality',
       'hoseType',
-      'hoseLength',
-      'wp',
+      'hoseLength_mm',
+      'wp_BAR',
       'ferrule1',
       'ferrule2',
       'insert1',
       'insert2',
       'typeFittingEnd1',
-      'generalDimensionEnd1',
+      'genericDimensionEnd1',
       'genderEnd1',
       'angleEnd1',
       'materialQualityEnd1',
@@ -192,7 +192,10 @@ const RegisterHose = () => {
           <Typography name='navigationBold' text='Register hose' />
           <Typography name='navigation'>
             Hose ID:
-            <Typography name={'navigationBold'} text={localState.id || ''} />
+            <Typography
+              name={'navigationBold'}
+              text={localState.assetId?.toString() || ''}
+            />
           </Typography>
         </View>
 
@@ -206,7 +209,7 @@ const RegisterHose = () => {
             <BarcodeInput
               label='Barcode (Hose ID)'
               onPress={openBarcodeModal}
-              value={localState.id || ''}
+              value={localState.assetId?.toString() || ''}
               disableScan={scanMethod === 'Barcode' && !!incomingId}
             />
           </TooltipWrapper>
@@ -256,22 +259,22 @@ const RegisterHose = () => {
         </View>
 
         <EditGeneralInfo
-          info={localState as GHD}
+          info={localState}
           onInputChange={handleInputChange}
           isRegisterView
         />
         <EditUniversalHoseData
-          info={localState as UHD}
+          info={localState}
           onInputChange={handleInputChange}
           showValidationErrors={localState.showValidationErrors}
         />
         <EditTessPartNumbers
-          info={localState as TPN}
+          info={localState}
           onInputChange={handleInputChange}
           showValidationErrors={localState.showValidationErrors}
         />
         <EditMaintenanceInfo
-          info={localState as HID}
+          info={localState}
           onInputChange={handleInputChange}
         />
         <Documents />

@@ -12,20 +12,20 @@ import { DataField } from '@/components/detailView/common/Datafield';
 import { colors } from '@/lib/tokens/colors';
 
 const requiredFields: (keyof HoseData)[] = [
-  'description',
+  'itemDescription',
   'prodDate',
   'installedDate',
   'criticality',
   'hoseType',
-  'hoseLength',
-  'wp',
+  'hoseLength_mm',
+  'wp_BAR',
   'ferrule1',
   'ferrule2',
   'insert1',
   'insert2',
   'genericHoseType',
   'typeFittingEnd1',
-  'generalDimensionEnd1',
+  'genericDimensionEnd1',
   'genderEnd1',
   'angleEnd1',
   'materialQualityEnd1',
@@ -42,9 +42,9 @@ export const InspectHose = () => {
   const [hoseData, setHoseData] = useState<HoseData | undefined>(() => {
     if (!state.data.hoses) return undefined;
     if (scanMethod === 'RFID' && rfid) {
-      return state.data.hoses.find((hose) => hose.RFid === rfid);
+      return state.data.hoses.find((hose) => hose.RFID === rfid);
     } else if (hoseId) {
-      return state.data.hoses.find((hose) => hose.id === hoseId);
+      return state.data.hoses.find((hose) => hose.assetId === +hoseId);
     }
     return undefined;
   });
@@ -92,7 +92,7 @@ export const InspectHose = () => {
               router.push({
                 pathname: '/dashboard/hoses/hose/[hoseId]',
                 params: {
-                  hoseId: hoseData.id!,
+                  hoseId: hoseData.assetId,
                   startInEditMode: 'true',
                   missingFields: JSON.stringify(missingFields),
                 },
@@ -142,7 +142,7 @@ export const InspectHose = () => {
       </View>
       <SingleHoseDisplay item={hoseData} />
       <View style={styles.infoSection}>
-        <DataField label='Description:' value={hoseData.description} />
+        <DataField label='Description:' value={hoseData.itemDescription} />
         <DataField
           label='S1 Plant, Vessel, Unit:'
           value={hoseData.s1PlantVesselUnit ?? ''}

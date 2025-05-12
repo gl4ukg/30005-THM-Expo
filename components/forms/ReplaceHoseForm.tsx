@@ -26,8 +26,8 @@ interface Props {
 
 export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
   const { state, dispatch } = useAppContext();
-  const [selectedIds, setSelectedIds] = useState<string[]>(
-    hoses.map((h) => h.id),
+  const [selectedIds, setSelectedIds] = useState<number[]>(
+    hoses.map((h) => h.assetId),
   );
   const [replacementType, setReplacementType] = useState('Planned');
   const [replacementReasons, setReplacementReasons] = useState<string[]>([]);
@@ -48,7 +48,7 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
     } else setEmailError(validation);
   };
 
-  const handleSelectionChange = (id: string) => {
+  const handleSelectionChange = (id: number) => {
     if (!isMultiSelection(state.data.selection)) {
       console.error('Not a multi selection');
       return;

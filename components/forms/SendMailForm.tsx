@@ -23,8 +23,8 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
   const [name, setName] = useState(state.auth.user?.name || '');
   const [email, setEmail] = useState(state.auth.user?.email || '');
   const [phone, setPhone] = useState('');
-  const [selectedIds, setSelectedIds] = useState<string[]>(
-    hoses.map((h) => h.id),
+  const [selectedIds, setSelectedIds] = useState<number[]>(
+    hoses.map((h) => h.assetId),
   );
   const originallySelectedHoses = useMemo(() => hoses, []);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
@@ -35,7 +35,7 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
       setEmailError(undefined);
     } else setEmailError(validation);
   };
-  const handleSelectionChange = (id: string) => {
+  const handleSelectionChange = (id: number) => {
     if (isMultiSelection(state.data.selection))
       dispatch({
         type: 'TOGGLE_HOSE_MULTI_SELECTION',

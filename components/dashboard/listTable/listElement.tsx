@@ -10,7 +10,7 @@ interface ElementProps {
   item: HoseData;
   canBeSelected?: boolean;
   isSelected?: boolean;
-  onSelectedChange?: (id: string) => void;
+  onSelectedChange?: (id: number) => void;
   onRowPress: () => void;
 }
 export const ListElement: FC<ElementProps> = ({
@@ -20,10 +20,10 @@ export const ListElement: FC<ElementProps> = ({
   onSelectedChange,
   onRowPress,
 }) => {
-  const { id, s1PlantVesselUnit, RFid, missingData } = item;
+  const { assetId, s1PlantVesselUnit, RFID, missingData } = item;
   const handleSelect = () => {
     if (!canBeSelected || !onSelectedChange) return;
-    onSelectedChange(id);
+    onSelectedChange(assetId);
   };
   const hasAttachment = Math.random() > 0.5;
   return (
@@ -35,10 +35,10 @@ export const ListElement: FC<ElementProps> = ({
         ]}
       >
         <View style={elementStyle.columnOne}>
-          <Typography name='tableContentNumber' text={id} />
+          <Typography name='tableContentNumber' text={assetId.toString()} />
           <View style={elementStyle.iconsContainer}>
             <View style={elementStyle.iconContainer}>
-              {!!RFid && (
+              {!!RFID && (
                 <Icon
                   name='RfidIdentificator'
                   color={colors.black}
