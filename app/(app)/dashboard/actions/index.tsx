@@ -7,6 +7,7 @@ import {
   isSingleSelection,
   MultiSelectionActionsType,
 } from '@/context/state';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { HoseData } from '@/lib/types/hose';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { Alert } from 'react-native';
@@ -50,6 +51,7 @@ const Action: React.FC<Props> = (props) => {
       `,
     );
   };
+  usePreventGoBack();
   const replaceHose = async (formData: Record<string, string | undefined>) => {
     Alert.alert(
       'Replace',

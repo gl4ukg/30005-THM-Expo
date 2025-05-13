@@ -5,6 +5,7 @@ import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
 import { isMultiSelection } from '@/context/state';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
@@ -27,6 +28,7 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
     hoses.map((h) => h.id),
   );
   const originallySelectedHoses = useMemo(() => hoses, []);
+  usePreventGoBack();
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const handleEmail = (email: string) => {
     setEmail(email);

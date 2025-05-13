@@ -10,7 +10,7 @@ import { FC, useContext, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View, Alert } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ShowBackConfirmationDialog } from './CancelAlert';
+import { DiscardChangesDialog } from './DiscardChangesAlert';
 
 interface BottomNavigationProps {}
 export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
@@ -100,7 +100,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               isOpen
                 ? setIsOpen(false)
                 : state.data.isCancelable
-                  ? ShowBackConfirmationDialog()
+                  ? DiscardChangesDialog()
                   : router.back()
             }
           >

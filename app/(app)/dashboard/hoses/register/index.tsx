@@ -18,7 +18,8 @@ import { Alert, BackHandler, ScrollView, StyleSheet, View } from 'react-native';
 import { BarcodeInput } from '@/components/UI/Input/BarcodeInput';
 import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
-import { ShowBackConfirmationDialog } from '@/components/UI/BottomNavigation/CancelAlert';
+import { DiscardChangesDialog } from '@/components/UI/BottomNavigation/DiscardChangesAlert';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -45,6 +46,8 @@ const RegisterHose = () => {
   const [rfid, setRfid] = useState<string | undefined>(incomingRfid);
   const [isBarcodeModalVisible, setIsBarcodeModalVisible] = useState(false);
 
+  usePreventGoBack();
+
   const [localState, setLocalState] = useState<
     Partial<HoseData> & { showValidationErrors?: boolean }
   >(() => {
@@ -69,28 +72,8 @@ const RegisterHose = () => {
   };
 
   const handleCancel = () => {
-    ShowBackConfirmationDialog();
+    DiscardChangesDialog();
   };
-  useEffect(() => {
-    dispatch({
-      type: 'SET_IS_CANCELABLE',
-      payload: true,
-    });
-
-    const onBackPress = () => {
-      ShowBackConfirmationDialog();
-      return true;
-    };
-
-    const backHandlerSubscription = BackHandler.addEventListener(
-      'hardwareBackPress',
-      onBackPress,
-    );
-
-    return () => {
-      backHandlerSubscription.remove();
-    };
-  }, [router]);
 
   useEffect(() => {
     if (state.data.hoseTemplate) {

@@ -159,6 +159,13 @@ const Dashboard = () => {
     }, [dispatch]),
   );
 
+  useEffect(() => {
+    dispatch({
+      type: 'SET_IS_CANCELABLE',
+      payload: false,
+    });
+  }, []);
+
   const [barData, setBarData] = useState<BarData>(month);
   useEffect(() => {
     switch (selected) {

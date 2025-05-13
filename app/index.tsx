@@ -30,13 +30,6 @@ const Login = () => {
   const windowHeight = Dimensions.get('window').height;
   const insets = useSafeAreaInsets();
 
-  useEffect(() => {
-    dispatch({
-      type: 'SET_IS_CANCELABLE',
-      payload: false,
-    });
-  }, []);
-
   return (
     <ImageBackground
       style={styles.imageBackground}
