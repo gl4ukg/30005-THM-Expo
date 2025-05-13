@@ -103,10 +103,4 @@ const styles = StyleSheet.create({
   section: {
     gap: 10,
   },
-  // inputContainer: {
-  //   paddingBottom: 20,
-  // },
-  // spacing: {
-  //   paddingTop: 10,
-  // },
 });
