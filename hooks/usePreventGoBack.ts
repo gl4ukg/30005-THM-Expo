@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { BackHandler, Platform } from 'react-native';
 import { useAppContext } from '@/context/ContextProvider';
-import { DiscardChangesDialog } from '@/components/UI/BottomNavigation/CancelAlert';
+import { DiscardChangesDialog } from '@/components/UI/BottomNavigation/DiscardChangesAlert';
 import {
   useNavigation,
   NavigationProp,

@@ -54,6 +54,7 @@ const Scan = () => {
   const [title, setTitle] = useState<string>('Scanner');
   const [subTitle, setSubTitle] = useState<string>('Scan or enter ID');
   const isNavigatingRef = useRef(false);
+  const cameraAlertShownRef = useRef(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -282,14 +283,27 @@ const Scan = () => {
     setScanMethod('Barcode');
   };
 
-  if (!hasPermission) requestPermission();
+  useEffect(() => {
+    if (!hasPermission) {
+      requestPermission();
+    }
+  }, [hasPermission, requestPermission]);
 
-  if (device === undefined && scanMethod === 'Barcode') {
-    Alert.alert(
-      'Your device does not have a camera.',
-      'Please use a device with a camera or use other scan methods.',
-    );
-  }
+  useEffect(() => {
+    // Show camera missing alert only once if conditions are met
+    if (
+      hasPermission && // Only check if we have permission to use the camera
+      scanMethod === 'Barcode' &&
+      device === undefined &&
+      !cameraAlertShownRef.current
+    ) {
+      Alert.alert(
+        'Your device does not have a camera.',
+        'Please use a device with a camera or use other scan methods.',
+      );
+      cameraAlertShownRef.current = true; // Mark alert as shown
+    }
+  }, [device, scanMethod, hasPermission]); // Rerun check if these dependencies change
 
   return (
     <SafeAreaView style={styles.safeArea}>
