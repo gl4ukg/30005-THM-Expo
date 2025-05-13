@@ -77,11 +77,14 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
         />
       </View>
       <View style={styles.spacing}>
-        <DataField label={'Drawing Number:'} value={hoseData.drawingNumber} />
-        <DataField label={'Position Number:'} value={hoseData.positionNumber} />
+        <DataField label={'Drawing number:'} value={hoseData.drawingNumber} />
         <DataField
-          label={'Customer Article Number:'}
-          value={hoseData.customerArticleNumber}
+          label={'Drawing position number:'}
+          value={hoseData.posNumber}
+        />
+        <DataField
+          label={'Drawing Article Number:'}
+          value={hoseData.artNumber}
         />
       </View>
     </View>

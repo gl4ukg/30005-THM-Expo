@@ -170,21 +170,23 @@ export const EditMaintenanceInfo: React.FC<
           type='text'
         />
       </TooltipWrapper>
-      <TooltipWrapper tooltipData={{ title: 'Position Number', message: '' }}>
+      <TooltipWrapper
+        tooltipData={{ title: 'Drawing position number', message: '' }}
+      >
         <Input
-          label={'Position Number:'}
-          value={info.positionNumber ?? ''}
-          onChangeText={(text) => onInputChange('positionNumber', text)}
+          label={'Drawing position number:'}
+          value={info.posNumber ?? ''}
+          onChangeText={(text) => onInputChange('posNumber', text)}
           type='text'
         />
       </TooltipWrapper>
       <TooltipWrapper
-        tooltipData={{ title: 'Customer Article Number', message: '' }}
+        tooltipData={{ title: 'Drawing article number', message: '' }}
       >
         <Input
-          label={'Customer Article Number:'}
-          value={info.customerArticleNumber ?? ''}
-          onChangeText={(text) => onInputChange('customerArticleNumber', text)}
+          label={'Drawing article number:'}
+          value={info.artNumber ?? ''}
+          onChangeText={(text) => onInputChange('artNumber', text)}
           type='text'
         />
       </TooltipWrapper>

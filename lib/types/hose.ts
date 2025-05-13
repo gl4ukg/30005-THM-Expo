@@ -82,8 +82,8 @@ export interface HoseData {
   replacementInterval?: string;
   replacementDate?: string;
   drawingNumber?: string;
-  positionNumber?: string;
-  customerArticleNumber?: string;
+  posNumber?: string;
+  artNumber?: string;
   hoseCondition?: string;
   inspectedDate?: string;
   inspectedBy?: string;
@@ -163,6 +163,6 @@ export type HID = Pick<
   | 'replacementInterval'
   | 'replacementDate'
   | 'drawingNumber'
-  | 'positionNumber'
-  | 'customerArticleNumber'
+  | 'posNumber'
+  | 'artNumber'
 >;

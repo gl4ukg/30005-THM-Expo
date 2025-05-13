@@ -5,12 +5,7 @@ import { syncData } from '@/lib/util/sync';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
-import {
-  ActivityIndicator,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function RootLayout() {
@@ -26,7 +21,7 @@ export default function RootLayout() {
 const App = () => {
   const { state, dispatch } = useAppContext();
 
-  const { type, isConnected, isInternetReachable } = useNetInfo();
+  const { type, isInternetReachable } = useNetInfo();
   useEffect(() => {
     dispatch({
       type: 'UPDATE_CONNECTION_TYPE',
@@ -72,26 +67,27 @@ const App = () => {
         </View>
       )}
       <Stack
-          screenOptions={{
-            headerShown: false,
-            animationTypeForReplace: 'push',
-          }}
-        >
-          {state.auth.user === null && (
-            <SafeAreaView style={styles.safeArea}>
-              <Stack.Screen name='index' />
-              <Stack.Screen name='/login' />
-              <Stack.Screen name='/settings' />
-              <Stack.Screen name='/scan' />
-            </SafeAreaView>
-          )}
-          {state.auth.user !== null && (
-            <SafeAreaView style={styles.safeArea}>
-              <Stack.Screen name='(app)' />
-              <Stack.Screen name='ui' />
-            </SafeAreaView>
-          )}
-        </Stack>
+        screenOptions={{
+          headerShown: false,
+          animationTypeForReplace: 'push',
+        }}
+      >
+        {state.auth.user === null && (
+          <>
+            <Stack.Screen name='index' />
+            <Stack.Screen name='/login' />
+            <Stack.Screen name='/settings' />
+            <Stack.Screen name='/scan' />
+          </>
+        )}
+        {state.auth.user !== null && (
+          <>
+            <Stack.Screen name='(app)' />
+            <Stack.Screen name='ui' />
+          </>
+        )}
+      </Stack>
+              
     </>
   );
 };
