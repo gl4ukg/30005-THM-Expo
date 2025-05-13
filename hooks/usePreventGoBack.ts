@@ -10,8 +10,7 @@ import {
 
 export const usePreventGoBack = () => {
   const { dispatch, state } = useAppContext();
-  const navigation = useNavigation<NavigationProp<any>>();
-  if (Platform.OS === 'ios') {
+  const navigation = useNavigation();  if (Platform.OS === 'ios') {
     usePreventRemove(state.data.isCancelable, () => {
       DiscardChangesDialog();
       dispatch({
