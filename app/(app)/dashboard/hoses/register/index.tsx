@@ -18,7 +18,7 @@ import { Alert, BackHandler, ScrollView, StyleSheet, View } from 'react-native';
 import { BarcodeInput } from '@/components/UI/Input/BarcodeInput';
 import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
-import { DiscardChangesDialog } from '@/components/UI/BottomNavigation/DiscardChangesAlert';
+import { showDiscardChagesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
@@ -72,7 +72,7 @@ const RegisterHose = () => {
   };
 
   const handleCancel = () => {
-    DiscardChangesDialog();
+    showDiscardChagesAlert();
   };
 
   useEffect(() => {

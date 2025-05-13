@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { Alert } from 'react-native';
 
-export const DiscardChangesDialog = () => {
+export const showDiscardChagesAlert = () => {
   Alert.alert(
     'Discard changes?',
     'You have unsaved changes. Discard them and leave the screen?',

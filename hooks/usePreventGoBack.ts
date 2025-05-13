@@ -1,18 +1,15 @@
 import { useEffect } from 'react';
 import { BackHandler, Platform } from 'react-native';
 import { useAppContext } from '@/context/ContextProvider';
-import { DiscardChangesDialog } from '@/components/UI/BottomNavigation/DiscardChangesAlert';
-import {
-  useNavigation,
-  NavigationProp,
-  usePreventRemove,
-} from '@react-navigation/native';
+import { showDiscardChagesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
+import { useNavigation, usePreventRemove } from '@react-navigation/native';
 
 export const usePreventGoBack = () => {
   const { dispatch, state } = useAppContext();
-  const navigation = useNavigation();  if (Platform.OS === 'ios') {
+  const navigation = useNavigation();
+  if (Platform.OS === 'ios') {
     usePreventRemove(state.data.isCancelable, () => {
-      DiscardChangesDialog();
+      showDiscardChagesAlert();
       dispatch({
         type: 'SET_IS_CANCELABLE',
         payload: false,
@@ -26,7 +23,7 @@ export const usePreventGoBack = () => {
     });
 
     const onHardwareBackPress = () => {
-      DiscardChangesDialog();
+      showDiscardChagesAlert();
       return true;
     };
 
