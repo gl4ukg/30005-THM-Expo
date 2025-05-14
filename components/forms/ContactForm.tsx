@@ -6,6 +6,7 @@ import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
 import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
@@ -58,6 +59,8 @@ export const ContactForm: React.FC<Props> = ({
   const [selectedIds, setSelectedIds] = useState<number[]>(
     hoses.map((h) => h.assetId).filter((id): id is number => id !== undefined),
   );
+  usePreventGoBack();
+
   const originallySelectedHoses = useMemo(() => hoses, []);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const handleMail = (email: string) => {

@@ -85,7 +85,9 @@ type DataAction =
   | ActionWithoutPayload<'FINISH_SELECTION'>
   | ActionWithPayload<'SELECT_MANY_HOSES_MULTI_SELECTION', number[]>
   | ActionWithoutPayload<'DESELECT_ALL_HOSES_MULTI_SELECTION'>
-  | ActionWithPayload<'SET_HOSE_TEMPLATE', Partial<HoseData>>;
+  | ActionWithPayload<'SET_HOSE_TEMPLATE', Partial<HoseData>>
+  | ActionWithPayload<'SET_IS_CANCELABLE', boolean>;
+
 type SettingsAction =
   // | ActionWithPayload<'UPDATE_SETTINGS', any>
   ActionWithPayload<'UPDATE_CONNECTION_TYPE', 'wifi' | 'mobile' | null>;
@@ -229,6 +231,11 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       return {
         ...state,
         hoseTemplate: action.payload,
+      };
+    case 'SET_IS_CANCELABLE':
+      return {
+        ...state,
+        isCancelable: action.payload,
       };
     default: {
       // console.error('Unknown action type:', action.type);

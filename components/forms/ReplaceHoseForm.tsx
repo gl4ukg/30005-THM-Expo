@@ -12,6 +12,7 @@ import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
 import { isMultiSelection } from '@/context/state';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
@@ -39,6 +40,7 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
   const [phone, setPhone] = useState('');
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const originallySelectedHoses = useMemo(() => hoses, []);
+  usePreventGoBack();
 
   const handleEmail = (email: string) => {
     setEmail(email);
