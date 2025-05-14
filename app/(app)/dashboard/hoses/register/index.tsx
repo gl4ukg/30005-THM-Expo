@@ -126,7 +126,7 @@ const RegisterHose = () => {
   const handleSave = useCallback(() => {
     const requiredFieldsList: (keyof HoseData)[] = [
       'itemDescription',
-      'prodDate',
+      'productionDate',
       'installedDate',
       'criticality',
       'hoseType',
@@ -232,9 +232,13 @@ const RegisterHose = () => {
           >
             <DateInput
               label='Production date'
-              value={localState.prodDate ? new Date(localState.prodDate) : null}
+              value={
+                localState.productionDate
+                  ? new Date(localState.productionDate)
+                  : null
+              }
               onChange={(date) =>
-                handleInputChange('prodDate', date?.toISOString())
+                handleInputChange('productionDate', date?.toISOString())
               }
             />
           </TooltipWrapper>

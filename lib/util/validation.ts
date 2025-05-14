@@ -3,7 +3,7 @@ import { HoseData } from '../types/hose';
 export const getDefaultRequiredHoseData = (): Pick<
   HoseData,
   | 'itemDescription'
-  | 'prodDate'
+  | 'productionDate'
   | 'installedDate'
   | 'criticality'
   | 'hoseType'
@@ -25,7 +25,7 @@ export const getDefaultRequiredHoseData = (): Pick<
   | 'angleEnd2'
 > => ({
   itemDescription: '',
-  prodDate: new Date().toISOString(),
+  productionDate: undefined,
   installedDate: new Date().toISOString(),
   criticality: 0,
   hoseType: '',

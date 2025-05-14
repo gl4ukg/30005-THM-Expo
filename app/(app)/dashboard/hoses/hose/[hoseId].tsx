@@ -259,7 +259,7 @@ const HoseDetails = () => {
       <ScrollView ref={scrollViewRef}>
         <DetailsHeader
           id={hoseData.assetId.toString() ?? ''}
-          date={hoseData.prodDate ?? ''}
+          date={hoseData.productionDate ?? ''}
           missingData={isDataMissing}
         />
 

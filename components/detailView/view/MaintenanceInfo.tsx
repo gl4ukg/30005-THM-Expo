@@ -43,7 +43,9 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
         <DataField
           label={'Hose Production Date:'}
           value={
-            hoseData.prodDate ? formatDate(new Date(hoseData.prodDate)) : ''
+            hoseData.productionDate
+              ? formatDate(new Date(hoseData.productionDate))
+              : ''
           }
         />
         <DataField label={'Criticality:'} value={hoseData.criticality} />

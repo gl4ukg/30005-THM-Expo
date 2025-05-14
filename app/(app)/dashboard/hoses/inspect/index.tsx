@@ -13,7 +13,7 @@ import { colors } from '@/lib/tokens/colors';
 
 const requiredFields: (keyof HoseData)[] = [
   'itemDescription',
-  'prodDate',
+  'productionDate',
   'installedDate',
   'criticality',
   'hoseType',

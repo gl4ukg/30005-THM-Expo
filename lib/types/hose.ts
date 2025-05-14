@@ -21,7 +21,7 @@ export interface HoseData {
   angleEnd2: string;
   assetId: number;
 
-  prodDate?: string;
+  productionDate?: string;
 
   hexagonId?: number;
   extSystemCode?: string;
@@ -46,7 +46,6 @@ export interface HoseData {
   customerID?: string;
   customerEq?: string;
   system?: string;
-  productionDate?: string;
   class?: string;
   status?: string;
   type?: string;
@@ -123,7 +122,7 @@ export interface HoseData {
 export type GHD = Pick<
   HoseData,
   | 'itemDescription'
-  | 'prodDate'
+  | 'productionDate'
   | 'installedDate'
   | 'customerID'
   | 's1PlantVesselUnit'
@@ -181,7 +180,7 @@ export type TPN = Pick<
 
 export type HID = Pick<
   HoseData,
-  | 'prodDate'
+  | 'productionDate'
   | 'criticality'
   | 'inspectedDate'
   | 'inspector'
