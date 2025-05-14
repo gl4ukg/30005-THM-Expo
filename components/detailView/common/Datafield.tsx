@@ -21,14 +21,14 @@ export const DataField: React.FC<DataFieldProps> = ({
   }
 
   return (
-    <View>
-      <Typography
-        style={error ? styles.emptyValueText : styles.label}
-        name={'sectionText'}
-      >
-        {label}
-      </Typography>
+    <View style={styles.container}>
       <View style={styles.emptyValueContainer}>
+        <Typography
+          style={error ? styles.emptyValueText : styles.label}
+          name={'sectionText'}
+        >
+          {label}
+        </Typography>
         {isValueEmpty ? (
           <Typography
             style={[styles.value, styles.emptyValueText]}
@@ -43,14 +43,19 @@ export const DataField: React.FC<DataFieldProps> = ({
             {value !== undefined ? value.toString() : 'N/A'}
           </Typography>
         )}
-
-        {error && <Icon name='Alert' color={colors.error} size='sm' />}
       </View>
+      {error && <Icon name='Alert' color={colors.error} size='md' />}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 30,
+  },
   label: {
     color: colors.extended666,
   },
@@ -58,9 +63,7 @@ const styles = StyleSheet.create({
     color: colors.extended333,
   },
   emptyValueContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   emptyValueText: {
     color: colors.errorText,
