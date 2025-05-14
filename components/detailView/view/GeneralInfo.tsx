@@ -1,7 +1,7 @@
 import { DataField } from '@/components/detailView/common/Datafield';
 import { GHD } from '@/lib/types/hose';
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 type GeneralInfoProps = {
   info: Partial<GHD>;
@@ -9,10 +9,10 @@ type GeneralInfoProps = {
 
 export const GeneralInfo: React.FC<GeneralInfoProps> = ({ info }) => {
   return (
-    <View>
-      <DataField label='RFID:' value={info.RFid} />
+    <View style={styles.container}>
+      <DataField label='RFID:' value={info.RFID} />
       <DataField label='Installation date:' value={info.installedDate} />
-      <DataField label='Description:' value={info.description} />
+      <DataField label='Description:' value={info.itemDescription} />
       <DataField label='Customer ID:' value={info.customerID} />
       <DataField
         label='S1 Plant, Vessel, Unit:'
@@ -26,3 +26,10 @@ export const GeneralInfo: React.FC<GeneralInfoProps> = ({ info }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    gap: 10,
+    marginBottom: 30,
+  },
+});

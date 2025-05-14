@@ -9,9 +9,9 @@ import { ListElement } from './listElement';
 
 interface Props {
   items: HoseData[];
-  selectedIds: string[];
+  selectedIds: number[];
   canSelect?: boolean;
-  onSelectionChange?: (id: string) => void;
+  onSelectionChange?: (id: number) => void;
   onSelectAll?: () => void;
 }
 
@@ -27,7 +27,9 @@ export const ListTable: FC<Props> = ({
 }) => {
   const router = useRouter();
   const handleRowPress = (item: (typeof items)[0]) => {
-    router.push(`/(app)/dashboard/hoses/hose/${item.id}?id=${item.id}`);
+    router.push(
+      `/(app)/dashboard/hoses/hose/${item.assetId}?id=${item.assetId}`,
+    );
   };
 
   return (
@@ -86,11 +88,11 @@ export const ListTable: FC<Props> = ({
           </>
         }
         data={items}
-        keyExtractor={(item) => item.id ?? ''}
+        keyExtractor={(item) => item.assetId.toString() ?? ''}
         renderItem={({ item }) => (
           <ListElement
             item={item}
-            isSelected={selectedIds.includes(item.id ?? '')}
+            isSelected={selectedIds.includes(item.assetId ?? '')}
             onSelectedChange={onSelectionChange}
             canBeSelected={canSelect}
             onRowPress={() => handleRowPress(item)}

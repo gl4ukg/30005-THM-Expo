@@ -19,7 +19,7 @@ interface AuthState {
 }
 
 export interface Action {
-  id: string;
+  id: number;
   createdAt: string; // TODO: change to timestamp
   actionId: string;
   actionHoseIdList: HoseData[];
@@ -53,11 +53,11 @@ export type MultiSelectionActionsType =
 
 type MultiHosesSelection<T extends MultiSelectionActionsType> = {
   type: T;
-  ids: string[];
+  ids: number[];
 };
 type SingleHoseSelection<T extends SingleSelectionActionsType> = {
   type: T;
-  id: string;
+  id: number;
 };
 type ScrapSingleHoseSelection = SingleHoseSelection<'SCRAP'>;
 type ContactSingleHoseSelection = SingleHoseSelection<'CONTACT'>;

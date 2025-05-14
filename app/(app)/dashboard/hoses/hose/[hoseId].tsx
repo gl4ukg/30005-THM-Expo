@@ -60,7 +60,7 @@ export type Section = {
 };
 
 const isHoseDataType = (hose: HoseData | {}): hose is HoseData => {
-  return 'id' in hose;
+  return 'assetId' in hose;
 };
 
 const HoseDetails = () => {
@@ -82,7 +82,7 @@ const HoseDetails = () => {
   const [missingFields, setMissingFields] = useState<string[]>([]);
 
   const [hoseData, setHoseData] = useState<Partial<HoseData> | {}>(
-    state.data.hoses.find((hose) => hose.id === hoseId) || {},
+    state.data.hoses.find((hose) => hose.assetId === +hoseId) || {},
   );
 
   const router = useRouter();
@@ -128,7 +128,7 @@ const HoseDetails = () => {
   };
 
   const handleSave = () => {
-    if (!isHoseDataType(hoseData) || hoseData.id === undefined) return;
+    if (!isHoseDataType(hoseData) || hoseData.assetId === undefined) return;
 
     const requiredFieldsList = Object.keys(
       getDefaultRequiredHoseData(),
@@ -148,7 +148,7 @@ const HoseDetails = () => {
       } as HoseData;
       dispatch({
         type: 'SAVE_HOSE_DATA',
-        payload: { hoseId: hoseData.id!, hoseData: updatedHoseData },
+        payload: { hoseId: hoseData.assetId, hoseData: updatedHoseData },
       });
       setEditMode(false);
       setMissingFields([]);
@@ -189,23 +189,23 @@ const HoseDetails = () => {
     } else if (value === 'INSPECT') {
       router.push({
         pathname: `/dashboard/hoses/inspect`,
-        params: { rfid: hoseData.RFid, hoseId: hoseData.id },
+        params: { rfid: hoseData.RFID, hoseId: hoseData.assetId },
       });
       return;
     } else {
-      if (!hoseData.id) return;
+      if (!hoseData.assetId) return;
       if (!state.data.selection) {
         dispatch({
           type: 'SELECT_ONE_HOSE',
           payload: {
             type: value,
-            id: hoseData.id,
+            id: hoseData.assetId,
           },
         });
       }
       router.push({
         pathname: `/dashboard/actions`,
-        params: { hoseId: hoseData.id, action: value },
+        params: { hoseId: hoseData.assetId, action: value },
       });
     }
   };
@@ -258,8 +258,8 @@ const HoseDetails = () => {
       )}
       <ScrollView ref={scrollViewRef}>
         <DetailsHeader
-          id={hoseData.id ?? ''}
-          date={hoseData.prodDate}
+          id={hoseData.assetId.toString() ?? ''}
+          date={hoseData.productionDate ?? ''}
           missingData={isDataMissing}
         />
 

@@ -125,9 +125,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-
     gap: 5,
-
     position: 'relative',
   },
   input: {
