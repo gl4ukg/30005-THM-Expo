@@ -57,8 +57,8 @@ const RegisterHose = () => {
 
     return {
       ...mergedTemplate,
-      id: incomingId,
-      RFid: incomingRfid,
+      assetId: incomingId ? Number(incomingId) : undefined,
+      RFID: incomingRfid,
       showValidationErrors: false,
     };
   });
@@ -194,7 +194,7 @@ const RegisterHose = () => {
             Hose ID:
             <Typography
               name={'navigationBold'}
-              text={localState.assetId?.toString() || ''}
+              text={`${localState.assetId}`}
             />
           </Typography>
         </View>
@@ -209,7 +209,7 @@ const RegisterHose = () => {
             <BarcodeInput
               label='Barcode (Hose ID)'
               onPress={openBarcodeModal}
-              value={localState.assetId?.toString() || ''}
+              value={`${localState.assetId}`}
               disableScan={scanMethod === 'Barcode' && !!incomingId}
             />
           </TooltipWrapper>
