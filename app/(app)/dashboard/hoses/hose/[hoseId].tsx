@@ -239,8 +239,8 @@ const HoseDetails = () => {
   ];
 
   const getStructure = (hose: HoseData) => {
-    const structure: (string | undefined)[] = [
-      hose.s1PlantVesselUnit,
+    const structure: (string | undefined | null)[] = [
+      hose.s1Code ? `${hose.s1Code}` : undefined,
       hose.S2Equipment,
       hose.equipmentSubunit,
     ];
@@ -292,7 +292,11 @@ const HoseDetails = () => {
             <Documents />
             <Structure
               structure={getStructure(hoseData)}
-              name={hoseData.s1PlantVesselUnit ?? ''}
+              name={
+                state.data.assignedUnits.find(
+                  (unit) => unit.unitId === state.data.workingUnitId,
+                )?.unitName ?? ''
+              }
             />
             <HistoryView />
           </>

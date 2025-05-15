@@ -5,15 +5,16 @@ import { IconButton } from './IconButton';
 interface TooltipWrapperProps {
   tooltipData?: { title: string; message: string };
   children?: React.ReactNode;
+  iconPadding?: number;
 }
 
 export const TooltipWrapper: React.FC<
   React.PropsWithChildren<TooltipWrapperProps>
-> = ({ tooltipData, children }) => {
+> = ({ tooltipData, iconPadding = 26, children }) => {
   return (
     <View style={styles.container}>
       <View style={styles.fieldContainer}>{children}</View>
-      <View style={styles.iconContainer}>
+      <View style={[styles.iconContainer, { paddingTop: iconPadding }]}>
         {tooltipData && (
           <IconButton
             icon='Tooltip'
@@ -35,17 +36,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    marginBottom: 5,
     gap: 5,
   },
   fieldContainer: {
-    marginBottom: 10,
     flex: 1,
   },
   iconContainer: {
     flexDirection: 'row',
     width: 32,
     flexShrink: 0,
-    paddingTop: 26,
   },
 });

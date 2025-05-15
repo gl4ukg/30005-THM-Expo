@@ -1,12 +1,14 @@
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { Input } from '@/components/UI/Input/Input';
 import { RFIDInput } from '@/components/UI/Input/RFID';
-import { Select, TestDataSelect } from '@/components/UI/SelectModal/Select';
+import { Select } from '@/components/UI/SelectModal/Select';
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
+import { useAppContext } from '@/context/ContextProvider';
 import { GHD } from '@/lib/types/hose';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { DataField } from '../common/Datafield';
 
 export const EditGeneralInfo: React.FC<{
   info: Partial<GHD>;
@@ -17,6 +19,7 @@ export const EditGeneralInfo: React.FC<{
   isRegisterView?: boolean;
 }> = ({ info, onInputChange, isRegisterView }) => {
   const [rfid, setRfid] = useState<string>('');
+  const { state } = useAppContext();
 
   const handleRFIDScanned = (newRFID: string | null) => {
     if (newRFID) {
@@ -67,16 +70,14 @@ export const EditGeneralInfo: React.FC<{
           onChangeText={(text) => onInputChange('customerID', text)}
         />
       </TooltipWrapper>
-      <TooltipWrapper
-        tooltipData={{ title: 'Location', message: 'This is the location' }}
-      >
-        <Select
-          label='S1 Plant, Vessel, Unit:'
-          selectedOption={null}
-          onChange={(option) => onInputChange('s1PlantVesselUnit', option)}
-          options={TestDataSelect}
-        />
-      </TooltipWrapper>
+      <DataField
+        label='S1 Plant, Vessel, Unit:'
+        value={
+          state.data.assignedUnits.find(
+            (unit) => unit.unitId === state.data.workingUnitId,
+          )?.unitName
+        }
+      />
       <TooltipWrapper
         tooltipData={{
           title: 's2 equipment',
@@ -87,7 +88,7 @@ export const EditGeneralInfo: React.FC<{
           label='S2 Equipment:'
           selectedOption={info.S2Equipment ?? null}
           onChange={(value) => onInputChange('S2Equipment', value)}
-          options={TestDataSelect}
+          options={['Option 21', 'Option 22', 'Option 23']}
         />
       </TooltipWrapper>
       <TooltipWrapper
@@ -151,5 +152,6 @@ export const EditGeneralInfo: React.FC<{
 const styles = StyleSheet.create({
   container: {
     gap: 10,
+    marginBottom: 40,
   },
 });

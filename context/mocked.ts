@@ -2,7 +2,7 @@ import { HoseData } from '@/lib/types/hose';
 
 export const mockedData: HoseData[] = [
   {
-    assetId: 26,
+    assetId: 1154917,
     hexagonId: 0,
     extSystemCode: 'XX',
     companyCode: 'XX',
