@@ -64,7 +64,7 @@ export const EditMaintenanceInfo: React.FC<
             choices={[
               { id: 'Yes', label: 'YES' },
               { id: 'No', label: 'NO' },
-              { id: 'NotInsepcted', label: 'Not inspected' },
+              { id: 'NotInspected', label: 'Not inspected' },
             ]}
             selected={getSelectedApprovalId(info.approved)}
             onChange={handleApprovalChange}
