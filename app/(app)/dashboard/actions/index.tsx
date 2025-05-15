@@ -9,7 +9,7 @@ import {
 } from '@/context/state';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { HoseData } from '@/lib/types/hose';
-import { useLocalSearchParams } from 'expo-router/build/hooks';
+import { useLocalSearchParams, useRouter } from 'expo-router/build/hooks';
 import { Alert } from 'react-native';
 
 interface Props {}
@@ -29,6 +29,7 @@ const Action: React.FC<Props> = (props) => {
     const id = state.data.selection.id;
     hoses = [state.data.hoses.find((hose) => hose.assetId === id)!];
   }
+  const router = useRouter();
   const sendMail = async (formData: {
     comment: string;
     name: string;
@@ -49,6 +50,14 @@ const Action: React.FC<Props> = (props) => {
 
       Selected ids: ${formData.selectedIds.join(',')}
       `,
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            router.push('/dashboard');
+          },
+        },
+      ],
     );
   };
   usePreventGoBack();
@@ -58,6 +67,14 @@ const Action: React.FC<Props> = (props) => {
       Object.keys(formData)
         .map((key) => `${key}: ${formData[key]}`)
         .join('\n'),
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            router.push('/dashboard');
+          },
+        },
+      ],
     );
   };
   if (action === 'CONTACT_SUPPORT') {
