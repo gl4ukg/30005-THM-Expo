@@ -10,7 +10,7 @@ type StructureProps = {
 };
 export const Structure: React.FC<StructureProps> = ({ structure, name }) => {
   return (
-    <View>
+    <View style={styles.container}>
       <Bookmark title='Structure' />
       <View style={styles.structureList}>
         {structure.map((item, index) => (
@@ -38,6 +38,10 @@ export const Structure: React.FC<StructureProps> = ({ structure, name }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    gap: 10,
+    marginBottom: 30,
+  },
   structureList: {
     gap: 10,
   },
