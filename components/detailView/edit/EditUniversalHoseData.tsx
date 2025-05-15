@@ -106,7 +106,7 @@ export const EditUniversalHoseData: React.FC<{
     const oldInfo = { ...localInfo };
     let nextInfo = { ...oldInfo, [field]: value };
 
-    if (['hoseStandard', 'innerDiameter', 'hoseLength'].includes(field)) {
+    if (['hoseStandard', 'innerDiameter', 'hoseLength_mm'].includes(field)) {
       const descriptionData = {
         ...nextInfo,
         hoseLength:
