@@ -40,8 +40,9 @@ export default function TabLayout() {
           initialRouteName='dashboard'
           tabBar={() => <></>}
         >
-          <Tabs.Screen name='settings' />
           <Tabs.Screen name='dashboard' />
+          <Tabs.Screen name='settings' />
+          <Tabs.Screen name='scan' />
         </Tabs>
       </SafeAreaView>
       <BottomNavigation />

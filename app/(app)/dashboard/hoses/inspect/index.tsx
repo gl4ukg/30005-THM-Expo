@@ -10,6 +10,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAppContext } from '@/context/ContextProvider';
 import { DataField } from '@/components/detailView/common/Datafield';
 import { colors } from '@/lib/tokens/colors';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 
 const requiredFields: (keyof HoseData)[] = [
   'itemDescription',
@@ -48,6 +49,8 @@ export const InspectHose = () => {
     }
     return undefined;
   });
+
+  usePreventGoBack();
 
   const handleInputChange = <T extends keyof HoseData>(
     field: T,

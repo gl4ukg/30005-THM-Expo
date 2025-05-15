@@ -305,9 +305,7 @@ const HoseDetails = () => {
           <View style={styles.buttonContainer}>
             <ButtonTHS
               title='Save and close'
-              onPress={() => {
-                handleSave();
-              }}
+              onPress={handleSave}
               variant='primary'
               size='sm'
             />
