@@ -7,23 +7,23 @@ import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
 import { Href, Link, useRouter } from 'expo-router';
 import { FC, useContext, useState } from 'react';
-import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, View, Alert } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { showDiscardChagesAlert } from './showDiscardChangesAlert';
 
 interface BottomNavigationProps {}
 export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
   const [isOpen, setIsOpen] = useState(false);
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { dispatch } = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
 
   const handleLinkPress = (to: Href) => {
     setIsOpen(false);
     router.push(to);
     dispatch({ type: 'FINISH_SELECTION' });
   };
-
   return (
     <View style={[styles.modal, isOpen && styles.modalOpen]}>
       <View style={{ bottom: insets.bottom }}>
@@ -70,7 +70,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Settings',
-                to: '/(app)/user',
+                to: '/(app)/settings',
                 icon: () => <Icon name='Settings' color={colors.primary} />,
               },
             ]}
@@ -82,26 +82,23 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
           <TessLines width={Dimensions.get('window').width * 0.6} />
         </View>
         <View style={styles.buttonsWrapper}>
-          <Link
-            asChild
-            href='/(app)/user'
-            style={[styles.button, { display: 'none' }]}
-          >
+          <Link asChild href='/(app)/settings' style={[styles.button]}>
             <Pressable
               style={({ pressed }) => [pressed && {}]}
               onPress={() => setIsOpen(false)}
             >
-              <Icon name='User' color={colors.white} />
+              <Icon name='Settings' color={colors.white} />
             </Pressable>
           </Link>
-          <View style={{ width: 30, height: 30 }} />
           <OpenMenu
             isOpen={isOpen}
             handlePress={() => setIsOpen((isOpen) => !isOpen)}
           />
           <Pressable
             style={styles.button}
-            onPress={() => (isOpen ? setIsOpen(false) : router.back())}
+            onPress={() =>
+              isOpen ? setIsOpen(false) : router.canGoBack() && router.back()
+            }
           >
             <Icon name='ChevronLeft' color='#fff' />
           </Pressable>

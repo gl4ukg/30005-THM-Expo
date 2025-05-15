@@ -22,50 +22,48 @@ export const DataField: React.FC<DataFieldProps> = ({
 
   return (
     <View style={styles.container}>
-      <Typography
-        style={error ? styles.emptyValueText : styles.label}
-        name={'fieldLabel'}
-      >
-        {label}
-      </Typography>
       <View style={styles.emptyValueContainer}>
+        <Typography
+          style={error ? styles.emptyValueText : styles.label}
+          name={'sectionText'}
+        >
+          {label}
+        </Typography>
         {isValueEmpty ? (
           <Typography
             style={[styles.value, styles.emptyValueText]}
-            name={'fieldValue'}
+            name={'sectionText'}
             text='Not set'
           />
         ) : (
           <Typography
             style={error ? styles.emptyValueText : styles.value}
-            name={'fieldValue'}
+            name={'sectionText'}
           >
             {value !== undefined ? value.toString() : 'N/A'}
           </Typography>
         )}
-
-        {error && <Icon name='Alert' color={colors.error} size='sm' />}
       </View>
+      {error && <Icon name='Alert' color={colors.error} size='md' />}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10,
-  },
-  label: {
-    fontSize: 16,
-    color: colors.extended666,
-  },
-  value: {
-    fontSize: 16,
-    color: colors.extended333,
-  },
-  emptyValueContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingRight: 30,
+  },
+  label: {
+    color: colors.extended666,
+  },
+  value: {
+    color: colors.extended333,
+  },
+  emptyValueContainer: {
+    alignItems: 'flex-start',
   },
   emptyValueText: {
     color: colors.errorText,

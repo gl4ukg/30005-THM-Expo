@@ -10,22 +10,23 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAppContext } from '@/context/ContextProvider';
 import { DataField } from '@/components/detailView/common/Datafield';
 import { colors } from '@/lib/tokens/colors';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 
 const requiredFields: (keyof HoseData)[] = [
-  'description',
-  'prodDate',
+  'itemDescription',
+  'productionDate',
   'installedDate',
   'criticality',
   'hoseType',
-  'hoseLength',
-  'wp',
+  'hoseLength_mm',
+  'wp_BAR',
   'ferrule1',
   'ferrule2',
   'insert1',
   'insert2',
   'genericHoseType',
   'typeFittingEnd1',
-  'generalDimensionEnd1',
+  'genericDimensionEnd1',
   'genderEnd1',
   'angleEnd1',
   'materialQualityEnd1',
@@ -42,12 +43,14 @@ export const InspectHose = () => {
   const [hoseData, setHoseData] = useState<HoseData | undefined>(() => {
     if (!state.data.hoses) return undefined;
     if (scanMethod === 'RFID' && rfid) {
-      return state.data.hoses.find((hose) => hose.RFid === rfid);
+      return state.data.hoses.find((hose) => hose.RFID === rfid);
     } else if (hoseId) {
-      return state.data.hoses.find((hose) => hose.id === hoseId);
+      return state.data.hoses.find((hose) => hose.assetId === +hoseId);
     }
     return undefined;
   });
+
+  usePreventGoBack();
 
   const handleInputChange = <T extends keyof HoseData>(
     field: T,
@@ -92,7 +95,7 @@ export const InspectHose = () => {
               router.push({
                 pathname: '/dashboard/hoses/hose/[hoseId]',
                 params: {
-                  hoseId: hoseData.id!,
+                  hoseId: hoseData.assetId,
                   startInEditMode: 'true',
                   missingFields: JSON.stringify(missingFields),
                 },
@@ -142,7 +145,7 @@ export const InspectHose = () => {
       </View>
       <SingleHoseDisplay item={hoseData} />
       <View style={styles.infoSection}>
-        <DataField label='Description:' value={hoseData.description} />
+        <DataField label='Description:' value={hoseData.itemDescription} />
         <DataField
           label='S1 Plant, Vessel, Unit:'
           value={hoseData.s1PlantVesselUnit ?? ''}
@@ -186,6 +189,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: 10,
     backgroundColor: colors.white,
+    gap: 30,
   },
   centeredContainer: {
     flex: 1,
@@ -194,12 +198,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   infoSection: {
-    paddingVertical: 15,
-    paddingHorizontal: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.strokeInputField,
-    marginTop: 15,
-    marginBottom: 15,
+    gap: 10,
   },
   fieldMargin: {
     marginTop: 10,

@@ -18,7 +18,9 @@ export const SingleHoseDisplay: FC<Props> = ({ item }) => {
   const router = useRouter();
 
   const handleRowPress = () => {
-    router.push(`/(app)/dashboard/hoses/hose/${item.id}?id=${item.id}`);
+    router.push(
+      `/(app)/dashboard/hoses/hose/${item.assetId}?id=${item.assetId}`,
+    );
   };
 
   return (

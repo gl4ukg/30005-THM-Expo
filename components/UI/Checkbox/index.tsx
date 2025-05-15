@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
   checkboxPressable: {
     flexDirection: 'row',
-    gap: 15,
+    gap: 5,
   },
   disabled: {
     opacity: 0.5,

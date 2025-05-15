@@ -6,6 +6,7 @@ import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
 import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
@@ -55,9 +56,11 @@ export const ContactForm: React.FC<Props> = ({
   const [mail, setMail] = useState(state.auth.user?.email || '');
   const [phone, setPhone] = useState('');
   const [rfq, setRfq] = useState<string | null>(null);
-  const [selectedIds, setSelectedIds] = useState<string[]>(
-    hoses.map((h) => h.id).filter((id): id is string => id !== undefined),
+  const [selectedIds, setSelectedIds] = useState<number[]>(
+    hoses.map((h) => h.assetId).filter((id): id is number => id !== undefined),
   );
+  usePreventGoBack();
+
   const originallySelectedHoses = useMemo(() => hoses, []);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const handleMail = (email: string) => {
@@ -67,7 +70,7 @@ export const ContactForm: React.FC<Props> = ({
       setEmailError(undefined);
     } else setEmailError(isValid);
   };
-  const handleSelectionChange = (id: string) => {
+  const handleSelectionChange = (id: number) => {
     if (isMultiSelection(state.data.selection))
       dispatch({
         type: 'TOGGLE_HOSE_MULTI_SELECTION',

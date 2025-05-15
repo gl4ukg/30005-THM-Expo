@@ -14,42 +14,43 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
   return (
     <View style={styles.container}>
       <Bookmark title='Maintenance Info' />
-      <Typography
-        name={'navigationBold'}
-        text='Inspection'
-        style={styles.subTitle}
-      />
-      <DataField
-        label={'Inspected Date:'}
-        value={
-          hoseData.inspectedDate
-            ? formatDate(new Date(hoseData.inspectedDate))
-            : ''
-        }
-      />
-      <DataField label={'Inspected By:'} value={hoseData.inspectedBy} />
-      <DataField label={'Condition:'} value={hoseData.hoseCondition} />
-      <DataField
-        label={'Approved:'}
-        value={
-          hoseData.approved === undefined
-            ? ''
-            : hoseData.approved
-              ? 'Yes'
-              : 'No'
-        }
-      />
-      <DataField label={'Comment:'} value={hoseData.generalComment} />
-      <Typography
-        name={'navigationBold'}
-        text='Criticality / Intervals'
-        style={styles.subTitle}
-      />
-      <DataField
-        label={'Hose Production Date:'}
-        value={hoseData.prodDate ? formatDate(new Date(hoseData.prodDate)) : ''}
-      />
-      <DataField label={'Criticality:'} value={hoseData.criticality} />
+      <View style={styles.section}>
+        <Typography name={'navigationBold'} text='Inspection' />
+        <DataField
+          label={'Inspected Date:'}
+          value={
+            hoseData.inspectedDate
+              ? formatDate(new Date(hoseData.inspectedDate))
+              : ''
+          }
+        />
+        <DataField label={'Inspected By:'} value={hoseData.inspector} />
+        <DataField label={'Condition:'} value={hoseData.hoseCondition} />
+        <DataField
+          label={'Approved:'}
+          value={
+            hoseData.approved === undefined
+              ? ''
+              : hoseData.approved
+                ? 'Yes'
+                : 'No'
+          }
+        />
+        <DataField label={'Comment:'} value={hoseData.generalComment} />
+      </View>
+      <View style={styles.section}>
+        <Typography name={'navigationBold'} text='Criticality / Intervals' />
+        <DataField
+          label={'Hose Production Date:'}
+          value={
+            hoseData.productionDate
+              ? formatDate(new Date(hoseData.productionDate))
+              : ''
+          }
+        />
+        <DataField label={'Criticality:'} value={hoseData.criticality} />
+      </View>
+
       <View style={styles.inspectionDetails}>
         <DataField
           label={'Inspection Interval:'}
@@ -76,12 +77,15 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
           }
         />
       </View>
-      <View style={styles.spacing}>
-        <DataField label={'Drawing Number:'} value={hoseData.drawingNumber} />
-        <DataField label={'Position Number:'} value={hoseData.positionNumber} />
+      <View style={styles.section}>
+        <DataField label={'Drawing number:'} value={hoseData.drawingNumber} />
         <DataField
-          label={'Customer Article Number:'}
-          value={hoseData.customerArticleNumber}
+          label={'Drawing position number:'}
+          value={hoseData.posNumber}
+        />
+        <DataField
+          label={'Drawing Article Number:'}
+          value={hoseData.artNumber}
         />
       </View>
     </View>
@@ -93,18 +97,12 @@ const styles = StyleSheet.create({
     borderLeftWidth: 2,
     borderColor: colors.strokeInputField,
     paddingLeft: 18,
-    marginTop: 10,
-  },
-  subTitle: {
-    paddingVertical: 20,
   },
   container: {
-    flex: 1,
+    gap: 20,
+    marginBottom: 30,
   },
-  inputContainer: {
-    paddingBottom: 20,
-  },
-  spacing: {
-    paddingTop: 10,
+  section: {
+    gap: 10,
   },
 });

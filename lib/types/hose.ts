@@ -1,18 +1,17 @@
 export interface HoseData {
-  description: string;
-  prodDate: string;
+  itemDescription: string;
   installedDate: string;
   criticality: number | string;
   hoseType: string;
-  hoseLength: number | string;
-  wp: number | string;
+  hoseLength_mm: number | string;
+  wp_BAR: number | string;
   ferrule1: string;
   ferrule2: string;
   insert1: string;
   insert2: string;
   genericHoseType: string;
   typeFittingEnd1: string;
-  generalDimensionEnd1: string;
+  genericDimensionEnd1: string;
   genderEnd1: string;
   angleEnd1: string;
   materialQualityEnd1: string;
@@ -20,13 +19,29 @@ export interface HoseData {
   genericDimensionEnd2: string;
   genderEnd2: string;
   angleEnd2: string;
+  assetId: number;
 
-  id?: string;
-  RFid?: string;
-  parentSystem?: number;
-  s1Code?: number;
-  s2Code?: number;
+  productionDate?: string;
+
+  hexagonId?: number;
+  extSystemCode?: string;
+  companyCode?: string;
+  extDocSequenceId?: string;
+  requestDate?: string;
+  requestTime?: string;
+  documentName?: string;
+  methodName?: string;
+  customerNumber?: string;
+  customerOrderNumber?: number;
+  tessOrderNumber?: string;
+  tessAsOrderNumber?: string;
+  organization?: string;
+  department?: string;
+  RFID?: string;
+  s1Code?: number | null;
+  s2Code?: number | null;
   equipmentSubunit?: string;
+  hoseOtherInfo?: string;
   otherInfo?: string;
   customerID?: string;
   customerEq?: string;
@@ -34,10 +49,13 @@ export interface HoseData {
   class?: string;
   status?: string;
   type?: string;
+
   pollutionExposure?: string;
   uvExposure?: string;
-  hoseLengthInch?: number | string;
-  wpPsi?: number | string;
+  hoseLength_ft_in?: number | string;
+  wp_PSI?: number | string;
+  numberOfHoses?: number;
+  customerArtNumber?: string;
   couplingOrientation?: number;
   pinpricked?: boolean;
   hoseMediumTemperature?: number | string;
@@ -70,8 +88,18 @@ export interface HoseData {
   hookie?: string;
   whipCheck?: string;
   breakaway?: string;
+  parentSystem?: string;
+  cleaning?: string;
+  flushingStandard?: string;
+  customerFlushingMedia?: string;
+  minimumTemperature: string;
+  maximumTemperature: string;
+  colorCode?: string;
+  spareSetHose?: boolean;
+  emergencyHoseLink?: string;
+  emergencyHoseComment?: string;
+  currentStatus?: string;
 
-  s1PlantVesselUnit?: string;
   S2Equipment?: string;
 
   missingData?: boolean;
@@ -82,25 +110,25 @@ export interface HoseData {
   replacementInterval?: string;
   replacementDate?: string;
   drawingNumber?: string;
-  positionNumber?: string;
-  customerArticleNumber?: string;
+  posNumber?: string;
+  artNumber?: string;
   hoseCondition?: string;
   inspectedDate?: string;
-  inspectedBy?: string;
+  inspector?: string;
   innerDiameter?: string;
 }
 
 export type GHD = Pick<
   HoseData,
-  | 'description'
-  | 'prodDate'
+  | 'itemDescription'
+  | 'productionDate'
   | 'installedDate'
   | 'customerID'
-  | 's1PlantVesselUnit'
+  | 's1Code'
   | 'S2Equipment'
   | 'equipmentSubunit'
   | 'otherInfo'
-  | 'RFid'
+  | 'RFID'
   | 'hoseMediumTemperature'
   | 'hoseFunction'
   | 'pollutionExposure'
@@ -109,12 +137,12 @@ export type GHD = Pick<
 
 export type UHD = Pick<
   HoseData,
-  | 'description'
-  | 'wp'
-  | 'hoseLength'
+  | 'itemDescription'
+  | 'wp_BAR'
+  | 'hoseLength_mm'
   | 'materialQualityEnd1'
   | 'typeFittingEnd1'
-  | 'generalDimensionEnd1'
+  | 'genericDimensionEnd1'
   | 'genderEnd1'
   | 'angleEnd1'
   | 'materialQualityEnd2'
@@ -122,7 +150,7 @@ export type UHD = Pick<
   | 'typeFittingEnd2'
   | 'genderEnd2'
   | 'angleEnd2'
-  | 'wpPsi'
+  | 'wp_PSI'
   | 'commentEnd1PTC'
   | 'commentEnd2PTC'
   | 'hoseStandard'
@@ -151,10 +179,10 @@ export type TPN = Pick<
 
 export type HID = Pick<
   HoseData,
-  | 'prodDate'
+  | 'productionDate'
   | 'criticality'
   | 'inspectedDate'
-  | 'inspectedBy'
+  | 'inspector'
   | 'hoseCondition'
   | 'approved'
   | 'generalComment'
@@ -163,6 +191,6 @@ export type HID = Pick<
   | 'replacementInterval'
   | 'replacementDate'
   | 'drawingNumber'
-  | 'positionNumber'
-  | 'customerArticleNumber'
+  | 'posNumber'
+  | 'artNumber'
 >;

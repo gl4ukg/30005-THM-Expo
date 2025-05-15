@@ -54,6 +54,7 @@ const Scan = () => {
   const [title, setTitle] = useState<string>('Scanner');
   const [subTitle, setSubTitle] = useState<string>('Scan or enter ID');
   const isNavigatingRef = useRef(false);
+  const cameraAlertShownRef = useRef(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -153,14 +154,14 @@ const Scan = () => {
           rfid: scannedRfid || undefined,
           scanMethod: method,
         };
-        router.push({
+        router.replace({
           pathname: '/dashboard/hoses/register',
           params,
         });
         return;
       }
       if (scanPurpose === 'INSPECT_HOSE') {
-        router.push({
+        router.replace({
           pathname: '/dashboard/hoses/inspect',
           params: {
             hoseId: scannedId || undefined,
@@ -178,19 +179,19 @@ const Scan = () => {
 
       const hose = state.data.hoses.find((h) => {
         if (method === 'RFID' && currentRfid) {
-          return h.RFid === currentRfid;
+          return h.RFID === currentRfid;
         } else if (method === 'Barcode' && currentId) {
-          return h.id === currentId;
+          return h.assetId === +currentId;
         } else if (currentId && !method) {
-          return h.id === currentId;
+          return h.assetId === +currentId;
         }
         return false;
       });
 
       if (hose) {
-        console.log(`Hose found: ${hose.id}. Handling multi-selection.`);
+        console.log(`Hose found: ${hose.assetId}. Handling multi-selection.`);
         if (method === 'RFID') {
-          setId(hose.id!);
+          setId(hose.assetId.toString());
         }
         if (!isMultiSelection(state.data.selection) && !!scanPurpose) {
           dispatch({
@@ -200,14 +201,14 @@ const Scan = () => {
         }
         dispatch({
           type: 'ADD_HOSE_TO_EXISTING_MULTI_SELECTION',
-          payload: hose.id!,
+          payload: hose.assetId,
         });
 
         setTimeout(() => {
           console.log(
             `Navigating to actions screen for purpose: ${scanPurpose}`,
           );
-          router.push(
+          router.replace(
             `/(app)/dashboard/actions?action=${scanPurpose}&allowScan=true`,
           );
         }, 0);
@@ -282,14 +283,27 @@ const Scan = () => {
     setScanMethod('Barcode');
   };
 
-  if (!hasPermission) requestPermission();
+  useEffect(() => {
+    if (!hasPermission) {
+      requestPermission();
+    }
+  }, [hasPermission, requestPermission]);
 
-  if (device === undefined && scanMethod === 'Barcode') {
-    Alert.alert(
-      'Your device does not have a camera.',
-      'Please use a device with a camera or use other scan methods.',
-    );
-  }
+  useEffect(() => {
+    // Show camera missing alert only once if conditions are met
+    if (
+      hasPermission && // Only check if we have permission to use the camera
+      scanMethod === 'Barcode' &&
+      device === undefined &&
+      !cameraAlertShownRef.current
+    ) {
+      Alert.alert(
+        'Your device does not have a camera.',
+        'Please use a device with a camera or use other scan methods.',
+      );
+      cameraAlertShownRef.current = true; // Mark alert as shown
+    }
+  }, [device, scanMethod, hasPermission]); // Rerun check if these dependencies change
 
   return (
     <SafeAreaView style={styles.safeArea}>

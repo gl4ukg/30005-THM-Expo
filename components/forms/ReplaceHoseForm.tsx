@@ -12,6 +12,7 @@ import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
 import { isMultiSelection } from '@/context/state';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
@@ -26,8 +27,8 @@ interface Props {
 
 export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
   const { state, dispatch } = useAppContext();
-  const [selectedIds, setSelectedIds] = useState<string[]>(
-    hoses.map((h) => h.id),
+  const [selectedIds, setSelectedIds] = useState<number[]>(
+    hoses.map((h) => h.assetId),
   );
   const [replacementType, setReplacementType] = useState('Planned');
   const [replacementReasons, setReplacementReasons] = useState<string[]>([]);
@@ -39,6 +40,7 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
   const [phone, setPhone] = useState('');
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const originallySelectedHoses = useMemo(() => hoses, []);
+  usePreventGoBack();
 
   const handleEmail = (email: string) => {
     setEmail(email);
@@ -48,7 +50,7 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
     } else setEmailError(validation);
   };
 
-  const handleSelectionChange = (id: string) => {
+  const handleSelectionChange = (id: number) => {
     if (!isMultiSelection(state.data.selection)) {
       console.error('Not a multi selection');
       return;

@@ -11,68 +11,23 @@ import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
-import { GHD, HID, HoseData, TPN, UHD } from '@/lib/types/hose';
+import { HoseData } from '@/lib/types/hose';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useCallback } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { BarcodeInput } from '@/components/UI/Input/BarcodeInput';
 import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
+import { getDefaultRequiredHoseData } from '@/lib/util/validation';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
-  'RFid',
+  'RFID',
   'hoseCondition',
   'approved',
   'generalComment',
-  'id',
+  'assetId',
 ];
-
-const getDefaultRequiredHoseData = (): Pick<
-  HoseData,
-  | 'description'
-  | 'prodDate'
-  | 'installedDate'
-  | 'criticality'
-  | 'hoseType'
-  | 'hoseLength'
-  | 'wp'
-  | 'ferrule1'
-  | 'ferrule2'
-  | 'insert1'
-  | 'insert2'
-  //| 'genericHoseType'
-  | 'typeFittingEnd1'
-  | 'generalDimensionEnd1'
-  | 'genderEnd1'
-  | 'angleEnd1'
-  | 'materialQualityEnd1'
-  | 'typeFittingEnd2'
-  | 'genericDimensionEnd2'
-  | 'genderEnd2'
-  | 'angleEnd2'
-> => ({
-  description: '',
-  prodDate: new Date().toISOString(),
-  installedDate: new Date().toISOString(),
-  criticality: 0,
-  hoseType: '',
-  hoseLength: '',
-  wp: '',
-  ferrule1: '',
-  ferrule2: '',
-  insert1: '',
-  insert2: '',
-  //genericHoseType: '',
-  typeFittingEnd1: '',
-  generalDimensionEnd1: '',
-  genderEnd1: '',
-  angleEnd1: '',
-  materialQualityEnd1: '',
-  typeFittingEnd2: '',
-  genericDimensionEnd2: '',
-  genderEnd2: '',
-  angleEnd2: '',
-});
 
 const RegisterHose = () => {
   const {
@@ -90,6 +45,8 @@ const RegisterHose = () => {
   const [rfid, setRfid] = useState<string | undefined>(incomingRfid);
   const [isBarcodeModalVisible, setIsBarcodeModalVisible] = useState(false);
 
+  usePreventGoBack();
+
   const [localState, setLocalState] = useState<
     Partial<HoseData> & { showValidationErrors?: boolean }
   >(() => {
@@ -103,14 +60,18 @@ const RegisterHose = () => {
 
     return {
       ...mergedTemplate,
-      id: incomingId,
-      RFid: incomingRfid,
+      assetId: incomingId ? Number(incomingId) : undefined,
+      RFID: incomingRfid,
       showValidationErrors: false,
     };
   });
 
   const handleCheckboxChange = () => {
     setRegisterMultiple((prevState) => !prevState);
+  };
+
+  const handleCancel = () => {
+    router.back();
   };
 
   useEffect(() => {
@@ -122,8 +83,8 @@ const RegisterHose = () => {
       setLocalState((prevState) => ({
         ...mergedTemplate,
         ...prevState,
-        id: incomingId ?? prevState.id ?? mergedTemplate?.id,
-        RFid: incomingRfid ?? prevState.RFid ?? mergedTemplate?.RFid,
+        id: incomingId ?? prevState.assetId ?? mergedTemplate?.assetId,
+        RFid: incomingRfid ?? prevState.RFID ?? mergedTemplate?.RFID,
       }));
     }
   }, [state.data.hoseTemplate, incomingId, incomingRfid]);
@@ -171,19 +132,19 @@ const RegisterHose = () => {
 
   const handleSave = useCallback(() => {
     const requiredFieldsList: (keyof HoseData)[] = [
-      'description',
-      'prodDate',
+      'itemDescription',
+      'productionDate',
       'installedDate',
       'criticality',
       'hoseType',
-      'hoseLength',
-      'wp',
+      'hoseLength_mm',
+      'wp_BAR',
       'ferrule1',
       'ferrule2',
       'insert1',
       'insert2',
       'typeFittingEnd1',
-      'generalDimensionEnd1',
+      'genericDimensionEnd1',
       'genderEnd1',
       'angleEnd1',
       'materialQualityEnd1',
@@ -212,9 +173,9 @@ const RegisterHose = () => {
       return;
     }
 
-    const newHoseData = localState as HoseData;
+    dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
 
-    dispatch({ type: 'ADD_HOSE', payload: newHoseData });
+    const newHoseData = localState as HoseData;
 
     if (registerMultiple) {
       dispatch({ type: 'SET_HOSE_TEMPLATE', payload: newHoseData });
@@ -229,10 +190,6 @@ const RegisterHose = () => {
     }
   }, [localState, dispatch, router, registerMultiple]);
 
-  const handleCancel = () => {
-    router.push('/(app)/dashboard');
-  };
-
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -240,7 +197,10 @@ const RegisterHose = () => {
           <Typography name='navigationBold' text='Register hose' />
           <Typography name='navigation'>
             Hose ID:
-            <Typography name={'navigationBold'} text={localState.id || ''} />
+            <Typography
+              name={'navigationBold'}
+              text={`${localState.assetId}`}
+            />
           </Typography>
         </View>
 
@@ -254,7 +214,7 @@ const RegisterHose = () => {
             <BarcodeInput
               label='Barcode (Hose ID)'
               onPress={openBarcodeModal}
-              value={localState.id || ''}
+              value={`${localState.assetId}`}
               disableScan={scanMethod === 'Barcode' && !!incomingId}
             />
           </TooltipWrapper>
@@ -277,9 +237,13 @@ const RegisterHose = () => {
           >
             <DateInput
               label='Production date'
-              value={localState.prodDate ? new Date(localState.prodDate) : null}
+              value={
+                localState.productionDate
+                  ? new Date(localState.productionDate)
+                  : null
+              }
               onChange={(date) =>
-                handleInputChange('prodDate', date?.toISOString())
+                handleInputChange('productionDate', date?.toISOString())
               }
             />
           </TooltipWrapper>
@@ -304,22 +268,22 @@ const RegisterHose = () => {
         </View>
 
         <EditGeneralInfo
-          info={localState as GHD}
+          info={localState}
           onInputChange={handleInputChange}
           isRegisterView
         />
         <EditUniversalHoseData
-          info={localState as UHD}
+          info={localState}
           onInputChange={handleInputChange}
           showValidationErrors={localState.showValidationErrors}
         />
         <EditTessPartNumbers
-          info={localState as TPN}
+          info={localState}
           onInputChange={handleInputChange}
           showValidationErrors={localState.showValidationErrors}
         />
         <EditMaintenanceInfo
-          info={localState as HID}
+          info={localState}
           onInputChange={handleInputChange}
         />
         <Documents />

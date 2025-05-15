@@ -7,6 +7,7 @@ import {
   isSingleSelection,
   MultiSelectionActionsType,
 } from '@/context/state';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { HoseData } from '@/lib/types/hose';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { Alert } from 'react-native';
@@ -22,11 +23,11 @@ const Action: React.FC<Props> = (props) => {
   let hoses: HoseData[] = [];
   if (isMultiSelection(state.data.selection)) {
     hoses = state.data.selection.ids
-      .map((id) => state.data.hoses.find((hose) => hose.id === id))
+      .map((id) => state.data.hoses.find((hose) => hose.assetId === id))
       .filter((hose) => hose !== undefined) as HoseData[];
   } else if (isSingleSelection(state.data.selection)) {
     const id = state.data.selection.id;
-    hoses = [state.data.hoses.find((hose) => hose.id === id)!];
+    hoses = [state.data.hoses.find((hose) => hose.assetId === id)!];
   }
   const sendMail = async (formData: {
     comment: string;
@@ -50,6 +51,7 @@ const Action: React.FC<Props> = (props) => {
       `,
     );
   };
+  usePreventGoBack();
   const replaceHose = async (formData: Record<string, string | undefined>) => {
     Alert.alert(
       'Replace',

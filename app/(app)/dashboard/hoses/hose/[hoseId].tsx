@@ -22,9 +22,10 @@ import {
 import { colors } from '@/lib/tokens/colors';
 import { EditProps } from '@/lib/types/edit';
 import { HoseData } from '@/lib/types/hose';
+import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 
 type ExtendedEditProps<T> = EditProps<T> & {
   missingFields?: string[];
@@ -59,7 +60,7 @@ export type Section = {
 };
 
 const isHoseDataType = (hose: HoseData | {}): hose is HoseData => {
-  return 'id' in hose;
+  return 'assetId' in hose;
 };
 
 const HoseDetails = () => {
@@ -81,7 +82,7 @@ const HoseDetails = () => {
   const [missingFields, setMissingFields] = useState<string[]>([]);
 
   const [hoseData, setHoseData] = useState<Partial<HoseData> | {}>(
-    state.data.hoses.find((hose) => hose.id === hoseId) || {},
+    state.data.hoses.find((hose) => hose.assetId === +hoseId) || {},
   );
 
   const router = useRouter();
@@ -127,17 +128,58 @@ const HoseDetails = () => {
   };
 
   const handleSave = () => {
-    if (hoseData.id === undefined) return;
+    if (!isHoseDataType(hoseData) || hoseData.assetId === undefined) return;
 
-    const updatedHoseData = { ...hoseData, missingData: false };
+    const requiredFieldsList = Object.keys(
+      getDefaultRequiredHoseData(),
+    ) as (keyof HoseData)[];
 
-    dispatch({
-      type: 'SAVE_HOSE_DATA',
-      payload: { hoseId: hoseData.id, hoseData: updatedHoseData },
-    });
-    setEditMode(false);
-    setMissingFields([]);
-    scrollViewRef.current?.scrollTo({ y: 0 });
+    const currentMissingFields = requiredFieldsList.filter(
+      (field) =>
+        hoseData[field] === undefined ||
+        hoseData[field] === null ||
+        String(hoseData[field]).trim() === '',
+    );
+
+    const proceedWithSave = (markAsMissingData: boolean) => {
+      const updatedHoseData = {
+        ...hoseData,
+        missingData: markAsMissingData,
+      } as HoseData;
+      dispatch({
+        type: 'SAVE_HOSE_DATA',
+        payload: { hoseId: hoseData.assetId, hoseData: updatedHoseData },
+      });
+      setEditMode(false);
+      setMissingFields([]);
+      scrollViewRef.current?.scrollTo({ y: 0 });
+      Alert.alert(
+        'Success',
+        `Hose data saved successfully${markAsMissingData ? ' (with missing data)' : ''}.`,
+      );
+    };
+
+    if (currentMissingFields.length > 0) {
+      Alert.alert(
+        'Missing Data',
+        'This hose has missing data, do you have the ability to add and update?',
+        [
+          {
+            text: 'Update hose details',
+            onPress: () => {
+              setMissingFields(currentMissingFields);
+            },
+            style: 'cancel',
+          },
+          {
+            text: 'Continue anyway.',
+            onPress: () => proceedWithSave(true),
+          },
+        ],
+      );
+    } else {
+      proceedWithSave(false);
+    }
   };
 
   const handleAction = (value: SingleSelection['type']) => {
@@ -147,23 +189,23 @@ const HoseDetails = () => {
     } else if (value === 'INSPECT') {
       router.push({
         pathname: `/dashboard/hoses/inspect`,
-        params: { rfid: hoseData.RFid, hoseId: hoseData.id },
+        params: { rfid: hoseData.RFID, hoseId: hoseData.assetId },
       });
       return;
     } else {
-      if (!hoseData.id) return;
+      if (!hoseData.assetId) return;
       if (!state.data.selection) {
         dispatch({
           type: 'SELECT_ONE_HOSE',
           payload: {
             type: value,
-            id: hoseData.id,
+            id: hoseData.assetId,
           },
         });
       }
       router.push({
         pathname: `/dashboard/actions`,
-        params: { hoseId: hoseData.id, action: value },
+        params: { hoseId: hoseData.assetId, action: value },
       });
     }
   };
@@ -197,8 +239,8 @@ const HoseDetails = () => {
   ];
 
   const getStructure = (hose: HoseData) => {
-    const structure: (string | undefined)[] = [
-      hose.s1PlantVesselUnit,
+    const structure: (string | undefined | null)[] = [
+      hose.s1Code ? `${hose.s1Code}` : undefined,
       hose.S2Equipment,
       hose.equipmentSubunit,
     ];
@@ -216,8 +258,8 @@ const HoseDetails = () => {
       )}
       <ScrollView ref={scrollViewRef}>
         <DetailsHeader
-          id={hoseData.id ?? ''}
-          date={hoseData.prodDate}
+          id={hoseData.assetId.toString() ?? ''}
+          date={hoseData.productionDate ?? ''}
           missingData={isDataMissing}
         />
 
@@ -250,7 +292,11 @@ const HoseDetails = () => {
             <Documents />
             <Structure
               structure={getStructure(hoseData)}
-              name={hoseData.s1PlantVesselUnit ?? ''}
+              name={
+                state.data.assignedUnits.find(
+                  (unit) => unit.unitId === state.data.workingUnitId,
+                )?.unitName ?? ''
+              }
             />
             <HistoryView />
           </>
@@ -259,9 +305,7 @@ const HoseDetails = () => {
           <View style={styles.buttonContainer}>
             <ButtonTHS
               title='Save and close'
-              onPress={() => {
-                handleSave();
-              }}
+              onPress={handleSave}
               variant='primary'
               size='sm'
             />

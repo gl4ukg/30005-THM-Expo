@@ -19,7 +19,7 @@ interface AuthState {
 }
 
 export interface Action {
-  id: string;
+  id: number;
   createdAt: string; // TODO: change to timestamp
   actionId: string;
   actionHoseIdList: HoseData[];
@@ -53,11 +53,11 @@ export type MultiSelectionActionsType =
 
 type MultiHosesSelection<T extends MultiSelectionActionsType> = {
   type: T;
-  ids: string[];
+  ids: number[];
 };
 type SingleHoseSelection<T extends SingleSelectionActionsType> = {
   type: T;
-  id: string;
+  id: number;
 };
 type ScrapSingleHoseSelection = SingleHoseSelection<'SCRAP'>;
 type ContactSingleHoseSelection = SingleHoseSelection<'CONTACT'>;
@@ -93,29 +93,40 @@ export const isSingleSelection = (
 
 interface DataState {
   isLoading: boolean;
+  lastUpdate: null | Date;
   // define data state properties
   hoses: HoseData[];
   assignedUnits: {
     unitId: string;
     unitName: string;
   }[];
+  customer: {
+    id: string;
+    name: string;
+  };
   workingUnitId: null | string;
   selection: HoseSelection | null;
   hoseTemplate?: Partial<HoseData>;
+  isCancelable: boolean;
 }
 
 interface SettingsState {
   // define settings state properties
   connectionType: 'wifi' | 'mobile' | null;
+  appInfo: {
+    version: string;
+    environment: string;
+    webServiceEndpoint: string;
+  };
 }
 
 // Define initial states for each slice of the app state
 const initialAuthState: AuthState = {
   // initial auth state values
   user: {
-    email: 'use@e.mail',
-    name: 'User',
-    id: 'id',
+    email: 'slange_mester@tess.no ',
+    name: 'Ole Slange Mester',
+    id: '223949MOB',
   },
   isLoingLoading: false,
   token: null,
@@ -123,20 +134,28 @@ const initialAuthState: AuthState = {
 
 const initialDataState: DataState = {
   isLoading: false,
+  lastUpdate: new Date(),
+  customer: { id: '223949', name: 'CUSTOMER WEB DEMO (Main)' },
   // initial data state values
   hoses: [],
   assignedUnits: [
-    { unitId: '1', unitName: 'Test Princess' },
-    { unitId: '2', unitName: 'Test Prince' },
+    { unitId: '1203108', unitName: 'Test Princess' },
+    { unitId: '2406216', unitName: 'Test Prince' },
   ],
-  workingUnitId: '1',
+  workingUnitId: '1203108',
   selection: null,
   hoseTemplate: undefined,
+  isCancelable: false,
 };
 
 const initialSettingsState: SettingsState = {
   // initial settings state values
   connectionType: null,
+  appInfo: {
+    version: '1.0.0',
+    environment: 'DEV',
+    webServiceEndpoint: 'http://localhost:3000',
+  },
 };
 
 const initialState: AppState = {

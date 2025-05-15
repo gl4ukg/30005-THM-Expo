@@ -5,6 +5,7 @@ import { useState } from 'react';
 import {
   LayoutAnimation,
   Modal,
+  Platform,
   Pressable,
   StyleSheet,
   View,
@@ -52,7 +53,12 @@ export const TopBarNavigation: React.FC<Props> = ({
 
       <Modal visible={isExpanded} transparent style={styles.modal}>
         <Pressable onPress={toggleExpanded} style={styles.modal} />
-        <View style={[styles.dropdownContainer, { top: insets.top }]}>
+        <View
+          style={[
+            styles.dropdownContainer,
+            { top: Platform.OS === 'ios' ? insets.top : 0 },
+          ]}
+        >
           {optionalUnits.map((unit) => (
             <Pressable
               key={unit.unitId}
@@ -62,7 +68,9 @@ export const TopBarNavigation: React.FC<Props> = ({
               ]}
               onPress={() => selectSubUnit(unit.unitId)}
             >
-              <Icon name='Industry' color={colors.white} size='xsm' />
+              {unit.unitId === selectedUnit && (
+                <Icon name='Industry' color={colors.white} size='xsm' />
+              )}
               <Typography
                 name='navigation'
                 text={unit.unitName}
@@ -86,7 +94,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   container: {
-    position: 'relative',
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,

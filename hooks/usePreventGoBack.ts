@@ -1,0 +1,26 @@
+import { useEffect } from 'react';
+import { useAppContext } from '@/context/ContextProvider';
+import { showDiscardChagesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
+import { usePreventRemove } from '@react-navigation/native';
+
+export const usePreventGoBack = () => {
+  const { dispatch, state } = useAppContext();
+
+  const handlePreventGoBack = () => {
+    showDiscardChagesAlert();
+    dispatch({
+      type: 'SET_IS_CANCELABLE',
+      payload: false,
+    });
+    return true;
+  };
+
+  usePreventRemove(state.data.isCancelable, handlePreventGoBack);
+
+  useEffect(() => {
+    dispatch({
+      type: 'SET_IS_CANCELABLE',
+      payload: true,
+    });
+  }, [dispatch]);
+};

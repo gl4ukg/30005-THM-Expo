@@ -77,15 +77,17 @@ type DataAction =
     >
   | ActionWithPayload<'SET_HOSE_DATA', HoseData[]>
   | ActionWithPayload<'SET_DATA_LOADING', boolean>
-  | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: string; hoseData: any }>
+  | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: number; hoseData: any }>
   | ActionWithPayload<'SELECT_ONE_HOSE', SingleSelection>
   | ActionWithPayload<'START_MULTI_SELECTION', MultiSelection['type']>
-  | ActionWithPayload<'ADD_HOSE_TO_EXISTING_MULTI_SELECTION', string>
-  | ActionWithPayload<'TOGGLE_HOSE_MULTI_SELECTION', string>
+  | ActionWithPayload<'ADD_HOSE_TO_EXISTING_MULTI_SELECTION', number>
+  | ActionWithPayload<'TOGGLE_HOSE_MULTI_SELECTION', number>
   | ActionWithoutPayload<'FINISH_SELECTION'>
-  | ActionWithPayload<'SELECT_MANY_HOSES_MULTI_SELECTION', string[]>
+  | ActionWithPayload<'SELECT_MANY_HOSES_MULTI_SELECTION', number[]>
   | ActionWithoutPayload<'DESELECT_ALL_HOSES_MULTI_SELECTION'>
-  | ActionWithPayload<'SET_HOSE_TEMPLATE', Partial<HoseData>>;
+  | ActionWithPayload<'SET_HOSE_TEMPLATE', Partial<HoseData>>
+  | ActionWithPayload<'SET_IS_CANCELABLE', boolean>;
+
 type SettingsAction =
   // | ActionWithPayload<'UPDATE_SETTINGS', any>
   ActionWithPayload<'UPDATE_CONNECTION_TYPE', 'wifi' | 'mobile' | null>;
@@ -153,7 +155,7 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         ...state,
 
         hoses: state.hoses.map((hose) => {
-          if (hose.id === action.payload.hoseId) {
+          if (hose.assetId === action.payload.hoseId) {
             return {
               ...hose,
               ...action.payload.hoseData,
@@ -229,6 +231,11 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       return {
         ...state,
         hoseTemplate: action.payload,
+      };
+    case 'SET_IS_CANCELABLE':
+      return {
+        ...state,
+        isCancelable: action.payload,
       };
     default: {
       // console.error('Unknown action type:', action.type);

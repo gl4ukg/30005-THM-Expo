@@ -5,12 +5,7 @@ import { syncData } from '@/lib/util/sync';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
-import {
-  ActivityIndicator,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function RootLayout() {
@@ -25,7 +20,7 @@ export default function RootLayout() {
 const App = () => {
   const { state, dispatch } = useAppContext();
 
-  const { type, isConnected, isInternetReachable } = useNetInfo();
+  const { type, isInternetReachable } = useNetInfo();
   useEffect(() => {
     dispatch({
       type: 'UPDATE_CONNECTION_TYPE',
@@ -80,22 +75,15 @@ const App = () => {
           <>
             <Stack.Screen name='index' />
             <Stack.Screen name='/login' />
-            <Stack.Screen name='/scan' />
+            <Stack.Screen name='ui' />
           </>
         )}
         {state.auth.user !== null && (
-          <SafeAreaView style={styles.safeArea}>
+          <>
             <Stack.Screen name='(app)' />
-            <Stack.Screen name='ui' />
-          </SafeAreaView>
+          </>
         )}
       </Stack>
     </>
   );
 };
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    height: '100%',
-  },
-});
