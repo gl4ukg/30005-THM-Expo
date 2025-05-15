@@ -120,21 +120,24 @@ export const EditMaintenanceInfo: React.FC<
             </View>
           </>
         ) : (
-          <TooltipWrapper tooltipData={{ title: 'Criticality', message: '' }}>
-            <Select
-              label='Criticality'
-              selectedOption={String(info.criticality ?? '')}
-              onChange={(value) => onInputChange('criticality', value)}
-              options={[
-                '1 - None',
-                '2 - Very low',
-                '3 - Low',
-                '4 - Medium',
-                '5 - High',
-                '6 - Very high',
-              ]}
-              required
-            />
+          <>
+            <TooltipWrapper tooltipData={{ title: 'Criticality', message: '' }}>
+              <Select
+                label='Criticality'
+                selectedOption={String(info.criticality ?? '')}
+                onChange={(value) => onInputChange('criticality', value)}
+                options={[
+                  '1 - None',
+                  '2 - Very low',
+                  '3 - Low',
+                  '4 - Medium',
+                  '5 - High',
+                  '6 - Very high',
+                ]}
+                required
+              />
+            </TooltipWrapper>
+
             <View style={styles.inspectionDetails}>
               <DataField
                 label={'Inspection Interval:'}
@@ -161,7 +164,7 @@ export const EditMaintenanceInfo: React.FC<
                 }
               />
             </View>
-          </TooltipWrapper>
+          </>
         )}
       </View>
       <View style={styles.section}>
@@ -205,7 +208,7 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   section: {
-    gap: 10,
+    gap: 20,
   },
   inspectionDetails: {
     borderLeftWidth: 2,

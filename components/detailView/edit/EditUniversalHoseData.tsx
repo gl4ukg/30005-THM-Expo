@@ -145,157 +145,167 @@ export const EditUniversalHoseData: React.FC<{
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <Bookmark title='Universal Hose Data' />
-      <TooltipWrapper
-        tooltipData={{
-          title: 'Hose standard',
-          message: 'This is the hose standard',
-        }}
-      >
-        <Select
-          label='Hose Standard'
-          selectedOption={localInfo.hoseStandard || ''}
-          onChange={(value) => handleFieldChange('hoseStandard', value)}
-          options={[]}
-          required={showValidationErrors}
-        />
-      </TooltipWrapper>
-      <TooltipWrapper
-        tooltipData={{
-          title: 'Inner diameter',
-          message: 'This is the Inner diameter',
-        }}
-      >
-        <Select
-          label='Inner Diameter'
-          selectedOption={localInfo.innerDiameter || ''}
-          onChange={(value) => handleFieldChange('innerDiameter', value)}
-          options={[]}
-          required={showValidationErrors}
-        />
-      </TooltipWrapper>
-      <TooltipWrapper
-        tooltipData={{
-          title: 'Hose Length',
-          message: 'This is the hose length',
-        }}
-      >
-        <View style={styles.inputContainer}>
-          <UnitInput
-            label='Hose Length'
-            value={Number(localInfo.hoseLength_mm ?? 0)}
-            onChangeText={(value: number) =>
-              handleFieldChange('hoseLength_mm', String(value))
-            }
-            unit={'mm'}
+      <View style={styles.section}>
+        <TooltipWrapper
+          tooltipData={{
+            title: 'Hose standard',
+            message: 'This is the hose standard',
+          }}
+        >
+          <Select
+            label='Hose Standard'
+            selectedOption={localInfo.hoseStandard || ''}
+            onChange={(value) => handleFieldChange('hoseStandard', value)}
+            options={[]}
             required={showValidationErrors}
           />
-        </View>
-      </TooltipWrapper>
-      <TooltipWrapper
-        tooltipData={{
-          title: 'description',
-          message: 'This is the description',
-        }}
-      >
-        <Input
-          label='Description:'
-          value={localInfo.itemDescription || ''}
-          onChangeText={(text) => handleFieldChange('itemDescription', text)}
-          required={showValidationErrors}
-        />
-      </TooltipWrapper>
-
-      <TooltipWrapper
-        tooltipData={{
-          title: 'Working pressure',
-          message: 'This is the working pressure',
-        }}
-      >
-        <BarToPsiInput
-          pressureInBars={Number(info.wp_BAR ?? 0)}
-          onChange={(pressure) => {
-            handleFieldChange('wp_BAR', String(pressure.bar));
-            handleFieldChange('wp_PSI', String(pressure.psi));
+        </TooltipWrapper>
+        <TooltipWrapper
+          tooltipData={{
+            title: 'Inner diameter',
+            message: 'This is the Inner diameter',
           }}
-        />
-      </TooltipWrapper>
+        >
+          <Select
+            label='Inner Diameter'
+            selectedOption={localInfo.innerDiameter || ''}
+            onChange={(value) => handleFieldChange('innerDiameter', value)}
+            options={[]}
+            required={showValidationErrors}
+          />
+        </TooltipWrapper>
+        <TooltipWrapper
+          tooltipData={{
+            title: 'Hose Length',
+            message: 'This is the hose length',
+          }}
+        >
+          <View style={styles.inputContainer}>
+            <UnitInput
+              label='Hose Length'
+              value={Number(localInfo.hoseLength_mm ?? 0)}
+              onChangeText={(value: number) =>
+                handleFieldChange('hoseLength_mm', String(value))
+              }
+              unit={'mm'}
+              required={showValidationErrors}
+            />
+          </View>
+        </TooltipWrapper>
+        <TooltipWrapper
+          tooltipData={{
+            title: 'description',
+            message: 'This is the description',
+          }}
+        >
+          <Input
+            label='Description:'
+            value={localInfo.itemDescription || ''}
+            onChangeText={(text) => handleFieldChange('itemDescription', text)}
+            required={showValidationErrors}
+          />
+        </TooltipWrapper>
 
+        <TooltipWrapper
+          tooltipData={{
+            title: 'Working pressure',
+            message: 'This is the working pressure',
+          }}
+        >
+          <BarToPsiInput
+            pressureInBars={Number(info.wp_BAR ?? 0)}
+            onChange={(pressure) => {
+              handleFieldChange('wp_BAR', String(pressure.bar));
+              handleFieldChange('wp_PSI', String(pressure.psi));
+            }}
+          />
+        </TooltipWrapper>
+      </View>
       <View style={styles.sectionTitleContainer}>
         <Typography name='navigationBold' text='Coupling end 1' />
       </View>
+      <View style={styles.section}>
+        <TooltipWrapper
+          tooltipData={{ title: 'Material Quality', message: '' }}
+        >
+          <Select
+            label='Material Quality'
+            selectedOption={info.materialQualityEnd1 || ''}
+            onChange={(value) =>
+              handleFieldChange('materialQualityEnd1', value)
+            }
+            options={[]}
+            required={showValidationErrors}
+          />
+        </TooltipWrapper>
 
-      <TooltipWrapper tooltipData={{ title: 'Material Quality', message: '' }}>
-        <Select
-          label='Material Quality'
-          selectedOption={info.materialQualityEnd1 || ''}
-          onChange={(value) => handleFieldChange('materialQualityEnd1', value)}
-          options={[]}
-          required={showValidationErrors}
-        />
-      </TooltipWrapper>
+        <TooltipWrapper tooltipData={{ title: 'Type Fitting', message: '' }}>
+          <Select
+            label='Type Fitting'
+            selectedOption={info.typeFittingEnd1 || ''}
+            onChange={(value) => handleFieldChange('typeFittingEnd1', value)}
+            options={[]}
+            required={showValidationErrors}
+          />
+        </TooltipWrapper>
 
-      <TooltipWrapper tooltipData={{ title: 'Type Fitting', message: '' }}>
-        <Select
-          label='Type Fitting'
-          selectedOption={info.typeFittingEnd1 || ''}
-          onChange={(value) => handleFieldChange('typeFittingEnd1', value)}
-          options={[]}
-          required={showValidationErrors}
-        />
-      </TooltipWrapper>
+        <TooltipWrapper
+          tooltipData={{
+            title: 'General Dimension',
+            message: 'This is the general dimension for end 1',
+          }}
+        >
+          <Select
+            label='General Dimension'
+            selectedOption={info.genericDimensionEnd1 || ''}
+            onChange={(value) =>
+              handleFieldChange('genericDimensionEnd1', value)
+            }
+            options={[]}
+            required={showValidationErrors}
+          />
+        </TooltipWrapper>
 
-      <TooltipWrapper
-        tooltipData={{
-          title: 'General Dimension',
-          message: 'This is the general dimension for end 1',
-        }}
-      >
-        <Select
-          label='General Dimension'
-          selectedOption={info.genericDimensionEnd1 || ''}
-          onChange={(value) => handleFieldChange('genericDimensionEnd1', value)}
-          options={[]}
-          required={showValidationErrors}
-        />
-      </TooltipWrapper>
+        <TooltipWrapper tooltipData={{ title: 'Gender', message: '' }}>
+          <Select
+            label='Gender'
+            selectedOption={info.genderEnd1 || ''}
+            onChange={(value) => handleFieldChange('genderEnd1', value)}
+            required={showValidationErrors}
+            options={[]}
+          />
+        </TooltipWrapper>
 
-      <TooltipWrapper tooltipData={{ title: 'Gender', message: '' }}>
-        <Select
-          label='Gender'
-          selectedOption={info.genderEnd1 || ''}
-          onChange={(value) => handleFieldChange('genderEnd1', value)}
-          required={showValidationErrors}
-          options={[]}
-        />
-      </TooltipWrapper>
+        <TooltipWrapper tooltipData={{ title: 'Angle', message: '' }}>
+          <Select
+            label='Angle'
+            selectedOption={info.angleEnd1 || ''}
+            onChange={(value) => handleFieldChange('angleEnd1', value)}
+            options={[]}
+            required={showValidationErrors}
+          />
+        </TooltipWrapper>
 
-      <TooltipWrapper tooltipData={{ title: 'Angle', message: '' }}>
-        <Select
-          label='Angle'
-          selectedOption={info.angleEnd1 || ''}
-          onChange={(value) => handleFieldChange('angleEnd1', value)}
-          options={[]}
-          required={showValidationErrors}
-        />
-      </TooltipWrapper>
-
-      <TooltipWrapper
-        tooltipData={{
-          title: 'Comment End 1',
-          message: 'This is the comment end 1',
-        }}
-      >
-        <Input
-          label='Comment End 1'
-          value={info.commentEnd1PTC || ''}
-          onChangeText={(text) => handleFieldChange('commentEnd1PTC', text)}
-        />
-      </TooltipWrapper>
-
+        <TooltipWrapper
+          tooltipData={{
+            title: 'Comment End 1',
+            message: 'This is the comment end 1',
+          }}
+        >
+          <Input
+            label='Comment End 1'
+            value={info.commentEnd1PTC || ''}
+            onChangeText={(text) => handleFieldChange('commentEnd1PTC', text)}
+          />
+        </TooltipWrapper>
+      </View>
       {/* --- Coupling End 2 --- */}
-      <TooltipWrapper tooltipData={{ title: 'Coupling end 2', message: '' }}>
+      <TooltipWrapper
+        tooltipData={{ title: 'Coupling end 2', message: '' }}
+        iconPadding={0}
+      >
         <View style={styles.sectionTitleContainer}>
           <Typography name='navigationBold' text='Coupling end 2' />
           <View style={styles.checkboxContainer}>
@@ -371,6 +381,14 @@ export const EditUniversalHoseData: React.FC<{
 };
 
 const styles = StyleSheet.create({
+  container: {
+    gap: 20,
+    marginBottom: 40,
+  },
+  section: {
+    gap: 10,
+    marginBottom: 30,
+  },
   inputContainer: {
     marginBottom: 10,
   },
@@ -378,11 +396,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
-    paddingTop: 10,
   },
   checkboxContainer: {
     flexDirection: 'row',

@@ -45,6 +45,7 @@ const Login = () => {
               flexDirection: 'row',
               gap: 5,
               top: Platform.OS === 'ios' ? 0 : insets.top,
+              zIndex: 200,
             }}
           >
             <Link

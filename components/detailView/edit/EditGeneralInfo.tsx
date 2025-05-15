@@ -151,5 +151,6 @@ export const EditGeneralInfo: React.FC<{
 const styles = StyleSheet.create({
   container: {
     gap: 10,
+    marginBottom: 40,
   },
 });
