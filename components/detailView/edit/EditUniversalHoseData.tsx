@@ -5,7 +5,7 @@ import { UnitInput } from '@/components/detailView/edit/UnitInput';
 import { Typography } from '@/components/Typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Input } from '@/components/UI/Input/Input';
-import { Select, TestDataSelect } from '@/components/UI/SelectModal/Select';
+import { Select } from '@/components/UI/SelectModal/Select';
 import { UHD } from '@/lib/types/hose';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -322,7 +322,7 @@ export const EditUniversalHoseData: React.FC<{
           label='Material Quality'
           selectedOption={info.materialQualityEnd2 || ''}
           onChange={(value) => handleFieldChange('materialQualityEnd2', value)}
-          options={TestDataSelect}
+          options={[]}
           required={showValidationErrors}
         />
       </TooltipWrapper>
@@ -332,7 +332,7 @@ export const EditUniversalHoseData: React.FC<{
           label='Type Fitting'
           selectedOption={info.typeFittingEnd2 || ''}
           onChange={(value) => handleFieldChange('typeFittingEnd2', value)}
-          options={TestDataSelect}
+          options={[]}
           required={showValidationErrors}
         />
       </TooltipWrapper>
@@ -344,7 +344,7 @@ export const EditUniversalHoseData: React.FC<{
           label='Generic Dimension'
           selectedOption={info.genericDimensionEnd2 || ''}
           onChange={(value) => handleFieldChange('genericDimensionEnd2', value)}
-          options={TestDataSelect}
+          options={[]}
           required={showValidationErrors}
         />
       </TooltipWrapper>
@@ -355,7 +355,7 @@ export const EditUniversalHoseData: React.FC<{
           selectedOption={info.genderEnd2 || ''}
           onChange={(value) => handleFieldChange('genderEnd2', value)}
           required={showValidationErrors}
-          options={TestDataSelect}
+          options={[]}
         />
       </TooltipWrapper>
 
@@ -364,7 +364,7 @@ export const EditUniversalHoseData: React.FC<{
           label='Angle'
           selectedOption={info.angleEnd2 || ''}
           onChange={(value) => handleFieldChange('angleEnd2', value)}
-          options={TestDataSelect}
+          options={[]}
           required={showValidationErrors}
         />
       </TooltipWrapper>

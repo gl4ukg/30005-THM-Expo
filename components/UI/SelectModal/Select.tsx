@@ -5,7 +5,6 @@ import { Icon } from '../../Icon/Icon';
 import { Typography } from '../../Typography';
 import { RadioSelect } from '@/components/UI/SelectModal/RadioSelect';
 
-
 interface Props {
   label: string;
   selectedOption: string | null;
