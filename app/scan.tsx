@@ -154,14 +154,14 @@ const Scan = () => {
           rfid: scannedRfid || undefined,
           scanMethod: method,
         };
-        router.push({
+        router.replace({
           pathname: '/dashboard/hoses/register',
           params,
         });
         return;
       }
       if (scanPurpose === 'INSPECT_HOSE') {
-        router.push({
+        router.replace({
           pathname: '/dashboard/hoses/inspect',
           params: {
             hoseId: scannedId || undefined,
@@ -208,7 +208,7 @@ const Scan = () => {
           console.log(
             `Navigating to actions screen for purpose: ${scanPurpose}`,
           );
-          router.push(
+          router.replace(
             `/(app)/dashboard/actions?action=${scanPurpose}&allowScan=true`,
           );
         }, 0);

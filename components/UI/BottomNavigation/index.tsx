@@ -97,11 +97,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
           <Pressable
             style={styles.button}
             onPress={() =>
-              isOpen
-                ? setIsOpen(false)
-                : state.data.isCancelable
-                  ? showDiscardChagesAlert()
-                  : router.back()
+              isOpen ? setIsOpen(false) : router.canGoBack() && router.back()
             }
           >
             <Icon name='ChevronLeft' color='#fff' />
