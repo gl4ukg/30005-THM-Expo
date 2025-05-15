@@ -34,11 +34,13 @@ export const Documents = () => {
   ];
 
   return (
-    <View>
+    <View style={styles.container}>
       <Bookmark title='Documents' />
-      {documents.map((doc) => (
-        <DocumentItem key={doc.id} id={doc.id} name={doc.name} />
-      ))}
+      <View>
+        {documents.map((doc) => (
+          <DocumentItem key={doc.id} id={doc.id} name={doc.name} />
+        ))}
+      </View>
       <Pressable style={styles.addDocumentButton}>
         <Icon name='Plus' size='xsm' color={colors.primary} />
         <Typography name='button' style={styles.addDocumentButtonText}>
@@ -50,6 +52,10 @@ export const Documents = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    gap: 10,
+    marginBottom: 30,
+  },
   documentItem: {
     flexDirection: 'row',
     alignItems: 'center',

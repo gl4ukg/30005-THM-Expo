@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: 10,
     backgroundColor: colors.white,
+    gap: 30,
   },
   centeredContainer: {
     flex: 1,
@@ -194,12 +195,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   infoSection: {
-    paddingVertical: 15,
-    paddingHorizontal: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.strokeInputField,
-    marginTop: 15,
-    marginBottom: 15,
+    gap: 10,
   },
   fieldMargin: {
     marginTop: 10,

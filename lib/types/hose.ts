@@ -100,7 +100,6 @@ export interface HoseData {
   emergencyHoseComment?: string;
   currentStatus?: string;
 
-  s1PlantVesselUnit?: string;
   S2Equipment?: string;
 
   missingData?: boolean;
@@ -125,7 +124,7 @@ export type GHD = Pick<
   | 'productionDate'
   | 'installedDate'
   | 'customerID'
-  | 's1PlantVesselUnit'
+  | 's1Code'
   | 'S2Equipment'
   | 'equipmentSubunit'
   | 'otherInfo'
