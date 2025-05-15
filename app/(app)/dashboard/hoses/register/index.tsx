@@ -11,14 +11,13 @@ import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
-import { GHD, HID, HoseData, TPN, UHD } from '@/lib/types/hose';
+import { HoseData } from '@/lib/types/hose';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useCallback } from 'react';
-import { Alert, BackHandler, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { BarcodeInput } from '@/components/UI/Input/BarcodeInput';
 import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
-import { showDiscardChagesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
@@ -72,7 +71,7 @@ const RegisterHose = () => {
   };
 
   const handleCancel = () => {
-    showDiscardChagesAlert();
+    router.back();
   };
 
   useEffect(() => {
@@ -173,6 +172,8 @@ const RegisterHose = () => {
       }));
       return;
     }
+
+    dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
 
     const newHoseData = localState as HoseData;
 
