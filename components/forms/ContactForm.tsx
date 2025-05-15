@@ -13,6 +13,7 @@ import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
+import { TooltipWrapper } from '../detailView/edit/TooltipWrapper';
 
 const formLabels: Record<
   Extract<MultiSelectionActionsType, 'RFQ' | 'CONTACT' | 'SCRAP'>,
@@ -118,13 +119,20 @@ export const ContactForm: React.FC<Props> = ({
         ListFooterComponent={
           <View style={styles.inputsContainer}>
             {contactType === 'RFQ' && (
-              <Select
-                label={'RFQ type'}
-                selectedOption={rfq}
-                onChange={setRfq}
-                hasAlternativeOption={false}
-                options={rfqOptions}
-              />
+              <TooltipWrapper
+                tooltipData={{
+                  title: 'RFQ type',
+                  message: '',
+                }}
+              >
+                <Select
+                  label={'RFQ type'}
+                  selectedOption={rfq}
+                  onChange={setRfq}
+                  hasAlternativeOption={false}
+                  options={rfqOptions}
+                />
+              </TooltipWrapper>
             )}
             <Input
               type='textArea'
