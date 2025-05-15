@@ -1,7 +1,7 @@
 import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { Typography } from '@/components/Typography';
-import { Select, TestDataSelect } from '@/components/UI/SelectModal/Select';
+import { Select } from '@/components/UI/SelectModal/Select';
 import { EditProps } from '@/lib/types/edit';
 import { TPN } from '@/lib/types/hose';
 import { StyleSheet, View } from 'react-native';

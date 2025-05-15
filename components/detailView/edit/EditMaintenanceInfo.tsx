@@ -4,7 +4,7 @@ import { RadioGroup } from '@/components/detailView/common/RadioGroup';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { Typography } from '@/components/Typography';
 import { Input } from '@/components/UI/Input/Input';
-import { Select, TestDataSelect } from '@/components/UI/SelectModal/Select';
+import { Select } from '@/components/UI/SelectModal/Select';
 import { colors } from '@/lib/tokens/colors';
 import { HID } from '@/lib/types/hose';
 import { formatDate } from '@/lib/util/formatDate';
