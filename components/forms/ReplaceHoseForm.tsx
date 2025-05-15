@@ -19,6 +19,7 @@ import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
 import { FC, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
+import { UnitInput } from '../detailView/edit/UnitInput';
 
 interface Props {
   hoses: HoseData[];
@@ -114,11 +115,11 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
                 />
               </TooltipWrapper>
               <TooltipWrapper tooltipData={{ title: 'Downtime', message: '' }}>
-                <Input
-                  type='numeric'
+                <UnitInput
+                  value={+downtime}
+                  onChangeText={(value) => setDowntime(value.toString())}
+                  unit={'hours'}
                   label='Did it cause any downtime? (hours)'
-                  value={downtime}
-                  onChangeText={setDowntime}
                 />
               </TooltipWrapper>
             </>
