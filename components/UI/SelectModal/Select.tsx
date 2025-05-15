@@ -5,6 +5,19 @@ import { Icon } from '../../Icon/Icon';
 import { Typography } from '../../Typography';
 import { RadioSelect } from '@/components/UI/SelectModal/RadioSelect';
 
+export const TestDataSelect = [
+  'Option 1',
+  'Option 2',
+  'Option 3',
+  'Option 4',
+  'Option 5',
+  'Option 6',
+
+  'Option 7',
+  'Option 8',
+  'Option 9',
+];
+
 interface Props {
   label: string;
   selectedOption: string | null;

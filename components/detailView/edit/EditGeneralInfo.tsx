@@ -1,7 +1,7 @@
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { Input } from '@/components/UI/Input/Input';
 import { RFIDInput } from '@/components/UI/Input/RFID';
-import { Select } from '@/components/UI/SelectModal/Select';
+import { Select, TestDataSelect } from '@/components/UI/SelectModal/Select';
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { GHD } from '@/lib/types/hose';
@@ -74,7 +74,7 @@ export const EditGeneralInfo: React.FC<{
           label='S1 Plant, Vessel, Unit:'
           selectedOption={null}
           onChange={(option) => onInputChange('s1PlantVesselUnit', option)}
-          options={[]}
+          options={TestDataSelect}
         />
       </TooltipWrapper>
       <TooltipWrapper
@@ -87,7 +87,7 @@ export const EditGeneralInfo: React.FC<{
           label='S2 Equipment:'
           selectedOption={info.S2Equipment ?? null}
           onChange={(value) => onInputChange('S2Equipment', value)}
-          options={[]}
+          options={TestDataSelect}
         />
       </TooltipWrapper>
       <TooltipWrapper
