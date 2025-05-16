@@ -6,16 +6,11 @@ import { usePreventRemove } from '@react-navigation/native';
 export const usePreventGoBack = () => {
   const { dispatch, state } = useAppContext();
 
-  const handlePreventGoBack = () => {
-    showDiscardChagesAlert();
-    dispatch({
-      type: 'SET_IS_CANCELABLE',
-      payload: false,
-    });
-    return true;
+  const handleNavigationAttemptBlocked = () => {
+    showDiscardChagesAlert(dispatch);
   };
 
-  usePreventRemove(state.data.isCancelable, handlePreventGoBack);
+  usePreventRemove(state.data.isCancelable, handleNavigationAttemptBlocked);
 
   useEffect(() => {
     dispatch({
