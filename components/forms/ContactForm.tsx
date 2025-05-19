@@ -53,17 +53,31 @@ export const ContactForm: React.FC<Props> = ({
   onSave,
 }) => {
   const { state, dispatch } = useAppContext();
-  const [comment, setComment] = useState('');
-  const [name, setName] = useState(state.auth.user?.name || '');
-  const [mail, setMail] = useState(state.auth.user?.email || '');
-  const [phone, setPhone] = useState('');
-  const [rfq, setRfq] = useState<string | null>(null);
+
+  const [comment, setComment] = useState(
+    state.data.temporaryContactFormData?.comment || '',
+  );
+  const [name, setName] = useState(
+    state.data.temporaryContactFormData?.name || state.auth.user?.name || '',
+  );
+  const [mail, setMail] = useState(
+    state.data.temporaryContactFormData?.mail || state.auth.user?.email || '',
+  );
+  const [phone, setPhone] = useState(
+    state.data.temporaryContactFormData?.phone || '',
+  );
+  const [rfq, setRfq] = useState<string | null>(
+    state.data.temporaryContactFormData?.rfq === undefined
+      ? null
+      : state.data.temporaryContactFormData.rfq,
+  );
+
   const [selectedIds, setSelectedIds] = useState<number[]>(
     hoses.map((h) => h.assetId).filter((id): id is number => id !== undefined),
   );
   usePreventGoBack();
 
-  const originallySelectedHoses = useMemo(() => hoses, []);
+  const originallySelectedHoses = useMemo(() => hoses, [hoses]);
 
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const handleMail = (email: string) => {
@@ -128,7 +142,13 @@ export const ContactForm: React.FC<Props> = ({
             <LinkButton
               variant='light'
               title={`+ Add hoses to this ${formLabels[contactType].title.toLowerCase()}`}
-              onPress={() => router.push(`/scan?scanPurpose=${contactType}`)}
+              onPress={() => {
+                dispatch({
+                  type: 'SET_TEMPORARY_CONTACT_FORM_DATA',
+                  payload: { comment, name, mail, phone, rfq },
+                });
+                router.navigate(`/scan?scanPurpose=${contactType}`);
+              }}
             />
           </View>
         )}
@@ -213,7 +233,7 @@ export const ContactForm: React.FC<Props> = ({
                 title={formLabels[contactType].confirmButton}
                 size='sm'
                 disabled={isButtonDisabled}
-                onPress={() =>
+                onPress={() => {
                   onSave({
                     comment,
                     name,
@@ -221,14 +241,18 @@ export const ContactForm: React.FC<Props> = ({
                     phone,
                     rfq,
                     selectedIds,
-                  })
-                }
+                  });
+                  dispatch({ type: 'CLEAR_TEMPORARY_CONTACT_FORM_DATA' });
+                }}
               />
               <ButtonTHS
                 title='Cancel'
                 variant='tertiary'
                 size='sm'
-                onPress={() => router.back()}
+                onPress={() => {
+                  dispatch({ type: 'CLEAR_TEMPORARY_CONTACT_FORM_DATA' });
+                  router.back();
+                }}
               />
             </View>
           </View>
