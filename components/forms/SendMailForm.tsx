@@ -10,8 +10,9 @@ import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
+import { showDiscardChagesAlert } from '../UI/BottomNavigation/showDiscardChangesAlert';
 
 interface Props {
   hoses: HoseData[];
@@ -19,15 +20,27 @@ interface Props {
 }
 export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
   const { state, dispatch } = useAppContext();
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
-  const [name, setName] = useState(state.auth.user?.name || '');
-  const [email, setEmail] = useState(state.auth.user?.email || '');
-  const [phone, setPhone] = useState('');
+
+  const [subject, setSubject] = useState(
+    state.data.temporarySendMailFormData?.subject || '',
+  );
+  const [message, setMessage] = useState(
+    state.data.temporarySendMailFormData?.message || '',
+  );
+  const [name, setName] = useState(
+    state.data.temporarySendMailFormData?.name || state.auth.user?.name || '',
+  );
+  const [email, setEmail] = useState(
+    state.data.temporarySendMailFormData?.email || state.auth.user?.email || '',
+  );
+  const [phone, setPhone] = useState(
+    state.data.temporarySendMailFormData?.phone || '',
+  );
+
   const [selectedIds, setSelectedIds] = useState<number[]>(
     hoses.map((h) => h.assetId),
   );
-  const originallySelectedHoses = useMemo(() => hoses, []);
+  const originallySelectedHoses = useMemo(() => hoses, [hoses]);
   usePreventGoBack();
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const handleEmail = (email: string) => {
@@ -37,18 +50,15 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
       setEmailError(undefined);
     } else setEmailError(validation);
   };
-  const handleSelectionChange = (id: number) => {
-    if (isMultiSelection(state.data.selection))
-      dispatch({
-        type: 'TOGGLE_HOSE_MULTI_SELECTION',
-        payload: id,
-      });
-    if (selectedIds.includes(id)) {
-      setSelectedIds(selectedIds.filter((i) => i !== id));
-    } else {
-      setSelectedIds([...selectedIds, id]);
-    }
-  };
+  const handleSelectionChange = useCallback((id: number) => {
+    setSelectedIds((prevSelectedIds) => {
+      if (prevSelectedIds.includes(id)) {
+        return prevSelectedIds.filter((i) => i !== id);
+      } else {
+        return [...prevSelectedIds, id];
+      }
+    });
+  }, []);
 
   const isButtonDisabled =
     !name || !email || !!emailError || !phone || selectedIds.length === 0;
@@ -106,21 +116,28 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
                 title='Send'
                 size='sm'
                 disabled={isButtonDisabled}
-                onPress={() =>
+                onPress={() => {
                   onSave({
+                    subject,
                     comment: message,
                     name,
                     mail: email,
                     phone,
                     selectedIds,
-                  })
-                }
+                  });
+                  dispatch({ type: 'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA' });
+                  dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
+                }}
               />
               <ButtonTHS
                 title='Cancel'
                 variant='tertiary'
                 size='sm'
-                onPress={() => router.push('/(app)/dashboard')}
+                onPress={() => {
+                  dispatch({ type: 'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA' });
+                  dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
+                  router.back();
+                }}
               />
             </View>
           </View>
@@ -147,7 +164,13 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
               variant='light'
               hSpace={10}
               title={`+ Add hoses as attachment`}
-              onPress={() => router.push('/scan?scanPurpose=CONTACT_SUPPORT')}
+              onPress={() => {
+                dispatch({
+                  type: 'SET_TEMPORARY_SEND_MAIL_FORM_DATA',
+                  payload: { subject, message, name, email, phone },
+                });
+                router.navigate('/scan?scanPurpose=CONTACT_SUPPORT');
+              }}
             />
           </View>
         )}

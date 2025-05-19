@@ -17,7 +17,7 @@ import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo, useState, useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { UnitInput } from '../detailView/edit/UnitInput';
 
@@ -31,16 +31,38 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
   const [selectedIds, setSelectedIds] = useState<number[]>(
     hoses.map((h) => h.assetId),
   );
-  const [replacementType, setReplacementType] = useState('Planned');
-  const [replacementReasons, setReplacementReasons] = useState<string[]>([]);
-  const [replacementImpacts, setReplacementImpacts] = useState<string[]>([]);
-  const [downtime, setDowntime] = useState('');
-  const [comment, setComment] = useState('');
-  const [name, setName] = useState(state.auth.user?.name || '');
-  const [email, setEmail] = useState(state.auth.user?.email || '');
-  const [phone, setPhone] = useState('');
+
+  const [replacementType, setReplacementType] = useState(
+    state.data.temporaryReplaceHoseFormData?.replacementType || 'Planned',
+  );
+  const [replacementReasons, setReplacementReasons] = useState<string[]>(
+    state.data.temporaryReplaceHoseFormData?.replacementReasons || [],
+  );
+  const [replacementImpacts, setReplacementImpacts] = useState<string[]>(
+    state.data.temporaryReplaceHoseFormData?.replacementImpacts || [],
+  );
+  const [downtime, setDowntime] = useState(
+    state.data.temporaryReplaceHoseFormData?.downtime || '',
+  );
+  const [comment, setComment] = useState(
+    state.data.temporaryReplaceHoseFormData?.comment || '',
+  );
+  const [name, setName] = useState(
+    state.data.temporaryReplaceHoseFormData?.name ||
+      state.auth.user?.name ||
+      '',
+  );
+  const [email, setEmail] = useState(
+    state.data.temporaryReplaceHoseFormData?.email ||
+      state.auth.user?.email ||
+      '',
+  );
+  const [phone, setPhone] = useState(
+    state.data.temporaryReplaceHoseFormData?.phone || '',
+  );
+
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
-  const originallySelectedHoses = useMemo(() => hoses, []);
+  const originallySelectedHoses = useMemo(() => hoses, [hoses]);
   usePreventGoBack();
 
   const handleEmail = (email: string) => {
@@ -51,16 +73,15 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
     } else setEmailError(validation);
   };
 
-  const handleSelectionChange = (id: number) => {
-    if (!isMultiSelection(state.data.selection)) {
-      console.error('Not a multi selection');
-      return;
-    }
-    dispatch({
-      type: 'TOGGLE_HOSE_MULTI_SELECTION',
-      payload: id,
+  const handleSelectionChange = useCallback((id: number) => {
+    setSelectedIds((prevSelectedIds) => {
+      if (prevSelectedIds.includes(id)) {
+        return prevSelectedIds.filter((i) => i !== id);
+      } else {
+        return [...prevSelectedIds, id];
+      }
     });
-  };
+  }, []);
 
   const isButtonDisabled = !name || !email || !!emailError || !phone;
   return (
@@ -154,7 +175,7 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
               title='Replace hoses'
               size='sm'
               disabled={isButtonDisabled}
-              onPress={() =>
+              onPress={() => {
                 onSave({
                   name,
                   mail: email,
@@ -170,14 +191,22 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
                     replacementType === 'Unplanned'
                       ? replacementImpacts.join(',')
                       : undefined,
-                })
-              }
+                  downtime:
+                    replacementType === 'Unplanned' ? downtime : undefined,
+                });
+                dispatch({ type: 'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA' });
+                dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
+              }}
             />
             <ButtonTHS
               title='Cancel'
               variant='tertiary'
               size='sm'
-              onPress={() => router.back()}
+              onPress={() => {
+                dispatch({ type: 'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA' });
+                dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
+                router.back();
+              }}
             />
           </View>
         </View>
@@ -195,7 +224,22 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
             <LinkButton
               variant='light'
               title={`+ Add hose to this replacement report`}
-              onPress={() => router.push(`/scan?scanPurpose=REPLACE_HOSE`)}
+              onPress={() => {
+                dispatch({
+                  type: 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA',
+                  payload: {
+                    replacementType,
+                    replacementReasons,
+                    replacementImpacts,
+                    downtime,
+                    comment,
+                    name,
+                    email,
+                    phone,
+                  },
+                });
+                router.push(`/scan?scanPurpose=REPLACE_HOSE`);
+              }}
             />
           </View>
         </>
