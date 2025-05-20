@@ -54,7 +54,7 @@ export const UnitInput: React.FC<UnitInputProps> = ({
   const isRequiredValueMissing =
     (required && (isNaN(value) || !value)) || isMissing;
 
-  const displayValue = isNaN(value) ? '' : value.toString();
+  const displayValue = isNaN(value) ? '' : value;
 
   return (
     <View>
@@ -86,7 +86,7 @@ export const UnitInput: React.FC<UnitInputProps> = ({
               styles.inputFocused,
           ]}
           keyboardType={keyboardType}
-          value={displayValue}
+          value={displayValue.toString()}
           onChangeText={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}

@@ -186,7 +186,8 @@ const RegisterHose = () => {
       router.push('/scan?scanPurpose=REGISTER_HOSE');
     } else {
       Alert.alert('Success', 'Hose registered successfully.');
-      router.back();
+      // router.dismissAll();
+      router.push('/(app)/dashboard');
     }
   }, [localState, dispatch, router, registerMultiple]);
 

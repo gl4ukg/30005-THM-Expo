@@ -21,7 +21,8 @@ export const showDiscardChagesAlert = (dispatch: React.Dispatch<AppAction>) => {
             payload: false,
           });
           requestAnimationFrame(() => {
-            router.dismissAll();
+            // router.dismissAll();
+            console.log('Discard changes', router);
             router.push('/(app)/dashboard');
           });
         },

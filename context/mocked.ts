@@ -131,7 +131,7 @@ export const mockedData: HoseData[] = [
     customerID: 'EQN-100',
     customerEq: 'customer_eq_01',
     system: 'system_01',
-    productionDate: '01-APR-2025',
+    productionDate: '01-MAR-2025',
     installedDate: '01-APR-2025',
     class: 'HTSL',
     status: 'Installed',
