@@ -11,13 +11,13 @@ import { Input } from '@/components/UI/Input/Input';
 import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
-import { isMultiSelection } from '@/context/state';
+import { TemporaryReplaceHoseFormData } from '@/context/Reducer';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo, useState, useCallback, useEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { UnitInput } from '../detailView/edit/UnitInput';
 
@@ -31,38 +31,81 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
   const [selectedIds, setSelectedIds] = useState<number[]>(
     hoses.map((h) => h.assetId),
   );
-  const [replacementType, setReplacementType] = useState('Planned');
-  const [replacementReasons, setReplacementReasons] = useState<string[]>([]);
-  const [replacementImpacts, setReplacementImpacts] = useState<string[]>([]);
-  const [downtime, setDowntime] = useState('');
-  const [comment, setComment] = useState('');
-  const [name, setName] = useState(state.auth.user?.name || '');
-  const [email, setEmail] = useState(state.auth.user?.email || '');
-  const [phone, setPhone] = useState('');
+
+  const globalTempData = state.data.temporaryContactFormData as
+    | TemporaryReplaceHoseFormData
+    | null
+    | undefined;
+
+  const initialFormData: TemporaryReplaceHoseFormData = {
+    replacementType: globalTempData?.replacementType || 'Planned',
+    replacementReasons: globalTempData?.replacementReasons || [],
+    replacementImpacts: globalTempData?.replacementImpacts || [],
+    downtime: globalTempData?.downtime || '',
+    comment: globalTempData?.comment || '',
+    name: globalTempData?.name || state.auth.user?.name || '',
+    email: globalTempData?.email || state.auth.user?.email || '',
+    phone: globalTempData?.phone || '',
+  };
+
+  const [formData, setFormData] =
+    useState<TemporaryReplaceHoseFormData>(initialFormData);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
-  const originallySelectedHoses = useMemo(() => hoses, []);
+  const originallySelectedHoses = useMemo(() => hoses, [hoses]);
   usePreventGoBack();
 
-  const handleEmail = (email: string) => {
-    setEmail(email);
-    const validation = emailValidation(email);
+  useEffect(() => {
+    const globalData = state.data.temporaryContactFormData as
+      | TemporaryReplaceHoseFormData
+      | null
+      | undefined;
+    const user = state.auth.user;
+    setFormData({
+      replacementType: globalData?.replacementType || 'Planned',
+      replacementReasons: globalData?.replacementReasons || [],
+      replacementImpacts: globalData?.replacementImpacts || [],
+      downtime: globalData?.downtime || '',
+      comment: globalData?.comment || '',
+      name: globalData?.name || user?.name || '',
+      email: globalData?.email || user?.email || '',
+      phone: globalData?.phone || '',
+    });
+  }, [state.data.temporaryContactFormData, state.auth.user]);
+
+  const handleEmailInput = (emailValue: string) => {
+    setFormData((prev) => ({ ...prev, email: emailValue }));
+    const validation = emailValidation(emailValue);
     if (validation === true) {
       setEmailError(undefined);
     } else setEmailError(validation);
   };
 
-  const handleSelectionChange = (id: number) => {
-    if (!isMultiSelection(state.data.selection)) {
-      console.error('Not a multi selection');
-      return;
-    }
-    dispatch({
-      type: 'TOGGLE_HOSE_MULTI_SELECTION',
-      payload: id,
-    });
+  const handleInputChange = (
+    field: keyof TemporaryReplaceHoseFormData,
+    value: string | string[],
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const isButtonDisabled = !name || !email || !!emailError || !phone;
+  const handleMultiSelectChange = (
+    field: keyof TemporaryReplaceHoseFormData,
+    value: string[],
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSelectionChange = useCallback((id: number) => {
+    setSelectedIds((prevSelectedIds) => {
+      if (prevSelectedIds.includes(id)) {
+        return prevSelectedIds.filter((i) => i !== id);
+      } else {
+        return [...prevSelectedIds, id];
+      }
+    });
+  }, []);
+
+  const isButtonDisabled =
+    !formData.name || !formData.email || !!emailError || !formData.phone;
   return (
     <FlatList
       ListHeaderComponent={
@@ -86,13 +129,15 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
           >
             <Select
               label='Replacement type:'
-              selectedOption={replacementType}
-              onChange={setReplacementType}
+              selectedOption={formData.replacementType || ''}
+              onChange={(value) =>
+                handleInputChange('replacementType', value as string)
+              }
               hasAlternativeOption={false}
               options={['Planned', 'Unplanned']}
             />
           </TooltipWrapper>
-          {replacementType === 'Unplanned' && (
+          {formData.replacementType === 'Unplanned' && (
             <>
               <TooltipWrapper
                 tooltipData={{ title: 'Reason for replacement', message: '' }}
@@ -100,8 +145,10 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
                 <MultiSelect
                   label='Reason:'
                   options={replaceReasons}
-                  selectedOptions={replacementReasons}
-                  onSave={setReplacementReasons}
+                  selectedOptions={formData.replacementReasons || []}
+                  onSave={(value) =>
+                    handleMultiSelectChange('replacementReasons', value)
+                  }
                 />
               </TooltipWrapper>
               <TooltipWrapper
@@ -110,14 +157,18 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
                 <MultiSelect
                   label='Impact:'
                   options={replaceImpacts}
-                  selectedOptions={replacementImpacts}
-                  onSave={setReplacementImpacts}
+                  selectedOptions={formData.replacementImpacts || []}
+                  onSave={(value) =>
+                    handleMultiSelectChange('replacementImpacts', value)
+                  }
                 />
               </TooltipWrapper>
               <TooltipWrapper tooltipData={{ title: 'Downtime', message: '' }}>
                 <UnitInput
-                  value={+downtime}
-                  onChangeText={(value) => setDowntime(value.toString())}
+                  value={Number(formData.downtime) || 0}
+                  onChangeText={(value) =>
+                    handleInputChange('downtime', value.toString())
+                  }
                   unit={'hours'}
                   label='Did it cause any downtime? (hours)'
                 />
@@ -127,57 +178,67 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
           <Input
             type='textArea'
             label='Comment:'
-            value={comment}
-            onChangeText={setComment}
+            value={formData.comment || ''}
+            onChangeText={(value) => handleInputChange('comment', value)}
           />
           <Input
             type='text'
             label={'Name:'}
-            value={name}
-            onChangeText={setName}
+            value={formData.name || ''}
+            onChangeText={(value) => handleInputChange('name', value)}
           />
           <Input
             type='email'
             label={'Mail:'}
-            value={email}
-            onChangeText={handleEmail}
+            value={formData.email || ''}
+            onChangeText={handleEmailInput}
             errorMessage={emailError}
           />
           <Input
             type='tel'
             label={'Phone:'}
-            value={phone}
-            onChangeText={setPhone}
+            value={formData.phone || ''}
+            onChangeText={(value) => handleInputChange('phone', value)}
           />
           <View style={styles.buttonContainer}>
             <ButtonTHS
               title='Replace hoses'
               size='sm'
               disabled={isButtonDisabled}
-              onPress={() =>
+              onPress={() => {
                 onSave({
-                  name,
-                  mail: email,
-                  phone,
-                  comment,
+                  name: formData.name,
+                  mail: formData.email,
+                  phone: formData.phone,
+                  comment: formData.comment,
                   selectedIds: selectedIds.join(','),
-                  replacementType,
+                  replacementType: formData.replacementType,
                   replacementReasons:
-                    replacementType === 'Unplanned'
-                      ? replacementReasons.join(',')
+                    formData.replacementType === 'Unplanned'
+                      ? formData.replacementReasons?.join(',')
                       : undefined,
                   replacementImpacts:
-                    replacementType === 'Unplanned'
-                      ? replacementImpacts.join(',')
+                    formData.replacementType === 'Unplanned'
+                      ? formData.replacementImpacts?.join(',')
                       : undefined,
-                })
-              }
+                  downtime:
+                    formData.replacementType === 'Unplanned'
+                      ? formData.downtime
+                      : undefined,
+                });
+                dispatch({ type: 'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA' });
+                dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
+              }}
             />
             <ButtonTHS
               title='Cancel'
               variant='tertiary'
               size='sm'
-              onPress={() => router.back()}
+              onPress={() => {
+                dispatch({ type: 'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA' });
+                dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
+                router.back();
+              }}
             />
           </View>
         </View>
@@ -195,7 +256,13 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
             <LinkButton
               variant='light'
               title={`+ Add hose to this replacement report`}
-              onPress={() => router.push(`/scan?scanPurpose=REPLACE_HOSE`)}
+              onPress={() => {
+                dispatch({
+                  type: 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA',
+                  payload: { ...formData },
+                });
+                router.push(`/scan?scanPurpose=REPLACE_HOSE`);
+              }}
             />
           </View>
         </>

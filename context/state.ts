@@ -1,4 +1,9 @@
 import { HoseData } from '@/lib/types/hose';
+import {
+  TemporaryReplaceHoseFormData,
+  TemporaryRFQFormData,
+  TemporarySendMailFormData,
+} from './Reducer';
 
 interface AppState {
   auth: AuthState;
@@ -108,6 +113,11 @@ interface DataState {
   selection: HoseSelection | null;
   hoseTemplate?: Partial<HoseData>;
   isCancelable: boolean;
+  temporaryContactFormData?:
+    | TemporaryRFQFormData
+    | TemporaryReplaceHoseFormData
+    | TemporarySendMailFormData
+    | null;
 }
 
 interface SettingsState {
