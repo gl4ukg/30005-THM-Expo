@@ -16,7 +16,7 @@ import {
 import { HoseData } from '@/lib/types/hose';
 import { createContext } from 'react';
 
-export interface TemporaryContactFormData {
+export interface TemporaryRFQFormData {
   comment?: string;
   name?: string;
   mail?: string;
@@ -41,14 +41,6 @@ export interface TemporaryReplaceHoseFormData {
   name?: string;
   email?: string;
   phone?: string;
-}
-
-declare module '@/context/state' {
-  interface DataState {
-    temporaryContactFormData?: TemporaryContactFormData | null;
-    temporarySendMailFormData?: TemporarySendMailFormData | null;
-    temporaryReplaceHoseFormData?: TemporaryReplaceHoseFormData | null;
-  }
 }
 
 interface ActionWithPayload<T extends string, Payload> {
@@ -300,22 +292,22 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
     case 'SET_TEMPORARY_SEND_MAIL_FORM_DATA':
       return {
         ...state,
-        temporarySendMailFormData: action.payload,
+        temporaryContactFormData: action.payload,
       };
     case 'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA':
       return {
         ...state,
-        temporarySendMailFormData: null,
+        temporaryContactFormData: null,
       };
     case 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA':
       return {
         ...state,
-        temporaryReplaceHoseFormData: action.payload,
+        temporaryContactFormData: action.payload,
       };
     case 'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA':
       return {
         ...state,
-        temporaryReplaceHoseFormData: null,
+        temporaryContactFormData: null,
       };
     default: {
       // console.error('Unknown action type:', action.type);

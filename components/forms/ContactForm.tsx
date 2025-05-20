@@ -6,6 +6,7 @@ import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
 import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
+import { TemporaryRFQFormData } from '@/context/Reducer'; // Use TemporaryRFQFormData from Reducer.ts
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
@@ -54,20 +55,22 @@ export const ContactForm: React.FC<Props> = ({
 }) => {
   const { state, dispatch } = useAppContext();
 
-  const initialFormData = {
-    comment: state.data.temporaryContactFormData?.comment || '',
-    name:
-      state.data.temporaryContactFormData?.name || state.auth.user?.name || '',
-    mail:
-      state.data.temporaryContactFormData?.mail || state.auth.user?.email || '',
-    phone: state.data.temporaryContactFormData?.phone || '',
-    rfq:
-      state.data.temporaryContactFormData?.rfq === undefined
-        ? null
-        : state.data.temporaryContactFormData.rfq,
+  // Cast global state to the specific type for this form
+  const globalTempData = state.data.temporaryContactFormData as
+    | TemporaryRFQFormData
+    | null
+    | undefined;
+
+  const initialFormData: TemporaryRFQFormData = {
+    comment: globalTempData?.comment || '',
+    name: globalTempData?.name || state.auth.user?.name || '',
+    mail: globalTempData?.mail || state.auth.user?.email || '',
+    phone: globalTempData?.phone || '',
+    rfq: globalTempData?.rfq === undefined ? null : globalTempData.rfq,
   };
 
-  const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] =
+    useState<TemporaryRFQFormData>(initialFormData);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
 
   const [selectedIds, setSelectedIds] = useState<number[]>(
@@ -76,7 +79,10 @@ export const ContactForm: React.FC<Props> = ({
   usePreventGoBack();
 
   useEffect(() => {
-    const globalData = state.data.temporaryContactFormData;
+    const globalData = state.data.temporaryContactFormData as
+      | TemporaryRFQFormData
+      | null
+      | undefined;
     const user = state.auth.user;
     setFormData({
       comment: globalData?.comment || '',
@@ -98,7 +104,7 @@ export const ContactForm: React.FC<Props> = ({
   };
 
   const handleInputChange = (
-    field: keyof typeof formData,
+    field: keyof TemporaryRFQFormData, // Use TemporaryRFQFormData here
     value: string | null,
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -211,7 +217,7 @@ export const ContactForm: React.FC<Props> = ({
               >
                 <Select
                   label={'RFQ type'}
-                  selectedOption={formData.rfq}
+                  selectedOption={formData.rfq || ''}
                   onChange={(value) => handleInputChange('rfq', value)}
                   hasAlternativeOption={false}
                   options={rfqOptions}
@@ -225,26 +231,26 @@ export const ContactForm: React.FC<Props> = ({
                   ? 'Delivery address / Comments'
                   : 'Comment:'
               }
-              value={formData.comment}
+              value={formData.comment || ''}
               onChangeText={(value) => handleInputChange('comment', value)}
             />
             <Input
               type='text'
               label={'Name:'}
-              value={formData.name}
+              value={formData.name || ''}
               onChangeText={(value) => handleInputChange('name', value)}
             />
             <Input
               type='email'
               label={'Mail:'}
-              value={formData.mail}
+              value={formData.mail || ''}
               onChangeText={handleMail}
               errorMessage={emailError}
             />
             <Input
               type='tel'
               label={'Phone:'}
-              value={formData.phone}
+              value={formData.phone || ''}
               onChangeText={(value) => handleInputChange('phone', value)}
             />
             <View style={styles.buttonContainer}>

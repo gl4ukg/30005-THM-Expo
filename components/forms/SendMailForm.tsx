@@ -4,15 +4,14 @@ import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
-import { isMultiSelection } from '@/context/state';
+import { TemporarySendMailFormData } from '@/context/Reducer';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { showDiscardChagesAlert } from '../UI/BottomNavigation/showDiscardChangesAlert';
 
 interface Props {
   hoses: HoseData[];
@@ -21,35 +20,59 @@ interface Props {
 export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
   const { state, dispatch } = useAppContext();
 
-  const [subject, setSubject] = useState(
-    state.data.temporarySendMailFormData?.subject || '',
-  );
-  const [message, setMessage] = useState(
-    state.data.temporarySendMailFormData?.message || '',
-  );
-  const [name, setName] = useState(
-    state.data.temporarySendMailFormData?.name || state.auth.user?.name || '',
-  );
-  const [email, setEmail] = useState(
-    state.data.temporarySendMailFormData?.email || state.auth.user?.email || '',
-  );
-  const [phone, setPhone] = useState(
-    state.data.temporarySendMailFormData?.phone || '',
-  );
+  const globalTempData = state.data.temporaryContactFormData as
+    | TemporarySendMailFormData
+    | null
+    | undefined;
+
+  const initialFormData: TemporarySendMailFormData = {
+    subject: globalTempData?.subject || '',
+    message: globalTempData?.message || '',
+    name: globalTempData?.name || state.auth.user?.name || '',
+    email: globalTempData?.email || state.auth.user?.email || '',
+    phone: globalTempData?.phone || '',
+  };
+
+  const [formData, setFormData] =
+    useState<TemporarySendMailFormData>(initialFormData);
+  const [emailError, setEmailError] = useState<undefined | string>(undefined);
 
   const [selectedIds, setSelectedIds] = useState<number[]>(
     hoses.map((h) => h.assetId),
   );
   const originallySelectedHoses = useMemo(() => hoses, [hoses]);
   usePreventGoBack();
-  const [emailError, setEmailError] = useState<undefined | string>(undefined);
-  const handleEmail = (email: string) => {
-    setEmail(email);
-    const validation = emailValidation(email);
+
+  useEffect(() => {
+    const globalData = state.data.temporaryContactFormData as
+      | TemporarySendMailFormData
+      | null
+      | undefined;
+    const user = state.auth.user;
+    setFormData({
+      subject: globalData?.subject || '',
+      message: globalData?.message || '',
+      name: globalData?.name || user?.name || '',
+      email: globalData?.email || user?.email || '',
+      phone: globalData?.phone || '',
+    });
+  }, [state.data.temporaryContactFormData, state.auth.user]);
+
+  const handleEmailInput = (emailValue: string) => {
+    setFormData((prev) => ({ ...prev, email: emailValue }));
+    const validation = emailValidation(emailValue);
     if (validation === true) {
       setEmailError(undefined);
     } else setEmailError(validation);
   };
+
+  const handleInputChange = (
+    field: keyof TemporarySendMailFormData,
+    value: string,
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
   const handleSelectionChange = useCallback((id: number) => {
     setSelectedIds((prevSelectedIds) => {
       if (prevSelectedIds.includes(id)) {
@@ -61,7 +84,11 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
   }, []);
 
   const isButtonDisabled =
-    !name || !email || !!emailError || !phone || selectedIds.length === 0;
+    !formData.name ||
+    !formData.email ||
+    !!emailError ||
+    !formData.phone ||
+    selectedIds.length === 0;
 
   return (
     <>
@@ -77,15 +104,15 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
               <Input
                 type='text'
                 label={'Subject:'}
-                value={subject}
-                onChangeText={setSubject}
+                value={formData.subject || ''}
+                onChangeText={(value) => handleInputChange('subject', value)}
               />
               <Input
                 type='textArea'
                 label='Message'
                 placeholder='Message...'
-                value={message}
-                onChangeText={setMessage}
+                value={formData.message || ''}
+                onChangeText={(value) => handleInputChange('message', value)}
               />
             </View>
           </View>
@@ -95,21 +122,21 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
             <Input
               type='text'
               label={'From (your name):'}
-              value={name}
-              onChangeText={setName}
+              value={formData.name || ''}
+              onChangeText={(value) => handleInputChange('name', value)}
             />
             <Input
               type='email'
               label={'Your email address:'}
-              value={email}
-              onChangeText={handleEmail}
+              value={formData.email || ''}
+              onChangeText={handleEmailInput}
               errorMessage={emailError}
             />
             <Input
               type='tel'
               label={'Phone:'}
-              value={phone}
-              onChangeText={setPhone}
+              value={formData.phone || ''}
+              onChangeText={(value) => handleInputChange('phone', value)}
             />
             <View style={styles.buttonContainer}>
               <ButtonTHS
@@ -118,11 +145,11 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
                 disabled={isButtonDisabled}
                 onPress={() => {
                   onSave({
-                    subject,
-                    comment: message,
-                    name,
-                    mail: email,
-                    phone,
+                    subject: formData.subject,
+                    comment: formData.message, // Ensure your onSave expects 'comment' for message
+                    name: formData.name,
+                    mail: formData.email,
+                    phone: formData.phone,
                     selectedIds,
                   });
                   dispatch({ type: 'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA' });
@@ -167,7 +194,7 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
               onPress={() => {
                 dispatch({
                   type: 'SET_TEMPORARY_SEND_MAIL_FORM_DATA',
-                  payload: { subject, message, name, email, phone },
+                  payload: { ...formData },
                 });
                 router.navigate('/scan?scanPurpose=CONTACT_SUPPORT');
               }}
