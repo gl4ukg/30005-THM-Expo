@@ -11,7 +11,7 @@ import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { TooltipWrapper } from '../detailView/edit/TooltipWrapper';
 
@@ -54,38 +54,54 @@ export const ContactForm: React.FC<Props> = ({
 }) => {
   const { state, dispatch } = useAppContext();
 
-  const [comment, setComment] = useState(
-    state.data.temporaryContactFormData?.comment || '',
-  );
-  const [name, setName] = useState(
-    state.data.temporaryContactFormData?.name || state.auth.user?.name || '',
-  );
-  const [mail, setMail] = useState(
-    state.data.temporaryContactFormData?.mail || state.auth.user?.email || '',
-  );
-  const [phone, setPhone] = useState(
-    state.data.temporaryContactFormData?.phone || '',
-  );
-  const [rfq, setRfq] = useState<string | null>(
-    state.data.temporaryContactFormData?.rfq === undefined
-      ? null
-      : state.data.temporaryContactFormData.rfq,
-  );
+  const initialFormData = {
+    comment: state.data.temporaryContactFormData?.comment || '',
+    name:
+      state.data.temporaryContactFormData?.name || state.auth.user?.name || '',
+    mail:
+      state.data.temporaryContactFormData?.mail || state.auth.user?.email || '',
+    phone: state.data.temporaryContactFormData?.phone || '',
+    rfq:
+      state.data.temporaryContactFormData?.rfq === undefined
+        ? null
+        : state.data.temporaryContactFormData.rfq,
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
+  const [emailError, setEmailError] = useState<undefined | string>(undefined);
 
   const [selectedIds, setSelectedIds] = useState<number[]>(
     hoses.map((h) => h.assetId).filter((id): id is number => id !== undefined),
   );
   usePreventGoBack();
 
+  useEffect(() => {
+    const globalData = state.data.temporaryContactFormData;
+    const user = state.auth.user;
+    setFormData({
+      comment: globalData?.comment || '',
+      name: globalData?.name || user?.name || '',
+      mail: globalData?.mail || user?.email || '',
+      phone: globalData?.phone || '',
+      rfq: globalData?.rfq === undefined ? null : globalData.rfq,
+    });
+  }, [state.data.temporaryContactFormData, state.auth.user]);
+
   const originallySelectedHoses = useMemo(() => hoses, [hoses]);
 
-  const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const handleMail = (email: string) => {
-    setMail(email);
+    setFormData((prev) => ({ ...prev, mail: email }));
     const isValid = emailValidation(email);
     if (isValid === true) {
       setEmailError(undefined);
     } else setEmailError(isValid);
+  };
+
+  const handleInputChange = (
+    field: keyof typeof formData,
+    value: string | null,
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const canSelectHoses = useMemo(
@@ -118,13 +134,13 @@ export const ContactForm: React.FC<Props> = ({
   ];
 
   const isButtonDisabled =
-    !name ||
-    !mail ||
+    !formData.name ||
+    !formData.mail ||
     !!emailError ||
-    !phone ||
+    !formData.phone ||
     selectedIds.length === 0 ||
     (contactType === 'RFQ' &&
-      (!rfq || !rfqOptions.map((option) => option).includes(rfq)));
+      (!formData.rfq || !rfqOptions.includes(formData.rfq)));
 
   const renderListContent = useCallback(
     () => (
@@ -145,7 +161,7 @@ export const ContactForm: React.FC<Props> = ({
               onPress={() => {
                 dispatch({
                   type: 'SET_TEMPORARY_CONTACT_FORM_DATA',
-                  payload: { comment, name, mail, phone, rfq },
+                  payload: { ...formData },
                 });
                 router.navigate(`/scan?scanPurpose=${contactType}`);
               }}
@@ -161,6 +177,9 @@ export const ContactForm: React.FC<Props> = ({
       allowScanToAdd,
       contactType,
       canSelectHoses,
+      formData,
+      dispatch,
+      formLabels,
     ],
   );
 
@@ -192,8 +211,8 @@ export const ContactForm: React.FC<Props> = ({
               >
                 <Select
                   label={'RFQ type'}
-                  selectedOption={rfq}
-                  onChange={setRfq}
+                  selectedOption={formData.rfq}
+                  onChange={(value) => handleInputChange('rfq', value)}
                   hasAlternativeOption={false}
                   options={rfqOptions}
                 />
@@ -206,27 +225,27 @@ export const ContactForm: React.FC<Props> = ({
                   ? 'Delivery address / Comments'
                   : 'Comment:'
               }
-              value={comment}
-              onChangeText={setComment}
+              value={formData.comment}
+              onChangeText={(value) => handleInputChange('comment', value)}
             />
             <Input
               type='text'
               label={'Name:'}
-              value={name}
-              onChangeText={setName}
+              value={formData.name}
+              onChangeText={(value) => handleInputChange('name', value)}
             />
             <Input
               type='email'
               label={'Mail:'}
-              value={mail}
+              value={formData.mail}
               onChangeText={handleMail}
               errorMessage={emailError}
             />
             <Input
               type='tel'
               label={'Phone:'}
-              value={phone}
-              onChangeText={setPhone}
+              value={formData.phone}
+              onChangeText={(value) => handleInputChange('phone', value)}
             />
             <View style={styles.buttonContainer}>
               <ButtonTHS
@@ -235,11 +254,7 @@ export const ContactForm: React.FC<Props> = ({
                 disabled={isButtonDisabled}
                 onPress={() => {
                   onSave({
-                    comment,
-                    name,
-                    mail,
-                    phone,
-                    rfq,
+                    ...formData,
                     selectedIds,
                   });
                   dispatch({ type: 'CLEAR_TEMPORARY_CONTACT_FORM_DATA' });
@@ -250,7 +265,6 @@ export const ContactForm: React.FC<Props> = ({
                 variant='tertiary'
                 size='sm'
                 onPress={() => {
-                  dispatch({ type: 'CLEAR_TEMPORARY_CONTACT_FORM_DATA' });
                   router.back();
                 }}
               />
