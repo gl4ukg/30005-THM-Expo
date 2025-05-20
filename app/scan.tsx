@@ -290,9 +290,8 @@ const Scan = () => {
   }, [hasPermission, requestPermission]);
 
   useEffect(() => {
-    // Show camera missing alert only once if conditions are met
     if (
-      hasPermission && // Only check if we have permission to use the camera
+      hasPermission &&
       scanMethod === 'Barcode' &&
       device === undefined &&
       !cameraAlertShownRef.current
@@ -301,9 +300,9 @@ const Scan = () => {
         'Your device does not have a camera.',
         'Please use a device with a camera or use other scan methods.',
       );
-      cameraAlertShownRef.current = true; // Mark alert as shown
+      cameraAlertShownRef.current = true;
     }
-  }, [device, scanMethod, hasPermission]); // Rerun check if these dependencies change
+  }, [device, scanMethod, hasPermission]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -432,13 +431,14 @@ export default Scan;
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   headerContainer: {
-    position: 'fixed',
-    top: 0,
+    position: 'absolute',
+    bottom: 0,
     width: '100%',
     backgroundColor: colors.lightContrast,
     gap: 20,
     paddingHorizontal: 20,
     paddingVertical: 30,
+    zIndex: 1,
   },
   header: { justifyContent: 'center', alignItems: 'center', gap: 10 },
   headerText: { textAlign: 'center' },
