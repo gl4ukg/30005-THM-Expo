@@ -67,7 +67,11 @@ const User = () => {
 export default User;
 
 const styles = StyleSheet.create({
-  scrollView: { paddingHorizontal: 10, paddingBottom: 30, gap: 30 },
+  scrollView: {
+    paddingHorizontal: 10,
+    paddingBottom: 30,
+    gap: 30,
+  },
   headerWrapper: {
     paddingTop: 30,
     paddingBottom: 10,

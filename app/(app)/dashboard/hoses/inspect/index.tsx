@@ -148,7 +148,7 @@ export const InspectHose = () => {
         <DataField label='Description:' value={hoseData.itemDescription} />
         <DataField
           label='S1 Plant, Vessel, Unit:'
-          value={hoseData.s1PlantVesselUnit ?? ''}
+          value={hoseData.s1Code ?? ''}
         />
         <DataField label='S2 Equipment:' value={hoseData.S2Equipment ?? ''} />
         <DataField
@@ -188,7 +188,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 10,
-    backgroundColor: colors.white,
     gap: 30,
   },
   centeredContainer: {
