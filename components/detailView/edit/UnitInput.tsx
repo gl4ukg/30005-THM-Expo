@@ -11,7 +11,7 @@ type UnitInputProps = {
   unit: string;
   editable?: boolean;
   required?: boolean;
-  alwaysShowFeilIfMissing?: boolean;
+  alwaysShowErrorIfMissing?: boolean;
 };
 
 export const UnitInput: React.FC<UnitInputProps> = ({
