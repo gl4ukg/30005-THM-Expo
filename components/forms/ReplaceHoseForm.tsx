@@ -166,8 +166,8 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
               <TooltipWrapper tooltipData={{ title: 'Downtime', message: '' }}>
                 <UnitInput
                   value={Number(formData.downtime) || 0}
-                  onChangeText={(value) =>
-                    handleInputChange('downtime', value.toString())
+                  onChange={(value) =>
+                    handleInputChange('downtime', String(value))
                   }
                   unit={'hours'}
                   label='Did it cause any downtime? (hours)'
