@@ -148,7 +148,7 @@ const Ui = () => {
                   value={pressure.bar}
                   onChange={() => {}}
                   editable={false}
-                  alwaysShowFeilIfMissing
+                  alwaysShowErrorIfMissing
                   required
                 />
                 <UnitInput
@@ -156,7 +156,7 @@ const Ui = () => {
                   value={pressure.psi}
                   onChange={() => {}}
                   editable={false}
-                  alwaysShowFeilIfMissing
+                  alwaysShowErrorIfMissing
                   required
                 />
               </View>

@@ -12,7 +12,8 @@
       "supportsTablet": true,
       "appleTeamId": "55NT296GTJ",
       "infoPlist": {
-        "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera."
+        "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera.",
+        "ITSAppUsesNonExemptEncryption": false
       },
       "bundleIdentifier": "no.tess.THM",
       "runtimeVersion": "1.0.0"
@@ -24,8 +25,6 @@
       },
       "package": "no.tess.THM",
       "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.NFC",
         "android.permission.CAMERA",
         "android.permission.NFC"
       ],
@@ -82,7 +81,9 @@
           ],
           "includeNdefEntitlement": false
         }
-      ]
+      ],
+      "expo-background-task",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

@@ -61,7 +61,7 @@ export const UnitInput: React.FC<UnitInputProps> = ({
     setInputValue(numericValue.toString());
   };
   const isRequiredValueMissing =
-    (required && !inputValue && isTouched) || alwaysShowFeilIfMissing;
+    (required && !inputValue && isTouched) || alwaysShowErrorIfMissing;
 
   return (
     <View>

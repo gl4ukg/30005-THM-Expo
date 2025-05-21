@@ -2,10 +2,12 @@ import { Typography } from '@/components/Typography';
 import { ContextProvider, useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { syncData } from '@/lib/util/sync';
+import { registerBackgroundTaskAsync } from '@/tasks';
 import { useNetInfo } from '@react-native-community/netinfo';
+import * as BackgroundTask from 'expo-background-task';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function RootLayout() {
@@ -17,10 +19,20 @@ export default function RootLayout() {
     </ContextProvider>
   );
 }
+
+registerBackgroundTaskAsync();
 const App = () => {
   const { state, dispatch } = useAppContext();
-
   const { type, isInternetReachable } = useNetInfo();
+  useEffect(() => {
+    updateAsync();
+  }, []);
+
+  const updateAsync = async () => {
+    const status = await BackgroundTask.getStatusAsync();
+    const isRegistered = BackgroundTask.BackgroundTaskStatus;
+    console.log('status', status, isRegistered);
+  };
   useEffect(() => {
     dispatch({
       type: 'UPDATE_CONNECTION_TYPE',
