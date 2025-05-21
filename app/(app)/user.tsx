@@ -19,7 +19,6 @@ const User = () => {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.white,
       }}
     >
       {state.auth.user === null ? (

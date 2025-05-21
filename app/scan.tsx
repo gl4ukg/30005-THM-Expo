@@ -37,7 +37,6 @@ const Scan = () => {
     scanPurpose?: ScanPurpose;
   }>();
   const { state, dispatch } = useAppContext();
-  console.log(state.data.temporaryContactFormData?.comment);
   const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(
     'Barcode',
   );

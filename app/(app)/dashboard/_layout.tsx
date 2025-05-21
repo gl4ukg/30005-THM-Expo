@@ -1,3 +1,4 @@
+import { colors } from '@/lib/tokens/colors';
 import { Stack } from 'expo-router';
 
 export default function DashboardLayout() {
@@ -6,6 +7,7 @@ export default function DashboardLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
+          contentStyle: { backgroundColor: colors.white },
         }}
       >
         <Stack.Screen name='index' />

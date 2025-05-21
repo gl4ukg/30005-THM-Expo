@@ -8,7 +8,6 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "backgroundColor": "#ffffff",
     "ios": {
       "supportsTablet": true,
       "appleTeamId": "55NT296GTJ",
