@@ -37,7 +37,6 @@ const Scan = () => {
     scanPurpose?: ScanPurpose;
   }>();
   const { state, dispatch } = useAppContext();
-  console.log(state.data.temporaryContactFormData?.comment);
   const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(
     'Barcode',
   );
@@ -53,7 +52,6 @@ const Scan = () => {
   const [scanError, setScanError] = useState<string | null>(null);
 
   const [title, setTitle] = useState<string>('Scanner');
-  const [subTitle, setSubTitle] = useState<string>('Scan or enter ID');
   const isNavigatingRef = useRef(false);
   const cameraAlertShownRef = useRef(false);
 
@@ -317,7 +315,7 @@ const Scan = () => {
           <Typography
             name='navigation'
             style={styles.headerText}
-            text={subTitle}
+            text='Scan or enter ID'
           />
         </View>
         <View style={styles.inputsWrapper}>
@@ -385,8 +383,7 @@ const Scan = () => {
             style={({ pressed }) => [
               styles.searchButton,
               pressed && styles.searchButtonPressed,
-
-              !id && scanMethod !== 'RFID' && styles.searchButtonDisabled,
+              !id && styles.searchButtonDisabled,
             ]}
             disabled={!id || isNavigatingRef.current}
             onPress={() => handleScan(id, null, 'Barcode')}
@@ -398,7 +395,7 @@ const Scan = () => {
                   ? colors.extended666
                   : colors.primary25
               }
-              size='sm'
+              size='md'
             />
           </Pressable>
         </View>
@@ -448,9 +445,16 @@ const styles = StyleSheet.create({
     height: 36,
     justifyContent: 'center',
     alignItems: 'center',
+    borderColor: 'transparent',
     borderWidth: 1,
-    borderColor: colors.primary25,
     borderRadius: 4,
+  },
+  searchButtonPressed: {
+    borderColor: colors.primary25,
+  },
+  searchButtonDisabled: {
+    opacity: 0.3,
+    borderColor: 'transparent',
   },
   inputsWrapper: { flexDirection: 'row', gap: 5 },
   inputs: { gap: 5, flex: 1 },
@@ -463,12 +467,6 @@ const styles = StyleSheet.create({
     padding: 3,
     borderRadius: 3,
     gap: 20,
-  },
-  searchButtonPressed: {
-    backgroundColor: colors.primary25,
-  },
-  searchButtonDisabled: {
-    borderColor: colors.extended666,
   },
   switchButton: {
     flexDirection: 'row',
