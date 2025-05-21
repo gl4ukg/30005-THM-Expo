@@ -1,60 +1,67 @@
 import { colors } from '@/lib/tokens/colors';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { KeyboardTypeOptions, StyleSheet, TextInput, View } from 'react-native';
 import { Typography } from '../../Typography';
 import { Icon } from '@/components/Icon/Icon';
 
 type UnitInputProps = {
   label?: string;
-  value: number;
-  onChangeText: (value: number) => void;
+  value: number | null;
+  onChange: (value: number | null) => void;
   unit: string;
   editable?: boolean;
-  keyboardType?: KeyboardTypeOptions;
   required?: boolean;
-  isMissing?: boolean;
+  alwaysShowErrorIfMissing?: boolean;
 };
 
 export const UnitInput: React.FC<UnitInputProps> = ({
   label,
   value,
-  onChangeText,
+  onChange,
   unit,
+  required = false,
   editable = true,
-  keyboardType = 'numeric',
-  required,
-  isMissing,
+  alwaysShowErrorIfMissing = false,
 }) => {
+  const [inputValue, setInputValue] = useState(value?.toString() || '');
   const [isFocused, setIsFocused] = useState(false);
+  const [isTouched, setIsTouched] = useState(false);
 
-  const handleFocus = useCallback(() => {
-    if (editable) setIsFocused(true);
-  }, [setIsFocused, editable]);
+  useEffect(() => {
+    setInputValue(value?.toString() || '');
+  }, [value]);
 
-  const handleBlur = useCallback(() => {
-    if (editable) setIsFocused(false);
-  }, [setIsFocused, editable]);
+  const handleBlur = () => {
+    setIsFocused(false);
+    setIsTouched(true);
+    let processed: string | null = inputValue;
 
-  const handleChange = (text: string) => {
-    if (text === '') {
-      onChangeText(NaN);
+    // Handle empty input or standalone characters
+    if (['', '-', '.'].includes(processed)) {
+      onChange(null);
+      setInputValue('');
       return;
     }
 
-    const numericRegex = /^[0-9]*\.?[0-9]*$/;
-    if (numericRegex.test(text)) {
-      const parsedValue = parseFloat(text);
-
-      if (!isNaN(parsedValue) || text === '.') {
-        onChangeText(parsedValue);
-      }
+    // Add leading zero if needed
+    if (processed.startsWith('.')) {
+      processed = `0${processed}`;
     }
+
+    // Remove trailing decimal
+    if (processed.endsWith('.')) {
+      processed = processed.slice(0, -1);
+    }
+
+    // Handle negative zero case
+    if (processed === '-0') processed = '0';
+
+    const numericValue = parseFloat(processed);
+    onChange(numericValue);
+    setInputValue(numericValue.toString());
   };
-
   const isRequiredValueMissing =
-    (required && (isNaN(value) || !value)) || isMissing;
-
-  const displayValue = isNaN(value) ? '' : value.toString();
+    (required && !inputValue && isTouched) || alwaysShowFeilIfMissing;
 
   return (
     <View>
@@ -80,15 +87,12 @@ export const UnitInput: React.FC<UnitInputProps> = ({
             styles.input,
             !editable && styles.disabledInput,
             isRequiredValueMissing && editable && styles.errorBorder,
-            isFocused &&
-              editable &&
-              !isRequiredValueMissing &&
-              styles.inputFocused,
+            isFocused && !isRequiredValueMissing && styles.inputFocused,
           ]}
-          keyboardType={keyboardType}
-          value={displayValue}
-          onChangeText={handleChange}
-          onFocus={handleFocus}
+          keyboardType='numeric'
+          value={inputValue}
+          onChangeText={(text) => setInputValue(text.replace(',', '.'))}
+          onFocus={() => setIsFocused(true)}
           onBlur={handleBlur}
           selectionColor={colors.primary}
           editable={editable}
@@ -155,8 +159,8 @@ const styles = StyleSheet.create({
   },
   unitLabel: {
     color: colors.extended666,
-
     paddingBottom: 2,
+    paddingRight: 5,
   },
   unitError: {
     color: colors.errorText,
@@ -177,7 +181,7 @@ const styles = StyleSheet.create({
   errorMessage: {
     color: colors.errorText,
     position: 'absolute',
-    right: 0,
+    left: 0,
     bottom: -22,
     fontSize: 12,
     lineHeight: 16,
