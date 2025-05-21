@@ -3,7 +3,7 @@ import { Typography } from '@/components/Typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 interface ElementProps {
@@ -25,7 +25,7 @@ export const ListElement: FC<ElementProps> = ({
     if (!canBeSelected || !onSelectedChange) return;
     onSelectedChange(assetId);
   };
-  const hasAttachment = Math.random() > 0.5;
+  const hasAttachment = useMemo(() => Math.random() > 0.5, []);
   return (
     <Pressable onPress={onRowPress}>
       <View

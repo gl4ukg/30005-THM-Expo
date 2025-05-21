@@ -81,6 +81,9 @@ const App = () => {
         screenOptions={{
           headerShown: false,
           animationTypeForReplace: 'push',
+          contentStyle: {
+            backgroundColor: colors.white,
+          },
         }}
       >
         {state.auth.user === null && (

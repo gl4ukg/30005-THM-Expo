@@ -6,13 +6,15 @@ import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
 import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
+import { TemporaryRFQFormData } from '@/context/Reducer'; // Use TemporaryRFQFormData from Reducer.ts
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
+import { TooltipWrapper } from '../detailView/edit/TooltipWrapper';
 
 const formLabels: Record<
   Extract<MultiSelectionActionsType, 'RFQ' | 'CONTACT' | 'SCRAP'>,
@@ -44,6 +46,7 @@ interface Props {
   allowScanToAdd?: boolean;
   onSave: (arg0: any) => void;
 }
+
 export const ContactForm: React.FC<Props> = ({
   hoses,
   contactType,
@@ -51,37 +54,84 @@ export const ContactForm: React.FC<Props> = ({
   onSave,
 }) => {
   const { state, dispatch } = useAppContext();
-  const [comment, setComment] = useState('');
-  const [name, setName] = useState(state.auth.user?.name || '');
-  const [mail, setMail] = useState(state.auth.user?.email || '');
-  const [phone, setPhone] = useState('');
-  const [rfq, setRfq] = useState<string | null>(null);
+
+  // Cast global state to the specific type for this form
+  const globalTempData = state.data.temporaryContactFormData as
+    | TemporaryRFQFormData
+    | null
+    | undefined;
+
+  const initialFormData: TemporaryRFQFormData = {
+    comment: globalTempData?.comment || '',
+    name: globalTempData?.name || state.auth.user?.name || '',
+    mail: globalTempData?.mail || state.auth.user?.email || '',
+    phone: globalTempData?.phone || '',
+    rfq: globalTempData?.rfq === undefined ? null : globalTempData.rfq,
+  };
+
+  const [formData, setFormData] =
+    useState<TemporaryRFQFormData>(initialFormData);
+  const [emailError, setEmailError] = useState<undefined | string>(undefined);
+
   const [selectedIds, setSelectedIds] = useState<number[]>(
     hoses.map((h) => h.assetId).filter((id): id is number => id !== undefined),
   );
   usePreventGoBack();
 
-  const originallySelectedHoses = useMemo(() => hoses, []);
-  const [emailError, setEmailError] = useState<undefined | string>(undefined);
+  useEffect(() => {
+    const globalData = state.data.temporaryContactFormData as
+      | TemporaryRFQFormData
+      | null
+      | undefined;
+    const user = state.auth.user;
+    setFormData({
+      comment: globalData?.comment || '',
+      name: globalData?.name || user?.name || '',
+      mail: globalData?.mail || user?.email || '',
+      phone: globalData?.phone || '',
+      rfq: globalData?.rfq === undefined ? null : globalData.rfq,
+    });
+  }, [state.data.temporaryContactFormData, state.auth.user]);
+
+  const originallySelectedHoses = useMemo(() => hoses, [hoses]);
+
   const handleMail = (email: string) => {
-    setMail(email);
+    setFormData((prev) => ({ ...prev, mail: email }));
     const isValid = emailValidation(email);
     if (isValid === true) {
       setEmailError(undefined);
     } else setEmailError(isValid);
   };
-  const handleSelectionChange = (id: number) => {
-    if (isMultiSelection(state.data.selection))
-      dispatch({
-        type: 'TOGGLE_HOSE_MULTI_SELECTION',
-        payload: id,
-      });
-    if (selectedIds.includes(id)) {
-      setSelectedIds(selectedIds.filter((i) => i !== id));
-    } else {
-      setSelectedIds([...selectedIds, id]);
-    }
+
+  const handleInputChange = (
+    field: keyof TemporaryRFQFormData, // Use TemporaryRFQFormData here
+    value: string | null,
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
+
+  const canSelectHoses = useMemo(
+    () => isMultiSelection(state.data.selection),
+    [state.data.selection],
+  );
+
+  const handleSelectionChange = useCallback(
+    (id: number) => {
+      if (canSelectHoses)
+        dispatch({
+          type: 'TOGGLE_HOSE_MULTI_SELECTION',
+          payload: id,
+        });
+      setSelectedIds((prevSelectedIds) => {
+        if (prevSelectedIds.includes(id)) {
+          return prevSelectedIds.filter((i) => i !== id);
+        } else {
+          return [...prevSelectedIds, id];
+        }
+      });
+    },
+    [dispatch, canSelectHoses],
+  );
 
   const rfqOptions = [
     'TESS to quote with pressure test and certificate',
@@ -90,13 +140,54 @@ export const ContactForm: React.FC<Props> = ({
   ];
 
   const isButtonDisabled =
-    !name ||
-    !mail ||
+    !formData.name ||
+    !formData.mail ||
     !!emailError ||
-    !phone ||
+    !formData.phone ||
     selectedIds.length === 0 ||
     (contactType === 'RFQ' &&
-      (!rfq || !rfqOptions.map((option) => option).includes(rfq)));
+      (!formData.rfq || !rfqOptions.includes(formData.rfq)));
+
+  const renderListContent = useCallback(
+    () => (
+      <>
+        {selectedIds.length > 0 && (
+          <ListTable
+            items={originallySelectedHoses}
+            selectedIds={selectedIds}
+            onSelectionChange={handleSelectionChange}
+            canSelect={canSelectHoses}
+          />
+        )}
+        {allowScanToAdd && (
+          <View style={styles.addHoseContainer}>
+            <LinkButton
+              variant='light'
+              title={`+ Add hoses to this ${formLabels[contactType].title.toLowerCase()}`}
+              onPress={() => {
+                dispatch({
+                  type: 'SET_TEMPORARY_CONTACT_FORM_DATA',
+                  payload: { ...formData },
+                });
+                router.navigate(`/scan?scanPurpose=${contactType}`);
+              }}
+            />
+          </View>
+        )}
+      </>
+    ),
+    [
+      selectedIds,
+      originallySelectedHoses,
+      handleSelectionChange,
+      allowScanToAdd,
+      contactType,
+      canSelectHoses,
+      formData,
+      dispatch,
+      formLabels,
+    ],
+  );
 
   return (
     <>
@@ -118,13 +209,20 @@ export const ContactForm: React.FC<Props> = ({
         ListFooterComponent={
           <View style={styles.inputsContainer}>
             {contactType === 'RFQ' && (
-              <Select
-                label={'RFQ type'}
-                selectedOption={rfq}
-                onChange={setRfq}
-                hasAlternativeOption={false}
-                options={rfqOptions}
-              />
+              <TooltipWrapper
+                tooltipData={{
+                  title: 'RFQ type',
+                  message: '',
+                }}
+              >
+                <Select
+                  label={'RFQ type'}
+                  selectedOption={formData.rfq || ''}
+                  onChange={(value) => handleInputChange('rfq', value)}
+                  hasAlternativeOption={false}
+                  options={rfqOptions}
+                />
+              </TooltipWrapper>
             )}
             <Input
               type='textArea'
@@ -133,77 +231,55 @@ export const ContactForm: React.FC<Props> = ({
                   ? 'Delivery address / Comments'
                   : 'Comment:'
               }
-              value={comment}
-              onChangeText={setComment}
+              value={formData.comment || ''}
+              onChangeText={(value) => handleInputChange('comment', value)}
             />
             <Input
               type='text'
               label={'Name:'}
-              value={name}
-              onChangeText={setName}
+              value={formData.name || ''}
+              onChangeText={(value) => handleInputChange('name', value)}
             />
             <Input
               type='email'
               label={'Mail:'}
-              value={mail}
+              value={formData.mail || ''}
               onChangeText={handleMail}
               errorMessage={emailError}
             />
             <Input
               type='tel'
               label={'Phone:'}
-              value={phone}
-              onChangeText={setPhone}
+              value={formData.phone || ''}
+              onChangeText={(value) => handleInputChange('phone', value)}
             />
             <View style={styles.buttonContainer}>
               <ButtonTHS
                 title={formLabels[contactType].confirmButton}
                 size='sm'
                 disabled={isButtonDisabled}
-                onPress={() =>
+                onPress={() => {
                   onSave({
-                    comment,
-                    name,
-                    mail,
-                    phone,
-                    rfq,
+                    ...formData,
                     selectedIds,
-                  })
-                }
+                  });
+                  dispatch({ type: 'CLEAR_TEMPORARY_CONTACT_FORM_DATA' });
+                }}
               />
               <ButtonTHS
                 title='Cancel'
                 variant='tertiary'
                 size='sm'
-                onPress={() => router.back()}
+                onPress={() => {
+                  router.back();
+                }}
               />
             </View>
           </View>
         }
         data={['one']}
-        renderItem={() => (
-          <>
-            {selectedIds.length > 0 && (
-              <ListTable
-                items={originallySelectedHoses}
-                selectedIds={selectedIds}
-                onSelectionChange={handleSelectionChange}
-                canSelect={isMultiSelection(state.data.selection)}
-              />
-            )}
-            {allowScanToAdd && (
-              <View style={styles.addHoseContainer}>
-                <LinkButton
-                  variant='light'
-                  title={`+ Add hoses to this ${formLabels[contactType].title.toLowerCase()}`}
-                  onPress={() =>
-                    router.push(`/scan?scanPurpose=${contactType}`)
-                  }
-                />
-              </View>
-            )}
-          </>
-        )}
+        renderItem={renderListContent}
+        keyExtractor={(item, index) => `form-content-${index}`}
       />
     </>
   );

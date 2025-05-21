@@ -52,7 +52,6 @@ const Scan = () => {
   const [scanError, setScanError] = useState<string | null>(null);
 
   const [title, setTitle] = useState<string>('Scanner');
-  const [subTitle, setSubTitle] = useState<string>('Scan or enter ID');
   const isNavigatingRef = useRef(false);
   const cameraAlertShownRef = useRef(false);
 
@@ -290,9 +289,8 @@ const Scan = () => {
   }, [hasPermission, requestPermission]);
 
   useEffect(() => {
-    // Show camera missing alert only once if conditions are met
     if (
-      hasPermission && // Only check if we have permission to use the camera
+      hasPermission &&
       scanMethod === 'Barcode' &&
       device === undefined &&
       !cameraAlertShownRef.current
@@ -301,9 +299,9 @@ const Scan = () => {
         'Your device does not have a camera.',
         'Please use a device with a camera or use other scan methods.',
       );
-      cameraAlertShownRef.current = true; // Mark alert as shown
+      cameraAlertShownRef.current = true;
     }
-  }, [device, scanMethod, hasPermission]); // Rerun check if these dependencies change
+  }, [device, scanMethod, hasPermission]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -317,7 +315,7 @@ const Scan = () => {
           <Typography
             name='navigation'
             style={styles.headerText}
-            text={subTitle}
+            text='Scan or enter ID'
           />
         </View>
         <View style={styles.inputsWrapper}>
@@ -385,8 +383,7 @@ const Scan = () => {
             style={({ pressed }) => [
               styles.searchButton,
               pressed && styles.searchButtonPressed,
-
-              !id && scanMethod !== 'RFID' && styles.searchButtonDisabled,
+              !id && styles.searchButtonDisabled,
             ]}
             disabled={!id || isNavigatingRef.current}
             onPress={() => handleScan(id, null, 'Barcode')}
@@ -398,7 +395,7 @@ const Scan = () => {
                   ? colors.extended666
                   : colors.primary25
               }
-              size='sm'
+              size='md'
             />
           </Pressable>
         </View>
@@ -432,13 +429,14 @@ export default Scan;
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   headerContainer: {
-    position: 'fixed',
-    top: 0,
+    position: 'absolute',
+    bottom: 0,
     width: '100%',
     backgroundColor: colors.lightContrast,
     gap: 20,
     paddingHorizontal: 20,
     paddingVertical: 30,
+    zIndex: 1,
   },
   header: { justifyContent: 'center', alignItems: 'center', gap: 10 },
   headerText: { textAlign: 'center' },
@@ -447,9 +445,16 @@ const styles = StyleSheet.create({
     height: 36,
     justifyContent: 'center',
     alignItems: 'center',
+    borderColor: 'transparent',
     borderWidth: 1,
-    borderColor: colors.primary25,
     borderRadius: 4,
+  },
+  searchButtonPressed: {
+    borderColor: colors.primary25,
+  },
+  searchButtonDisabled: {
+    opacity: 0.3,
+    borderColor: 'transparent',
   },
   inputsWrapper: { flexDirection: 'row', gap: 5 },
   inputs: { gap: 5, flex: 1 },
@@ -462,12 +467,6 @@ const styles = StyleSheet.create({
     padding: 3,
     borderRadius: 3,
     gap: 20,
-  },
-  searchButtonPressed: {
-    backgroundColor: colors.primary25,
-  },
-  searchButtonDisabled: {
-    borderColor: colors.extended666,
   },
   switchButton: {
     flexDirection: 'row',

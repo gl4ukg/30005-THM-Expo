@@ -16,6 +16,33 @@ import {
 import { HoseData } from '@/lib/types/hose';
 import { createContext } from 'react';
 
+export interface TemporaryRFQFormData {
+  comment?: string;
+  name?: string;
+  mail?: string;
+  phone?: string;
+  rfq?: string | null;
+}
+
+export interface TemporarySendMailFormData {
+  subject?: string;
+  message?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+}
+
+export interface TemporaryReplaceHoseFormData {
+  replacementType?: string;
+  replacementReasons?: string[];
+  replacementImpacts?: string[];
+  downtime?: string;
+  comment?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+}
+
 interface ActionWithPayload<T extends string, Payload> {
   type: T;
   payload: Payload;
@@ -86,7 +113,22 @@ type DataAction =
   | ActionWithPayload<'SELECT_MANY_HOSES_MULTI_SELECTION', number[]>
   | ActionWithoutPayload<'DESELECT_ALL_HOSES_MULTI_SELECTION'>
   | ActionWithPayload<'SET_HOSE_TEMPLATE', Partial<HoseData>>
-  | ActionWithPayload<'SET_IS_CANCELABLE', boolean>;
+  | ActionWithPayload<'SET_IS_CANCELABLE', boolean>
+  | ActionWithPayload<
+      'SET_TEMPORARY_CONTACT_FORM_DATA',
+      TemporaryContactFormData
+    >
+  | ActionWithoutPayload<'CLEAR_TEMPORARY_CONTACT_FORM_DATA'>
+  | ActionWithPayload<
+      'SET_TEMPORARY_SEND_MAIL_FORM_DATA',
+      TemporarySendMailFormData
+    >
+  | ActionWithoutPayload<'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA'>
+  | ActionWithPayload<
+      'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA',
+      TemporaryReplaceHoseFormData
+    >
+  | ActionWithoutPayload<'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA'>;
 
 type SettingsAction =
   // | ActionWithPayload<'UPDATE_SETTINGS', any>
@@ -236,6 +278,36 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       return {
         ...state,
         isCancelable: action.payload,
+      };
+    case 'SET_TEMPORARY_CONTACT_FORM_DATA':
+      return {
+        ...state,
+        temporaryContactFormData: action.payload,
+      };
+    case 'CLEAR_TEMPORARY_CONTACT_FORM_DATA':
+      return {
+        ...state,
+        temporaryContactFormData: null,
+      };
+    case 'SET_TEMPORARY_SEND_MAIL_FORM_DATA':
+      return {
+        ...state,
+        temporaryContactFormData: action.payload,
+      };
+    case 'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA':
+      return {
+        ...state,
+        temporaryContactFormData: null,
+      };
+    case 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA':
+      return {
+        ...state,
+        temporaryContactFormData: action.payload,
+      };
+    case 'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA':
+      return {
+        ...state,
+        temporaryContactFormData: null,
       };
     default: {
       // console.error('Unknown action type:', action.type);
