@@ -21,7 +21,7 @@ export const UnitInput: React.FC<UnitInputProps> = ({
   unit,
   required = false,
   editable = true,
-  alwaysShowFeilIfMissing = false,
+  alwaysShowErrorIfMissing = false,
 }) => {
   const [inputValue, setInputValue] = useState(value?.toString() || '');
   const [isFocused, setIsFocused] = useState(false);
