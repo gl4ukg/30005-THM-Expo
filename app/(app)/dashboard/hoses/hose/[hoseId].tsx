@@ -19,7 +19,6 @@ import {
   SingleSelection,
   SingleSelectionActionsType,
 } from '@/context/state';
-import { colors } from '@/lib/tokens/colors';
 import { EditProps } from '@/lib/types/edit';
 import { HoseData } from '@/lib/types/hose';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
@@ -86,6 +85,52 @@ const HoseDetails = () => {
   );
 
   const router = useRouter();
+
+  // Sample history data
+  const sampleHistoryItems = [
+    {
+      id: '4140106',
+      date: new Date(2024, 11, 31, 10, 30), // Month is 0-indexed, so 11 is December
+      name: '2239FULL',
+      comments:
+        'Updated customer database with new contact information and verified all entries.',
+    },
+    {
+      id: '4140107',
+      date: new Date(2024, 10, 15, 14, 0),
+      name: '1105PART',
+      comments:
+        'Performed routine maintenance check. System operating normally.',
+    },
+    {
+      id: '4140108',
+      date: new Date(2023, 0, 20, 9, 15),
+      name: 'SUSER',
+      comments:
+        'Initial setup and configuration of the hose asset in the system.',
+    },
+    {
+      id: '4140106',
+      date: new Date(2024, 11, 31, 10, 30), // Month is 0-indexed, so 11 is December
+      name: '2239FULL',
+      comments:
+        'Updated customer database with new contact information and verified all entries.',
+    },
+    {
+      id: '4140107',
+      date: new Date(2024, 10, 15, 14, 0),
+      name: '1105PART',
+      comments:
+        'Performed routine maintenance check. System operating normally.',
+    },
+    {
+      id: '4140108',
+      date: new Date(2023, 0, 20, 9, 15),
+      name: 'SUSER',
+      comments:
+        'Initial setup and configuration of the hose asset in the system.',
+    },
+  ];
 
   useEffect(() => {
     if (missingFieldsParam) {
@@ -298,7 +343,7 @@ const HoseDetails = () => {
                 )?.unitName ?? ''
               }
             />
-            <HistoryView />
+            <HistoryView items={sampleHistoryItems} />
           </>
         )}
         {editMode && (
