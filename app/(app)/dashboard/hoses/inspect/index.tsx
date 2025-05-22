@@ -11,6 +11,7 @@ import { useAppContext } from '@/context/ContextProvider';
 import { DataField } from '@/components/detailView/common/Datafield';
 import { colors } from '@/lib/tokens/colors';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+import { getScanUrl } from '@/app/scan';
 
 const requiredFields: (keyof HoseData)[] = [
   'itemDescription',
@@ -124,9 +125,11 @@ export const InspectHose = () => {
   if (!hoseData) {
     return (
       <View style={styles.centeredContainer}>
-        <Typography
-          name={'navigation'}
-          text='Hose not found or not registered.'
+        <Typography name='navigation' text='No hose found.' />
+        <ButtonTHS
+          onPress={() => router.push(getScanUrl('INSPECT_HOSE'))}
+          title='Go Back'
+          variant='secondary'
         />
       </View>
     );

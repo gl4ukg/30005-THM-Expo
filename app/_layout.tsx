@@ -90,7 +90,8 @@ const App = () => {
           <>
             <Stack.Screen name='index' />
             <Stack.Screen name='/login' />
-            <Stack.Screen name='ui' />
+            <Stack.Screen name='/scan' />
+            <Stack.Screen name='/ui' />
           </>
         )}
         {state.auth.user !== null && (

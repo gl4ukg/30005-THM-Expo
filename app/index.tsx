@@ -24,6 +24,7 @@ import { HoseData } from '@/lib/types/hose';
 import { Link, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { getScanUrl } from '@/app/scan';
 
 const Login = () => {
   const router = useRouter();
@@ -87,7 +88,7 @@ const Login = () => {
               </Pressable>
             </Link>
             <Link
-              href={'/scan'}
+              href={getScanUrl('INSPECT_HOSE')}
               asChild
               style={[
                 styles.link,

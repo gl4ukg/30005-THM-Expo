@@ -10,6 +10,7 @@ import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
+  KeyboardAvoidingView,
   Platform,
   Pressable,
   SafeAreaView,
@@ -305,120 +306,132 @@ const Scan = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.headerContainer}>
-        <View style={styles.header}>
-          <Typography
-            name='navigationBold'
-            style={styles.headerText}
-            text={title}
-          />
-          <Typography
-            name='navigation'
-            style={styles.headerText}
-            text='Scan or enter ID'
-          />
-        </View>
-        <View style={styles.inputsWrapper}>
-          <View style={styles.inputs}>
-            <Input
-              value={id || ''}
-              onChangeText={setId}
-              type='numeric'
-              ref={inputRef}
-            />
-            <View style={styles.switch}>
+      <View style={{ flex: 1 }}>
+        <KeyboardAvoidingView
+          behavior='padding'
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 70 : 0}
+          style={{ flex: 1 }}
+        >
+          <View style={styles.readerContainer}>
+            {device && scanMethod === 'Barcode' && (
+              <Camera
+                ref={cameraRef}
+                style={styles.camera}
+                device={device}
+                codeScanner={codeScanner}
+                isActive={scanMethod === 'Barcode'}
+              />
+            )}
+            {scanMethod === 'RFID' && showRfidScanView && (
+              <View style={styles.rfidContainer}>
+                <Icon name='RFID' size='lg' />
+                <Typography
+                  name='sectionHeaderCapslock'
+                  text={Platform.OS === 'android' ? 'Scan RFID now' : ''}
+                />
+              </View>
+            )}
+          </View>
+          <View style={styles.headerContainer}>
+            <View style={styles.header}>
+              <Typography
+                name='navigationBold'
+                style={styles.headerText}
+                text={title}
+              />
+              <Typography
+                name='navigation'
+                style={styles.headerText}
+                text='Scan or enter ID'
+              />
+            </View>
+            <View style={styles.inputsWrapper}>
+              <View style={styles.inputs}>
+                <Input
+                  value={id || ''}
+                  onChangeText={setId}
+                  type='numeric'
+                  ref={inputRef}
+                />
+                <View style={styles.switch}>
+                  <Pressable
+                    style={
+                      scanMethod === 'Barcode'
+                        ? styles.switchButtonActive
+                        : styles.switchButton
+                    }
+                    onPress={handleBarcodePress}
+                  >
+                    <Icon
+                      name='Barcode'
+                      size='xsm'
+                      color={
+                        scanMethod === 'Barcode'
+                          ? colors.white
+                          : colors.extended333
+                      }
+                    />
+                    <Typography
+                      name='navigation'
+                      text='Barcode'
+                      style={
+                        scanMethod === 'Barcode'
+                          ? styles.switchTextActive
+                          : styles.switchText
+                      }
+                    />
+                  </Pressable>
+                  <Pressable
+                    style={
+                      scanMethod === 'RFID'
+                        ? styles.switchButtonActive
+                        : styles.switchButton
+                    }
+                    onPress={handleRFIDPress}
+                  >
+                    <Icon
+                      name='RFID'
+                      size='xsm'
+                      color={
+                        scanMethod === 'RFID'
+                          ? colors.white
+                          : colors.extended333
+                      }
+                    />
+                    <Typography
+                      name='navigation'
+                      text='RFID'
+                      style={
+                        scanMethod === 'RFID'
+                          ? styles.switchTextActive
+                          : styles.switchText
+                      }
+                    />
+                  </Pressable>
+                </View>
+              </View>
               <Pressable
-                style={
-                  scanMethod === 'Barcode'
-                    ? styles.switchButtonActive
-                    : styles.switchButton
-                }
-                onPress={handleBarcodePress}
+                style={({ pressed }) => [
+                  styles.searchButton,
+                  pressed && styles.searchButtonPressed,
+                  !id && styles.searchButtonDisabled,
+                ]}
+                disabled={!id || isNavigatingRef.current}
+                onPress={() => handleScan(id, null, 'Barcode')}
               >
                 <Icon
-                  name='Barcode'
-                  size='xsm'
+                  name='Search'
                   color={
-                    scanMethod === 'Barcode' ? colors.white : colors.extended333
+                    !id || isNavigatingRef.current
+                      ? colors.extended666
+                      : colors.primary25
                   }
-                />
-                <Typography
-                  name='navigation'
-                  text='Barcode'
-                  style={
-                    scanMethod === 'Barcode'
-                      ? styles.switchTextActive
-                      : styles.switchText
-                  }
-                />
-              </Pressable>
-              <Pressable
-                style={
-                  scanMethod === 'RFID'
-                    ? styles.switchButtonActive
-                    : styles.switchButton
-                }
-                onPress={handleRFIDPress}
-              >
-                <Icon
-                  name='RFID'
-                  size='xsm'
-                  color={
-                    scanMethod === 'RFID' ? colors.white : colors.extended333
-                  }
-                />
-                <Typography
-                  name='navigation'
-                  text='RFID'
-                  style={
-                    scanMethod === 'RFID'
-                      ? styles.switchTextActive
-                      : styles.switchText
-                  }
+                  size='md'
                 />
               </Pressable>
             </View>
           </View>
-          <Pressable
-            style={({ pressed }) => [
-              styles.searchButton,
-              pressed && styles.searchButtonPressed,
-              !id && styles.searchButtonDisabled,
-            ]}
-            disabled={!id || isNavigatingRef.current}
-            onPress={() => handleScan(id, null, 'Barcode')}
-          >
-            <Icon
-              name='Search'
-              color={
-                !id || isNavigatingRef.current
-                  ? colors.extended666
-                  : colors.primary25
-              }
-              size='md'
-            />
-          </Pressable>
-        </View>
-      </View>
-      <View style={styles.readerContainer}>
-        {device && scanMethod === 'Barcode' && (
-          <Camera
-            ref={cameraRef}
-            style={styles.camera}
-            device={device}
-            codeScanner={codeScanner}
-            isActive={scanMethod === 'Barcode'}
-          />
-        )}
-        {scanMethod === 'RFID' && showRfidScanView && (
-          <View style={styles.rfidContainer}>
-            <Icon name='RFID' size='lg' />
-            <Typography
-              name='sectionHeaderCapslock'
-              text={Platform.OS === 'android' ? 'Scan RFID now' : ''}
-            />
-          </View>
-        )}
+        </KeyboardAvoidingView>
       </View>
     </SafeAreaView>
   );
@@ -429,8 +442,6 @@ export default Scan;
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   headerContainer: {
-    position: 'absolute',
-    bottom: 0,
     width: '100%',
     backgroundColor: colors.lightContrast,
     gap: 20,
