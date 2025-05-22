@@ -38,7 +38,7 @@ export const HistoryView = ({ items }: HistoryViewProps) => {
       {itemsToShow && itemsToShow.length > 0 ? (
         itemsToShow.map((item) => (
           <View key={item.id} style={styles.itemContainer}>
-            <Icon name='Time' size={'xsm'} color={colors.primary} />
+            <Icon name='Time' size={'sm'} color={colors.primary} />
             <View style={styles.itemContent}>
               <Typography name='navigation'>
                 ({formatDate(item.date)}) {item.id} - {item.name}
@@ -57,11 +57,17 @@ export const HistoryView = ({ items }: HistoryViewProps) => {
       )}
       {!showAll && items.length > INITIAL_ITEMS_TO_SHOW && (
         <View style={styles.showAllContainer}>
-          <Icon name='Plus' size='sm' color={colors.primary} />
+          <Icon name='Plus' size='xsm' color={colors.primary} />
           <LinkButton
             title={`Show all (${remainingItemsCount})`}
             onPress={() => setShowAll(true)}
           />
+        </View>
+      )}
+      {showAll && (
+        <View style={styles.showAllContainer}>
+          <Icon name='ChevronUp' size='xsm' color={colors.primary} />
+          <LinkButton title={'Show less'} onPress={() => setShowAll(false)} />
         </View>
       )}
     </View>
