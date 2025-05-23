@@ -1,6 +1,6 @@
 import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { Typography } from '@/components/Typography';
-import { View, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Alert, StyleSheet } from 'react-native';
 import { formatDate } from '@/lib/util/formatDate';
 import { Icon } from '@/components/Icon/Icon';
 import { colors } from '@/lib/tokens/colors';
@@ -16,11 +16,13 @@ interface HistoryItemProps {
 
 interface HistoryViewProps {
   items: HistoryItemProps[];
+  initialItemsToShow?: number;
 }
 
-const INITIAL_ITEMS_TO_SHOW = 2;
-
-export const HistoryView = ({ items }: HistoryViewProps) => {
+export const HistoryView = ({
+  items,
+  initialItemsToShow = 2,
+}: HistoryViewProps) => {
   const [showAll, setShowAll] = useState(false);
 
   const handleShowComments = (item: HistoryItemProps) => {
@@ -29,14 +31,15 @@ export const HistoryView = ({ items }: HistoryViewProps) => {
     Alert.alert(alertTitle, item.comments);
   };
 
-  const itemsToShow = showAll ? items : items.slice(0, INITIAL_ITEMS_TO_SHOW);
-  const remainingItemsCount = items.length - INITIAL_ITEMS_TO_SHOW;
+  const itemsToDisplay = showAll ? items : items.slice(0, initialItemsToShow);
+  const canShowMore = items.length > initialItemsToShow;
+  const remainingItemsCount = items.length - initialItemsToShow;
 
   return (
     <View>
       <Bookmark title='History' />
-      {itemsToShow && itemsToShow.length > 0 ? (
-        itemsToShow.map((item) => (
+      {items.length > 0 ? (
+        itemsToDisplay.map((item) => (
           <View key={item.id} style={styles.itemContainer}>
             <Icon name='Time' size={'sm'} color={colors.primary} />
             <View style={styles.itemContent}>
@@ -53,21 +56,31 @@ export const HistoryView = ({ items }: HistoryViewProps) => {
           </View>
         ))
       ) : (
-        <Typography name='navigation'> No history items to display.</Typography>
+        <Typography name='navigation' style={styles.noItemsText}>
+          {' '}
+          No history items to display.
+        </Typography>
       )}
-      {!showAll && items.length > INITIAL_ITEMS_TO_SHOW && (
+
+      {canShowMore && (
         <View style={styles.showAllContainer}>
-          <Icon name='Plus' size='xsm' color={colors.primary} />
-          <LinkButton
-            title={`Show all (${remainingItemsCount})`}
-            onPress={() => setShowAll(true)}
-          />
-        </View>
-      )}
-      {showAll && (
-        <View style={styles.showAllContainer}>
-          <Icon name='ChevronUp' size='xsm' color={colors.primary} />
-          <LinkButton title={'Show less'} onPress={() => setShowAll(false)} />
+          {showAll ? (
+            <>
+              <Icon name='ChevronUp' size='xsm' color={colors.primary} />
+              <LinkButton
+                title={' Show less'}
+                onPress={() => setShowAll(false)}
+              />
+            </>
+          ) : (
+            <>
+              <Icon name='Plus' size='xsm' color={colors.primary} />
+              <LinkButton
+                title={` Show all (${remainingItemsCount})`}
+                onPress={() => setShowAll(true)}
+              />
+            </>
+          )}
         </View>
       )}
     </View>
@@ -78,36 +91,20 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
     paddingVertical: 8,
     borderBottomWidth: 1,
     borderBottomColor: colors.white,
     gap: 12,
   },
-  icon: {
-    marginRight: 10,
-  },
   itemContent: {
     flex: 1,
-  },
-  linkText: {
-    color: colors.primary,
-    textDecorationLine: 'underline',
-  },
-  showAllButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-    paddingVertical: 8,
-    gap: 8,
-  },
-  showAllText: {
-    color: colors.primary,
   },
   showAllContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginTop: 10,
+    paddingHorizontal: 32,
+  },
+  noItemsText: {
+    paddingVertical: 8,
   },
 });
