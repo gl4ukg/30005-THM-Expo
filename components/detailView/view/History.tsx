@@ -38,7 +38,12 @@ export const HistoryView = ({
   return (
     <View>
       <Bookmark title='History' />
-      {items.length > 0 ? (
+      {items.length === 0 ? (
+        <Typography name='navigation' style={styles.noItemsText}>
+          {' '}
+          No history items to display.
+        </Typography>
+      ) : (
         itemsToDisplay.map((item) => (
           <View key={item.id} style={styles.itemContainer}>
             <Icon name='Time' size={'sm'} color={colors.primary} />
@@ -55,11 +60,6 @@ export const HistoryView = ({
             </View>
           </View>
         ))
-      ) : (
-        <Typography name='navigation' style={styles.noItemsText}>
-          {' '}
-          No history items to display.
-        </Typography>
       )}
 
       {canShowMore && (
