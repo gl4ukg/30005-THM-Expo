@@ -40,7 +40,6 @@ export const HistoryView = ({
       <Bookmark title='History' />
       {items.length === 0 ? (
         <Typography name='navigation' style={styles.noItemsText}>
-          {' '}
           No history items to display.
         </Typography>
       ) : (
