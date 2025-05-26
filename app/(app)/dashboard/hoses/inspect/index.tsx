@@ -9,9 +9,8 @@ import { ButtonTHS } from '@/components/UI';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAppContext } from '@/context/ContextProvider';
 import { DataField } from '@/components/detailView/common/Datafield';
-import { colors } from '@/lib/tokens/colors';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
-import { getScanUrl } from '@/app/scan';
+import { getScanUrl } from '@/app/(app)/scan';
 
 const requiredFields: (keyof HoseData)[] = [
   'itemDescription',

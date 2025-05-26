@@ -24,7 +24,7 @@ import { HoseData } from '@/lib/types/hose';
 import { Link, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { getScanUrl } from '@/app/scan';
+import { getScanUrl } from '@/app/(app)/scan';
 
 const Login = () => {
   const router = useRouter();

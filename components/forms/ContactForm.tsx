@@ -15,6 +15,7 @@ import { router } from 'expo-router';
 import { useMemo, useState, useCallback, useEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { TooltipWrapper } from '../detailView/edit/TooltipWrapper';
+import { getScanUrl } from '@/app/(app)/scan';
 
 const formLabels: Record<
   Extract<MultiSelectionActionsType, 'RFQ' | 'CONTACT' | 'SCRAP'>,
@@ -169,7 +170,7 @@ export const ContactForm: React.FC<Props> = ({
                   type: 'SET_TEMPORARY_CONTACT_FORM_DATA',
                   payload: { ...formData },
                 });
-                router.navigate(`/scan?scanPurpose=${contactType}`);
+                router.push(getScanUrl(contactType));
               }}
             />
           </View>
