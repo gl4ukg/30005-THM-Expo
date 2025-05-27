@@ -31,7 +31,6 @@ export const ListTable: FC<Props> = ({
       `/(app)/dashboard/hoses/hose/${item.assetId}?id=${item.assetId}`,
     );
   };
-
   return (
     <View style={styles.container}>
       <FlatList
@@ -92,7 +91,7 @@ export const ListTable: FC<Props> = ({
         renderItem={({ item }) => (
           <ListElement
             item={item}
-            isSelected={selectedIds.includes(item.assetId ?? '')}
+            isSelected={selectedIds.includes(item.assetId)}
             onSelectedChange={onSelectionChange}
             canBeSelected={canSelect}
             onRowPress={() => handleRowPress(item)}
