@@ -1,16 +1,18 @@
+import React from 'react';
 import { colors } from '@/lib/tokens/colors';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View, Modal, Dimensions } from 'react-native';
 import { Icon } from '../../Icon/Icon';
 import { Typography } from '../../Typography';
 import { Bookmark } from './Bookmark';
 import * as DocumentPicker from 'expo-document-picker';
-import * as Linking from 'expo-linking';
 import { useState } from 'react';
+import Pdf from 'react-native-pdf';
 
 interface DocumentProps {
   id: string;
   name: string;
   uri?: string;
+  mimeType?: string;
   onPress: (uri?: string) => void;
 }
 
@@ -28,6 +30,30 @@ const DocumentItem: React.FC<DocumentProps> = ({ id, name, uri, onPress }) => {
         </Typography>
       </View>
     </Pressable>
+  );
+};
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+const PdfViewer: React.FC<{ uri: string; onClose: () => void }> = ({
+  uri,
+  onClose,
+}) => {
+  return (
+    <View style={pdfViewerStyles.container}>
+      <Pdf
+        source={{ uri, cache: true }}
+        style={pdfViewerStyles.pdf}
+        onError={(error) => {
+          console.error('Error loading PDF:', error);
+        }}
+      />
+      <Pressable onPress={onClose} style={pdfViewerStyles.closeButton}>
+        <Typography name='button' style={pdfViewerStyles.closeButtonText}>
+          Close PDF
+        </Typography>
+      </Pressable>
+    </View>
   );
 };
 
@@ -51,19 +77,30 @@ export const Documents = () => {
   ];
 
   const [documents, setDocuments] = useState(initialDocuments);
+  const [selectedPdfUri, setSelectedPdfUri] = useState<string | null>(null);
+  const [isPdfVisible, setIsPdfVisible] = useState(false);
 
   const handleDocumentPress = async (uri?: string) => {
-    if (uri) {
-      try {
-        await Linking.openURL(uri);
-      } catch (error) {
-        console.error('Failed to open document:', error);
-      }
-    } else {
-      console.log(
-        'Document URI is not available locally. Implement remote fetching or viewing logic.',
-      );
+    if (!uri || uri.length === 0) {
+      console.log('Document URI is not available or empty.');
+      return;
     }
+
+    if (
+      uri.startsWith('http://') ||
+      uri.startsWith('https://') ||
+      uri.startsWith('file://')
+    ) {
+      setSelectedPdfUri(uri);
+      setIsPdfVisible(true);
+    } else {
+      console.warn('Unsupported URI scheme for PDF viewer:', uri);
+    }
+  };
+
+  const handleClosePdfViewer = () => {
+    setIsPdfVisible(false);
+    setSelectedPdfUri(null);
   };
 
   const handleAddDocument = async () => {
@@ -76,8 +113,12 @@ export const Documents = () => {
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const asset = result.assets[0];
 
-        if (typeof asset.name !== 'string' || typeof asset.uri !== 'string') {
-          console.error('Picked asset has invalid name or URI:', asset);
+        if (
+          typeof asset.name !== 'string' ||
+          typeof asset.uri !== 'string' ||
+          asset.uri.length === 0
+        ) {
+          console.error('Picked asset has invalid name or empty URI:', asset);
           return;
         }
 
@@ -87,8 +128,9 @@ export const Documents = () => {
             id: newId,
             name: asset.name,
             uri: asset.uri,
+            mimeType: asset.mimeType || 'application/pdf',
           };
-          return [...prevDocuments, newDocument];
+          return [newDocument, ...prevDocuments];
         });
       } else {
         if (result.canceled) {
@@ -112,6 +154,7 @@ export const Documents = () => {
             id={doc.id}
             name={doc.name}
             uri={doc.uri}
+            mimeType={doc.mimeType}
             onPress={handleDocumentPress}
           />
         ))}
@@ -122,6 +165,12 @@ export const Documents = () => {
           Add document
         </Typography>
       </Pressable>
+
+      <Modal visible={isPdfVisible} onRequestClose={handleClosePdfViewer}>
+        {selectedPdfUri && (
+          <PdfViewer uri={selectedPdfUri} onClose={handleClosePdfViewer} />
+        )}
+      </Modal>
     </View>
   );
 };
@@ -150,3 +199,29 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
 });
+const pdfViewerStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pdf: {
+    width: screenWidth * 0.9,
+    height: screenHeight * 0.8,
+    backgroundColor: 'white',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+  },
+});
+
+export default Documents;
