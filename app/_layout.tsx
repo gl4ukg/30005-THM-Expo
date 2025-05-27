@@ -53,7 +53,7 @@ const App = () => {
   }, [type]);
   return (
     <>
-      {state.data.isLoading && (
+      {/* {state.data.isLoading && (
         <View
           style={{
             width: '100%',
@@ -76,7 +76,7 @@ const App = () => {
           </Typography>
           <ActivityIndicator color={colors.white} />
         </View>
-      )}
+      )} */}
       <Stack
         screenOptions={{
           headerShown: false,
@@ -90,7 +90,7 @@ const App = () => {
           <>
             <Stack.Screen name='index' />
             <Stack.Screen name='/login' />
-            <Stack.Screen name='/scan' />
+            {/* <Stack.Screen name='/scan' /> */}
             <Stack.Screen name='/ui' />
           </>
         )}

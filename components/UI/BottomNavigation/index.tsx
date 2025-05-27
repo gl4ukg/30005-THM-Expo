@@ -1,4 +1,4 @@
-import { getScanUrl } from '@/app/scan';
+import { getScanUrl } from '@/app/(app)/scan';
 import { TessLines } from '@/components/decorative/TessLines';
 import { Icon } from '@/components/Icon/Icon';
 import { OpenMenu } from '@/components/UI/BottomNavigation/openMenu';
