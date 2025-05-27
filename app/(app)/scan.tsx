@@ -9,7 +9,7 @@ import { HoseData } from '@/lib/types/hose';
 import { reverseHexString } from '@/lib/util/rfid';
 import { Href, router, useFocusEffect } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
-import { use, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -28,7 +28,6 @@ import {
   useCameraPermission,
   useCodeScanner,
 } from 'react-native-vision-camera';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 export type ScanPurpose =
   | MultiSelectionActionsType
@@ -81,7 +80,7 @@ const Scan = () => {
         if (code && code.value?.length === 7 && !isNaN(Number(code.value))) {
           setId(code.value);
           isProcessingHose.current = true;
-          handelHoseSearch(code.value);
+          handleHoseSearch(code.value);
           setScanMethod(null);
           break;
         }
@@ -138,7 +137,7 @@ const Scan = () => {
         const reversedId = reverseHexString(tag.id);
         setRfid(reversedId);
         setScanMethod('RFID');
-        handelHoseSearch(reversedId, true);
+        handleHoseSearch(reversedId, true);
       } else {
         setScanError('No tag ID found.');
       }
@@ -178,7 +177,7 @@ const Scan = () => {
     setScanMethod(null);
   };
 
-  const handelHoseSearch = (id: string, withRfId?: true) => {
+  const handleHoseSearch = (id: string, withRfId?: true) => {
     let hose: HoseData | undefined = undefined;
     if (withRfId) {
       const RFID = Platform.OS === 'ios' ? reverseHexString(id) : id;
