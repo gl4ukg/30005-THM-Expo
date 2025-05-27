@@ -187,7 +187,7 @@ export const EditUniversalHoseData: React.FC<{
             <UnitInput
               label='Hose Length'
               value={Number(localInfo.hoseLength_mm ?? 0)}
-              onChangeText={(value: number) =>
+              onChange={(value: number | null) =>
                 handleFieldChange('hoseLength_mm', String(value))
               }
               unit={'mm'}

@@ -9,8 +9,8 @@ import { ButtonTHS } from '@/components/UI';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAppContext } from '@/context/ContextProvider';
 import { DataField } from '@/components/detailView/common/Datafield';
-import { colors } from '@/lib/tokens/colors';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+import { getScanUrl } from '@/app/(app)/scan';
 
 const requiredFields: (keyof HoseData)[] = [
   'itemDescription',
@@ -124,9 +124,11 @@ export const InspectHose = () => {
   if (!hoseData) {
     return (
       <View style={styles.centeredContainer}>
-        <Typography
-          name={'navigation'}
-          text='Hose not found or not registered.'
+        <Typography name='navigation' text='No hose found.' />
+        <ButtonTHS
+          onPress={() => router.push(getScanUrl('INSPECT_HOSE'))}
+          title='Go Back'
+          variant='secondary'
         />
       </View>
     );
@@ -148,7 +150,7 @@ export const InspectHose = () => {
         <DataField label='Description:' value={hoseData.itemDescription} />
         <DataField
           label='S1 Plant, Vessel, Unit:'
-          value={hoseData.s1PlantVesselUnit ?? ''}
+          value={hoseData.s1Code ?? ''}
         />
         <DataField label='S2 Equipment:' value={hoseData.S2Equipment ?? ''} />
         <DataField
@@ -188,7 +190,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 10,
-    backgroundColor: colors.white,
     gap: 30,
   },
   centeredContainer: {

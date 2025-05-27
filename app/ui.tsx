@@ -1,5 +1,7 @@
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
 import { condition, replaceReasons } from '@/components/detailView/data/lists';
+import { BarToPsiInput } from '@/components/detailView/edit/BarToPsiInput';
+import { UnitInput } from '@/components/detailView/edit/UnitInput';
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
@@ -24,18 +26,30 @@ import {
 } from 'react-native';
 
 const Ui = () => {
-  const [iconsExpanded, setIconsExpanded] = useState(false);
-  const [typographyExpanded, setTypographyExpanded] = useState(false);
-  const [buttonsExpanded, setButtonsExpanded] = useState(false);
-  const [inputsExpanded, setInputsExpanded] = useState(false);
-  const [radioBtnExpanded, setRadioBtnExpanded] = useState(false);
-  const [selectExpanded, setSelectExpanded] = useState(true);
-  const [datePickerExpanded, setdatePickerExpanded] = useState(false);
+  const [expanded, setExpanded] = useState<
+    | 'icons'
+    | 'typography'
+    | 'buttons'
+    | 'inputs'
+    | 'radioBtn'
+    | 'select'
+    | 'datePicker'
+    | 'unitInputs'
+    | null
+  >(null);
   const [date, setDate] = useState<Date | null>(null);
 
   const [name, setName] = useState('');
   const [genericText, setGenericText] = useState('');
   const [phone, setPhone] = useState('');
+  const [number, setNumber] = useState<number | null>(null);
+  const [pressure, setPressure] = useState<{
+    bar: number | null;
+    psi: number | null;
+  }>({
+    bar: 0,
+    psi: 0,
+  });
 
   const [error, setError] = useState<undefined | string>(undefined);
   const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
@@ -85,20 +99,87 @@ const Ui = () => {
           <ScrollView contentContainerStyle={styles.scrollView}>
             <Pressable
               style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
-              onPress={() => setIconsExpanded(!iconsExpanded)}
+              onPress={() =>
+                setExpanded((exp) =>
+                  exp === 'unitInputs' ? null : 'unitInputs',
+                )
+              }
+            >
+              <Typography
+                text='Units Inputs'
+                name='sectionHeaderCapslock'
+                style={{ color: colors.black }}
+              />
+              {expanded === 'unitInputs' ? (
+                <Icon name='ChevronDown' size='md' color={colors.black} />
+              ) : (
+                <Icon name='ChevronRight' size='md' color={colors.black} />
+              )}
+            </Pressable>
+            <View
+              style={{
+                display: expanded === 'unitInputs' ? 'flex' : 'none',
+                gap: 30,
+                marginBlock: 20,
+              }}
+            >
+              <View style={styles.rowWrapper}>
+                <UnitInput
+                  unit='kg'
+                  value={number}
+                  onChange={setNumber}
+                  editable={true}
+                  required={true}
+                />
+                <UnitInput
+                  unit='kg'
+                  value={number}
+                  onChange={setNumber}
+                  editable={false}
+                  required
+                />
+              </View>
+              <View style={styles.rowWrapper}>
+                <BarToPsiInput pressureInBars={number} onChange={setPressure} />
+              </View>
+              <View style={styles.rowWrapper}>
+                <UnitInput
+                  unit='BAR'
+                  value={pressure.bar}
+                  onChange={() => {}}
+                  editable={false}
+                  alwaysShowErrorIfMissing
+                  required
+                />
+                <UnitInput
+                  unit='PSI'
+                  value={pressure.psi}
+                  onChange={() => {}}
+                  editable={false}
+                  alwaysShowErrorIfMissing
+                  required
+                />
+              </View>
+            </View>
+
+            <Pressable
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
+              onPress={() =>
+                setExpanded((exp) => (exp === 'icons' ? null : 'icons'))
+              }
             >
               <Typography
                 text='Icons'
                 name='sectionHeaderCapslock'
                 style={{ color: colors.black }}
               />
-              {iconsExpanded ? (
+              {expanded === 'icons' ? (
                 <Icon name='ChevronDown' size='md' color={colors.black} />
               ) : (
                 <Icon name='ChevronRight' size='md' color={colors.black} />
               )}
             </Pressable>
-            <View style={{ display: iconsExpanded ? 'flex' : 'none' }}>
+            <View style={{ display: expanded === 'icons' ? 'flex' : 'none' }}>
               <View style={styles.rowWrapper}>
                 <Icon name='Alert' size='xsm' color={colors.black} />
                 <Icon name='Alert' size='sm' color={colors.black} />
@@ -322,20 +403,22 @@ const Ui = () => {
             </View>
             <Pressable
               style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
-              onPress={() => setButtonsExpanded(!buttonsExpanded)}
+              onPress={() =>
+                setExpanded((exp) => (exp === 'buttons' ? null : 'buttons'))
+              }
             >
               <Typography
                 text='Buttons'
                 name='sectionHeaderCapslock'
                 style={{ color: colors.black }}
               />
-              {buttonsExpanded ? (
+              {expanded === 'buttons' ? (
                 <Icon name='ChevronDown' size='md' color={colors.black} />
               ) : (
                 <Icon name='ChevronRight' size='md' color={colors.black} />
               )}
             </Pressable>
-            <View style={{ display: buttonsExpanded ? 'flex' : 'none' }}>
+            <View style={{ display: expanded === 'buttons' ? 'flex' : 'none' }}>
               <View style={styles.group}>
                 <Typography name='sectionHeader' text='Light' />
                 <LinkButton variant='light' title='Forgot password?' />
@@ -403,21 +486,28 @@ const Ui = () => {
             </View>
             <Pressable
               style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
-              onPress={() => setTypographyExpanded(!typographyExpanded)}
+              onPress={() =>
+                setExpanded((exp) =>
+                  exp === 'typography' ? null : 'typography',
+                )
+              }
             >
               <Typography
                 text='Typography'
                 name='sectionHeaderCapslock'
                 style={{ color: colors.black }}
               />
-              {typographyExpanded ? (
+              {expanded === 'typography' ? (
                 <Icon name='ChevronDown' size='md' color={colors.black} />
               ) : (
                 <Icon name='ChevronRight' size='md' color={colors.black} />
               )}
             </Pressable>
             <View
-              style={{ display: typographyExpanded ? 'flex' : 'none', gap: 10 }}
+              style={{
+                display: expanded === 'typography' ? 'flex' : 'none',
+                gap: 10,
+              }}
             >
               <View style={styles.rowWrapper}>
                 <Typography text='Button' name='button' />
@@ -500,21 +590,26 @@ const Ui = () => {
             </View>
             <Pressable
               style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
-              onPress={() => setInputsExpanded(!inputsExpanded)}
+              onPress={() =>
+                setExpanded((exp) => (exp === 'inputs' ? null : 'inputs'))
+              }
             >
               <Typography
                 text='Inputs'
                 name='sectionHeaderCapslock'
                 style={{ color: colors.black }}
               />
-              {inputsExpanded ? (
+              {expanded === 'inputs' ? (
                 <Icon name='ChevronDown' size='md' color={colors.black} />
               ) : (
                 <Icon name='ChevronRight' size='md' color={colors.black} />
               )}
             </Pressable>
             <View
-              style={{ display: inputsExpanded ? 'flex' : 'none', gap: 10 }}
+              style={{
+                display: expanded === 'inputs' ? 'flex' : 'none',
+                gap: 10,
+              }}
             >
               <View style={{ padding: 20, gap: 20 }}>
                 <Input
@@ -601,20 +696,24 @@ const Ui = () => {
             </View>
             <Pressable
               style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
-              onPress={() => setRadioBtnExpanded(!radioBtnExpanded)}
+              onPress={() =>
+                setExpanded((exp) => (exp === 'radioBtn' ? null : 'radioBtn'))
+              }
             >
               <Typography
                 text='Radio buttons'
                 name='sectionHeaderCapslock'
                 style={{ color: colors.black }}
               />
-              {radioBtnExpanded ? (
+              {expanded === 'radioBtn' ? (
                 <Icon name='ChevronDown' size='md' color={colors.black} />
               ) : (
                 <Icon name='ChevronRight' size='md' color={colors.black} />
               )}
             </Pressable>
-            <View style={{ display: radioBtnExpanded ? 'flex' : 'none' }}>
+            <View
+              style={{ display: expanded === 'radioBtn' ? 'flex' : 'none' }}
+            >
               <RadioGroup
                 label={'UV exposure'}
                 choices={[
@@ -628,14 +727,16 @@ const Ui = () => {
             </View>
             <Pressable
               style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
-              onPress={() => setSelectExpanded(!selectExpanded)}
+              onPress={() =>
+                setExpanded((exp) => (exp === 'select' ? null : 'select'))
+              }
             >
               <Typography
                 text='Select'
                 name='sectionHeaderCapslock'
                 style={{ color: colors.black }}
               />
-              {selectExpanded ? (
+              {expanded === 'select' ? (
                 <Icon name='ChevronDown' size='md' color={colors.black} />
               ) : (
                 <Icon name='ChevronRight' size='md' color={colors.black} />
@@ -643,7 +744,7 @@ const Ui = () => {
             </Pressable>
             <View
               style={{
-                display: selectExpanded ? 'flex' : 'none',
+                display: expanded === 'select' ? 'flex' : 'none',
                 paddingBottom: 30,
                 gap: 30,
               }}
@@ -679,20 +780,26 @@ const Ui = () => {
             </View>
             <Pressable
               style={{ flexDirection: 'row', alignItems: 'center', gap: 30 }}
-              onPress={() => setdatePickerExpanded(!datePickerExpanded)}
+              onPress={() =>
+                setExpanded((exp) =>
+                  exp === 'datePicker' ? null : 'datePicker',
+                )
+              }
             >
               <Typography
                 text='Datepicker'
                 name='sectionHeaderCapslock'
                 style={{ color: colors.black }}
               />
-              {datePickerExpanded ? (
+              {expanded === 'datePicker' ? (
                 <Icon name='ChevronDown' size='md' color={colors.black} />
               ) : (
                 <Icon name='ChevronRight' size='md' color={colors.black} />
               )}
             </Pressable>
-            <View style={{ display: datePickerExpanded ? 'flex' : 'none' }}>
+            <View
+              style={{ display: expanded === 'datePicker' ? 'flex' : 'none' }}
+            >
               <Typography
                 name={'fieldLabel'}
                 style={{ color: colors.black }}
