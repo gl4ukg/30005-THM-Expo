@@ -94,7 +94,10 @@ export const ContactForm: React.FC<Props> = ({
     });
   }, [state.data.temporaryContactFormData, state.auth.user]);
 
-  const originallySelectedHoses = useMemo(() => hoses, [hoses]);
+  const originallySelectedHoses = useMemo(() => {
+    setSelectedIds(hoses.map((h) => h.assetId));
+    return hoses;
+  }, [hoses]);
 
   const handleMail = (email: string) => {
     setFormData((prev) => ({ ...prev, mail: email }));
@@ -116,23 +119,32 @@ export const ContactForm: React.FC<Props> = ({
     [state.data.selection],
   );
 
-  const handleSelectionChange = useCallback(
-    (id: number) => {
-      if (canSelectHoses)
-        dispatch({
-          type: 'TOGGLE_HOSE_MULTI_SELECTION',
-          payload: id,
-        });
-      setSelectedIds((prevSelectedIds) => {
-        if (prevSelectedIds.includes(id)) {
-          return prevSelectedIds.filter((i) => i !== id);
-        } else {
-          return [...prevSelectedIds, id];
-        }
-      });
-    },
-    [dispatch, canSelectHoses],
-  );
+  // const handleSelectionChange = useCallback(
+  //   (id: number) => {
+  //     if (canSelectHoses)
+  //       dispatch({
+  //         type: 'TOGGLE_HOSE_MULTI_SELECTION',
+  //         payload: id,
+  //       });
+  //     setSelectedIds((prevSelectedIds) => {
+  //       if (prevSelectedIds.includes(id)) {
+  //         return prevSelectedIds.filter((i) => i !== id);
+  //       } else {
+  //         return [...prevSelectedIds, id];
+  //       }
+  //     });
+  //   },
+  //   [dispatch, canSelectHoses],
+  // );
+  const handleSelectionChange = useCallback((id: number) => {
+    setSelectedIds((prevSelectedIds) => {
+      if (prevSelectedIds.includes(id)) {
+        return prevSelectedIds.filter((i) => i !== id);
+      } else {
+        return [...prevSelectedIds, id];
+      }
+    });
+  }, []);
 
   const rfqOptions = [
     'TESS to quote with pressure test and certificate',
@@ -149,45 +161,32 @@ export const ContactForm: React.FC<Props> = ({
     (contactType === 'RFQ' &&
       (!formData.rfq || !rfqOptions.includes(formData.rfq)));
 
-  const renderListContent = useCallback(
-    () => (
-      <>
-        {selectedIds.length > 0 && (
-          <ListTable
-            items={originallySelectedHoses}
-            selectedIds={selectedIds}
-            onSelectionChange={handleSelectionChange}
-            canSelect={canSelectHoses}
+  const renderListContent = () => (
+    <>
+      {selectedIds.length > 0 && (
+        <ListTable
+          items={originallySelectedHoses}
+          selectedIds={selectedIds}
+          onSelectionChange={handleSelectionChange}
+          canSelect={canSelectHoses}
+        />
+      )}
+      {allowScanToAdd && (
+        <View style={styles.addHoseContainer}>
+          <LinkButton
+            variant='light'
+            title={`+ Add hoses to this ${formLabels[contactType].title.toLowerCase()}`}
+            onPress={() => {
+              dispatch({
+                type: 'SET_TEMPORARY_CONTACT_FORM_DATA',
+                payload: { ...formData },
+              });
+              router.push(getScanUrl(contactType));
+            }}
           />
-        )}
-        {allowScanToAdd && (
-          <View style={styles.addHoseContainer}>
-            <LinkButton
-              variant='light'
-              title={`+ Add hoses to this ${formLabels[contactType].title.toLowerCase()}`}
-              onPress={() => {
-                dispatch({
-                  type: 'SET_TEMPORARY_CONTACT_FORM_DATA',
-                  payload: { ...formData },
-                });
-                router.push(getScanUrl(contactType));
-              }}
-            />
-          </View>
-        )}
-      </>
-    ),
-    [
-      selectedIds,
-      originallySelectedHoses,
-      handleSelectionChange,
-      allowScanToAdd,
-      contactType,
-      canSelectHoses,
-      formData,
-      dispatch,
-      formLabels,
-    ],
+        </View>
+      )}
+    </>
   );
 
   return (

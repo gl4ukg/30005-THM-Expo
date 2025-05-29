@@ -373,7 +373,7 @@ const Scan = () => {
                   !id && styles.searchButtonDisabled,
                 ]}
                 disabled={!id}
-                onPress={() => id && handelHoseSearch(id)}
+                onPress={() => id && handleHoseSearch(id)}
               >
                 <Icon
                   name='Search'
