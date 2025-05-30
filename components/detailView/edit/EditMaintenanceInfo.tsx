@@ -20,10 +20,12 @@ export const EditMaintenanceInfo: React.FC<
     ) => void;
   } & { isInspect?: boolean }
 > = ({ info, onInputChange, isInspect }) => {
-  const getSelectedApprovalId = (approved: boolean | undefined): string => {
+  const getSelectedApprovalId = (
+    approved: boolean | undefined,
+  ): 'Yes' | 'No' | 'NotInspected' => {
     if (approved === true) return 'Yes';
     if (approved === false) return 'No';
-    return 'NotInsepcted';
+    return 'NotInspected';
   };
 
   const handleApprovalChange = (selectedId: string) => {
@@ -32,7 +34,7 @@ export const EditMaintenanceInfo: React.FC<
       approvalValue = true;
     } else if (selectedId === 'No') {
       approvalValue = false;
-    } else {
+    } else if (selectedId === 'NotInspected') {
       approvalValue = undefined;
     }
 
