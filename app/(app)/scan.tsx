@@ -63,6 +63,7 @@ const Scan = () => {
     useCallback(() => {
       handleBarcodePress();
       return () => {
+        setScanMethod(null);
         NfcManager.cancelTechnologyRequest().catch(() => {});
       };
     }, []),
