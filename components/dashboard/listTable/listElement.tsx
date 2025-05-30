@@ -20,7 +20,7 @@ export const ListElement: FC<ElementProps> = ({
   onSelectedChange,
   onRowPress,
 }) => {
-  const { assetId, s1PlantVesselUnit, RFID, missingData } = item;
+  const { assetId, s1Code, RFID, missingData } = item;
   const handleSelect = () => {
     if (!canBeSelected || !onSelectedChange) return;
     onSelectedChange(assetId);
@@ -61,9 +61,8 @@ export const ListElement: FC<ElementProps> = ({
         <View style={elementStyle.columnTwo}>
           <Typography
             name='tableContent'
-            text={s1PlantVesselUnit}
+            text={`${s1Code}`}
             numberOfLines={1}
-            ellipsizeMode='tail'
           />
           <View style={elementStyle.subtitleDateContainer}>
             <Typography

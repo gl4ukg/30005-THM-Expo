@@ -14,12 +14,12 @@ import { Structure } from '@/components/detailView/view/Structure';
 import { TessPartNumbers } from '@/components/detailView/view/TessPartNumbers';
 import { UniversalHoseData } from '@/components/detailView/view/UniversalHoseData';
 import { AppContext } from '@/context/Reducer';
+import { mockedHistory } from '@/context/mocked';
 import {
   isMultiSelection,
   SingleSelection,
   SingleSelectionActionsType,
 } from '@/context/state';
-import { colors } from '@/lib/tokens/colors';
 import { EditProps } from '@/lib/types/edit';
 import { HoseData } from '@/lib/types/hose';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
@@ -298,7 +298,7 @@ const HoseDetails = () => {
                 )?.unitName ?? ''
               }
             />
-            <HistoryView />
+            <HistoryView items={mockedHistory} />
           </>
         )}
         {editMode && (

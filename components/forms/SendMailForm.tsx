@@ -40,7 +40,10 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
   const [selectedIds, setSelectedIds] = useState<number[]>(
     hoses.map((h) => h.assetId),
   );
-  const originallySelectedHoses = useMemo(() => hoses, [hoses]);
+  const originallySelectedHoses = useMemo(() => {
+    setSelectedIds(hoses.map((h) => h.assetId));
+    return hoses;
+  }, [hoses]);
   usePreventGoBack();
 
   useEffect(() => {

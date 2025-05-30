@@ -414,3 +414,26 @@ export const mockedData: HoseData[] = [
     currentStatus: 'Open',
   },
 ];
+
+export const mockedHistory = [
+  {
+    id: '4140106',
+    date: new Date(2024, 11, 31, 10, 30),
+    name: '2239FULL',
+    comments:
+      'Updated customer database with new contact information and verified all entries.',
+  },
+  {
+    id: '4140107',
+    date: new Date(2024, 10, 15, 14, 0),
+    name: '1105PART',
+    comments: 'Performed routine maintenance check. System operating normally.',
+  },
+  {
+    id: '4140108',
+    date: new Date(2023, 0, 20, 9, 15),
+    name: 'SUSER',
+    comments:
+      'Initial setup and configuration of the hose asset in the system.',
+  },
+];

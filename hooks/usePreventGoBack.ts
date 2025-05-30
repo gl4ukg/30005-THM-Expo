@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { useAppContext } from '@/context/ContextProvider';
-import { showDiscardChagesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
+import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { usePreventRemove } from '@react-navigation/native';
 
 export const usePreventGoBack = () => {
   const { dispatch, state } = useAppContext();
 
   const handleNavigationAttemptBlocked = () => {
-    showDiscardChagesAlert(dispatch);
+    showDiscardChangesAlert(dispatch);
   };
 
   usePreventRemove(state.data.isCancelable, handleNavigationAttemptBlocked);

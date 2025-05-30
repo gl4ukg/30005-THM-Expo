@@ -114,10 +114,7 @@ type DataAction =
   | ActionWithoutPayload<'DESELECT_ALL_HOSES_MULTI_SELECTION'>
   | ActionWithPayload<'SET_HOSE_TEMPLATE', Partial<HoseData>>
   | ActionWithPayload<'SET_IS_CANCELABLE', boolean>
-  | ActionWithPayload<
-      'SET_TEMPORARY_CONTACT_FORM_DATA',
-      TemporaryContactFormData
-    >
+  | ActionWithPayload<'SET_TEMPORARY_CONTACT_FORM_DATA', TemporaryRFQFormData>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_CONTACT_FORM_DATA'>
   | ActionWithPayload<
       'SET_TEMPORARY_SEND_MAIL_FORM_DATA',
