@@ -10,7 +10,6 @@ import { FC, useContext, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View, Alert } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { showDiscardChagesAlert } from './showDiscardChangesAlert';
 
 interface BottomNavigationProps {}
 export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {

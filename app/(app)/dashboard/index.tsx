@@ -6,7 +6,7 @@ import { AppContext } from '@/context/Reducer';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 
 const month: BarData = [
   {
@@ -201,7 +201,12 @@ const Dashboard = () => {
           />
         </View>
         <BarChart barData={barData} />
-        <View style={style.menu}>
+        <View
+          style={[
+            style.menu,
+            Dimensions.get('window').width <= 320 && { gap: 5 },
+          ]}
+        >
           <Primary
             label='Failed'
             value={1129}
