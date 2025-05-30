@@ -9,6 +9,7 @@ import { GHD } from '@/lib/types/hose';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { DataField } from '../common/Datafield';
+import { options } from '@/components/detailView/edit/fakeOptions';
 
 export const EditGeneralInfo: React.FC<{
   info: Partial<GHD>;
@@ -88,7 +89,7 @@ export const EditGeneralInfo: React.FC<{
           label='S2 Equipment:'
           selectedOption={info.S2Equipment ?? null}
           onChange={(value) => onInputChange('S2Equipment', value)}
-          options={['Option 21', 'Option 22', 'Option 23']}
+          options={options}
         />
       </TooltipWrapper>
       <TooltipWrapper

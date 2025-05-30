@@ -3,7 +3,7 @@ import { BarData } from '@/components/dashboard/BarChart';
 import { Typography } from '@/components/Typography';
 import { ActionMenu } from '@/components/UI/ActionMenu';
 import { AppContext } from '@/context/Reducer';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, usePreventRemove } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
@@ -150,6 +150,7 @@ const Dashboard = () => {
   const [selected, setSelected] =
     useState<(typeof options)[0]['value']>('month');
   const { dispatch } = useContext(AppContext);
+  const router = useRouter();
 
   useFocusEffect(
     useCallback(() => {
@@ -157,6 +158,13 @@ const Dashboard = () => {
         type: 'FINISH_SELECTION',
       });
     }, [dispatch]),
+  );
+
+  usePreventRemove(
+    true,
+    useCallback(() => {
+      router.push('/');
+    }, [router]),
   );
 
   useEffect(() => {
@@ -183,7 +191,6 @@ const Dashboard = () => {
         break;
     }
   }, [selected]);
-  const router = useRouter();
 
   const goToFilter = (filter: string) => {
     router.push(`/(app)/dashboard/hoses/${filter}`);
