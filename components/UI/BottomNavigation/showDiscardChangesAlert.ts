@@ -31,12 +31,11 @@ export const showDiscardChangesAlert = (
         text: "Don't leave",
         style: 'cancel',
         onPress: () => {
-          // Reset the flag immediately when user cancels
           isAlertShowing = false;
         },
       },
       {
-        text: hasTemporaryData ? 'Discard' : 'Discard changes',
+        text: hasTemporaryData ? 'Discard' : 'Discard',
         style: 'destructive',
         onPress: () => {
           isAlertShowing = false;
@@ -56,7 +55,6 @@ export const showDiscardChangesAlert = (
             payload: {},
           });
 
-          // Navigate after a short delay to ensure state updates are processed
           setTimeout(() => {
             router.push('/(app)/dashboard');
           }, 100);

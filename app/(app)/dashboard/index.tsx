@@ -152,10 +152,6 @@ const Dashboard = () => {
   const { dispatch } = useContext(AppContext);
   const router = useRouter();
 
-  usePreventRemove(true, () => {
-    router.push('/');
-  });
-
   useFocusEffect(
     useCallback(() => {
       dispatch({
@@ -169,6 +165,13 @@ const Dashboard = () => {
         payload: {},
       });
     }, [dispatch]),
+  );
+
+  usePreventRemove(
+    true,
+    useCallback(() => {
+      router.push('/');
+    }, [router]),
   );
 
   useEffect(() => {

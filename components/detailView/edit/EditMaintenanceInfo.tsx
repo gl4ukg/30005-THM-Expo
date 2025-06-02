@@ -1,6 +1,7 @@
 import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { DataField } from '@/components/detailView/common/Datafield';
 import { RadioGroup } from '@/components/detailView/common/RadioGroup';
+import { options } from '@/components/detailView/edit/fakeOptions';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { Typography } from '@/components/Typography';
 import { Input } from '@/components/UI/Input/Input';
@@ -19,10 +20,12 @@ export const EditMaintenanceInfo: React.FC<
     ) => void;
   } & { isInspect?: boolean }
 > = ({ info, onInputChange, isInspect }) => {
-  const getSelectedApprovalId = (approved: boolean | undefined): string => {
+  const getSelectedApprovalId = (
+    approved: boolean | undefined,
+  ): 'Yes' | 'No' | 'NotInspected' => {
     if (approved === true) return 'Yes';
     if (approved === false) return 'No';
-    return 'NotInsepcted';
+    return 'NotInspected';
   };
 
   const handleApprovalChange = (selectedId: string) => {
@@ -31,7 +34,7 @@ export const EditMaintenanceInfo: React.FC<
       approvalValue = true;
     } else if (selectedId === 'No') {
       approvalValue = false;
-    } else {
+    } else if (selectedId === 'NotInspected') {
       approvalValue = undefined;
     }
 
@@ -55,7 +58,7 @@ export const EditMaintenanceInfo: React.FC<
             label='Condition:'
             selectedOption={info.hoseCondition || ''}
             onChange={(value) => onInputChange('hoseCondition', value)}
-            options={[]}
+            options={options}
           />
         </TooltipWrapper>
         <TooltipWrapper>
