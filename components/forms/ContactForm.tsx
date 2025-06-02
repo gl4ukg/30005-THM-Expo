@@ -7,7 +7,7 @@ import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
 import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
 import { TemporaryRFQFormData } from '@/context/Reducer'; // Use TemporaryRFQFormData from Reducer.ts
-import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
@@ -77,7 +77,6 @@ export const ContactForm: React.FC<Props> = ({
   const [selectedIds, setSelectedIds] = useState<number[]>(
     hoses.map((h) => h.assetId).filter((id): id is number => id !== undefined),
   );
-  usePreventGoBack();
 
   useEffect(() => {
     const globalData = state.data.temporaryContactFormData as
@@ -100,7 +99,12 @@ export const ContactForm: React.FC<Props> = ({
   }, [hoses]);
 
   const handleMail = (email: string) => {
-    setFormData((prev) => ({ ...prev, mail: email }));
+    const updatedFormData = { ...formData, mail: email };
+    setFormData(updatedFormData);
+    dispatch({
+      type: 'SET_TEMPORARY_CONTACT_FORM_DATA',
+      payload: updatedFormData,
+    });
     const isValid = emailValidation(email);
     if (isValid === true) {
       setEmailError(undefined);
@@ -108,10 +112,15 @@ export const ContactForm: React.FC<Props> = ({
   };
 
   const handleInputChange = (
-    field: keyof TemporaryRFQFormData, // Use TemporaryRFQFormData here
+    field: keyof TemporaryRFQFormData,
     value: string | null,
   ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    const updatedFormData = { ...formData, [field]: value };
+    setFormData(updatedFormData);
+    dispatch({
+      type: 'SET_TEMPORARY_CONTACT_FORM_DATA',
+      payload: updatedFormData,
+    });
   };
 
   const canSelectHoses = useMemo(
@@ -271,6 +280,7 @@ export const ContactForm: React.FC<Props> = ({
                 variant='tertiary'
                 size='sm'
                 onPress={() => {
+                  dispatch({ type: 'CLEAR_TEMPORARY_CONTACT_FORM_DATA' });
                   router.back();
                 }}
               />
