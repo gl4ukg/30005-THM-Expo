@@ -84,7 +84,7 @@ export function combineReducers<S, A>(
 }
 
 type AuthAction =
-  | ActionWithPayload<'LOGIN', { email: string; id: string; name: string }>
+  | ActionWithPayload<'LOGIN', AuthState['user']>
   | ActionWithoutPayload<'LOGOUT'>
   | ActionWithPayload<'SET_TOKEN', string>
   | ActionWithPayload<'SET_LOGIN_LOADING', boolean>;

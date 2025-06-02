@@ -18,6 +18,8 @@ interface AuthState {
     email: string;
     name: string;
     id: string;
+    phoneNumber?: string;
+    customerNumbers?: string[];
   };
   isLoingLoading: boolean;
   token: null | string;
