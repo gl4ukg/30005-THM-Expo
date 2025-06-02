@@ -1,15 +1,13 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { useAppContext } from '@/context/ContextProvider';
-import {
-  showDiscardChangesAlert,
-  resetDiscardChangesAlert,
-} from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
+import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { usePreventRemove } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
 
 export const usePreventGoBack = () => {
   const { dispatch, state } = useAppContext();
   const preventionActiveRef = useRef(false);
+  const isAlertShowingRef = useRef(false);
 
   const hasTemporaryData = !!(
     state.data.temporaryContactFormData ||
@@ -18,8 +16,8 @@ export const usePreventGoBack = () => {
   );
 
   const handleNavigationAttemptBlocked = useCallback(() => {
-    resetDiscardChangesAlert();
-    showDiscardChangesAlert(dispatch, hasTemporaryData);
+    isAlertShowingRef.current = false;
+    showDiscardChangesAlert(dispatch, hasTemporaryData, isAlertShowingRef);
   }, [dispatch, hasTemporaryData]);
 
   const shouldPreventNavigation = state.data.isCancelable;
@@ -34,7 +32,7 @@ export const usePreventGoBack = () => {
 
   useFocusEffect(
     useCallback(() => {
-      resetDiscardChangesAlert();
+      isAlertShowingRef.current = false;
       dispatch({
         type: 'SET_IS_CANCELABLE',
         payload: true,

@@ -2,26 +2,29 @@ import { AppAction } from '@/context/Reducer';
 import { router } from 'expo-router';
 import { Alert } from 'react-native';
 
-let isAlertShowing = false;
-
-export const resetDiscardChangesAlert = () => {
-  isAlertShowing = false;
-};
-
 export const showDiscardChangesAlert = (
   dispatch: React.Dispatch<AppAction>,
   hasTemporaryData: boolean = true,
+  isAlertShowingRef?: React.MutableRefObject<boolean>,
 ) => {
-  if (isAlertShowing) {
+  if (isAlertShowingRef?.current) {
     return;
   }
 
-  isAlertShowing = true;
+  if (isAlertShowingRef) {
+    isAlertShowingRef.current = true;
+  }
 
   const title = hasTemporaryData ? 'Discard changes?' : 'Leave screen?';
   const message = hasTemporaryData
     ? 'You have unsaved changes. Discard them and leave the screen?'
     : 'Are you sure you want to leave this screen?';
+
+  const resetFlag = () => {
+    if (isAlertShowingRef) {
+      isAlertShowingRef.current = false;
+    }
+  };
 
   Alert.alert(
     title,
@@ -30,15 +33,13 @@ export const showDiscardChangesAlert = (
       {
         text: "Don't leave",
         style: 'cancel',
-        onPress: () => {
-          isAlertShowing = false;
-        },
+        onPress: resetFlag,
       },
       {
         text: hasTemporaryData ? 'Discard' : 'Discard',
         style: 'destructive',
         onPress: () => {
-          isAlertShowing = false;
+          resetFlag();
 
           dispatch({
             type: 'SET_IS_CANCELABLE',
@@ -64,7 +65,7 @@ export const showDiscardChangesAlert = (
     {
       onDismiss: () => {
         console.log('Alert dismissed, resetting flag');
-        isAlertShowing = false;
+        resetFlag();
       },
     },
   );
