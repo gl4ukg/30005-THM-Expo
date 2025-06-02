@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import { useAppContext } from '@/context/ContextProvider';
-import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
+import {
+  showDiscardChangesAlert,
+  resetDiscardChangesAlert,
+} from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { usePreventRemove } from '@react-navigation/native';
 
 export const usePreventGoBack = () => {
@@ -13,6 +16,8 @@ export const usePreventGoBack = () => {
   usePreventRemove(state.data.isCancelable, handleNavigationAttemptBlocked);
 
   useEffect(() => {
+    resetDiscardChangesAlert();
+
     dispatch({
       type: 'SET_IS_CANCELABLE',
       payload: true,

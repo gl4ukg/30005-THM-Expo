@@ -3,7 +3,7 @@ import { BarData } from '@/components/dashboard/BarChart';
 import { Typography } from '@/components/Typography';
 import { ActionMenu } from '@/components/UI/ActionMenu';
 import { AppContext } from '@/context/Reducer';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, usePreventRemove } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
@@ -150,11 +150,29 @@ const Dashboard = () => {
   const [selected, setSelected] =
     useState<(typeof options)[0]['value']>('month');
   const { dispatch } = useContext(AppContext);
+  const router = useRouter();
+
+  usePreventRemove(true, () => {
+    router.push('/');
+  });
 
   useFocusEffect(
     useCallback(() => {
       dispatch({
         type: 'FINISH_SELECTION',
+      });
+      dispatch({
+        type: 'CLEAR_TEMPORARY_CONTACT_FORM_DATA',
+      });
+      dispatch({
+        type: 'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA',
+      });
+      dispatch({
+        type: 'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA',
+      });
+      dispatch({
+        type: 'SET_HOSE_TEMPLATE',
+        payload: {},
       });
     }, [dispatch]),
   );
@@ -183,7 +201,6 @@ const Dashboard = () => {
         break;
     }
   }, [selected]);
-  const router = useRouter();
 
   const goToFilter = (filter: string) => {
     router.push(`/(app)/dashboard/hoses/${filter}`);
