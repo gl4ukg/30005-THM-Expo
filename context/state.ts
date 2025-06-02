@@ -113,11 +113,9 @@ interface DataState {
   selection: HoseSelection | null;
   hoseTemplate?: Partial<HoseData>;
   isCancelable: boolean;
-  temporaryContactFormData?:
-    | TemporaryRFQFormData
-    | TemporaryReplaceHoseFormData
-    | TemporarySendMailFormData
-    | null;
+  temporaryContactFormData?: TemporaryRFQFormData | null;
+  temporarySendMailFormData?: TemporarySendMailFormData | null;
+  temporaryReplaceHoseFormData?: TemporaryReplaceHoseFormData | null;
 }
 
 interface SettingsState {
@@ -156,6 +154,9 @@ const initialDataState: DataState = {
   selection: null,
   hoseTemplate: undefined,
   isCancelable: false,
+  temporaryContactFormData: null,
+  temporarySendMailFormData: null,
+  temporaryReplaceHoseFormData: null,
 };
 
 const initialSettingsState: SettingsState = {

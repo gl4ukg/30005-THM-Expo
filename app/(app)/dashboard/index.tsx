@@ -162,13 +162,7 @@ const Dashboard = () => {
         type: 'FINISH_SELECTION',
       });
       dispatch({
-        type: 'CLEAR_TEMPORARY_CONTACT_FORM_DATA',
-      });
-      dispatch({
-        type: 'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA',
-      });
-      dispatch({
-        type: 'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA',
+        type: 'CLEAR_ALL_TEMPORARY_DATA',
       });
       dispatch({
         type: 'SET_HOSE_TEMPLATE',
