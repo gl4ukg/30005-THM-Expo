@@ -4,7 +4,6 @@ import { Alert } from 'react-native';
 
 export const showDiscardChangesAlert = (
   dispatch: React.Dispatch<AppAction>,
-  hasTemporaryData: boolean = true,
   isAlertShowingRef?: React.MutableRefObject<boolean>,
 ) => {
   if (isAlertShowingRef?.current) {
@@ -15,11 +14,6 @@ export const showDiscardChangesAlert = (
     isAlertShowingRef.current = true;
   }
 
-  const title = hasTemporaryData ? 'Discard changes?' : 'Leave screen?';
-  const message = hasTemporaryData
-    ? 'You have unsaved changes. Discard them and leave the screen?'
-    : 'Are you sure you want to leave this screen?';
-
   const resetFlag = () => {
     if (isAlertShowingRef) {
       isAlertShowingRef.current = false;
@@ -27,8 +21,8 @@ export const showDiscardChangesAlert = (
   };
 
   Alert.alert(
-    title,
-    message,
+    'Discard changes',
+    'You have unsaved changes. Discard them and leave the screen?',
     [
       {
         text: "Don't leave",
@@ -36,7 +30,7 @@ export const showDiscardChangesAlert = (
         onPress: resetFlag,
       },
       {
-        text: hasTemporaryData ? 'Discard' : 'Discard',
+        text: 'Discard',
         style: 'destructive',
         onPress: () => {
           resetFlag();
@@ -46,13 +40,7 @@ export const showDiscardChangesAlert = (
             payload: false,
           });
           dispatch({
-            type: 'FINISH_SELECTION',
-          });
-          dispatch({
-            type: 'CLEAR_ALL_TEMPORARY_DATA',
-          });
-          dispatch({
-            type: 'SET_HOSE_TEMPLATE',
+            type: 'FINISH_SELECTION_AND_RESET',
             payload: {},
           });
 

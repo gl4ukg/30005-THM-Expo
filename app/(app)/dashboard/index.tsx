@@ -155,13 +155,7 @@ const Dashboard = () => {
   useFocusEffect(
     useCallback(() => {
       dispatch({
-        type: 'FINISH_SELECTION',
-      });
-      dispatch({
-        type: 'CLEAR_ALL_TEMPORARY_DATA',
-      });
-      dispatch({
-        type: 'SET_HOSE_TEMPLATE',
+        type: 'FINISH_SELECTION_AND_RESET',
         payload: {},
       });
     }, [dispatch]),

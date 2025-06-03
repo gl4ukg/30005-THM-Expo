@@ -126,7 +126,8 @@ type DataAction =
       TemporaryReplaceHoseFormData
     >
   | ActionWithoutPayload<'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA'>
-  | ActionWithoutPayload<'CLEAR_ALL_TEMPORARY_DATA'>;
+  | ActionWithoutPayload<'CLEAR_ALL_TEMPORARY_DATA'>
+  | ActionWithPayload<'FINISH_SELECTION_AND_RESET', Partial<HoseData>>;
 
 type SettingsAction =
   // | ActionWithPayload<'UPDATE_SETTINGS', any>
@@ -313,6 +314,15 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         temporaryContactFormData: null,
         temporarySendMailFormData: null,
         temporaryReplaceHoseFormData: null,
+      };
+    case 'FINISH_SELECTION_AND_RESET':
+      return {
+        ...state,
+        selection: null,
+        temporaryContactFormData: null,
+        temporarySendMailFormData: null,
+        temporaryReplaceHoseFormData: null,
+        hoseTemplate: action.payload,
       };
     default: {
       // console.error('Unknown action type:', action.type);
