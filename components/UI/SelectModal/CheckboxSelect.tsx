@@ -3,7 +3,7 @@ import { ButtonTHS } from '@/components/UI/Button/Button';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Input } from '@/components/UI/Input/Input';
 import { colors } from '@/lib/tokens/colors';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   ScrollView,
@@ -37,10 +37,19 @@ export const CheckboxSelect: React.FC<Props> = ({
   const [manualInput, setManualInput] = useState(
     selected.find((o) => !options.includes(o)) || '',
   );
-
   const [error, setError] = useState('');
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
+
+  useEffect(() => {
+    if (isAlternativeOption && hasAlternativeOption) {
+      const timer = setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+        textInputRef.current?.focus();
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [isAlternativeOption, hasAlternativeOption]);
 
   return (
     <View style={styles.container}>

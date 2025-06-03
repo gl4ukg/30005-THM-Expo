@@ -41,6 +41,16 @@ export const RadioSelect: React.FC<Props> = ({
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
 
+  useEffect(() => {
+    if (isAlternativeOption && hasAlternativeOption) {
+      const timer = setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+        textInputRef.current?.focus();
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [isAlternativeOption, hasAlternativeOption]);
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
