@@ -3,6 +3,9 @@ import {
   TemporaryReplaceHoseFormData,
   TemporaryRFQFormData,
   TemporarySendMailFormData,
+  TemporaryInspectionData,
+  TemporaryRegistrationData,
+  TemporaryHoseEditData,
 } from './Reducer';
 
 interface AppState {
@@ -116,6 +119,9 @@ interface DataState {
   temporaryContactFormData?: TemporaryRFQFormData | null;
   temporarySendMailFormData?: TemporarySendMailFormData | null;
   temporaryReplaceHoseFormData?: TemporaryReplaceHoseFormData | null;
+  temporaryInspectionData?: TemporaryInspectionData | null;
+  temporaryRegistrationData?: TemporaryRegistrationData | null;
+  temporaryHoseEditData?: TemporaryHoseEditData | null;
 }
 
 interface SettingsState {
@@ -157,6 +163,8 @@ const initialDataState: DataState = {
   temporaryContactFormData: null,
   temporarySendMailFormData: null,
   temporaryReplaceHoseFormData: null,
+  temporaryInspectionData: null,
+  temporaryRegistrationData: null,
 };
 
 const initialSettingsState: SettingsState = {

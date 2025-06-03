@@ -9,16 +9,10 @@ export const usePreventGoBack = () => {
   const preventionActiveRef = useRef(false);
   const isAlertShowingRef = useRef(false);
 
-  const hasTemporaryData = !!(
-    state.data.temporaryContactFormData ||
-    state.data.temporarySendMailFormData ||
-    state.data.temporaryReplaceHoseFormData
-  );
-
   const handleNavigationAttemptBlocked = useCallback(() => {
     isAlertShowingRef.current = false;
-    showDiscardChangesAlert(dispatch, hasTemporaryData, isAlertShowingRef);
-  }, [dispatch, hasTemporaryData]);
+    showDiscardChangesAlert(dispatch);
+  }, [dispatch]);
 
   const shouldPreventNavigation = state.data.isCancelable;
 
