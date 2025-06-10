@@ -3,13 +3,14 @@ import { DataField } from '@/components/detailView/common/Datafield';
 import { Typography } from '@/components/Typography';
 import { useAppContext } from '@/context/ContextProvider';
 import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 const User = () => {
   const router = useRouter();
   const { state } = useAppContext();
 
-  const { user } = state.auth;
+  let { user } = state.auth;
   const { appInfo } = state.settings;
   const { customer, workingUnitId, assignedUnits, lastUpdate } = state.data;
   const location = assignedUnits.find((unit) => unit.unitId === workingUnitId);
@@ -17,6 +18,9 @@ const User = () => {
     router.push('/');
     return null;
   }
+  useEffect(() => {
+    user = state.auth.user;
+  }, [state.auth.user]);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollView}>
@@ -30,8 +34,15 @@ const User = () => {
       <View style={styles.section}>
         <Bookmark title='User' />
         <View style={styles.sectionData}>
-          <DataField label='User ID:' value={user.id} />
+          <DataField label='User ID:' value={state.auth.user?.id} />
           <DataField label='Full name:' value={user.name} />
+          {user.phoneNumber && (
+            <DataField label='Phone number:' value={user.phoneNumber} />
+          )}
+          {user.customerNumbers &&
+            user.customerNumbers.map((number) => (
+              <DataField key={number} label='Customer number:' value={number} />
+            ))}
         </View>
       </View>
       <View style={styles.section}>
