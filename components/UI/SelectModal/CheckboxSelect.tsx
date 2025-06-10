@@ -3,7 +3,7 @@ import { ButtonTHS } from '@/components/UI/Button/Button';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Input } from '@/components/UI/Input/Input';
 import { colors } from '@/lib/tokens/colors';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   ScrollView,
@@ -40,16 +40,7 @@ export const CheckboxSelect: React.FC<Props> = ({
   const [error, setError] = useState('');
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
-
-  useEffect(() => {
-    if (isAlternativeOption && hasAlternativeOption) {
-      const timer = setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-        textInputRef.current?.focus();
-      }, 150);
-      return () => clearTimeout(timer);
-    }
-  }, [isAlternativeOption, hasAlternativeOption]);
+  const focusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   return (
     <View style={styles.container}>
@@ -80,10 +71,22 @@ export const CheckboxSelect: React.FC<Props> = ({
             label={'Other (please specify)'}
             isChecked={isAlternativeOption}
             onChange={() => {
+              if (focusTimerRef.current) {
+                clearTimeout(focusTimerRef.current);
+              }
+
               scrollViewRef.current?.scrollToEnd({ animated: true });
               setError('');
+              const wasUnchecked = !isAlternativeOption;
               setIsAlternativeOption((prev) => !prev);
               onSelect(manualInput);
+
+              if (wasUnchecked) {
+                focusTimerRef.current = setTimeout(() => {
+                  textInputRef.current?.focus();
+                  focusTimerRef.current = null;
+                }, 200);
+              }
             }}
           />
         )}

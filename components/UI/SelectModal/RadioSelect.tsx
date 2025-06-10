@@ -3,10 +3,9 @@ import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI/Button/Button';
 import { Input } from '@/components/UI/Input/Input';
 import { colors } from '@/lib/tokens/colors';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
-  Pressable,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -40,16 +39,7 @@ export const RadioSelect: React.FC<Props> = ({
   const [error, setError] = useState('');
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
-
-  useEffect(() => {
-    if (isAlternativeOption && hasAlternativeOption) {
-      const timer = setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-        textInputRef.current?.focus();
-      }, 150);
-      return () => clearTimeout(timer);
-    }
-  }, [isAlternativeOption, hasAlternativeOption]);
+  const focusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   return (
     <View style={styles.container}>
@@ -98,10 +88,19 @@ export const RadioSelect: React.FC<Props> = ({
           <RadioButton
             isSelected={isAlternativeOption}
             onChange={() => {
+              if (focusTimerRef.current) {
+                clearTimeout(focusTimerRef.current);
+              }
+
               scrollViewRef.current?.scrollToEnd({ animated: true });
               setError('');
               setIsAlternativeOption(true);
               setManualInput('');
+
+              focusTimerRef.current = setTimeout(() => {
+                textInputRef.current?.focus();
+                focusTimerRef.current = null;
+              }, 200);
             }}
             id={'alternativeOption'}
             label={'N/A'}
