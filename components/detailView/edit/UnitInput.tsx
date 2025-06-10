@@ -23,12 +23,14 @@ export const UnitInput: React.FC<UnitInputProps> = ({
   editable = true,
   alwaysShowErrorIfMissing = false,
 }) => {
-  const [inputValue, setInputValue] = useState(value?.toString() || '');
+  const [inputValue, setInputValue] = useState(
+    value !== null ? value.toString() : '',
+  );
   const [isFocused, setIsFocused] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
 
   useEffect(() => {
-    setInputValue(value?.toString() || '');
+    setInputValue(value !== null ? value.toString() : '');
   }, [value]);
 
   const handleBlur = () => {
