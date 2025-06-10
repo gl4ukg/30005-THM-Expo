@@ -43,6 +43,20 @@ export interface TemporaryReplaceHoseFormData {
   phone?: string;
 }
 
+export interface TemporaryInspectionData {
+  hoseId?: number;
+  changes?: Partial<HoseData>;
+}
+
+export interface TemporaryRegistrationData {
+  formData?: Partial<HoseData> & { showValidationErrors?: boolean };
+}
+
+export interface TemporaryHoseEditData {
+  hoseId?: number;
+  changes?: Partial<HoseData>;
+}
+
 interface ActionWithPayload<T extends string, Payload> {
   type: T;
   payload: Payload;
@@ -125,7 +139,18 @@ type DataAction =
       'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA',
       TemporaryReplaceHoseFormData
     >
-  | ActionWithoutPayload<'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA'>;
+  | ActionWithoutPayload<'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA'>
+  | ActionWithPayload<'SET_TEMPORARY_INSPECTION_DATA', TemporaryInspectionData>
+  | ActionWithoutPayload<'CLEAR_TEMPORARY_INSPECTION_DATA'>
+  | ActionWithPayload<
+      'SET_TEMPORARY_REGISTRATION_DATA',
+      TemporaryRegistrationData
+    >
+  | ActionWithoutPayload<'CLEAR_TEMPORARY_REGISTRATION_DATA'>
+  | ActionWithPayload<'SET_TEMPORARY_HOSE_EDIT_DATA', TemporaryHoseEditData>
+  | ActionWithoutPayload<'CLEAR_TEMPORARY_HOSE_EDIT_DATA'>
+  | ActionWithoutPayload<'CLEAR_ALL_TEMPORARY_DATA'>
+  | ActionWithPayload<'FINISH_SELECTION_AND_RESET', Partial<HoseData>>;
 
 type SettingsAction =
   // | ActionWithPayload<'UPDATE_SETTINGS', any>
@@ -289,22 +314,74 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
     case 'SET_TEMPORARY_SEND_MAIL_FORM_DATA':
       return {
         ...state,
-        temporaryContactFormData: action.payload,
+        temporarySendMailFormData: action.payload,
       };
     case 'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA':
       return {
         ...state,
-        temporaryContactFormData: null,
+        temporarySendMailFormData: null,
       };
     case 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA':
       return {
         ...state,
-        temporaryContactFormData: action.payload,
+        temporaryReplaceHoseFormData: action.payload,
       };
     case 'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA':
       return {
         ...state,
+        temporaryReplaceHoseFormData: null,
+      };
+    case 'SET_TEMPORARY_INSPECTION_DATA':
+      return {
+        ...state,
+        temporaryInspectionData: action.payload,
+      };
+    case 'CLEAR_TEMPORARY_INSPECTION_DATA':
+      return {
+        ...state,
+        temporaryInspectionData: null,
+      };
+    case 'SET_TEMPORARY_REGISTRATION_DATA':
+      return {
+        ...state,
+        temporaryRegistrationData: action.payload,
+      };
+    case 'CLEAR_TEMPORARY_REGISTRATION_DATA':
+      return {
+        ...state,
+        temporaryRegistrationData: null,
+      };
+    case 'SET_TEMPORARY_HOSE_EDIT_DATA':
+      return {
+        ...state,
+        temporaryHoseEditData: action.payload,
+      };
+    case 'CLEAR_TEMPORARY_HOSE_EDIT_DATA':
+      return {
+        ...state,
+        temporaryHoseEditData: null,
+      };
+    case 'CLEAR_ALL_TEMPORARY_DATA':
+      return {
+        ...state,
         temporaryContactFormData: null,
+        temporarySendMailFormData: null,
+        temporaryReplaceHoseFormData: null,
+        temporaryInspectionData: null,
+        temporaryRegistrationData: null,
+        temporaryHoseEditData: null,
+      };
+    case 'FINISH_SELECTION_AND_RESET':
+      return {
+        ...state,
+        selection: null,
+        temporaryContactFormData: null,
+        temporarySendMailFormData: null,
+        temporaryReplaceHoseFormData: null,
+        temporaryInspectionData: null,
+        temporaryRegistrationData: null,
+        temporaryHoseEditData: null,
+        hoseTemplate: action.payload,
       };
     default: {
       // console.error('Unknown action type:', action.type);

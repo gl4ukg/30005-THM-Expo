@@ -26,6 +26,7 @@ import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 
 type ExtendedEditProps<T> = EditProps<T> & {
   missingFields?: string[];
@@ -81,11 +82,26 @@ const HoseDetails = () => {
   const [editMode, setEditMode] = useState(startInEditMode === 'true');
   const [missingFields, setMissingFields] = useState<string[]>([]);
 
-  const [hoseData, setHoseData] = useState<Partial<HoseData> | {}>(
-    state.data.hoses.find((hose) => hose.assetId === +hoseId) || {},
+  // Get original hose data from state
+  const originalHoseData = state.data.hoses.find(
+    (hose) => hose.assetId === +hoseId,
   );
 
+  // Current hose data (original + temporary changes)
+  const hoseData = originalHoseData
+    ? {
+        ...originalHoseData,
+        ...(state.data.temporaryHoseEditData?.hoseId ===
+        originalHoseData.assetId
+          ? state.data.temporaryHoseEditData.changes
+          : {}),
+      }
+    : {};
+
   const router = useRouter();
+
+  // Use preventGoBack when in edit mode
+  usePreventGoBack();
 
   useEffect(() => {
     if (missingFieldsParam) {
@@ -114,17 +130,38 @@ const HoseDetails = () => {
     field: keyof HoseData,
     value: HoseData[keyof HoseData],
   ) => {
-    setHoseData((prevState) => ({
-      ...prevState,
-      [field]: value,
-    }));
+    if (!originalHoseData) return;
+
+    // Get current temporary changes
+    const currentChanges =
+      state.data.temporaryHoseEditData?.hoseId === originalHoseData.assetId
+        ? state.data.temporaryHoseEditData.changes || {}
+        : {};
+
+    // Update temporary hose edit data
+    dispatch({
+      type: 'SET_TEMPORARY_HOSE_EDIT_DATA',
+      payload: {
+        hoseId: originalHoseData.assetId,
+        changes: {
+          ...currentChanges,
+          [field]: value,
+        },
+      },
+    });
   };
 
   const toggleEditMode = () => {
-    setEditMode((prev) => !prev);
     if (editMode) {
+      // Exiting edit mode - clear temporary data and missing fields
+      dispatch({ type: 'CLEAR_TEMPORARY_HOSE_EDIT_DATA' });
+      dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
       setMissingFields([]);
+    } else {
+      // Entering edit mode - set cancelable
+      dispatch({ type: 'SET_IS_CANCELABLE', payload: true });
     }
+    setEditMode((prev) => !prev);
   };
 
   const handleSave = () => {
@@ -146,10 +183,16 @@ const HoseDetails = () => {
         ...hoseData,
         missingData: markAsMissingData,
       } as HoseData;
+
+      // Save the changes from temporary data
       dispatch({
         type: 'SAVE_HOSE_DATA',
         payload: { hoseId: hoseData.assetId, hoseData: updatedHoseData },
       });
+
+      // Clear temporary data and exit edit mode
+      dispatch({ type: 'CLEAR_TEMPORARY_HOSE_EDIT_DATA' });
+      dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
       setEditMode(false);
       setMissingFields([]);
       scrollViewRef.current?.scrollTo({ y: 0 });
