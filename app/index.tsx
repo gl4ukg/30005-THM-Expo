@@ -88,7 +88,7 @@ const Login = () => {
               </Pressable>
             </Link>
             <Link
-              href={getScanUrl('INSPECT_HOSE')}
+              href={'/photo'}
               asChild
               style={[
                 styles.link,
@@ -101,7 +101,7 @@ const Login = () => {
                   { flex: 1, backgroundColor: colors.extendedBlue },
                 ]}
               >
-                <Typography name='navigation' text='Scan' numberOfLines={1} />
+                <Typography name='navigation' text='Photos' numberOfLines={1} />
               </Pressable>
             </Link>
             <Link
