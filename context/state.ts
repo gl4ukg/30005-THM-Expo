@@ -3,6 +3,9 @@ import {
   TemporaryReplaceHoseFormData,
   TemporaryRFQFormData,
   TemporarySendMailFormData,
+  TemporaryInspectionData,
+  TemporaryRegistrationData,
+  TemporaryHoseEditData,
 } from './Reducer';
 
 interface AppState {
@@ -18,6 +21,8 @@ interface AuthState {
     email: string;
     name: string;
     id: string;
+    phoneNumber?: string;
+    customerNumbers?: string[];
   };
   isLoingLoading: boolean;
   token: null | string;
@@ -113,11 +118,12 @@ interface DataState {
   selection: HoseSelection | null;
   hoseTemplate?: Partial<HoseData>;
   isCancelable: boolean;
-  temporaryContactFormData?:
-    | TemporaryRFQFormData
-    | TemporaryReplaceHoseFormData
-    | TemporarySendMailFormData
-    | null;
+  temporaryContactFormData?: TemporaryRFQFormData | null;
+  temporarySendMailFormData?: TemporarySendMailFormData | null;
+  temporaryReplaceHoseFormData?: TemporaryReplaceHoseFormData | null;
+  temporaryInspectionData?: TemporaryInspectionData | null;
+  temporaryRegistrationData?: TemporaryRegistrationData | null;
+  temporaryHoseEditData?: TemporaryHoseEditData | null;
 }
 
 interface SettingsState {
@@ -156,6 +162,11 @@ const initialDataState: DataState = {
   selection: null,
   hoseTemplate: undefined,
   isCancelable: false,
+  temporaryContactFormData: null,
+  temporarySendMailFormData: null,
+  temporaryReplaceHoseFormData: null,
+  temporaryInspectionData: null,
+  temporaryRegistrationData: null,
 };
 
 const initialSettingsState: SettingsState = {

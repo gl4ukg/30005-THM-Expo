@@ -5,7 +5,7 @@ import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
 import { TemporarySendMailFormData } from '@/context/Reducer';
-import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
@@ -20,7 +20,7 @@ interface Props {
 export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
   const { state, dispatch } = useAppContext();
 
-  const globalTempData = state.data.temporaryContactFormData as
+  const globalTempData = state.data.temporarySendMailFormData as
     | TemporarySendMailFormData
     | null
     | undefined;
@@ -44,10 +44,9 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
     setSelectedIds(hoses.map((h) => h.assetId));
     return hoses;
   }, [hoses]);
-  usePreventGoBack();
 
   useEffect(() => {
-    const globalData = state.data.temporaryContactFormData as
+    const globalData = state.data.temporarySendMailFormData as
       | TemporarySendMailFormData
       | null
       | undefined;
@@ -59,10 +58,15 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
       email: globalData?.email || user?.email || '',
       phone: globalData?.phone || '',
     });
-  }, [state.data.temporaryContactFormData, state.auth.user]);
+  }, [state.data.temporarySendMailFormData, state.auth.user]);
 
   const handleEmailInput = (emailValue: string) => {
-    setFormData((prev) => ({ ...prev, email: emailValue }));
+    const updatedFormData = { ...formData, email: emailValue };
+    setFormData(updatedFormData);
+    dispatch({
+      type: 'SET_TEMPORARY_SEND_MAIL_FORM_DATA',
+      payload: updatedFormData,
+    });
     const validation = emailValidation(emailValue);
     if (validation === true) {
       setEmailError(undefined);
@@ -73,7 +77,12 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
     field: keyof TemporarySendMailFormData,
     value: string,
   ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    const updatedFormData = { ...formData, [field]: value };
+    setFormData(updatedFormData);
+    dispatch({
+      type: 'SET_TEMPORARY_SEND_MAIL_FORM_DATA',
+      payload: updatedFormData,
+    });
   };
 
   const handleSelectionChange = useCallback((id: number) => {

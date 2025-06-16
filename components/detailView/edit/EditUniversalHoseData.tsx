@@ -186,7 +186,9 @@ export const EditUniversalHoseData: React.FC<{
           <View style={styles.inputContainer}>
             <UnitInput
               label='Hose Length'
-              value={Number(localInfo.hoseLength_mm ?? 0)}
+              value={
+                localInfo.hoseLength_mm ? Number(localInfo.hoseLength_mm) : null
+              }
               onChange={(value: number | null) =>
                 handleFieldChange('hoseLength_mm', String(value))
               }
@@ -216,7 +218,7 @@ export const EditUniversalHoseData: React.FC<{
           }}
         >
           <BarToPsiInput
-            pressureInBars={Number(info.wp_BAR ?? 0)}
+            pressureInBars={info.wp_BAR ? Number(info.wp_BAR) : null}
             onChange={(pressure) => {
               handleFieldChange('wp_BAR', String(pressure.bar));
               handleFieldChange('wp_PSI', String(pressure.psi));
