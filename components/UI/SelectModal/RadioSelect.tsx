@@ -40,6 +40,21 @@ export const RadioSelect: React.FC<Props> = ({
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
   const focusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleNonApplicableOption = () => {
+    if (focusTimerRef.current) {
+      clearTimeout(focusTimerRef.current);
+    }
+
+    scrollViewRef.current?.scrollToEnd({ animated: true });
+    setError('');
+    setIsAlternativeOption(true);
+    setManualInput('');
+
+    focusTimerRef.current = setTimeout(() => {
+      textInputRef.current?.focus();
+      focusTimerRef.current = null;
+    }, 200);
+  };
 
   return (
     <View style={styles.container}>
@@ -87,21 +102,7 @@ export const RadioSelect: React.FC<Props> = ({
         {hasAlternativeOption && (
           <RadioButton
             isSelected={isAlternativeOption}
-            onChange={() => {
-              if (focusTimerRef.current) {
-                clearTimeout(focusTimerRef.current);
-              }
-
-              scrollViewRef.current?.scrollToEnd({ animated: true });
-              setError('');
-              setIsAlternativeOption(true);
-              setManualInput('');
-
-              focusTimerRef.current = setTimeout(() => {
-                textInputRef.current?.focus();
-                focusTimerRef.current = null;
-              }, 200);
-            }}
+            onChange={handleNonApplicableOption}
             id={'alternativeOption'}
             label={'N/A'}
             menu

@@ -42,6 +42,24 @@ export const CheckboxSelect: React.FC<Props> = ({
   const textInputRef = useRef<TextInput>(null);
   const focusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const haldleOtherOption = () => {
+    if (focusTimerRef.current) {
+      clearTimeout(focusTimerRef.current);
+    }
+
+    scrollViewRef.current?.scrollToEnd({ animated: true });
+    setError('');
+    setIsAlternativeOption((prev) => !prev);
+    onSelect(manualInput);
+
+    if (!isAlternativeOption) {
+      focusTimerRef.current = setTimeout(() => {
+        textInputRef.current?.focus();
+        focusTimerRef.current = null;
+      }, 200);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -70,24 +88,7 @@ export const CheckboxSelect: React.FC<Props> = ({
           <Checkbox
             label={'Other (please specify)'}
             isChecked={isAlternativeOption}
-            onChange={() => {
-              if (focusTimerRef.current) {
-                clearTimeout(focusTimerRef.current);
-              }
-
-              scrollViewRef.current?.scrollToEnd({ animated: true });
-              setError('');
-              const wasUnchecked = !isAlternativeOption;
-              setIsAlternativeOption((prev) => !prev);
-              onSelect(manualInput);
-
-              if (wasUnchecked) {
-                focusTimerRef.current = setTimeout(() => {
-                  textInputRef.current?.focus();
-                  focusTimerRef.current = null;
-                }, 200);
-              }
-            }}
+            onChange={haldleOtherOption}
           />
         )}
         {isAlternativeOption && (
