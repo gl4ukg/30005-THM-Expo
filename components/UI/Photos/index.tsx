@@ -20,6 +20,7 @@ import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 interface Props {
   title: string;
   dirUri: string;
+  rerender: number | null;
 }
 
 export interface ImageFileData {
@@ -27,14 +28,13 @@ export interface ImageFileData {
   name: string;
   path: string;
 }
-export const ImageGallery: React.FC<Props> = ({ title, dirUri }) => {
+export const ImageGallery: React.FC<Props> = ({ title, dirUri, rerender }) => {
   // console.log('album', album?.length, dirUri);
   const [album, setAlbum] = useState<ImageFileData[]>([]);
   useEffect(() => {
     const getHoseImages = async () => {
       const imageDir = `${dirUri}/images/`;
       const dirInfo = await FileSystem.getInfoAsync(imageDir);
-      console.log('dirInfo: ', dirInfo);
       if (!dirInfo.exists) {
         // Folder doesn't exist = no images
         setAlbum([]);
@@ -52,11 +52,10 @@ export const ImageGallery: React.FC<Props> = ({ title, dirUri }) => {
         name: fileName,
         path: `${imageDir}${fileName}`,
       }));
-      console.log('hImg: ', hoseImages);
       setAlbum(hoseImages);
     };
     getHoseImages();
-  }, [dirUri]);
+  }, [dirUri, rerender]);
   const takeImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchCameraAsync({
@@ -66,6 +65,7 @@ export const ImageGallery: React.FC<Props> = ({ title, dirUri }) => {
       quality: 1,
       cameraType: ImagePicker.CameraType.back,
       selectionLimit: 1,
+      exif: true,
     });
 
     if (!result.canceled) {
