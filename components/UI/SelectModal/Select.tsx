@@ -58,15 +58,19 @@ export const Select: React.FC<Props> = ({
           ]}
           onPress={() => setModalOpen(true)}
         >
-          <Typography
-            name='navigation'
-            style={[
-              styles.value,
-              !selectedOption && styles.valueNotSelected,
-              isRequiredValueMissing && styles.valueError,
-            ]}
-            text={selectedOption?.trim() || 'Select...'}
-          />
+          <View style={styles.textContainer}>
+            <Typography
+              name='navigation'
+              style={[
+                styles.value,
+                !selectedOption && styles.valueNotSelected,
+                isRequiredValueMissing && styles.valueError,
+              ]}
+              text={selectedOption?.trim() || 'Select...'}
+              numberOfLines={2}
+              ellipsizeMode='tail'
+            />
+          </View>
 
           <View style={styles.iconContainer}>
             <Icon
@@ -113,9 +117,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
+  textContainer: {
+    flex: 1,
+    marginRight: 8,
+  },
+
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    height: '100%',
+    minHeight: 20,
   },
 
   label: {
@@ -130,13 +143,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 5,
+    paddingVertical: 12,
     paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: colors.secondary95,
     borderRadius: 1,
     backgroundColor: colors.white,
     width: '100%',
+    minHeight: 44,
   },
   inputContainerError: {
     borderColor: colors.errorText,

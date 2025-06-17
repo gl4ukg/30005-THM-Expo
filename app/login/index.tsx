@@ -7,15 +7,17 @@ import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
 import { mockedData } from '@/context/mocked';
 import { colors } from '@/lib/tokens/colors';
+import { getHoseData } from '@/lib/util/hoseData';
+import { login } from '@/lib/util/login';
 import { emailValidation } from '@/lib/util/validation';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('itera@test.no');
+  const [fullName, setFullName] = useState('Test Tess User');
+  const [password, setPassword] = useState('iteraTest');
   const [nameError, setNameError] = useState<undefined | string>(undefined);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
 
@@ -38,22 +40,16 @@ export default function Login() {
     } else setNameError(undefined);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     dispatch({
       type: 'SET_LOGIN_LOADING',
       payload: true,
     });
 
-    // TODO: get data
-    dispatch({
-      type: 'SET_HOSE_DATA',
-      payload: mockedData,
-    });
-    // check if valid.
-    // if valid send request to api or do something else.
-    setTimeout(() => {
-      if (password.length < 3) {
-        // login and navigate to dashboard
+    // /login -> 200 and cookie or 400 and error
+    try {
+      const user = await login(email, password);
+      if (!user) {
         dispatch({
           type: 'SET_LOGIN_LOADING',
           payload: false,
@@ -63,31 +59,47 @@ export default function Login() {
             text: 'OK',
           },
         ]);
-      } else if (password.length >= 3 && password.length < 6) {
-        // login and navigate to dashboard
+        return;
+      } else {
         dispatch({
           type: 'SET_LOGIN_LOADING',
           payload: false,
         });
-        Alert.alert('Login - failed', 'No internet', [
-          {
-            text: 'OK',
-          },
-        ]);
-      } else {
-        // update state
         dispatch({
           type: 'LOGIN',
-          payload: { email, name: fullName, id: password },
+          payload: {
+            email: user.email,
+            name: `${user.firstName} ${user.lastName}`,
+            id: `${user.userId}`,
+            phoneNumber: user.phoneNumber,
+            customerNumbers: user.customerNumbers,
+          },
         });
-        // login and navigate to dashboard
+        const hoseData = await getHoseData(user.customerNumbers);
         dispatch({
-          type: 'SET_LOGIN_LOADING',
-          payload: false,
+          type: 'SET_HOSE_DATA',
+          payload: hoseData,
         });
         router.push('/(app)/dashboard');
       }
-    }, 3000);
+    } catch (error) {
+      const message = (error as Error).message;
+      Alert.alert(
+        'Login - failed',
+        message || 'Invalid password or user not found',
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              dispatch({
+                type: 'SET_LOGIN_LOADING',
+                payload: false,
+              });
+            },
+          },
+        ],
+      );
+    }
   };
 
   const isButtonDisabled =

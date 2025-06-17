@@ -12,7 +12,7 @@ import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
 import { TemporaryReplaceHoseFormData } from '@/context/Reducer';
-import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
@@ -32,7 +32,7 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
     hoses.map((h) => h.assetId),
   );
 
-  const globalTempData = state.data.temporaryContactFormData as
+  const globalTempData = state.data.temporaryReplaceHoseFormData as
     | TemporaryReplaceHoseFormData
     | null
     | undefined;
@@ -52,10 +52,10 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
     useState<TemporaryReplaceHoseFormData>(initialFormData);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const originallySelectedHoses = useMemo(() => hoses, [hoses]);
-  usePreventGoBack();
+  // Navigation prevention is handled at the page level
 
   useEffect(() => {
-    const globalData = state.data.temporaryContactFormData as
+    const globalData = state.data.temporaryReplaceHoseFormData as
       | TemporaryReplaceHoseFormData
       | null
       | undefined;
@@ -70,10 +70,15 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
       email: globalData?.email || user?.email || '',
       phone: globalData?.phone || '',
     });
-  }, [state.data.temporaryContactFormData, state.auth.user]);
+  }, [state.data.temporaryReplaceHoseFormData, state.auth.user]);
 
   const handleEmailInput = (emailValue: string) => {
-    setFormData((prev) => ({ ...prev, email: emailValue }));
+    const updatedFormData = { ...formData, email: emailValue };
+    setFormData(updatedFormData);
+    dispatch({
+      type: 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA',
+      payload: updatedFormData,
+    });
     const validation = emailValidation(emailValue);
     if (validation === true) {
       setEmailError(undefined);
@@ -84,14 +89,24 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
     field: keyof TemporaryReplaceHoseFormData,
     value: string | string[],
   ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    const updatedFormData = { ...formData, [field]: value };
+    setFormData(updatedFormData);
+    dispatch({
+      type: 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA',
+      payload: updatedFormData,
+    });
   };
 
   const handleMultiSelectChange = (
     field: keyof TemporaryReplaceHoseFormData,
     value: string[],
   ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    const updatedFormData = { ...formData, [field]: value };
+    setFormData(updatedFormData);
+    dispatch({
+      type: 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA',
+      payload: updatedFormData,
+    });
   };
 
   const handleSelectionChange = useCallback((id: number) => {
@@ -165,7 +180,7 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
               </TooltipWrapper>
               <TooltipWrapper tooltipData={{ title: 'Downtime', message: '' }}>
                 <UnitInput
-                  value={Number(formData.downtime) || 0}
+                  value={formData.downtime ? Number(formData.downtime) : null}
                   onChange={(value) =>
                     handleInputChange('downtime', String(value))
                   }
