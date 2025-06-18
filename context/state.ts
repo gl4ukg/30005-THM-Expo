@@ -124,6 +124,8 @@ interface DataState {
   temporaryInspectionData?: TemporaryInspectionData | null;
   temporaryRegistrationData?: TemporaryRegistrationData | null;
   temporaryHoseEditData?: TemporaryHoseEditData | null;
+  drafts: any[];
+  done: any[];
 }
 
 interface SettingsState {
@@ -167,6 +169,8 @@ const initialDataState: DataState = {
   temporaryReplaceHoseFormData: null,
   temporaryInspectionData: null,
   temporaryRegistrationData: null,
+  drafts: [],
+  done: [],
 };
 
 const initialSettingsState: SettingsState = {

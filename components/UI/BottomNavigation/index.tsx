@@ -36,6 +36,11 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
                 icon: () => <Icon name='Meter' color={colors.primary} />,
               },
               {
+                title: 'Recent activities',
+                to: '/(app)/activites',
+                icon: () => <Icon name='Dashboard' color={colors.primary} />,
+              },
+              {
                 title: 'Register hose / equipment',
                 to: getScanUrl('REGISTER_HOSE'),
                 icon: () => (
