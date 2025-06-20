@@ -15,6 +15,7 @@ import {
 } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
 import { createContext } from 'react';
+import { CacheService } from '@/services/cache/cacheService';
 
 export interface TemporaryRFQFormData {
   comment?: string;
@@ -105,6 +106,7 @@ type AuthAction =
 type DataAction =
   | ActionWithPayload<'SET_ASSIGNED_UNITS', DataState['assignedUnits']>
   | ActionWithPayload<'SET_WORKING_UNIT', string>
+  | ActionWithPayload<'SET_S1_CODE', number>
   | ActionWithPayload<
       'REMOVE_ACTION',
       { id: string; actionType: SingleSelectionActionsType }
@@ -119,6 +121,7 @@ type DataAction =
   | ActionWithPayload<'SET_HOSE_DATA', HoseData[]>
   | ActionWithPayload<'SET_DATA_LOADING', boolean>
   | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: number; hoseData: any }>
+  | ActionWithPayload<'REMOVE_HOSES', number[]>
   | ActionWithPayload<'SELECT_ONE_HOSE', SingleSelection>
   | ActionWithPayload<'START_MULTI_SELECTION', MultiSelection['type']>
   | ActionWithPayload<'ADD_HOSE_TO_EXISTING_MULTI_SELECTION', number>
@@ -203,6 +206,11 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         ...state,
         workingUnitId: action.payload,
       };
+    case 'SET_S1_CODE':
+      return {
+        ...state,
+        s1Code: action.payload,
+      };
     case 'SET_HOSE_DATA':
       return {
         ...state,
@@ -215,18 +223,29 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         console.error('hoseId is undefined', action.payload.hoseId);
         return state;
       }
+
+      // On submit, when the hose is to be saved, update the cache to persist the changes
+      const updatedHoses = state.hoses.map((hose) => {
+        if (hose.assetId === action.payload.hoseId) {
+          const updatedHose = {
+            ...hose,
+            ...action.payload.hoseData,
+          };
+
+          try {
+            CacheService.updateHose(updatedHose);
+          } catch (error) {
+            console.error('Failed to update hose in cache:', error);
+          }
+
+          return updatedHose;
+        }
+        return hose;
+      });
+
       return {
         ...state,
-
-        hoses: state.hoses.map((hose) => {
-          if (hose.assetId === action.payload.hoseId) {
-            return {
-              ...hose,
-              ...action.payload.hoseData,
-            };
-          }
-          return hose;
-        }),
+        hoses: updatedHoses,
       };
     case 'START_MULTI_SELECTION':
       return {

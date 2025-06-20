@@ -70,6 +70,14 @@ export const InspectHose = () => {
   const completeInspection = () => {
     console.log('Complete Inspection:', hoseData);
 
+    if (!hoseData) return;
+
+    // SAVE_HOSE_DATA action handles updating both context and cache layers
+    dispatch({
+      type: 'SAVE_HOSE_DATA',
+      payload: { hoseId: hoseData.assetId, hoseData: hoseData },
+    });
+
     router.push('/dashboard');
   };
 

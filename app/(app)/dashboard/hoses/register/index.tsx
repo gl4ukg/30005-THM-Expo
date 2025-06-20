@@ -19,6 +19,7 @@ import { BarcodeInput } from '@/components/UI/Input/BarcodeInput';
 import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+import { DataService } from '@/services/data/dataService';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -130,7 +131,7 @@ const RegisterHose = () => {
     setIsBarcodeModalVisible(false);
   };
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
     const requiredFieldsList: (keyof HoseData)[] = [
       'itemDescription',
       'productionDate',
@@ -175,21 +176,49 @@ const RegisterHose = () => {
 
     dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
 
-    const newHoseData = localState as HoseData;
+    // Generate a unique asset ID for the new hose
+    const maxAssetId = Math.max(...state.data.hoses.map((h) => h.assetId), 0);
+    const newAssetId = maxAssetId + 1;
 
-    if (registerMultiple) {
-      dispatch({ type: 'SET_HOSE_TEMPLATE', payload: newHoseData });
+    const newHoseData: HoseData = {
+      ...localState,
+      assetId: newAssetId,
+    } as HoseData;
+
+    try {
+      // Add the new hose to cache and update context
+      await DataService.addHose(newHoseData);
+
+      // Update the context with the new hose
+      dispatch({
+        type: 'SET_HOSE_DATA',
+        payload: [...state.data.hoses, newHoseData],
+      });
+
+      if (registerMultiple) {
+        dispatch({ type: 'SET_HOSE_TEMPLATE', payload: newHoseData });
+        Alert.alert(
+          'Success',
+          'Hose registered successfully and added to cache. Ready for next hose.',
+        );
+        router.push('/scan?scanPurpose=REGISTER_HOSE');
+      } else {
+        Alert.alert(
+          'Success',
+          'Hose registered successfully and added to cache.',
+        );
+        router.push('/(app)/dashboard');
+      }
+    } catch (error) {
+      console.error('Failed to save hose:', error);
       Alert.alert(
-        'Success',
-        'Hose registered successfully. Ready for next hose.',
+        'Save Error',
+        'Failed to save hose to cache. Please try again.',
+        [{ text: 'OK' }],
       );
-      router.push('/scan?scanPurpose=REGISTER_HOSE');
-    } else {
-      Alert.alert('Success', 'Hose registered successfully.');
-      // router.dismissAll();
-      router.push('/(app)/dashboard');
+      dispatch({ type: 'SET_IS_CANCELABLE', payload: true });
     }
-  }, [localState, dispatch, router, registerMultiple]);
+  }, [localState, dispatch, router, registerMultiple, state.data.hoses]);
 
   return (
     <View style={styles.container}>

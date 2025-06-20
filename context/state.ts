@@ -104,6 +104,7 @@ export const isSingleSelection = (
 interface DataState {
   isLoading: boolean;
   lastUpdate: null | Date;
+  s1Code: number | null; // Added S1 code
   // define data state properties
   hoses: HoseData[];
   assignedUnits: {
@@ -151,6 +152,7 @@ const initialAuthState: AuthState = {
 const initialDataState: DataState = {
   isLoading: false,
   lastUpdate: new Date(),
+  s1Code: null, // Will be set after login
   customer: { id: '223949', name: 'CUSTOMER WEB DEMO (Main)' },
   // initial data state values
   hoses: [],

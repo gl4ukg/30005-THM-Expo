@@ -5,11 +5,10 @@ import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
-import { mockedData } from '@/context/mocked';
 import { colors } from '@/lib/tokens/colors';
-import { getHoseData } from '@/lib/util/hoseData';
 import { login } from '@/lib/util/login';
 import { emailValidation } from '@/lib/util/validation';
+import { DataService } from '@/services/data/dataService';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
@@ -75,11 +74,36 @@ export default function Login() {
             customerNumbers: user.customerNumbers,
           },
         });
-        const hoseData = await getHoseData(user.customerNumbers);
-        dispatch({
-          type: 'SET_HOSE_DATA',
-          payload: hoseData,
-        });
+
+        try {
+          const userData = await DataService.initializeUserData();
+
+          dispatch({
+            type: 'SET_S1_CODE',
+            payload: userData.s1Code,
+          });
+
+          dispatch({
+            type: 'SET_HOSE_DATA',
+            payload: userData.hoses,
+          });
+
+          console.log(
+            `Login successful: S1 Code: ${userData.s1Code}, Hoses: ${userData.hoses.length}`,
+          );
+
+          // Only navigate on successful data initialization
+          router.push('/(app)/dashboard');
+        } catch (dataError) {
+          console.error('Failed to initialize user data:', dataError);
+          Alert.alert(
+            'Data Loading Error',
+            'Login successful but failed to load user data. Please try again.',
+            [{ text: 'OK' }],
+          );
+          return;
+        }
+
         router.push('/(app)/dashboard');
       }
     } catch (error) {
