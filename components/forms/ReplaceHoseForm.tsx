@@ -52,7 +52,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
         setSelectedIds([]);
         return;
       }
-      setFormData(draft.formData);
+      setFormData(draft.formData as PartialReplaceHoseFormData);
       setSelectedIds([...draft.selectedIds]);
     }, [draftId, state.data.drafts]),
   );
@@ -84,7 +84,11 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   }, []);
 
   const handleSend = () => {
-    // TODO move draft to done and change status to done
+    dispatch({
+      type: 'MOVE_DRAFT_TO_DONE',
+      payload: +draftId,
+    });
+    router.push('/dashboard');
   };
 
   const handleSaveAsDraft = () => {

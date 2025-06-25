@@ -86,8 +86,10 @@ export const InspectHose = () => {
   };
 
   const sendInspection = () => {
-    console.log('Complete Inspection:', hoseData);
-
+    dispatch({
+      type: 'MOVE_DRAFT_TO_DONE',
+      payload: id,
+    });
     router.push('/dashboard');
   };
   const handleSend = () => {

@@ -7,6 +7,7 @@ import {
   AppState,
   AuthState,
   DataState,
+  ActivityDraft,
   initialState,
   isMultiSelection,
   MultiSelection,
@@ -15,7 +16,7 @@ import {
   SingleSelectionActionsType,
 } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
-import { createContext } from 'react';
+import { act, createContext } from 'react';
 
 export interface PartialFormData {
   comment?: string;
@@ -141,25 +142,8 @@ type DataAction =
       'SET_TEMPORARY_REGISTRATION_DATA',
       TemporaryRegistrationData
     >
-  | ActionWithPayload<
-      'CREATE_DRAFT',
-      {
-        id: number;
-        selectedIds: number[];
-        type: ActivityType;
-        formData: any;
-      }
-    >
-  | ActionWithPayload<
-      'SAVE_DRAFT',
-      {
-        id: number;
-        selectedIds: number[];
-        type: ActivityType;
-        status: 'done' | 'draft';
-        formData: any;
-      }
-    >
+  | ActionWithPayload<'CREATE_DRAFT', Omit<ActivityDraft, 'modifiedAt'>>
+  | ActionWithPayload<'SAVE_DRAFT', Omit<ActivityDraft, 'modifiedAt'>>
   | ActionWithPayload<
       'ADD_HOSE_TO_DRAFT',
       {
@@ -167,6 +151,7 @@ type DataAction =
         hoseId: number;
       }
     >
+  | ActionWithPayload<'MOVE_DRAFT_TO_DONE', number>
   | ActionWithPayload<'REMOVE_FROM_DRAFT', number>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_REGISTRATION_DATA'>
   | ActionWithPayload<'SET_TEMPORARY_HOSE_EDIT_DATA', TemporaryHoseEditData>
@@ -323,83 +308,41 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         ...state,
         isCancelable: action.payload,
       };
-    case 'SET_TEMPORARY_CONTACT_FORM_DATA':
-      return {
-        ...state,
-        temporaryContactFormData: action.payload,
-      };
-    case 'CLEAR_TEMPORARY_CONTACT_FORM_DATA':
-      return {
-        ...state,
-        temporaryContactFormData: null,
-      };
-    case 'SET_TEMPORARY_SEND_MAIL_FORM_DATA':
-      return {
-        ...state,
-        temporarySendMailFormData: action.payload,
-      };
-    case 'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA':
-      return {
-        ...state,
-        temporarySendMailFormData: null,
-      };
-    case 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA':
-      return {
-        ...state,
-        temporaryReplaceHoseFormData: action.payload,
-      };
-    case 'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA':
-      return {
-        ...state,
-        temporaryReplaceHoseFormData: null,
-      };
-    case 'SET_TEMPORARY_INSPECTION_DATA':
-      return {
-        ...state,
-        temporaryInspectionData: action.payload,
-      };
-    case 'CLEAR_TEMPORARY_INSPECTION_DATA':
-      return {
-        ...state,
-        temporaryInspectionData: null,
-      };
-    case 'SET_TEMPORARY_REGISTRATION_DATA':
-      return {
-        ...state,
-        temporaryRegistrationData: action.payload,
-      };
-    case 'CLEAR_TEMPORARY_REGISTRATION_DATA':
-      return {
-        ...state,
-        temporaryRegistrationData: null,
-      };
-    case 'SET_TEMPORARY_HOSE_EDIT_DATA':
-      return {
-        ...state,
-        temporaryHoseEditData: action.payload,
-      };
 
-    case 'CREATE_DRAFT':
+    case 'CREATE_DRAFT': {
+      const newDraft = {
+        ...action.payload,
+        status: 'draft',
+        modifiedAt: new Date(),
+      } as ActivityDraft;
       return {
         ...state,
-        drafts: [...state.drafts, { ...action.payload, status: 'draft' }],
+        drafts: [...state.drafts, newDraft],
       };
-    case 'SAVE_DRAFT':
+    }
+    case 'SAVE_DRAFT': {
       const drafts = state.drafts.find(
         (draft) => draft.id === action.payload.id,
       )
         ? state.drafts.map((draft) => {
             if (draft.id === action.payload.id) {
-              return { ...action.payload };
+              return {
+                ...action.payload,
+                modifiedAt: new Date(),
+              } as ActivityDraft;
             }
             return draft;
           })
-        : [...state.drafts, { ...action.payload }];
+        : [
+            ...state.drafts,
+            { ...action.payload, modifiedAt: new Date() } as ActivityDraft,
+          ];
       return {
         ...state,
         drafts,
       };
-    case 'ADD_HOSE_TO_DRAFT':
+    }
+    case 'ADD_HOSE_TO_DRAFT': {
       const { draftId, hoseId } = action.payload;
       const draft = state.drafts.find((draft) => draft.id === draftId);
       if (!draft) return state;
@@ -409,6 +352,7 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
           if (draft.id === draftId) {
             return {
               ...draft,
+              modifiedAt: new Date(),
               selectedIds: draft.selectedIds.includes(hoseId)
                 ? draft.selectedIds
                 : [...draft.selectedIds, hoseId],
@@ -417,41 +361,32 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
           return draft;
         }),
       };
-    case 'REMOVE_FROM_DRAFT':
-      console.log('REMOVE_FROM_DRAFT', action.payload);
+    }
+    case 'REMOVE_FROM_DRAFT': {
       return {
         ...state,
         drafts: [
           ...state.drafts.filter((draft) => draft.id !== action.payload),
         ],
       };
-    case 'CLEAR_TEMPORARY_HOSE_EDIT_DATA':
+    }
+    case 'MOVE_DRAFT_TO_DONE': {
+      const draft = state.drafts.find((draft) => draft.id === action.payload);
+
       return {
         ...state,
-        temporaryHoseEditData: null,
+        drafts: [
+          ...state.drafts.filter((draft) => draft.id !== action.payload),
+        ],
+        done: draft
+          ? [
+              ...state.done,
+              { ...draft, status: 'done', modifiedAt: new Date() },
+            ]
+          : state.done,
       };
-    case 'CLEAR_ALL_TEMPORARY_DATA':
-      return {
-        ...state,
-        temporaryContactFormData: null,
-        temporarySendMailFormData: null,
-        temporaryReplaceHoseFormData: null,
-        temporaryInspectionData: null,
-        temporaryRegistrationData: null,
-        temporaryHoseEditData: null,
-      };
-    case 'FINISH_SELECTION_AND_RESET':
-      return {
-        ...state,
-        selection: null,
-        temporaryContactFormData: null,
-        temporarySendMailFormData: null,
-        temporaryReplaceHoseFormData: null,
-        temporaryInspectionData: null,
-        temporaryRegistrationData: null,
-        temporaryHoseEditData: null,
-        hoseTemplate: action.payload,
-      };
+    }
+
     default: {
       // console.error('Unknown action type:', action.type);
       return state;

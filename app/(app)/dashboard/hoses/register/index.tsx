@@ -78,9 +78,7 @@ const RegisterHose = () => {
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({ y: 0 });
       }
-      // let hose: HoseData | undefined = state.data.hoses.find(
-      //   (hose) => hose.assetId === (incomingId ? +incomingId : undefined),
-      // );
+
       if (draftId) {
         const draft = state.data.drafts.find((d) => d.id === +draftId);
         if (draft) {
@@ -100,21 +98,6 @@ const RegisterHose = () => {
   const handleCancel = () => {
     router.back();
   };
-
-  // useEffect(() => {
-  //   if (state.data.hoseTemplate) {
-  //     const templateData = state.data.hoseTemplate || {};
-  //     const defaultRequired = getDefaultRequiredHoseData();
-  //     const mergedTemplate = { ...defaultRequired, ...templateData };
-
-  //     setHoseData((prevState) => ({
-  //       ...mergedTemplate,
-  //       ...prevState,
-  //       id: incomingId ?? prevState.assetId ?? mergedTemplate?.assetId,
-  //       RFid: incomingRfid ?? prevState.RFID ?? mergedTemplate?.RFID,
-  //     }));
-  //   }
-  // }, [state.data.hoseTemplate, incomingId, incomingRfid]);
 
   const handleInputChange = (
     field: keyof HoseData,
@@ -214,6 +197,7 @@ const RegisterHose = () => {
           formData: newHoseData,
           selectedIds: [],
           type: 'REGISTER_HOSE',
+          status: 'draft',
           id: newDraftId,
         },
       });
@@ -223,7 +207,10 @@ const RegisterHose = () => {
       );
       router.push(`/scan?scanPurpose=REGISTER_HOSE&draftId=${newDraftId}`);
     } else {
-      Alert.alert('Success', 'Hose registered successfully.');
+      dispatch({
+        type: 'MOVE_DRAFT_TO_DONE',
+        payload: +id,
+      });
       router.push('/(app)/dashboard');
     }
   }, [hoseData, dispatch, router, registerMultiple]);

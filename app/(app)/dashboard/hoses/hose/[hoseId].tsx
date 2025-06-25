@@ -13,7 +13,7 @@ import { MaintenanceInfo } from '@/components/detailView/view/MaintenanceInfo';
 import { Structure } from '@/components/detailView/view/Structure';
 import { TessPartNumbers } from '@/components/detailView/view/TessPartNumbers';
 import { UniversalHoseData } from '@/components/detailView/view/UniversalHoseData';
-import { AppContext } from '@/context/Reducer';
+import { AppContext, PartialRFQFormData } from '@/context/Reducer';
 import { mockedHistory } from '@/context/mocked';
 import {
   isMultiSelection,
@@ -21,7 +21,7 @@ import {
   SingleSelectionActionsType,
 } from '@/context/state';
 import { EditProps } from '@/lib/types/edit';
-import { HoseData } from '@/lib/types/hose';
+import { HID, HoseData } from '@/lib/types/hose';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -237,9 +237,10 @@ const HoseDetails = () => {
         type: 'CREATE_DRAFT',
         payload: {
           id: draftId,
+          status: 'draft',
           selectedIds: [hoseData.assetId],
           type: 'INSPECT',
-          formData: hoseData,
+          formData: hoseData as Partial<HID>,
         },
       });
       router.push({
@@ -255,9 +256,10 @@ const HoseDetails = () => {
         type: 'CREATE_DRAFT',
         payload: {
           id: draftId,
+          status: 'draft',
           selectedIds: [hoseData.assetId],
           type: value,
-          formData: hoseData,
+          formData: hoseData as PartialRFQFormData,
         },
       });
       router.push({
@@ -306,7 +308,7 @@ const HoseDetails = () => {
 
   return (
     <View style={styles.container}>
-      {!isMultiSelection(state.data.selection) && !editMode && (
+      {!editMode && (
         <ActionsFab
           options={options as Option<SingleSelectionActionsType>[]}
           onChange={handleAction as (value: string) => void}

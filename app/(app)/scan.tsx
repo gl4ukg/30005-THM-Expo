@@ -211,6 +211,7 @@ const Scan = () => {
             id: +draftId,
             selectedIds: [hose.assetId],
             type: scanPurpose === 'REGISTER_HOSE' ? 'REGISTER_HOSE' : 'INSPECT',
+            status: 'draft',
             formData: hose,
           },
         });
@@ -236,6 +237,7 @@ const Scan = () => {
             type: 'CREATE_DRAFT',
             payload: {
               id: +draftId,
+              status: 'draft',
               selectedIds: [hose.assetId],
               type: scanPurpose,
               formData: {},

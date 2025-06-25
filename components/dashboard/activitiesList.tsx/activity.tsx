@@ -27,6 +27,7 @@ export interface Activity {
   type: ActivityType;
   status: 'done' | 'draft';
   selectedIds: number[];
+  modifiedAt: Date;
   formData:
     | PartialRFQFormData
     | PartialFormData
@@ -63,7 +64,7 @@ export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
           <Typography name='tableContentNumber' text={`${id}`} />
           <View style={elementStyle.iconsContainer}>
             {/* <View style={elementStyle.iconContainer}>
-              {!!formData.RFID && (
+              {!!formData.rfid && (
                 <Icon
                   name='RfidIdentificator'
                   color={colors.black}
@@ -94,7 +95,9 @@ export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
             <ActivityStatus status={status} type={type} />
             <Typography
               name='tableContentNumber'
-              text={'H_CODED'}
+              text={new Date(item.modifiedAt)
+                .toLocaleDateString()
+                .replaceAll('/', '')}
               style={elementStyle.date}
             />
           </View>

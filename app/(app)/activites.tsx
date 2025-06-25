@@ -38,12 +38,10 @@ const options = [
 ];
 const Activities: React.FC = () => {
   const { state } = useAppContext();
-  const [activities, setActivities] = useState<Activity[]>(state.data.drafts);
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [filter, setFilter] = useState<(typeof options)[0]['value']>('ALL');
   const [status, setStatus] = useState<'all' | 'draft' | 'done'>('all');
-  const [activitiesToShow, setActivitiesToShow] = useState<Activity[]>(
-    state.data.drafts,
-  );
+  const [activitiesToShow, setActivitiesToShow] = useState<Activity[]>([]);
 
   const removeActivity = (id: string) => {
     setActivities(activities.filter((activity) => activity.id !== +id));
@@ -59,13 +57,12 @@ const Activities: React.FC = () => {
     setActivitiesToShow(filteredActivities);
   }, [activities, filter, status, state]);
   useEffect(() => {
-    console.log(
-      'state',
-      state.data.drafts.map((item) => item.id),
+    const activities = [...state.data.drafts, ...state.data.done].sort(
+      (a, b) => b.modifiedAt.getTime() - a.modifiedAt.getTime(),
     );
-    setActivities(state.data.drafts);
-    setActivitiesToShow(state.data.drafts);
-  }, [state.data.drafts]);
+    setActivities(activities);
+    setActivitiesToShow(activities);
+  }, [state.data.drafts, state.data.done]);
   return (
     <FlatList
       ListHeaderComponent={

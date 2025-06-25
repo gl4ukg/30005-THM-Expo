@@ -108,7 +108,13 @@ export const ActionForm: React.FC<Props> = ({
     });
   }, []);
 
-  const onSend = () => {};
+  const onSend = () => {
+    dispatch({
+      type: 'MOVE_DRAFT_TO_DONE',
+      payload: +draftId,
+    });
+    router.push('/dashboard');
+  };
   const handleSaveAsDraft = () => {
     dispatch({
       type: 'SAVE_DRAFT',

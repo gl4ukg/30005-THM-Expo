@@ -73,7 +73,11 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
   }, []);
 
   const handleSend = () => {
-    // TODO move draft to done and change status to done
+    dispatch({
+      type: 'MOVE_DRAFT_TO_DONE',
+      payload: +draftId,
+    });
+    router.push('/dashboard');
   };
 
   const handleSaveAsDraft = () => {
@@ -100,6 +104,7 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
         type: 'CREATE_DRAFT',
         payload: {
           id: +draftId,
+          status: 'draft',
           selectedIds,
           type: 'CONTACT_SUPPORT',
           formData,
