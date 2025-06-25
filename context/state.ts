@@ -7,7 +7,7 @@ import {
   TemporaryRegistrationData,
   TemporaryHoseEditData,
 } from './Reducer';
-import { Activity } from '@/components/dashboard/activitiesList.tsx/activity';
+import { Activity } from '@/components/dashboard/activitiesList/activity';
 
 interface AppState {
   auth: AuthState;

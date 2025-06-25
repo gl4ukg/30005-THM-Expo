@@ -1,4 +1,4 @@
-import { ActivityType } from '@/components/dashboard/activitiesList.tsx/activity';
+import { ActivityType } from '@/components/dashboard/activitiesList/activity';
 import {
   Action,
   ActionCONTACT,

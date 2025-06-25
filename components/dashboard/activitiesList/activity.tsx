@@ -1,4 +1,4 @@
-import { ActivityStatus } from '@/components/dashboard/activitiesList.tsx/activityStatus';
+import { ActivityStatus } from '@/components/dashboard/activitiesList/activityStatus';
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { useAppContext } from '@/context/ContextProvider';

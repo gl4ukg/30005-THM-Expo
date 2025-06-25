@@ -1,4 +1,4 @@
-import { Activity } from '@/components/dashboard/activitiesList.tsx/activity';
+import { Activity } from '@/components/dashboard/activitiesList/activity';
 import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
 import { FC } from 'react';
@@ -15,7 +15,7 @@ const typeTextDictionary: Record<Activity['type'], string> = {
   RFQ: 'RFQ',
   CONTACT_SUPPORT: 'Support',
   CONTACT: 'Contact',
-  EDIT: 'Edited',
+  // EDIT: 'Edited',
 };
 
 export const ActivityStatus: FC<Props> = ({ status, type }) => {

@@ -1,4 +1,4 @@
-import { Activity } from '@/components/dashboard/activitiesList.tsx/activity';
+import { Activity } from '@/components/dashboard/activitiesList/activity';
 import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
 import { useRouter } from 'expo-router';

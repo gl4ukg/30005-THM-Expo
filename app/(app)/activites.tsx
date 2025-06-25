@@ -1,5 +1,5 @@
-import { Activity } from '@/components/dashboard/activitiesList.tsx/activity';
-import { ActivitiesList } from '@/components/dashboard/activitiesList.tsx/indext';
+import { Activity } from '@/components/dashboard/activitiesList/activity';
+import { ActivitiesList } from '@/components/dashboard/activitiesList/indext';
 import { Typography } from '@/components/Typography';
 import { ActionMenu } from '@/components/UI/ActionMenu';
 import { useAppContext } from '@/context/ContextProvider';
