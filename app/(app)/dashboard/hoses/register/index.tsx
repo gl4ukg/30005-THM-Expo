@@ -12,13 +12,14 @@ import { RFIDInput } from '@/components/UI/Input/RFID';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
-import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState, useCallback } from 'react';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { BarcodeInput } from '@/components/UI/Input/BarcodeInput';
 import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+import { generateNumericDraftId } from '@/lib/util/unikId';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -30,24 +31,25 @@ const excludedTemplateFields: (keyof HoseData)[] = [
 ];
 
 const RegisterHose = () => {
+  usePreventGoBack();
   const {
     hoseId: incomingId,
     rfid: incomingRfid,
     scanMethod,
+    draftId,
   } = useLocalSearchParams<{
     hoseId?: string;
     rfid?: string;
     scanMethod?: 'RFID' | 'Barcode';
+    draftId?: string;
   }>();
-
   const { state, dispatch } = useAppContext();
   const [registerMultiple, setRegisterMultiple] = useState(false);
   const [rfid, setRfid] = useState<string | undefined>(incomingRfid);
   const [isBarcodeModalVisible, setIsBarcodeModalVisible] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
 
-  usePreventGoBack();
-
-  const [localState, setLocalState] = useState<
+  const [hoseData, setHoseData] = useState<
     Partial<HoseData> & { showValidationErrors?: boolean }
   >(() => {
     const templateData = state.data.hoseTemplate || {};
@@ -57,7 +59,6 @@ const RegisterHose = () => {
     excludedTemplateFields.forEach((field) => {
       delete mergedTemplate[field];
     });
-
     return {
       ...mergedTemplate,
       assetId: incomingId ? Number(incomingId) : undefined,
@@ -65,6 +66,32 @@ const RegisterHose = () => {
       showValidationErrors: false,
     };
   });
+  let id = useMemo(
+    () =>
+      draftId
+        ? +draftId
+        : generateNumericDraftId(state.data.drafts.map((d) => d.id)),
+    [],
+  );
+  useFocusEffect(
+    useCallback(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({ y: 0 });
+      }
+      // let hose: HoseData | undefined = state.data.hoses.find(
+      //   (hose) => hose.assetId === (incomingId ? +incomingId : undefined),
+      // );
+      if (draftId) {
+        const draft = state.data.drafts.find((d) => d.id === +draftId);
+        if (draft) {
+          setHoseData({
+            ...(draft.formData as Partial<HoseData>),
+            showValidationErrors: false,
+          });
+        }
+      }
+    }, [draftId, state.data.drafts]),
+  );
 
   const handleCheckboxChange = () => {
     setRegisterMultiple((prevState) => !prevState);
@@ -74,26 +101,26 @@ const RegisterHose = () => {
     router.back();
   };
 
-  useEffect(() => {
-    if (state.data.hoseTemplate) {
-      const templateData = state.data.hoseTemplate || {};
-      const defaultRequired = getDefaultRequiredHoseData();
-      const mergedTemplate = { ...defaultRequired, ...templateData };
+  // useEffect(() => {
+  //   if (state.data.hoseTemplate) {
+  //     const templateData = state.data.hoseTemplate || {};
+  //     const defaultRequired = getDefaultRequiredHoseData();
+  //     const mergedTemplate = { ...defaultRequired, ...templateData };
 
-      setLocalState((prevState) => ({
-        ...mergedTemplate,
-        ...prevState,
-        id: incomingId ?? prevState.assetId ?? mergedTemplate?.assetId,
-        RFid: incomingRfid ?? prevState.RFID ?? mergedTemplate?.RFID,
-      }));
-    }
-  }, [state.data.hoseTemplate, incomingId, incomingRfid]);
+  //     setHoseData((prevState) => ({
+  //       ...mergedTemplate,
+  //       ...prevState,
+  //       id: incomingId ?? prevState.assetId ?? mergedTemplate?.assetId,
+  //       RFid: incomingRfid ?? prevState.RFID ?? mergedTemplate?.RFID,
+  //     }));
+  //   }
+  // }, [state.data.hoseTemplate, incomingId, incomingRfid]);
 
   const handleInputChange = (
     field: keyof HoseData,
     value: HoseData[keyof HoseData] | undefined,
   ) => {
-    setLocalState((prevState) => ({
+    setHoseData((prevState) => ({
       ...prevState,
       [field]: value,
     }));
@@ -102,13 +129,13 @@ const RegisterHose = () => {
   const handleRFIDScanned = useCallback((newRfid: string | null) => {
     if (newRfid) {
       setRfid(newRfid);
-      setLocalState((prevState) => ({
+      setHoseData((prevState) => ({
         ...prevState,
         RFid: newRfid,
       }));
     } else {
       setRfid(undefined);
-      setLocalState((prevState) => ({
+      setHoseData((prevState) => ({
         ...prevState,
         RFid: undefined,
       }));
@@ -122,7 +149,7 @@ const RegisterHose = () => {
 
   const handleBarcodeScannedFromModal = (barcode: string | null) => {
     if (barcode) {
-      setLocalState((prevState) => ({
+      setHoseData((prevState) => ({
         ...prevState,
         id: barcode,
       }));
@@ -156,9 +183,9 @@ const RegisterHose = () => {
 
     const missing = requiredFieldsList.filter(
       (field) =>
-        localState[field] === undefined ||
-        localState[field] === null ||
-        localState[field] === '',
+        hoseData[field] === undefined ||
+        hoseData[field] === null ||
+        hoseData[field] === '',
     );
 
     if (missing.length > 0) {
@@ -166,7 +193,7 @@ const RegisterHose = () => {
         'Missing Required Fields',
         `Please fill in the following fields: ${missing.join(', ')}`,
       );
-      setLocalState((prevState) => ({
+      setHoseData((prevState) => ({
         ...prevState,
         showValidationErrors: true,
       }));
@@ -175,33 +202,54 @@ const RegisterHose = () => {
 
     dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
 
-    const newHoseData = localState as HoseData;
+    const newHoseData = hoseData as HoseData;
 
     if (registerMultiple) {
-      dispatch({ type: 'SET_HOSE_TEMPLATE', payload: newHoseData });
+      const newDraftId = generateNumericDraftId(
+        state.data.drafts.map((d) => d.id),
+      );
+      dispatch({
+        type: 'CREATE_DRAFT',
+        payload: {
+          formData: newHoseData,
+          selectedIds: [],
+          type: 'REGISTER_HOSE',
+          id: newDraftId,
+        },
+      });
       Alert.alert(
         'Success',
         'Hose registered successfully. Ready for next hose.',
       );
-      router.push('/scan?scanPurpose=REGISTER_HOSE');
+      router.push(`/scan?scanPurpose=REGISTER_HOSE&draftId=${newDraftId}`);
     } else {
       Alert.alert('Success', 'Hose registered successfully.');
-      // router.dismissAll();
       router.push('/(app)/dashboard');
     }
-  }, [localState, dispatch, router, registerMultiple]);
+  }, [hoseData, dispatch, router, registerMultiple]);
+
+  const handleSaveAsDraft = () => {
+    dispatch({
+      type: 'SAVE_DRAFT',
+      payload: {
+        formData: hoseData,
+        selectedIds: [],
+        type: 'REGISTER_HOSE',
+        id: +id,
+        status: 'draft',
+      },
+    });
+    router.push('/(app)/dashboard');
+  };
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView ref={scrollViewRef}>
         <View style={styles.header}>
           <Typography name='navigationBold' text='Register hose' />
           <Typography name='navigation'>
             Hose ID:
-            <Typography
-              name={'navigationBold'}
-              text={`${localState.assetId}`}
-            />
+            <Typography name={'navigationBold'} text={` ${hoseData.assetId}`} />
           </Typography>
         </View>
 
@@ -215,7 +263,7 @@ const RegisterHose = () => {
             <BarcodeInput
               label='Barcode (Hose ID)'
               onPress={openBarcodeModal}
-              value={`${localState.assetId}`}
+              value={`${hoseData.assetId}`}
               disableScan={scanMethod === 'Barcode' && !!incomingId}
             />
           </TooltipWrapper>
@@ -239,8 +287,8 @@ const RegisterHose = () => {
             <DateInput
               label='Production date'
               value={
-                localState.productionDate
-                  ? new Date(localState.productionDate)
+                hoseData.productionDate
+                  ? new Date(hoseData.productionDate)
                   : null
               }
               onChange={(date) =>
@@ -257,9 +305,7 @@ const RegisterHose = () => {
             <DateInput
               label='Installation date'
               value={
-                localState.installedDate
-                  ? new Date(localState.installedDate)
-                  : null
+                hoseData.installedDate ? new Date(hoseData.installedDate) : null
               }
               onChange={(date) =>
                 handleInputChange('installedDate', date?.toISOString())
@@ -269,22 +315,22 @@ const RegisterHose = () => {
         </View>
 
         <EditGeneralInfo
-          info={localState}
+          info={hoseData}
           onInputChange={handleInputChange}
           isRegisterView
         />
         <EditUniversalHoseData
-          info={localState}
+          info={hoseData}
           onInputChange={handleInputChange}
-          showValidationErrors={localState.showValidationErrors}
+          showValidationErrors={hoseData.showValidationErrors}
         />
         <EditTessPartNumbers
-          info={localState}
+          info={hoseData}
           onInputChange={handleInputChange}
-          showValidationErrors={localState.showValidationErrors}
+          showValidationErrors={hoseData.showValidationErrors}
         />
         <EditMaintenanceInfo
-          info={localState}
+          info={hoseData}
           onInputChange={handleInputChange}
         />
         <Documents />
@@ -300,7 +346,13 @@ const RegisterHose = () => {
           />
         </View>
         <View style={styles.buttonContainer}>
-          <ButtonTHS title='Save & close' size='sm' onPress={handleSave} />
+          <ButtonTHS title={`Save & close`} size='sm' onPress={handleSave} />
+          <ButtonTHS
+            title='Save as draft'
+            variant='secondary'
+            size='sm'
+            onPress={handleSaveAsDraft}
+          />
           <ButtonTHS
             title='Cancel'
             onPress={handleCancel}

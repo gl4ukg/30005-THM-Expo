@@ -1,12 +1,183 @@
-import { Bookmark } from '@/components/detailView/common/Bookmark';
-import { View } from 'react-native';
-
+import { Activity } from '@/components/dashboard/activitiesList.tsx/activity';
+import { ActivitiesList } from '@/components/dashboard/activitiesList.tsx/indext';
+import { Typography } from '@/components/Typography';
+import { ActionMenu } from '@/components/UI/ActionMenu';
+import { useAppContext } from '@/context/ContextProvider';
+import { colors } from '@/lib/tokens/colors';
+import { useEffect, useState } from 'react';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+const options = [
+  {
+    label: 'All activities',
+    value: 'ALL',
+  },
+  {
+    label: 'Inspected hoses',
+    value: 'INSPECT',
+  },
+  {
+    label: 'Register hose ',
+    value: 'REGISTER_HOSE',
+  },
+  {
+    label: 'Scraped hoses',
+    value: 'SCRAP',
+  },
+  {
+    label: 'Hose replacement',
+    value: 'REPLACE_HOSE',
+  },
+  {
+    label: 'Request for quote (RFQ)',
+    value: 'RFQ',
+  },
+  {
+    label: 'Contact requests to TESS',
+    value: 'CONTACT',
+  },
+];
 const Activities: React.FC = () => {
+  const { state } = useAppContext();
+  const [activities, setActivities] = useState<Activity[]>(state.data.drafts);
+  const [filter, setFilter] = useState<(typeof options)[0]['value']>('ALL');
+  const [status, setStatus] = useState<'all' | 'draft' | 'done'>('all');
+  const [activitiesToShow, setActivitiesToShow] = useState<Activity[]>(
+    state.data.drafts,
+  );
+
+  const removeActivity = (id: string) => {
+    setActivities(activities.filter((activity) => activity.id !== +id));
+    // TODO remove from state, add reducer
+  };
+  useEffect(() => {
+    const filteredActivities = activities.filter((activity) => {
+      return (
+        (status === 'all' || activity.status === status) &&
+        (filter === 'ALL' || activity.type === filter)
+      );
+    });
+    setActivitiesToShow(filteredActivities);
+  }, [activities, filter, status, state]);
+  useEffect(() => {
+    console.log(
+      'state',
+      state.data.drafts.map((item) => item.id),
+    );
+    setActivities(state.data.drafts);
+    setActivitiesToShow(state.data.drafts);
+  }, [state.data.drafts]);
   return (
-    <View>
-      <Bookmark title='Activities' />
-    </View>
+    <FlatList
+      ListHeaderComponent={
+        <View style={styles.listHeaderComponent}>
+          <Typography
+            name='navigationBold'
+            text='Recent activities'
+            style={styles.contactTitle}
+          />
+          <ActionMenu
+            selected={filter}
+            options={options}
+            onChange={setFilter}
+          />
+          <View style={styles.switchContainer}>
+            <Pressable
+              onPress={() => setStatus('all')}
+              style={[
+                styles.switchButton,
+                status === 'all' && styles.switchButtonSelected,
+              ]}
+            >
+              <Typography
+                name='navigation'
+                text='All'
+                style={[
+                  styles.switchButtonText,
+                  status === 'all' && styles.switchButtonTextSelected,
+                ]}
+              />
+            </Pressable>
+            <Pressable
+              onPress={() => setStatus('draft')}
+              style={[
+                styles.switchButton,
+                status === 'draft' && styles.switchButtonSelected,
+              ]}
+            >
+              <Typography
+                name='navigation'
+                text='Drafts'
+                style={[
+                  styles.switchButtonText,
+                  status === 'all' && styles.switchButtonTextSelected,
+                ]}
+              />
+            </Pressable>
+            <Pressable
+              onPress={() => setStatus('done')}
+              style={[
+                styles.switchButton,
+                status === 'done' && styles.switchButtonSelected,
+              ]}
+            >
+              <Typography
+                name='navigation'
+                text='Done'
+                style={[
+                  styles.switchButtonText,
+                  status === 'all' && styles.switchButtonTextSelected,
+                ]}
+              />
+            </Pressable>
+          </View>
+        </View>
+      }
+      data={['one']}
+      renderItem={() => (
+        <ActivitiesList onRemove={removeActivity} items={activitiesToShow} />
+      )}
+      keyExtractor={(_, index) => `form-content-${index}`}
+    />
   );
 };
+
+const styles = StyleSheet.create({
+  listHeaderComponent: {
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 30,
+  },
+  contactTitle: {
+    color: colors.black,
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    backgroundColor: colors.secondary95,
+    borderRadius: 8,
+    padding: 2,
+    width: '80%',
+  },
+  switchButton: {
+    borderRadius: 8,
+    backgroundColor: 'transparent',
+    margin: 4,
+    paddingInline: 10,
+    paddingVertical: 5,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  switchButtonSelected: {
+    backgroundColor: colors.white,
+  },
+  switchButtonText: {
+    color: colors.extended333,
+  },
+  switchButtonTextSelected: {
+    color: colors.primary95,
+  },
+});
 
 export default Activities;

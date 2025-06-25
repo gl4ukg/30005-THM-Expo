@@ -7,7 +7,7 @@ import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
 import { Href, Link, useRouter } from 'expo-router';
 import { FC, useContext, useState } from 'react';
-import { Dimensions, Pressable, StyleSheet, View, Alert } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -59,7 +59,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Replace hose / pressure testing',
-                to: getScanUrl('REPLACE_HOSE'), // TODO: change to replace hose
+                to: getScanUrl('REPLACE_HOSE'),
                 icon: () => <Icon name='Task' color={colors.primary} />,
               },
               {

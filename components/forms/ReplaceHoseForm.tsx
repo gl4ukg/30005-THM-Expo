@@ -11,74 +11,55 @@ import { Input } from '@/components/UI/Input/Input';
 import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
-import { TemporaryReplaceHoseFormData } from '@/context/Reducer';
+import { PartialReplaceHoseFormData } from '@/context/Reducer';
 
+import { getScanUrl } from '@/app/(app)/scan';
 import { colors } from '@/lib/tokens/colors';
-import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
-import { router } from 'expo-router';
-import { FC, useMemo, useState, useCallback, useEffect } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import { FC, useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { UnitInput } from '../detailView/edit/UnitInput';
 
 interface Props {
-  hoses: HoseData[];
-  onSave: (formData: Record<string, string | undefined>) => void;
+  draftId: string;
 }
 
-export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
+export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   const { state, dispatch } = useAppContext();
-  const [selectedIds, setSelectedIds] = useState<number[]>(
-    hoses.map((h) => h.assetId),
-  );
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  const globalTempData = state.data.temporaryReplaceHoseFormData as
-    | TemporaryReplaceHoseFormData
-    | null
-    | undefined;
-
-  const initialFormData: TemporaryReplaceHoseFormData = {
-    replacementType: globalTempData?.replacementType || 'Planned',
-    replacementReasons: globalTempData?.replacementReasons || [],
-    replacementImpacts: globalTempData?.replacementImpacts || [],
-    downtime: globalTempData?.downtime || '',
-    comment: globalTempData?.comment || '',
-    name: globalTempData?.name || state.auth.user?.name || '',
-    email: globalTempData?.email || state.auth.user?.email || '',
-    phone: globalTempData?.phone || '',
-  };
-
-  const [formData, setFormData] =
-    useState<TemporaryReplaceHoseFormData>(initialFormData);
+  const [formData, setFormData] = useState<PartialReplaceHoseFormData>({});
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
-  const originallySelectedHoses = useMemo(() => hoses, [hoses]);
-  // Navigation prevention is handled at the page level
+  const flatListRef = useRef<FlatList>(null);
 
-  useEffect(() => {
-    const globalData = state.data.temporaryReplaceHoseFormData as
-      | TemporaryReplaceHoseFormData
-      | null
-      | undefined;
-    const user = state.auth.user;
-    setFormData({
-      replacementType: globalData?.replacementType || 'Planned',
-      replacementReasons: globalData?.replacementReasons || [],
-      replacementImpacts: globalData?.replacementImpacts || [],
-      downtime: globalData?.downtime || '',
-      comment: globalData?.comment || '',
-      name: globalData?.name || user?.name || '',
-      email: globalData?.email || user?.email || '',
-      phone: globalData?.phone || '',
-    });
-  }, [state.data.temporaryReplaceHoseFormData, state.auth.user]);
+  const originallySelectedHoses = useMemo(() => {
+    const draft = state.data.drafts.find((d) => d.id === +draftId);
+    if (!draft) return [];
+    return state.data.hoses.filter((hose) =>
+      draft.selectedIds?.includes(hose.assetId),
+    );
+  }, [selectedIds]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (flatListRef.current) {
+        flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+      }
+      const draft = state.data.drafts.find((d) => d.id === +draftId);
+      if (!draft) {
+        setFormData({});
+        setSelectedIds([]);
+        return;
+      }
+      setFormData(draft.formData);
+      setSelectedIds([...draft.selectedIds]);
+    }, [draftId, state.data.drafts]),
+  );
 
   const handleEmailInput = (emailValue: string) => {
     const updatedFormData = { ...formData, email: emailValue };
     setFormData(updatedFormData);
-    dispatch({
-      type: 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA',
-      payload: updatedFormData,
-    });
     const validation = emailValidation(emailValue);
     if (validation === true) {
       setEmailError(undefined);
@@ -86,27 +67,10 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
   };
 
   const handleInputChange = (
-    field: keyof TemporaryReplaceHoseFormData,
+    field: keyof PartialReplaceHoseFormData,
     value: string | string[],
   ) => {
-    const updatedFormData = { ...formData, [field]: value };
-    setFormData(updatedFormData);
-    dispatch({
-      type: 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA',
-      payload: updatedFormData,
-    });
-  };
-
-  const handleMultiSelectChange = (
-    field: keyof TemporaryReplaceHoseFormData,
-    value: string[],
-  ) => {
-    const updatedFormData = { ...formData, [field]: value };
-    setFormData(updatedFormData);
-    dispatch({
-      type: 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA',
-      payload: updatedFormData,
-    });
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSelectionChange = useCallback((id: number) => {
@@ -119,10 +83,48 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
     });
   }, []);
 
+  const handleSend = () => {
+    // TODO move draft to done and change status to done
+  };
+
+  const handleSaveAsDraft = () => {
+    dispatch({
+      type: 'SAVE_DRAFT',
+      payload: {
+        id: +draftId,
+        selectedIds,
+        type: 'REPLACE_HOSE',
+        status: 'draft',
+        formData,
+      },
+    });
+    router.push('/dashboard');
+  };
+  const handleCancel = () => {
+    router.push('/dashboard');
+  };
+
+  const handleAddHoses = () => {
+    const draft = state.data.drafts.find((d) => d.id === +draftId);
+    if (!draft) return;
+    dispatch({
+      type: 'SAVE_DRAFT',
+      payload: {
+        id: +draftId,
+        selectedIds,
+        status: 'draft',
+        type: 'REPLACE_HOSE',
+        formData,
+      },
+    });
+    router.push(getScanUrl('REPLACE_HOSE', draftId.toString()));
+  };
+
   const isButtonDisabled =
     !formData.name || !formData.email || !!emailError || !formData.phone;
   return (
     <FlatList
+      ref={flatListRef}
       ListHeaderComponent={
         <View style={styles.listHeaderComponent}>
           <Typography
@@ -162,7 +164,7 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
                   options={replaceReasons}
                   selectedOptions={formData.replacementReasons || []}
                   onSave={(value) =>
-                    handleMultiSelectChange('replacementReasons', value)
+                    handleInputChange('replacementReasons', value)
                   }
                 />
               </TooltipWrapper>
@@ -174,7 +176,7 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
                   options={replaceImpacts}
                   selectedOptions={formData.replacementImpacts || []}
                   onSave={(value) =>
-                    handleMultiSelectChange('replacementImpacts', value)
+                    handleInputChange('replacementImpacts', value)
                   }
                 />
               </TooltipWrapper>
@@ -220,40 +222,19 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
               title='Replace hoses'
               size='sm'
               disabled={isButtonDisabled}
-              onPress={() => {
-                onSave({
-                  name: formData.name,
-                  mail: formData.email,
-                  phone: formData.phone,
-                  comment: formData.comment,
-                  selectedIds: selectedIds.join(','),
-                  replacementType: formData.replacementType,
-                  replacementReasons:
-                    formData.replacementType === 'Unplanned'
-                      ? formData.replacementReasons?.join(',')
-                      : undefined,
-                  replacementImpacts:
-                    formData.replacementType === 'Unplanned'
-                      ? formData.replacementImpacts?.join(',')
-                      : undefined,
-                  downtime:
-                    formData.replacementType === 'Unplanned'
-                      ? formData.downtime
-                      : undefined,
-                });
-                dispatch({ type: 'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA' });
-                dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
-              }}
+              onPress={handleSend}
+            />
+            <ButtonTHS
+              title='Save as draft'
+              size='sm'
+              variant='secondary'
+              onPress={handleSaveAsDraft}
             />
             <ButtonTHS
               title='Cancel'
               variant='tertiary'
               size='sm'
-              onPress={() => {
-                dispatch({ type: 'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA' });
-                dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
-                router.back();
-              }}
+              onPress={handleCancel}
             />
           </View>
         </View>
@@ -271,13 +252,7 @@ export const ReplaceHoseForm: FC<Props> = ({ hoses, onSave }) => {
             <LinkButton
               variant='light'
               title={`+ Add hose to this replacement report`}
-              onPress={() => {
-                dispatch({
-                  type: 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA',
-                  payload: { ...formData },
-                });
-                router.push(`/scan?scanPurpose=REPLACE_HOSE`);
-              }}
+              onPress={handleAddHoses}
             />
           </View>
         </>

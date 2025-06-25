@@ -1,3 +1,4 @@
+import { ActivityType } from '@/components/dashboard/activitiesList.tsx/activity';
 import {
   Action,
   ActionCONTACT,
@@ -16,31 +17,25 @@ import {
 import { HoseData } from '@/lib/types/hose';
 import { createContext } from 'react';
 
-export interface TemporaryRFQFormData {
+export interface PartialFormData {
   comment?: string;
-  name?: string;
-  mail?: string;
-  phone?: string;
-  rfq?: string | null;
-}
-
-export interface TemporarySendMailFormData {
-  subject?: string;
-  message?: string;
   name?: string;
   email?: string;
   phone?: string;
 }
+export interface PartialRFQFormData extends PartialFormData {
+  rfq?: string | null;
+}
 
-export interface TemporaryReplaceHoseFormData {
+export interface PartialSendMailFormData extends PartialFormData {
+  subject?: string;
+}
+
+export interface PartialReplaceHoseFormData extends PartialFormData {
   replacementType?: string;
   replacementReasons?: string[];
   replacementImpacts?: string[];
   downtime?: string;
-  comment?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
 }
 
 export interface TemporaryInspectionData {
@@ -128,16 +123,16 @@ type DataAction =
   | ActionWithoutPayload<'DESELECT_ALL_HOSES_MULTI_SELECTION'>
   | ActionWithPayload<'SET_HOSE_TEMPLATE', Partial<HoseData>>
   | ActionWithPayload<'SET_IS_CANCELABLE', boolean>
-  | ActionWithPayload<'SET_TEMPORARY_CONTACT_FORM_DATA', TemporaryRFQFormData>
+  | ActionWithPayload<'SET_TEMPORARY_CONTACT_FORM_DATA', PartialRFQFormData>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_CONTACT_FORM_DATA'>
   | ActionWithPayload<
       'SET_TEMPORARY_SEND_MAIL_FORM_DATA',
-      TemporarySendMailFormData
+      PartialSendMailFormData
     >
   | ActionWithoutPayload<'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA'>
   | ActionWithPayload<
       'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA',
-      TemporaryReplaceHoseFormData
+      PartialReplaceHoseFormData
     >
   | ActionWithoutPayload<'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA'>
   | ActionWithPayload<'SET_TEMPORARY_INSPECTION_DATA', TemporaryInspectionData>
@@ -146,6 +141,33 @@ type DataAction =
       'SET_TEMPORARY_REGISTRATION_DATA',
       TemporaryRegistrationData
     >
+  | ActionWithPayload<
+      'CREATE_DRAFT',
+      {
+        id: number;
+        selectedIds: number[];
+        type: ActivityType;
+        formData: any;
+      }
+    >
+  | ActionWithPayload<
+      'SAVE_DRAFT',
+      {
+        id: number;
+        selectedIds: number[];
+        type: ActivityType;
+        status: 'done' | 'draft';
+        formData: any;
+      }
+    >
+  | ActionWithPayload<
+      'ADD_HOSE_TO_DRAFT',
+      {
+        draftId: number;
+        hoseId: number;
+      }
+    >
+  | ActionWithPayload<'REMOVE_FROM_DRAFT', number>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_REGISTRATION_DATA'>
   | ActionWithPayload<'SET_TEMPORARY_HOSE_EDIT_DATA', TemporaryHoseEditData>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_HOSE_EDIT_DATA'>
@@ -355,6 +377,53 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       return {
         ...state,
         temporaryHoseEditData: action.payload,
+      };
+
+    case 'CREATE_DRAFT':
+      return {
+        ...state,
+        drafts: [...state.drafts, { ...action.payload, status: 'draft' }],
+      };
+    case 'SAVE_DRAFT':
+      const drafts = state.drafts.find(
+        (draft) => draft.id === action.payload.id,
+      )
+        ? state.drafts.map((draft) => {
+            if (draft.id === action.payload.id) {
+              return { ...action.payload };
+            }
+            return draft;
+          })
+        : [...state.drafts, { ...action.payload }];
+      return {
+        ...state,
+        drafts,
+      };
+    case 'ADD_HOSE_TO_DRAFT':
+      const { draftId, hoseId } = action.payload;
+      const draft = state.drafts.find((draft) => draft.id === draftId);
+      if (!draft) return state;
+      return {
+        ...state,
+        drafts: state.drafts.map((draft) => {
+          if (draft.id === draftId) {
+            return {
+              ...draft,
+              selectedIds: draft.selectedIds.includes(hoseId)
+                ? draft.selectedIds
+                : [...draft.selectedIds, hoseId],
+            };
+          }
+          return draft;
+        }),
+      };
+    case 'REMOVE_FROM_DRAFT':
+      console.log('REMOVE_FROM_DRAFT', action.payload);
+      return {
+        ...state,
+        drafts: [
+          ...state.drafts.filter((draft) => draft.id !== action.payload),
+        ],
       };
     case 'CLEAR_TEMPORARY_HOSE_EDIT_DATA':
       return {

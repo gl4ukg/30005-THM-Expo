@@ -1,12 +1,13 @@
 import { HoseData } from '@/lib/types/hose';
 import {
-  TemporaryReplaceHoseFormData,
-  TemporaryRFQFormData,
-  TemporarySendMailFormData,
+  PartialReplaceHoseFormData,
+  PartialRFQFormData,
+  PartialSendMailFormData,
   TemporaryInspectionData,
   TemporaryRegistrationData,
   TemporaryHoseEditData,
 } from './Reducer';
+import { Activity } from '@/components/dashboard/activitiesList.tsx/activity';
 
 interface AppState {
   auth: AuthState;
@@ -118,13 +119,15 @@ interface DataState {
   selection: HoseSelection | null;
   hoseTemplate?: Partial<HoseData>;
   isCancelable: boolean;
-  temporaryContactFormData?: TemporaryRFQFormData | null;
-  temporarySendMailFormData?: TemporarySendMailFormData | null;
-  temporaryReplaceHoseFormData?: TemporaryReplaceHoseFormData | null;
+  temporaryContactFormData?: PartialRFQFormData | null;
+  temporarySendMailFormData?: PartialSendMailFormData | null;
+  temporaryReplaceHoseFormData?: PartialReplaceHoseFormData | null;
   temporaryInspectionData?: TemporaryInspectionData | null;
   temporaryRegistrationData?: TemporaryRegistrationData | null;
   temporaryHoseEditData?: TemporaryHoseEditData | null;
-  drafts: any[];
+  drafts: (Activity & {
+    formData: PartialRFQFormData | PartialSendMailFormData | Partial<HoseData>;
+  })[];
   done: any[];
 }
 
@@ -169,7 +172,43 @@ const initialDataState: DataState = {
   temporaryReplaceHoseFormData: null,
   temporaryInspectionData: null,
   temporaryRegistrationData: null,
-  drafts: [],
+  drafts: [
+    {
+      id: 191818,
+      type: 'SCRAP',
+      status: 'draft',
+      selectedIds: [27, 30],
+      formData: {
+        comment: 'test',
+        email: 'slange_mester@tess.no',
+        name: 'Ole Slange Mester',
+        phone: '123123123',
+      },
+    },
+    {
+      id: 191819,
+      type: 'RFQ',
+      status: 'done',
+      selectedIds: [27],
+      formData: {},
+    },
+    {
+      id: 191820,
+      type: 'REPLACE_HOSE',
+      status: 'done',
+      selectedIds: [27],
+      formData: {
+        comment: 'test',
+        email: 'slange_mester@tess.no',
+        name: 'Ole Slange Mester',
+        phone: '123123123',
+        replacementImpacts: ['test'],
+        replacementReasons: ['test'],
+        replacementType: 'Unplanned',
+        downtime: '100',
+      },
+    },
+  ],
   done: [],
 };
 

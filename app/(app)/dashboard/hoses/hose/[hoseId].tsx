@@ -27,6 +27,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+import { generateNumericDraftId } from '@/lib/util/unikId';
 
 type ExtendedEditProps<T> = EditProps<T> & {
   missingFields?: string[];
@@ -154,7 +155,6 @@ const HoseDetails = () => {
   const toggleEditMode = () => {
     if (editMode) {
       // Exiting edit mode - clear temporary data and missing fields
-      dispatch({ type: 'CLEAR_TEMPORARY_HOSE_EDIT_DATA' });
       dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
       setMissingFields([]);
     } else {
@@ -191,7 +191,6 @@ const HoseDetails = () => {
       });
 
       // Clear temporary data and exit edit mode
-      dispatch({ type: 'CLEAR_TEMPORARY_HOSE_EDIT_DATA' });
       dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
       setEditMode(false);
       setMissingFields([]);
@@ -227,28 +226,43 @@ const HoseDetails = () => {
 
   const handleAction = (value: SingleSelection['type']) => {
     if (value === 'EDIT') {
+      // Create a draft for editing ?
       setEditMode(true);
       return;
     } else if (value === 'INSPECT') {
+      const draftId = generateNumericDraftId(
+        state.data.drafts.map((d) => d.id),
+      );
+      dispatch({
+        type: 'CREATE_DRAFT',
+        payload: {
+          id: draftId,
+          selectedIds: [hoseData.assetId],
+          type: 'INSPECT',
+          formData: hoseData,
+        },
+      });
       router.push({
         pathname: `/dashboard/hoses/inspect`,
-        params: { rfid: hoseData.RFID, hoseId: hoseData.assetId },
+        params: { draftId },
       });
       return;
     } else {
-      if (!hoseData.assetId) return;
-      if (!state.data.selection) {
-        dispatch({
-          type: 'SELECT_ONE_HOSE',
-          payload: {
-            type: value,
-            id: hoseData.assetId,
-          },
-        });
-      }
+      const draftId = generateNumericDraftId(
+        state.data.drafts.map((d) => d.id),
+      );
+      dispatch({
+        type: 'CREATE_DRAFT',
+        payload: {
+          id: draftId,
+          selectedIds: [hoseData.assetId],
+          type: value,
+          formData: hoseData,
+        },
+      });
       router.push({
         pathname: `/dashboard/actions`,
-        params: { hoseId: hoseData.assetId, action: value },
+        params: { action: value, draftId: draftId, allowScan: 'false' },
       });
     }
   };
