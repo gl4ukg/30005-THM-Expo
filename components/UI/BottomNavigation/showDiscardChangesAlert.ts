@@ -19,15 +19,12 @@ export const showDiscardChangesAlert = (
         style: 'destructive',
         onPress: () => {
           dispatch({
-            type: 'CLEAR_ALL_TEMPORARY_DATA',
-          });
-          dispatch({
             type: 'SET_IS_CANCELABLE',
             payload: false,
           });
           requestAnimationFrame(() => {
             // router.dismissAll();
-            router.push('/(app)/dashboard');
+            router.back();
           });
         },
       },

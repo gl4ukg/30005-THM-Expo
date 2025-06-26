@@ -49,6 +49,7 @@
     "react-native": "0.79.3",
     "react-native-collapsible": "^1.6.2",
     "react-native-gesture-handler": "~2.24.0",
+    "react-native-get-random-values": "~1.11.0",
     "react-native-gifted-charts": "^1.4.56",
     "react-native-modal-datetime-picker": "^18.0.0",
     "react-native-nfc-manager": "^3.16.1",
@@ -58,7 +59,8 @@
     "react-native-svg": "15.11.2",
     "react-native-vision-camera": "^4.6.4",
     "react-native-web": "^0.20.0",
-    "react-native-webview": "13.13.5"
+    "react-native-webview": "13.13.5",
+    "short-uuid": "^5.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

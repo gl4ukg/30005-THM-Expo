@@ -7,7 +7,7 @@ import { FC, useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 interface ElementProps {
-  item: HoseData;
+  item: Partial<HoseData>;
   canBeSelected?: boolean;
   isSelected?: boolean;
   onSelectedChange?: (id: number) => void;
@@ -23,7 +23,7 @@ export const ListElement: FC<ElementProps> = ({
   const { assetId, s1Code, RFID, missingData } = item;
   const handleSelect = () => {
     if (!canBeSelected || !onSelectedChange) return;
-    onSelectedChange(assetId);
+    onSelectedChange(assetId!);
   };
   const hasAttachment = useMemo(() => Math.random() > 0.5, []);
   return (
@@ -35,7 +35,10 @@ export const ListElement: FC<ElementProps> = ({
         ]}
       >
         <View style={elementStyle.columnOne}>
-          <Typography name='tableContentNumber' text={assetId.toString()} />
+          <Typography
+            name='tableContentNumber'
+            text={assetId?.toString() ?? 'no id'}
+          />
           <View style={elementStyle.iconsContainer}>
             <View style={elementStyle.iconContainer}>
               {!!RFID && (

@@ -1,72 +1,54 @@
+import { getScanUrl } from '@/app/(app)/scan';
 import { ListTable } from '@/components/dashboard/listTable';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
-import { TemporarySendMailFormData } from '@/context/Reducer';
+import { PartialSendMailFormData } from '@/context/Reducer';
 
 import { colors } from '@/lib/tokens/colors';
-import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
-import { router } from 'expo-router';
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 interface Props {
-  hoses: HoseData[];
-  onSave: (arg0: any) => void;
+  draftId: string;
 }
-export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
+export const SendMailForm: React.FC<Props> = ({ draftId }) => {
   const { state, dispatch } = useAppContext();
-
-  const globalTempData = state.data.temporarySendMailFormData as
-    | TemporarySendMailFormData
-    | null
-    | undefined;
-
-  const initialFormData: TemporarySendMailFormData = {
-    subject: globalTempData?.subject || '',
-    message: globalTempData?.message || '',
-    name: globalTempData?.name || state.auth.user?.name || '',
-    email: globalTempData?.email || state.auth.user?.email || '',
-    phone: globalTempData?.phone || '',
-  };
-
-  const [formData, setFormData] =
-    useState<TemporarySendMailFormData>(initialFormData);
+  const [formData, setFormData] = useState<PartialSendMailFormData>({});
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
-
-  const [selectedIds, setSelectedIds] = useState<number[]>(
-    hoses.map((h) => h.assetId),
-  );
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const flatListRef = useRef<FlatList>(null);
   const originallySelectedHoses = useMemo(() => {
-    setSelectedIds(hoses.map((h) => h.assetId));
-    return hoses;
-  }, [hoses]);
+    const draft = state.data.drafts.find((d) => d.id === +draftId);
+    if (!draft) return [];
+    return state.data.hoses.filter((hose) =>
+      draft.selectedIds?.includes(hose.assetId),
+    );
+  }, [selectedIds]);
 
-  useEffect(() => {
-    const globalData = state.data.temporarySendMailFormData as
-      | TemporarySendMailFormData
-      | null
-      | undefined;
-    const user = state.auth.user;
-    setFormData({
-      subject: globalData?.subject || '',
-      message: globalData?.message || '',
-      name: globalData?.name || user?.name || '',
-      email: globalData?.email || user?.email || '',
-      phone: globalData?.phone || '',
-    });
-  }, [state.data.temporarySendMailFormData, state.auth.user]);
+  useFocusEffect(
+    useCallback(() => {
+      if (flatListRef.current) {
+        flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+      }
+      const draft = state.data.drafts.find((d) => d.id === +draftId);
+      if (!draft) {
+        setFormData({});
+        setSelectedIds([]);
+        return;
+      }
+      setFormData(draft.formData as PartialSendMailFormData);
+      setSelectedIds([...draft.selectedIds]);
+    }, [draftId, state.data.drafts]),
+  );
 
   const handleEmailInput = (emailValue: string) => {
     const updatedFormData = { ...formData, email: emailValue };
     setFormData(updatedFormData);
-    dispatch({
-      type: 'SET_TEMPORARY_SEND_MAIL_FORM_DATA',
-      payload: updatedFormData,
-    });
     const validation = emailValidation(emailValue);
     if (validation === true) {
       setEmailError(undefined);
@@ -74,15 +56,10 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
   };
 
   const handleInputChange = (
-    field: keyof TemporarySendMailFormData,
+    field: keyof PartialSendMailFormData,
     value: string,
   ) => {
-    const updatedFormData = { ...formData, [field]: value };
-    setFormData(updatedFormData);
-    dispatch({
-      type: 'SET_TEMPORARY_SEND_MAIL_FORM_DATA',
-      payload: updatedFormData,
-    });
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSelectionChange = useCallback((id: number) => {
@@ -95,6 +72,59 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
     });
   }, []);
 
+  const handleSend = () => {
+    dispatch({
+      type: 'MOVE_DRAFT_TO_DONE',
+      payload: +draftId,
+    });
+    router.push('/dashboard');
+  };
+
+  const handleSaveAsDraft = () => {
+    dispatch({
+      type: 'SAVE_DRAFT',
+      payload: {
+        id: +draftId,
+        selectedIds,
+        type: 'CONTACT_SUPPORT',
+        status: 'draft',
+        formData,
+      },
+    });
+    router.push('/dashboard');
+  };
+  const handleCancel = () => {
+    router.push('/dashboard');
+  };
+
+  const handleAddHoses = () => {
+    const draft = state.data.drafts.find((d) => d.id === +draftId);
+    if (!draft) {
+      dispatch({
+        type: 'CREATE_DRAFT',
+        payload: {
+          id: +draftId,
+          status: 'draft',
+          selectedIds,
+          type: 'CONTACT_SUPPORT',
+          formData,
+        },
+      });
+    } else {
+      dispatch({
+        type: 'SAVE_DRAFT',
+        payload: {
+          id: +draftId,
+          selectedIds,
+          status: 'draft',
+          type: 'CONTACT_SUPPORT',
+          formData,
+        },
+      });
+    }
+    router.navigate(getScanUrl('CONTACT_SUPPORT', draftId.toString()));
+  };
+
   const isButtonDisabled =
     !formData.name ||
     !formData.email ||
@@ -105,6 +135,7 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
   return (
     <>
       <FlatList
+        ref={flatListRef}
         ListHeaderComponent={
           <View style={[styles.listHeaderComponent, styles.paddingHorizontal]}>
             <Typography
@@ -123,8 +154,8 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
                 type='textArea'
                 label='Message'
                 placeholder='Message...'
-                value={formData.message || ''}
-                onChangeText={(value) => handleInputChange('message', value)}
+                value={formData.comment || ''}
+                onChangeText={(value) => handleInputChange('comment', value)}
               />
             </View>
           </View>
@@ -155,28 +186,19 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
                 title='Send'
                 size='sm'
                 disabled={isButtonDisabled}
-                onPress={() => {
-                  onSave({
-                    subject: formData.subject,
-                    comment: formData.message, // Ensure your onSave expects 'comment' for message
-                    name: formData.name,
-                    mail: formData.email,
-                    phone: formData.phone,
-                    selectedIds,
-                  });
-                  dispatch({ type: 'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA' });
-                  dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
-                }}
+                onPress={handleSend}
+              />
+              <ButtonTHS
+                title='Save as draft'
+                size='sm'
+                variant='secondary'
+                onPress={handleSaveAsDraft}
               />
               <ButtonTHS
                 title='Cancel'
                 variant='tertiary'
                 size='sm'
-                onPress={() => {
-                  dispatch({ type: 'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA' });
-                  dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
-                  router.back();
-                }}
+                onPress={handleCancel}
               />
             </View>
           </View>
@@ -203,13 +225,7 @@ export const SendMailForm: React.FC<Props> = ({ hoses, onSave }) => {
               variant='light'
               hSpace={10}
               title={`+ Add hoses as attachment`}
-              onPress={() => {
-                dispatch({
-                  type: 'SET_TEMPORARY_SEND_MAIL_FORM_DATA',
-                  payload: { ...formData },
-                });
-                router.navigate('/scan?scanPurpose=CONTACT_SUPPORT');
-              }}
+              onPress={handleAddHoses}
             />
           </View>
         )}
