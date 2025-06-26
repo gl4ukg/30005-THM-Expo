@@ -8,20 +8,21 @@ import { ButtonTHS } from '@/components/UI';
 import { Input } from '@/components/UI/Input/Input';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+const baseDir = `${FileSystem.documentDirectory}THM/`;
+
 const Photo = () => {
   const [hoseId, setHoseId] = useState<string | null>(null);
   const [locationId, setLocationId] = useState<string | null>(null);
   const [dirUri, setDirUri] = useState<string | null>(null);
   const [time, setTime] = useState<number | null>(null);
 
-  const setLocation = () =>
-    setDirUri(`${FileSystem.documentDirectory}THM/${locationId}/${hoseId}`);
+  const setLocation = () => setDirUri(`${baseDir}${locationId}/${hoseId}`);
 
   const getImages = async () => {
     const getMockedImages = async () => {
       try {
         // 1. Prepare target directory
-        const imageDir = `${FileSystem.documentDirectory}THM/${locationId}/${hoseId}/images/`;
+        const imageDir = `${baseDir}${locationId}/${hoseId}/images/`;
 
         // Create directory if needed
         await FileSystem.makeDirectoryAsync(imageDir, { intermediates: true });
