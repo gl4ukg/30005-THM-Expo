@@ -3,10 +3,9 @@ import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI/Button/Button';
 import { Input } from '@/components/UI/Input/Input';
 import { colors } from '@/lib/tokens/colors';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
-  Pressable,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -40,6 +39,22 @@ export const RadioSelect: React.FC<Props> = ({
   const [error, setError] = useState('');
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
+  const focusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleNonApplicableOption = () => {
+    if (focusTimerRef.current) {
+      clearTimeout(focusTimerRef.current);
+    }
+
+    scrollViewRef.current?.scrollToEnd({ animated: true });
+    setError('');
+    setIsAlternativeOption(true);
+    setManualInput('');
+
+    focusTimerRef.current = setTimeout(() => {
+      textInputRef.current?.focus();
+      focusTimerRef.current = null;
+    }, 200);
+  };
 
   return (
     <View style={styles.container}>
@@ -87,12 +102,7 @@ export const RadioSelect: React.FC<Props> = ({
         {hasAlternativeOption && (
           <RadioButton
             isSelected={isAlternativeOption}
-            onChange={() => {
-              scrollViewRef.current?.scrollToEnd({ animated: true });
-              setError('');
-              setIsAlternativeOption(true);
-              setManualInput('');
-            }}
+            onChange={handleNonApplicableOption}
             id={'alternativeOption'}
             label={'N/A'}
             menu
