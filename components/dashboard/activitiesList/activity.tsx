@@ -52,36 +52,44 @@ export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
     if (item.selectedIds.length === 1) {
       return (
         state.data.hoses.find((hose) => hose.assetId === item.selectedIds[0])
-          ?.S2Equipment ?? ''
+          ?.equipmentSubunit ?? ''
       );
     } else return '';
   };
+  const singleHose =
+    item.selectedIds.length === 1
+      ? state.data.hoses.find((hose) => hose.assetId === item.selectedIds[0])
+      : undefined;
 
   return (
-    <Pressable onPress={onRowPress}>
+    <Pressable onPress={() => (status === 'draft' ? onRowPress() : null)}>
       <View style={[elementStyle.container]}>
         <View style={elementStyle.columnOne}>
           <Typography name='tableContentNumber' text={`${id}`} />
           <View style={elementStyle.iconsContainer}>
-            {/* <View style={elementStyle.iconContainer}>
-              {!!formData.rfid && (
-                <Icon
-                  name='RfidIdentificator'
-                  color={colors.black}
-                  size='xsm'
-                />
-              )}
-            </View>
-            <View style={elementStyle.iconContainer}>
-              {formData.missingData && (
-                <Icon name='Alert' color={colors.error} size='xsm' />
-              )}
-            </View>
-            <View style={elementStyle.iconContainer}>
-              {hasAttachment && (
-                <Icon name='Attachment' color={colors.black} size='xsm' />
-              )}
-            </View> */}
+            {singleHose && (
+              <>
+                <View style={elementStyle.iconContainer}>
+                  {!!singleHose.RFID && (
+                    <Icon
+                      name='RfidIdentificator'
+                      color={colors.black}
+                      size='xsm'
+                    />
+                  )}
+                </View>
+                <View style={elementStyle.iconContainer}>
+                  {singleHose.missingData && (
+                    <Icon name='Alert' color={colors.error} size='xsm' />
+                  )}
+                </View>
+                <View style={elementStyle.iconContainer}>
+                  {singleHose.documentName && (
+                    <Icon name='Attachment' color={colors.black} size='xsm' />
+                  )}
+                </View>
+              </>
+            )}
           </View>
         </View>
         <View style={elementStyle.columnTwo}>
