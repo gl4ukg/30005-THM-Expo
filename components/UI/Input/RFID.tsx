@@ -44,7 +44,10 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
   }, []);
 
   const handleRFIDScan = useCallback(async () => {
-    if (!isNfcSupported) return;
+    if (!isNfcSupported) {
+      Alert.alert('NFC not supported', 'This device does not support NFC.');
+      return;
+    }
 
     try {
       if (!(await NfcManager.isEnabled())) {
@@ -140,7 +143,7 @@ export const RFIDInput: React.FC<RFIDInputProps> = ({
           pressed && !disableScan && styles.pressedInputContainer,
         ]}
         onPress={handlePress}
-        disabled={!isNfcSupported || disableScan}
+        disabled={disableScan}
       >
         <Typography
           name='navigation'

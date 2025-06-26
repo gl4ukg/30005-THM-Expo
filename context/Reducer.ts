@@ -151,6 +151,7 @@ type DataAction =
         hoseId: number;
       }
     >
+  | ActionWithPayload<'ADD_HOSE_TO_EDITED_HOSES', Partial<HoseData>>
   | ActionWithPayload<'MOVE_DRAFT_TO_DONE', number>
   | ActionWithPayload<'REMOVE_FROM_DRAFT', number>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_REGISTRATION_DATA'>
@@ -384,6 +385,12 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
               { ...draft, status: 'done', modifiedAt: new Date() },
             ]
           : state.done,
+      };
+    }
+    case 'ADD_HOSE_TO_EDITED_HOSES': {
+      return {
+        ...state,
+        editedHoses: [...state.editedHoses, action.payload],
       };
     }
 

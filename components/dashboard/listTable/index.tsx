@@ -28,7 +28,7 @@ export const ListTable: FC<Props> = ({
   const router = useRouter();
   const handleRowPress = (item: (typeof items)[0]) => {
     router.push(
-      `/(app)/dashboard/hoses/hose/${item.assetId}?id=${item.assetId}`,
+      `/(app)/dashboard/hoses/hose/${item.assetId}?id=${item.assetId}${canSelect ? '&isNotEditable=true' : ''}`,
     );
   };
   return (

@@ -121,6 +121,7 @@ interface DataState {
   isCancelable: boolean;
   drafts: ActivityDraft[];
   done: ActivityDone[];
+  editedHoses: Partial<HoseData>[];
 }
 
 interface DraftAction extends Activity {
@@ -263,6 +264,7 @@ const initialDataState: DataState = {
       },
     },
   ],
+  editedHoses: [],
 };
 
 const initialSettingsState: SettingsState = {
