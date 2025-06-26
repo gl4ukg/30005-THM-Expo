@@ -4,10 +4,12 @@ import { IconName } from '@/components/Icon/iconMapping';
 import { Typography } from '@/components/Typography';
 import { ActionsFab } from '@/components/UI/ActionMenu/fab';
 import { useAppContext } from '@/context/ContextProvider';
-import { MultiSelectionActionsType, isMultiSelection } from '@/context/state';
+import { MultiSelectionActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
+import { generateNumericDraftId } from '@/lib/util/unikId';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 interface Props {
@@ -31,7 +33,9 @@ const FilteredHosesList: React.FC<Props> = (props) => {
   if (Array.isArray(filter)) {
     filter = filter[0];
   }
-
+  const [selected, setSelected] = useState<number[]>([]);
+  const [selectionType, setSelectionType] =
+    useState<MultiSelectionActionsType | null>(null);
   const router = useRouter();
   type Option<T extends string> = {
     value: T;
@@ -65,41 +69,44 @@ const FilteredHosesList: React.FC<Props> = (props) => {
     state.data.hoses,
   ); //TODO
   const onChangeAction = (value: MultiSelectionActionsType) => {
-    dispatch({
-      type: 'START_MULTI_SELECTION',
-      payload: value,
-    });
+    setSelectionType(value);
   };
   const handleSelectionChange = (id: number) => {
-    const selection = state.data.selection;
-    if (isMultiSelection(selection)) {
-      dispatch({
-        type: 'TOGGLE_HOSE_MULTI_SELECTION',
-        payload: id,
-      });
-    }
+    setSelected((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((item) => item !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
   };
   const toggleSelectAll = () => {
-    if (isMultiSelection(state.data.selection)) {
-      const allIds = filteredList.map((item) => item.assetId);
-      const isAllSelected = state.data.selection.ids.length === listLength;
-
-      if (isAllSelected) {
-        dispatch({ type: 'DESELECT_ALL_HOSES_MULTI_SELECTION' });
+    setSelected((prev) => {
+      if (prev.length === listLength) {
+        return [];
       } else {
-        dispatch({
-          type: 'SELECT_MANY_HOSES_MULTI_SELECTION',
-          payload: allIds,
-        });
+        return filteredList.map((item) => item.assetId);
       }
-    }
+    });
   };
   const handleSelectionAction = () => {
-    if (isMultiSelection(state.data.selection)) {
-      const action = state.data.selection.type;
+    if (selectionType) {
+      const draftId = generateNumericDraftId(
+        state.data.drafts.map((d) => d.id),
+      ).toString();
+      dispatch({
+        type: 'SAVE_DRAFT',
+        payload: {
+          formData: {},
+          selectedIds: selected,
+          type: selectionType,
+          id: +draftId,
+          status: 'draft',
+        },
+      });
       router.push({
         pathname: `/dashboard/actions`,
-        params: { action },
+        params: { action: selectionType, draftId: draftId, allowScan: 'true' },
       });
     }
   };
@@ -112,32 +119,26 @@ const FilteredHosesList: React.FC<Props> = (props) => {
       />
       <View style={style.header}>
         <Typography name='sectionHeader' text={listTitle} style={style.title} />
-        {isMultiSelection(state.data.selection) && (
+        {selectionType && (
           <View style={style.selectedCounterContainer}>
             <View style={style.selectedCounterTitle}>
               <Typography
                 name='navigation'
-                text={
-                  options.find((o) => o.value === state.data.selection?.type)
-                    ?.label
-                }
+                text={options.find((o) => o.value === selectionType)?.label}
               />
               <Typography
                 name='navigation'
-                text={
-                  options.find((o) => o.value === state.data.selection?.type)
-                    ?.subtitle
-                }
+                text={options.find((o) => o.value === selectionType)?.subtitle}
                 style={style.selectedCounterTitle}
               />
             </View>
             <View style={style.selectionCounter}>
               <SelectedHoseCounter
                 icon={
-                  options.find((o) => o.value === state.data.selection?.type)
-                    ?.icon || 'Alert'
+                  options.find((o) => o.value === selectionType)
+                    ?.icon as IconName
                 }
-                counter={state.data.selection.ids.length}
+                counter={selected.length}
                 handlePress={handleSelectionAction}
               />
             </View>
@@ -146,13 +147,9 @@ const FilteredHosesList: React.FC<Props> = (props) => {
       </View>
       <ListTable
         items={filteredList}
-        selectedIds={
-          (isMultiSelection(state.data.selection) &&
-            state.data.selection?.ids) ||
-          []
-        }
+        selectedIds={selected}
         onSelectionChange={handleSelectionChange}
-        canSelect={isMultiSelection(state.data.selection)}
+        canSelect={selectionType !== null}
         onSelectAll={toggleSelectAll}
       />
     </>

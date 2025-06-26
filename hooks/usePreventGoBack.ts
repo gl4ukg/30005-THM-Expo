@@ -14,15 +14,13 @@ export const usePreventGoBack = () => {
     showDiscardChangesAlert(dispatch);
   }, [dispatch]);
 
-  const shouldPreventNavigation = state.data.isCancelable;
-
   useEffect(() => {
-    if (shouldPreventNavigation !== preventionActiveRef.current) {
-      preventionActiveRef.current = shouldPreventNavigation;
+    if (state.data.isCancelable !== preventionActiveRef.current) {
+      preventionActiveRef.current = state.data.isCancelable;
     }
-  }, [shouldPreventNavigation]);
+  }, [state.data.isCancelable]);
 
-  usePreventRemove(shouldPreventNavigation, handleNavigationAttemptBlocked);
+  usePreventRemove(state.data.isCancelable, handleNavigationAttemptBlocked);
 
   useFocusEffect(
     useCallback(() => {

@@ -7,7 +7,7 @@ import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
 import { Href, Link, useRouter } from 'expo-router';
 import { FC, useContext, useState } from 'react';
-import { Dimensions, Pressable, StyleSheet, View, Alert } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -36,6 +36,11 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
                 icon: () => <Icon name='Meter' color={colors.primary} />,
               },
               {
+                title: 'Recent activities',
+                to: '/(app)/activites',
+                icon: () => <Icon name='Dashboard' color={colors.primary} />,
+              },
+              {
                 title: 'Register hose / equipment',
                 to: getScanUrl('REGISTER_HOSE'),
                 icon: () => (
@@ -54,7 +59,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               },
               {
                 title: 'Replace hose / pressure testing',
-                to: getScanUrl('REPLACE_HOSE'), // TODO: change to replace hose
+                to: getScanUrl('REPLACE_HOSE'),
                 icon: () => <Icon name='Task' color={colors.primary} />,
               },
               {
