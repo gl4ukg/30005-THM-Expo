@@ -12,24 +12,24 @@ export const PdfViewingDemo = () => {
           PDF Viewing Demo
         </Typography>
         <Typography name='sectionText' style={styles.descriptionText}>
-          This demo shows two different ways to view and download PDF documents:
+          Tap on any document below to view it in the app with full-screen
+          experience:
         </Typography>
 
         <View style={styles.featureList}>
           <Typography name='fieldLabel' style={styles.featureText}>
-            📱 In-App Viewer: View PDFs directly within the React Native app
-            with download capability
-          </Typography>
-          <Typography name='fieldLabel' style={styles.featureText}>
-            🌐 Browser Viewer: Open PDFs in the device's default browser
+            📱 Full-Screen Viewer: View PDFs directly within the app
           </Typography>
           <Typography name='fieldLabel' style={styles.featureText}>
             📥 Download: Save PDF files directly to the device
           </Typography>
+          <Typography name='fieldLabel' style={styles.featureText}>
+            ✖️ Close: Exit the PDF viewer and return to the document list
+          </Typography>
         </View>
 
         <Typography name='sectionText' style={styles.instructionText}>
-          Tap on any document below, then choose your preferred viewing option:
+          Simply tap on any document to open it:
         </Typography>
       </View>
 
