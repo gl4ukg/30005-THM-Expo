@@ -25,7 +25,7 @@ interface PdfViewerProps {
   onClose: () => void;
 }
 
-export const EnhancedPdfViewer: React.FC<PdfViewerProps> = ({
+export const PDFViewer: React.FC<PdfViewerProps> = ({
   uri,
   fileName = 'document.pdf',
   onClose,
@@ -376,4 +376,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EnhancedPdfViewer;
+export default PDFViewer;

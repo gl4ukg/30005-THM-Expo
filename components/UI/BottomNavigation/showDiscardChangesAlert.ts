@@ -2,7 +2,9 @@ import { AppAction } from '@/context/Reducer';
 import { router } from 'expo-router';
 import { Alert } from 'react-native';
 
-export const showDiscardChagesAlert = (dispatch: React.Dispatch<AppAction>) => {
+export const showDiscardChangesAlert = (
+  dispatch: React.Dispatch<AppAction>,
+) => {
   Alert.alert(
     'Discard changes?',
     'You have unsaved changes. Discard them and leave the screen?',
@@ -21,8 +23,8 @@ export const showDiscardChagesAlert = (dispatch: React.Dispatch<AppAction>) => {
             payload: false,
           });
           requestAnimationFrame(() => {
-            router.dismissAll();
-            router.push('/(app)/dashboard');
+            // router.dismissAll();
+            router.back();
           });
         },
       },

@@ -7,7 +7,7 @@ import { StyleSheet, View } from 'react-native';
 import { ListElement } from './listElement';
 
 interface Props {
-  item: HoseData;
+  item: Partial<HoseData>;
 }
 
 const spacing = {

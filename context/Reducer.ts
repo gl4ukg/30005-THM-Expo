@@ -1,3 +1,4 @@
+import { ActivityType } from '@/components/dashboard/activitiesList/activity';
 import {
   Action,
   ActionCONTACT,
@@ -6,6 +7,7 @@ import {
   AppState,
   AuthState,
   DataState,
+  ActivityDraft,
   initialState,
   isMultiSelection,
   MultiSelection,
@@ -14,33 +16,41 @@ import {
   SingleSelectionActionsType,
 } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
-import { createContext } from 'react';
+import { act, createContext } from 'react';
 
-export interface TemporaryRFQFormData {
+export interface PartialFormData {
   comment?: string;
-  name?: string;
-  mail?: string;
-  phone?: string;
-  rfq?: string | null;
-}
-
-export interface TemporarySendMailFormData {
-  subject?: string;
-  message?: string;
   name?: string;
   email?: string;
   phone?: string;
 }
+export interface PartialRFQFormData extends PartialFormData {
+  rfq?: string | null;
+}
 
-export interface TemporaryReplaceHoseFormData {
+export interface PartialSendMailFormData extends PartialFormData {
+  subject?: string;
+}
+
+export interface PartialReplaceHoseFormData extends PartialFormData {
   replacementType?: string;
   replacementReasons?: string[];
   replacementImpacts?: string[];
   downtime?: string;
-  comment?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
+}
+
+export interface TemporaryInspectionData {
+  hoseId?: number;
+  changes?: Partial<HoseData>;
+}
+
+export interface TemporaryRegistrationData {
+  formData?: Partial<HoseData> & { showValidationErrors?: boolean };
+}
+
+export interface TemporaryHoseEditData {
+  hoseId?: number;
+  changes?: Partial<HoseData>;
 }
 
 interface ActionWithPayload<T extends string, Payload> {
@@ -84,7 +94,7 @@ export function combineReducers<S, A>(
 }
 
 type AuthAction =
-  | ActionWithPayload<'LOGIN', { email: string; id: string; name: string }>
+  | ActionWithPayload<'LOGIN', AuthState['user']>
   | ActionWithoutPayload<'LOGOUT'>
   | ActionWithPayload<'SET_TOKEN', string>
   | ActionWithPayload<'SET_LOGIN_LOADING', boolean>;
@@ -114,21 +124,41 @@ type DataAction =
   | ActionWithoutPayload<'DESELECT_ALL_HOSES_MULTI_SELECTION'>
   | ActionWithPayload<'SET_HOSE_TEMPLATE', Partial<HoseData>>
   | ActionWithPayload<'SET_IS_CANCELABLE', boolean>
-  | ActionWithPayload<
-      'SET_TEMPORARY_CONTACT_FORM_DATA',
-      TemporaryContactFormData
-    >
+  | ActionWithPayload<'SET_TEMPORARY_CONTACT_FORM_DATA', PartialRFQFormData>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_CONTACT_FORM_DATA'>
   | ActionWithPayload<
       'SET_TEMPORARY_SEND_MAIL_FORM_DATA',
-      TemporarySendMailFormData
+      PartialSendMailFormData
     >
   | ActionWithoutPayload<'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA'>
   | ActionWithPayload<
       'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA',
-      TemporaryReplaceHoseFormData
+      PartialReplaceHoseFormData
     >
-  | ActionWithoutPayload<'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA'>;
+  | ActionWithoutPayload<'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA'>
+  | ActionWithPayload<'SET_TEMPORARY_INSPECTION_DATA', TemporaryInspectionData>
+  | ActionWithoutPayload<'CLEAR_TEMPORARY_INSPECTION_DATA'>
+  | ActionWithPayload<
+      'SET_TEMPORARY_REGISTRATION_DATA',
+      TemporaryRegistrationData
+    >
+  | ActionWithPayload<'CREATE_DRAFT', Omit<ActivityDraft, 'modifiedAt'>>
+  | ActionWithPayload<'SAVE_DRAFT', Omit<ActivityDraft, 'modifiedAt'>>
+  | ActionWithPayload<
+      'ADD_HOSE_TO_DRAFT',
+      {
+        draftId: number;
+        hoseId: number;
+      }
+    >
+  | ActionWithPayload<'ADD_HOSE_TO_EDITED_HOSES', Partial<HoseData>>
+  | ActionWithPayload<'MOVE_DRAFT_TO_DONE', number>
+  | ActionWithPayload<'REMOVE_FROM_DRAFT', number>
+  | ActionWithoutPayload<'CLEAR_TEMPORARY_REGISTRATION_DATA'>
+  | ActionWithPayload<'SET_TEMPORARY_HOSE_EDIT_DATA', TemporaryHoseEditData>
+  | ActionWithoutPayload<'CLEAR_TEMPORARY_HOSE_EDIT_DATA'>
+  | ActionWithoutPayload<'CLEAR_ALL_TEMPORARY_DATA'>
+  | ActionWithPayload<'FINISH_SELECTION_AND_RESET', Partial<HoseData>>;
 
 type SettingsAction =
   // | ActionWithPayload<'UPDATE_SETTINGS', any>
@@ -279,36 +309,91 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         ...state,
         isCancelable: action.payload,
       };
-    case 'SET_TEMPORARY_CONTACT_FORM_DATA':
+
+    case 'CREATE_DRAFT': {
+      const newDraft = {
+        ...action.payload,
+        status: 'draft',
+        modifiedAt: new Date(),
+      } as ActivityDraft;
       return {
         ...state,
-        temporaryContactFormData: action.payload,
+        drafts: [...state.drafts, newDraft],
       };
-    case 'CLEAR_TEMPORARY_CONTACT_FORM_DATA':
+    }
+    case 'SAVE_DRAFT': {
+      const drafts = state.drafts.find(
+        (draft) => draft.id === action.payload.id,
+      )
+        ? state.drafts.map((draft) => {
+            if (draft.id === action.payload.id) {
+              return {
+                ...action.payload,
+                modifiedAt: new Date(),
+              } as ActivityDraft;
+            }
+            return draft;
+          })
+        : [
+            ...state.drafts,
+            { ...action.payload, modifiedAt: new Date() } as ActivityDraft,
+          ];
       return {
         ...state,
-        temporaryContactFormData: null,
+        drafts,
       };
-    case 'SET_TEMPORARY_SEND_MAIL_FORM_DATA':
+    }
+    case 'ADD_HOSE_TO_DRAFT': {
+      const { draftId, hoseId } = action.payload;
+      const draft = state.drafts.find((draft) => draft.id === draftId);
+      if (!draft) return state;
       return {
         ...state,
-        temporaryContactFormData: action.payload,
+        drafts: state.drafts.map((draft) => {
+          if (draft.id === draftId) {
+            return {
+              ...draft,
+              modifiedAt: new Date(),
+              selectedIds: draft.selectedIds.includes(hoseId)
+                ? draft.selectedIds
+                : [...draft.selectedIds, hoseId],
+            };
+          }
+          return draft;
+        }),
       };
-    case 'CLEAR_TEMPORARY_SEND_MAIL_FORM_DATA':
+    }
+    case 'REMOVE_FROM_DRAFT': {
       return {
         ...state,
-        temporaryContactFormData: null,
+        drafts: [
+          ...state.drafts.filter((draft) => draft.id !== action.payload),
+        ],
       };
-    case 'SET_TEMPORARY_REPLACE_HOSE_FORM_DATA':
+    }
+    case 'MOVE_DRAFT_TO_DONE': {
+      const draft = state.drafts.find((draft) => draft.id === action.payload);
+
       return {
         ...state,
-        temporaryContactFormData: action.payload,
+        drafts: [
+          ...state.drafts.filter((draft) => draft.id !== action.payload),
+        ],
+        done: draft
+          ? [
+              ...state.done,
+              { ...draft, status: 'done', modifiedAt: new Date() },
+            ]
+          : state.done,
       };
-    case 'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA':
+    }
+    case 'ADD_HOSE_TO_EDITED_HOSES': {
       return {
         ...state,
-        temporaryContactFormData: null,
+        editedHoses: [...state.editedHoses, action.payload],
       };
+    }
+
     default: {
       // console.error('Unknown action type:', action.type);
       return state;

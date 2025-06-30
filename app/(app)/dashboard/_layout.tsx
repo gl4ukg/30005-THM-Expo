@@ -14,7 +14,7 @@ export default function DashboardLayout() {
         <Stack.Screen name='hoses/[filter]/index' />
         <Stack.Screen name='hoses/index' />
         <Stack.Screen name='hoses/hose/[hoseId]' />
-        <Stack.Screen name='hoses/register/' />
+        <Stack.Screen name='hoses/register/index' />
       </Stack>
     </>
   );

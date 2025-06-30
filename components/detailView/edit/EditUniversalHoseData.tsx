@@ -1,5 +1,6 @@
 import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { BarToPsiInput } from '@/components/detailView/edit/BarToPsiInput';
+import { options } from '@/components/detailView/edit/fakeOptions';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { UnitInput } from '@/components/detailView/edit/UnitInput';
 import { Typography } from '@/components/Typography';
@@ -158,7 +159,7 @@ export const EditUniversalHoseData: React.FC<{
             label='Hose Standard'
             selectedOption={localInfo.hoseStandard || ''}
             onChange={(value) => handleFieldChange('hoseStandard', value)}
-            options={[]}
+            options={options}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -172,7 +173,7 @@ export const EditUniversalHoseData: React.FC<{
             label='Inner Diameter'
             selectedOption={localInfo.innerDiameter || ''}
             onChange={(value) => handleFieldChange('innerDiameter', value)}
-            options={[]}
+            options={options}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -185,7 +186,9 @@ export const EditUniversalHoseData: React.FC<{
           <View style={styles.inputContainer}>
             <UnitInput
               label='Hose Length'
-              value={Number(localInfo.hoseLength_mm ?? 0)}
+              value={
+                localInfo.hoseLength_mm ? Number(localInfo.hoseLength_mm) : null
+              }
               onChange={(value: number | null) =>
                 handleFieldChange('hoseLength_mm', String(value))
               }
@@ -215,7 +218,7 @@ export const EditUniversalHoseData: React.FC<{
           }}
         >
           <BarToPsiInput
-            pressureInBars={Number(info.wp_BAR ?? 0)}
+            pressureInBars={info.wp_BAR ? Number(info.wp_BAR) : null}
             onChange={(pressure) => {
               handleFieldChange('wp_BAR', String(pressure.bar));
               handleFieldChange('wp_PSI', String(pressure.psi));
@@ -236,7 +239,7 @@ export const EditUniversalHoseData: React.FC<{
             onChange={(value) =>
               handleFieldChange('materialQualityEnd1', value)
             }
-            options={[]}
+            options={options}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -246,7 +249,7 @@ export const EditUniversalHoseData: React.FC<{
             label='Type Fitting'
             selectedOption={info.typeFittingEnd1 || ''}
             onChange={(value) => handleFieldChange('typeFittingEnd1', value)}
-            options={[]}
+            options={options}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -263,7 +266,7 @@ export const EditUniversalHoseData: React.FC<{
             onChange={(value) =>
               handleFieldChange('genericDimensionEnd1', value)
             }
-            options={[]}
+            options={options}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -274,7 +277,7 @@ export const EditUniversalHoseData: React.FC<{
             selectedOption={info.genderEnd1 || ''}
             onChange={(value) => handleFieldChange('genderEnd1', value)}
             required={showValidationErrors}
-            options={[]}
+            options={options}
           />
         </TooltipWrapper>
 
@@ -283,7 +286,7 @@ export const EditUniversalHoseData: React.FC<{
             label='Angle'
             selectedOption={info.angleEnd1 || ''}
             onChange={(value) => handleFieldChange('angleEnd1', value)}
-            options={[]}
+            options={options}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -322,7 +325,7 @@ export const EditUniversalHoseData: React.FC<{
           label='Material Quality'
           selectedOption={info.materialQualityEnd2 || ''}
           onChange={(value) => handleFieldChange('materialQualityEnd2', value)}
-          options={[]}
+          options={options}
           required={showValidationErrors}
         />
       </TooltipWrapper>
@@ -332,7 +335,7 @@ export const EditUniversalHoseData: React.FC<{
           label='Type Fitting'
           selectedOption={info.typeFittingEnd2 || ''}
           onChange={(value) => handleFieldChange('typeFittingEnd2', value)}
-          options={[]}
+          options={options}
           required={showValidationErrors}
         />
       </TooltipWrapper>
@@ -344,7 +347,7 @@ export const EditUniversalHoseData: React.FC<{
           label='Generic Dimension'
           selectedOption={info.genericDimensionEnd2 || ''}
           onChange={(value) => handleFieldChange('genericDimensionEnd2', value)}
-          options={[]}
+          options={options}
           required={showValidationErrors}
         />
       </TooltipWrapper>
@@ -355,7 +358,7 @@ export const EditUniversalHoseData: React.FC<{
           selectedOption={info.genderEnd2 || ''}
           onChange={(value) => handleFieldChange('genderEnd2', value)}
           required={showValidationErrors}
-          options={[]}
+          options={options}
         />
       </TooltipWrapper>
 
@@ -364,7 +367,7 @@ export const EditUniversalHoseData: React.FC<{
           label='Angle'
           selectedOption={info.angleEnd2 || ''}
           onChange={(value) => handleFieldChange('angleEnd2', value)}
-          options={[]}
+          options={options}
           required={showValidationErrors}
         />
       </TooltipWrapper>

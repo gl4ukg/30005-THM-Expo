@@ -9,6 +9,7 @@ import { GHD } from '@/lib/types/hose';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { DataField } from '../common/Datafield';
+import { options } from '@/components/detailView/edit/fakeOptions';
 
 export const EditGeneralInfo: React.FC<{
   info: Partial<GHD>;
@@ -18,7 +19,7 @@ export const EditGeneralInfo: React.FC<{
   ) => void;
   isRegisterView?: boolean;
 }> = ({ info, onInputChange, isRegisterView }) => {
-  const [rfid, setRfid] = useState<string>('');
+  const [rfid, setRfid] = useState<string>(info.RFID ?? '');
   const { state } = useAppContext();
 
   const handleRFIDScanned = (newRFID: string | null) => {
@@ -41,7 +42,11 @@ export const EditGeneralInfo: React.FC<{
           <TooltipWrapper
             tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
           >
-            <RFIDInput label='RFID' onRFIDScanned={handleRFIDScanned} />
+            <RFIDInput
+              initialValue={rfid}
+              label='RFID'
+              onRFIDScanned={handleRFIDScanned}
+            />
           </TooltipWrapper>
           <TooltipWrapper
             tooltipData={{
@@ -88,7 +93,7 @@ export const EditGeneralInfo: React.FC<{
           label='S2 Equipment:'
           selectedOption={info.S2Equipment ?? null}
           onChange={(value) => onInputChange('S2Equipment', value)}
-          options={['Option 21', 'Option 22', 'Option 23']}
+          options={options}
         />
       </TooltipWrapper>
       <TooltipWrapper

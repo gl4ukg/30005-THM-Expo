@@ -11,7 +11,7 @@ export interface HoseData {
   insert2: string;
   genericHoseType: string;
   typeFittingEnd1: string;
-  genericDimensionEnd1: string;
+  genericDimensionEnd1: string | null;
   genderEnd1: string;
   angleEnd1: string;
   materialQualityEnd1: string;
@@ -63,8 +63,8 @@ export interface HoseData {
   hoseFunction?: string;
   hoseWarranty?: string;
   hoseWarrantyComment?: string;
-  materialQualityEnd2?: string;
-  generalCommentPTC?: string;
+  materialQualityEnd2?: string | null;
+  generalCommentPTC?: string | null;
   commentEnd1PTC?: string;
   commentEnd2PTC?: string;
   originalHoseComment?: string;

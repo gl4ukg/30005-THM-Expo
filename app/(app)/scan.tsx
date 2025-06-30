@@ -2,9 +2,12 @@ import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
-import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
+import { mockedData } from '@/context/mocked';
+import { MultiSelectionActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
+import { HoseData } from '@/lib/types/hose';
 import { reverseHexString } from '@/lib/util/rfid';
+import { generateNumericDraftId } from '@/lib/util/unikId';
 import { Href, router, useFocusEffect } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -21,6 +24,7 @@ import {
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
 import {
   Camera,
+  Code,
   useCameraDevice,
   useCameraPermission,
   useCodeScanner,
@@ -30,17 +34,23 @@ export type ScanPurpose =
   | MultiSelectionActionsType
   | 'REGISTER_HOSE'
   | 'INSPECT_HOSE';
-export const getScanUrl = (scanPurpose: ScanPurpose): Href =>
-  `/scan?scanPurpose=${scanPurpose}`;
+export const getScanUrl = (
+  scanPurpose: ScanPurpose,
+  draftId?: string,
+): Href => {
+  return `/(app)/scan?scanPurpose=${scanPurpose}&draftId=${draftId ?? ''}`;
+};
 
 const Scan = () => {
-  const { scanPurpose } = useLocalSearchParams<{
+  let { scanPurpose, draftId } = useLocalSearchParams<{
     scanPurpose?: ScanPurpose;
+    draftId?: string;
   }>();
   const { state, dispatch } = useAppContext();
   const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(
     'Barcode',
   );
+
   const inputRef = useRef<TextInput>(null);
   const cameraRef = useRef<Camera>(null);
   const device = useCameraDevice('back');
@@ -52,188 +62,64 @@ const Scan = () => {
   const previousRfid = useRef<string | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
 
-  const [title, setTitle] = useState<string>('Scanner');
-  const isNavigatingRef = useRef(false);
+  const title = getScanTitle(scanPurpose);
+  const isProcessingHose = useRef(false);
   const cameraAlertShownRef = useRef(false);
 
   useFocusEffect(
     useCallback(() => {
-      isNavigatingRef.current = false;
-      return () => {};
+      handleBarcodePress();
+      return () => {
+        setScanMethod(null);
+        NfcManager.cancelTechnologyRequest().catch(() => {});
+      };
     }, []),
   );
-
-  useEffect(() => {
-    if (scanPurpose) {
-      switch (scanPurpose) {
-        case 'REGISTER_HOSE':
-          setTitle('Register Hose');
-          break;
-        case 'INSPECT_HOSE':
-          setTitle('Inspect Hose');
-          break;
-        case 'RFQ':
-          setTitle('Order hoses');
-          break;
-        case 'SCRAP':
-          setTitle('Scrap hoses');
-          break;
-        case 'CONTACT':
-          setTitle('Contact TESS Team');
-          break;
-        default:
-          break;
-      }
-    }
-  }, [scanPurpose]);
 
   const codeScanner = useCodeScanner({
     codeTypes: ['code-39'],
     onCodeScanned: (codes) => {
-      if (isNavigatingRef.current) {
+      if (isProcessingHose.current) {
         return;
       }
-      if (codes.length > 0 && codes[0].value) {
-        const scannedId =
-          typeof codes[0].value === 'string' ? codes[0].value : '';
-
-        if (isNavigatingRef.current) return;
-        setId(scannedId);
-        setScanMethod('Barcode');
-        handleScan(scannedId, null, 'Barcode');
+      while (codes.length) {
+        const code: Code | undefined = codes.shift();
+        //if code length is 7 and is a number
+        if (code && code.value?.length === 7 && !isNaN(Number(code.value))) {
+          setId(code.value);
+          isProcessingHose.current = true;
+          handleHoseSearch(code.value);
+          setScanMethod(null);
+          break;
+        }
       }
     },
   });
 
   useEffect(() => {
-    let isMounted = true;
-
     const initNFC = async () => {
-      if (!isMounted) return;
-
       try {
         await NfcManager.start();
         const supported = await NfcManager.isSupported();
-        if (isMounted) setIsNfcSupported(supported);
-        if (!supported && isMounted) {
+        setIsNfcSupported(supported);
+        if (!supported) {
           Alert.alert('NFC not supported', 'This device does not support NFC.');
         }
       } catch (error) {
-        if (isMounted) {
-          console.error('Error checking NFC support:', error);
-          Alert.alert(
-            'Error',
-            'Failed to check NFC support. Please try again.',
-          );
-        }
+        console.error('Error checking NFC support:', error);
+        Alert.alert('Error', 'Failed to check NFC support. Please try again.');
       }
     };
 
     initNFC();
 
     return () => {
-      isMounted = false;
       NfcManager.cancelTechnologyRequest().catch(() => {});
     };
   }, []);
 
-  const handleScan = useCallback(
-    (
-      scannedId: string | null,
-      scannedRfid: string | null,
-      method: 'RFID' | 'Barcode' | null,
-    ) => {
-      if (isNavigatingRef.current) {
-        return;
-      }
-      isNavigatingRef.current = true;
-
-      if (scanPurpose === 'REGISTER_HOSE') {
-        const params: { [key: string]: any } = {
-          hoseId: scannedId || undefined,
-          rfid: scannedRfid || undefined,
-          scanMethod: method,
-        };
-        router.replace({
-          pathname: '/dashboard/hoses/register',
-          params,
-        });
-        return;
-      }
-      if (scanPurpose === 'INSPECT_HOSE') {
-        router.replace({
-          pathname: '/dashboard/hoses/inspect',
-          params: {
-            hoseId: scannedId || undefined,
-            rfid: scannedRfid || undefined,
-            scanMethod: method,
-          },
-        });
-        return;
-      }
-
-      setScanMethod(null);
-
-      const currentId = scannedId ?? id;
-      const currentRfid = scannedRfid ?? rfid;
-
-      const hose = state.data.hoses.find((h) => {
-        if (method === 'RFID' && currentRfid) {
-          return h.RFID === currentRfid;
-        } else if (method === 'Barcode' && currentId) {
-          return h.assetId === +currentId;
-        } else if (currentId && !method) {
-          return h.assetId === +currentId;
-        }
-        return false;
-      });
-
-      if (hose) {
-        console.log(`Hose found: ${hose.assetId}. Handling multi-selection.`);
-        if (method === 'RFID') {
-          setId(hose.assetId.toString());
-        }
-        if (!isMultiSelection(state.data.selection) && !!scanPurpose) {
-          dispatch({
-            type: 'START_MULTI_SELECTION',
-            payload: scanPurpose,
-          });
-        }
-        dispatch({
-          type: 'ADD_HOSE_TO_EXISTING_MULTI_SELECTION',
-          payload: hose.assetId,
-        });
-
-        setTimeout(() => {
-          console.log(
-            `Navigating to actions screen for purpose: ${scanPurpose}`,
-          );
-          router.replace(
-            `/(app)/dashboard/actions?action=${scanPurpose}&allowScan=true`,
-          );
-        }, 0);
-      } else {
-        console.log('Hose not found. Displaying alert.');
-        Alert.alert('Hose not found', 'Please enter a valid hose ID.');
-
-        isNavigatingRef.current = false;
-        console.log('handleScan: Lock released due to hose not found.');
-      }
-    },
-
-    [
-      scanPurpose,
-      id,
-      rfid,
-      state.data.hoses,
-      state.data.selection,
-      dispatch,
-      router,
-    ],
-  );
-
   const handleRFIDScan = useCallback(async () => {
-    if (isNavigatingRef.current) {
+    if (isProcessingHose.current) {
       console.log('RFID scan initiated, but navigation already in progress.');
       return;
     }
@@ -243,12 +129,12 @@ const Scan = () => {
       previousRfid.current = rfid;
       setScanError(null);
       setId(null);
-      setShowRfidScanView(true);
+      // setShowRfidScanView(true);
 
       await NfcManager.requestTechnology(NfcTech.Iso15693IOS);
       const tag = await NfcManager.getTag();
 
-      if (isNavigatingRef.current) {
+      if (isProcessingHose.current) {
         console.log('RFID tag read, but navigation already initiated.');
         NfcManager.cancelTechnologyRequest().catch(() => {});
         setShowRfidScanView(false);
@@ -259,8 +145,7 @@ const Scan = () => {
         const reversedId = reverseHexString(tag.id);
         setRfid(reversedId);
         setScanMethod('RFID');
-
-        handleScan(null, reversedId, 'RFID');
+        handleHoseSearch(reversedId, true);
       } else {
         setScanError('No tag ID found.');
       }
@@ -269,18 +154,127 @@ const Scan = () => {
       NfcManager.cancelTechnologyRequest().catch(() => {});
       setShowRfidScanView(false);
     }
-  }, [isNfcSupported, rfid, handleScan]);
+  }, [isNfcSupported, rfid, isProcessingHose]);
+
+  useEffect(() => {
+    //TODO: remove it
+    dispatch({
+      type: 'SET_HOSE_DATA',
+      payload: mockedData,
+    });
+  }, []);
 
   const handleRFIDPress = () => {
+    isProcessingHose.current = false;
     inputRef.current?.blur();
     handleRFIDScan();
+    setId(null);
+    setRfid(null);
     setScanMethod('RFID');
   };
 
   const handleBarcodePress = () => {
-    setId('');
+    isProcessingHose.current = false;
     inputRef.current?.blur();
+    setId(null);
+    setRfid(null);
     setScanMethod('Barcode');
+  };
+  const handleTextInputFocus = () => {
+    isProcessingHose.current = false;
+    setScanMethod(null);
+  };
+
+  const handleHoseSearch = (id: string, withRfId?: true) => {
+    let hose: HoseData | undefined = undefined;
+    if (withRfId) {
+      const RFID = Platform.OS === 'ios' ? reverseHexString(id) : id;
+      console.log('RFID', RFID);
+      //TODO: remove this comment const RFID = id;
+      hose = state.data.hoses.find((hose) => hose.RFID === RFID);
+    } else {
+      hose = state.data.hoses.find((hose) => hose.assetId === +id);
+    }
+
+    if (hose) {
+      if (scanPurpose === 'REGISTER_HOSE' || scanPurpose === 'INSPECT_HOSE') {
+        const draftId = generateNumericDraftId(
+          state.data.drafts.map((d) => d.id),
+        ).toString();
+        const params: { [key: string]: any } = {
+          hoseId: hose.assetId,
+          draftId: draftId,
+        };
+        dispatch({
+          type: 'CREATE_DRAFT',
+          payload: {
+            id: +draftId,
+            selectedIds: [hose.assetId],
+            type: scanPurpose === 'REGISTER_HOSE' ? 'REGISTER_HOSE' : 'INSPECT',
+            status: 'draft',
+            formData: hose,
+          },
+        });
+        router.replace({
+          pathname: `/dashboard/hoses/${scanPurpose === 'REGISTER_HOSE' ? 'register' : 'inspect'}`,
+          params,
+        });
+        return;
+      } else if (scanPurpose) {
+        if (draftId) {
+          dispatch({
+            type: 'ADD_HOSE_TO_DRAFT',
+            payload: {
+              draftId: +draftId,
+              hoseId: hose.assetId,
+            },
+          });
+        } else {
+          draftId = generateNumericDraftId(
+            state.data.drafts.map((d) => d.id),
+          ).toString();
+          dispatch({
+            type: 'CREATE_DRAFT',
+            payload: {
+              id: +draftId,
+              status: 'draft',
+              selectedIds: [hose.assetId],
+              type: scanPurpose,
+              formData: {},
+            },
+          });
+        }
+        setId(null);
+        setScanMethod('Barcode');
+        isProcessingHose.current = false;
+        console.log(
+          'Navigating to action screen',
+          `/(app)/dashboard/actions?action=${scanPurpose}&allowScan=true${draftId ? `&draftId=${draftId}` : ''}`,
+        );
+        router.replace(
+          `/(app)/dashboard/actions?action=${scanPurpose}&allowScan=true${draftId ? `&draftId=${draftId}` : ''}`,
+        );
+      }
+    } else {
+      Alert.alert(
+        `Hose with ID ${Platform.OS === 'ios' ? reverseHexString(id) : id} not found`,
+        'Please enter a valid hose ID.',
+        [
+          {
+            text: 'Cancel scanning',
+            onPress: () => {
+              router.back();
+            },
+          },
+          {
+            text: 'Try again',
+            onPress: () => {
+              withRfId ? handleRFIDPress() : handleBarcodePress();
+            },
+          },
+        ],
+      );
+    }
   };
 
   useEffect(() => {
@@ -322,7 +316,7 @@ const Scan = () => {
                 isActive={scanMethod === 'Barcode'}
               />
             )}
-            {scanMethod === 'RFID' && showRfidScanView && (
+            {scanMethod === 'RFID' && (
               <View style={styles.rfidContainer}>
                 <Icon name='RFID' size='lg' />
                 <Typography
@@ -352,6 +346,7 @@ const Scan = () => {
                   onChangeText={setId}
                   type='numeric'
                   ref={inputRef}
+                  onFocus={handleTextInputFocus}
                 />
                 <View style={styles.switch}>
                   <Pressable
@@ -416,13 +411,13 @@ const Scan = () => {
                   pressed && styles.searchButtonPressed,
                   !id && styles.searchButtonDisabled,
                 ]}
-                disabled={!id || isNavigatingRef.current}
-                onPress={() => handleScan(id, null, 'Barcode')}
+                disabled={!id}
+                onPress={() => id && handleHoseSearch(id)}
               >
                 <Icon
                   name='Search'
                   color={
-                    !id || isNavigatingRef.current
+                    !id || isProcessingHose.current
                       ? colors.extended666
                       : colors.primary25
                   }
@@ -513,3 +508,22 @@ const styles = StyleSheet.create({
     gap: 20,
   },
 });
+
+const getScanTitle = (scanPurpose: ScanPurpose | undefined) => {
+  if (scanPurpose) {
+    switch (scanPurpose) {
+      case 'REGISTER_HOSE':
+        return 'Register Hose';
+      case 'INSPECT_HOSE':
+        return 'Inspect Hose';
+      case 'RFQ':
+        return 'Order hoses';
+      case 'SCRAP':
+        return 'Scrap hoses';
+      case 'CONTACT':
+        return 'Contact TESS Team';
+      default:
+        return 'Scan Hose';
+    }
+  }
+};

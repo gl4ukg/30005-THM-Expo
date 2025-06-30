@@ -1,17 +1,17 @@
+import { getScanUrl } from '@/app/(app)/scan';
+import { SingleHoseDisplay } from '@/components/dashboard/listTable/SingleHoseDisplay';
+import { DataField } from '@/components/detailView/common/Datafield';
 import { Photos } from '@/components/detailView/common/Photos';
 import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
-import { SingleHoseDisplay } from '@/components/dashboard/listTable/SingleHoseDisplay';
 import { Typography } from '@/components/Typography';
-import { HoseData } from '@/lib/types/hose';
-import React, { useState } from 'react';
-import { ScrollView, StyleSheet, View, Alert } from 'react-native';
 import { ButtonTHS } from '@/components/UI';
-import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAppContext } from '@/context/ContextProvider';
-import { DataField } from '@/components/detailView/common/Datafield';
-import { colors } from '@/lib/tokens/colors';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
-import { getScanUrl } from '@/app/scan';
+import { HoseData } from '@/lib/types/hose';
+import { generateNumericDraftId } from '@/lib/util/unikId';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 
 const requiredFields: (keyof HoseData)[] = [
   'itemDescription',
@@ -38,43 +38,61 @@ const requiredFields: (keyof HoseData)[] = [
 ];
 
 export const InspectHose = () => {
-  const { state, dispatch } = useAppContext();
-  const { hoseId, rfid, scanMethod } = useLocalSearchParams();
-  const router = useRouter();
-  const [hoseData, setHoseData] = useState<HoseData | undefined>(() => {
-    if (!state.data.hoses) return undefined;
-    if (scanMethod === 'RFID' && rfid) {
-      return state.data.hoses.find((hose) => hose.RFID === rfid);
-    } else if (hoseId) {
-      return state.data.hoses.find((hose) => hose.assetId === +hoseId);
-    }
-    return undefined;
-  });
-
   usePreventGoBack();
-
-  const handleInputChange = <T extends keyof HoseData>(
-    field: T,
-    value: HoseData[T],
-  ) => {
-    setHoseData((prevData) => {
-      if (!prevData) {
-        return undefined;
+  const { state, dispatch } = useAppContext();
+  const { hoseId, draftId } = useLocalSearchParams<{
+    hoseId: string;
+    draftId?: string;
+  }>();
+  const [hoseData, setHoseData] = useState<Partial<HoseData>>({});
+  const router = useRouter();
+  const scrollViewRef = useRef<ScrollView>(null);
+  let id = useMemo(
+    () =>
+      draftId
+        ? +draftId
+        : generateNumericDraftId(state.data.drafts.map((d) => d.id)),
+    [],
+  );
+  useFocusEffect(
+    useCallback(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({ y: 0 });
       }
-      return {
-        ...prevData,
-        [field]: value,
-      };
-    });
+      let hose: HoseData | undefined = state.data.hoses.find(
+        (hose) => hose.assetId === +hoseId,
+      );
+      if (draftId) {
+        const draft = state.data.drafts.find((d) => d.id === +draftId);
+        if (draft) {
+          setHoseData(draft.formData as Partial<HoseData>);
+        }
+      } else {
+        if (hose) {
+          setHoseData(hose);
+        }
+      }
+    }, [hoseId, draftId, state.data.drafts]),
+  );
+
+  const handleInputChange = (
+    field: keyof Partial<HoseData>,
+    value: HoseData[keyof Partial<HoseData>],
+  ) => {
+    setHoseData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
   };
 
-  const completeInspection = () => {
-    console.log('Complete Inspection:', hoseData);
-
+  const sendInspection = () => {
+    dispatch({
+      type: 'MOVE_DRAFT_TO_DONE',
+      payload: id,
+    });
     router.push('/dashboard');
   };
-
-  const handleCompleteInspection = () => {
+  const handleSend = () => {
     if (!hoseData) return;
 
     const missingFields = requiredFields.filter((field) => {
@@ -96,7 +114,7 @@ export const InspectHose = () => {
               router.push({
                 pathname: '/dashboard/hoses/hose/[hoseId]',
                 params: {
-                  hoseId: hoseData.assetId,
+                  hoseId: `${hoseData.assetId}`,
                   startInEditMode: 'true',
                   missingFields: JSON.stringify(missingFields),
                 },
@@ -106,15 +124,28 @@ export const InspectHose = () => {
           },
           {
             text: 'No, skip',
-            onPress: completeInspection,
+            onPress: sendInspection,
             style: 'cancel',
           },
         ],
         { cancelable: false },
       );
     } else {
-      completeInspection();
+      sendInspection();
     }
+  };
+  const handleSaveAsDraft = () => {
+    dispatch({
+      type: 'SAVE_DRAFT',
+      payload: {
+        id: id,
+        selectedIds: [hoseData.assetId!],
+        type: 'INSPECT',
+        status: 'draft',
+        formData: hoseData,
+      },
+    });
+    router.push('/dashboard');
   };
 
   const handleCancel = () => {
@@ -122,7 +153,7 @@ export const InspectHose = () => {
     router.back();
   };
 
-  if (!hoseData) {
+  if (!hoseData.assetId) {
     return (
       <View style={styles.centeredContainer}>
         <Typography name='navigation' text='No hose found.' />
@@ -139,14 +170,15 @@ export const InspectHose = () => {
     <ScrollView
       style={styles.scrollView}
       contentContainerStyle={styles.contentContainer}
+      ref={scrollViewRef}
     >
       <View style={styles.header}>
         <View style={styles.headerRow}>
           <Typography name='navigationBold' text='Inspect hose:' />
         </View>
-        <Typography name={'fieldLabel'} text='Inspection#' />
+        <Typography name={'fieldLabel'} text={`Inspection #${id}`} />
       </View>
-      <SingleHoseDisplay item={hoseData} />
+      <SingleHoseDisplay item={hoseData as HoseData} />
       <View style={styles.infoSection}>
         <DataField label='Description:' value={hoseData.itemDescription} />
         <DataField
@@ -169,11 +201,16 @@ export const InspectHose = () => {
       <View style={styles.buttonContainer}>
         <ButtonTHS
           title='Complete Inspection'
-          onPress={handleCompleteInspection}
+          onPress={handleSend}
           variant='primary'
           size='sm'
         />
-
+        <ButtonTHS
+          title='Save as draft'
+          onPress={handleSaveAsDraft}
+          variant='secondary'
+          size='sm'
+        />
         <ButtonTHS
           title='Cancel'
           onPress={handleCancel}

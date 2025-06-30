@@ -6,7 +6,7 @@ import { Typography } from '../../Typography';
 import { Bookmark } from './Bookmark';
 import * as DocumentPicker from 'expo-document-picker';
 import { useState } from 'react';
-import { EnhancedPdfViewer } from '../../PDF/EnhancedPdfViewer';
+import { PDFViewer } from '../../PDF/PDFViewer';
 
 interface DocumentData {
   id: string;
@@ -147,10 +147,7 @@ export const Documents = () => {
         presentationStyle='fullScreen'
       >
         {selectedPdfUri && (
-          <EnhancedPdfViewer
-            uri={selectedPdfUri}
-            onClose={handleClosePdfViewer}
-          />
+          <PDFViewer uri={selectedPdfUri} onClose={handleClosePdfViewer} />
         )}
       </Modal>
     </View>
