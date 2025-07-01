@@ -84,12 +84,17 @@ export default function Login() {
           });
 
           dispatch({
+            type: 'SET_S1_ITEMS',
+            payload: userData.s1Items,
+          });
+
+          dispatch({
             type: 'SET_HOSE_DATA',
             payload: userData.hoses,
           });
 
           console.log(
-            `Login successful: S1 Code: ${userData.s1Code}, Hoses: ${userData.hoses.length}`,
+            `Login successful: S1 Code: ${userData.s1Code}, S1 Items: ${userData.s1Items.length}, Hoses: ${userData.hoses.length}`,
           );
 
           // Only navigate on successful data initialization
@@ -103,8 +108,6 @@ export default function Login() {
           );
           return;
         }
-
-        router.push('/(app)/dashboard');
       }
     } catch (error) {
       const message = (error as Error).message;

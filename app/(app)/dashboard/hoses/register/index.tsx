@@ -84,8 +84,10 @@ const RegisterHose = () => {
       setLocalState((prevState) => ({
         ...mergedTemplate,
         ...prevState,
-        id: incomingId ?? prevState.assetId ?? mergedTemplate?.assetId,
-        RFid: incomingRfid ?? prevState.RFID ?? mergedTemplate?.RFID,
+        assetId: incomingId
+          ? Number(incomingId)
+          : (prevState.assetId ?? mergedTemplate?.assetId),
+        RFID: incomingRfid ?? prevState.RFID ?? mergedTemplate?.RFID,
       }));
     }
   }, [state.data.hoseTemplate, incomingId, incomingRfid]);
@@ -105,13 +107,13 @@ const RegisterHose = () => {
       setRfid(newRfid);
       setLocalState((prevState) => ({
         ...prevState,
-        RFid: newRfid,
+        RFID: newRfid,
       }));
     } else {
       setRfid(undefined);
       setLocalState((prevState) => ({
         ...prevState,
-        RFid: undefined,
+        RFID: undefined,
       }));
     }
   }, []);

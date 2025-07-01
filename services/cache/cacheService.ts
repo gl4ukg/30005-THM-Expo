@@ -1,5 +1,6 @@
 import { MMKV } from 'react-native-mmkv';
 import { HoseData } from '@/lib/types/hose';
+import { S1Item } from '@/services/api/assetApi';
 
 /**
  * Cache Layer - Handles local storage using MMKV
@@ -13,13 +14,14 @@ export class CacheService {
 
   private static readonly KEYS = {
     S1_CODE: 'user_s1_code',
+    S1_ITEMS: 'user_s1_items',
     HOSES: 'hoses_data',
     LAST_SYNC: 'last_sync_timestamp',
     USER_DATA: 'user_data',
   } as const;
 
   // Store s1 in cache
-  static setS1Code(s1Code: number): void {
+  static setS1Code(s1Code: string): void {
     try {
       this.storage.set(this.KEYS.S1_CODE, s1Code);
       console.log('S1 code cached successfully:', s1Code);
@@ -30,13 +32,37 @@ export class CacheService {
   }
 
   // Get s1 from cache
-  static getS1Code(): number | null {
+  static getS1Code(): string | null {
     try {
-      const s1Code = this.storage.getNumber(this.KEYS.S1_CODE);
+      const s1Code = this.storage.getString(this.KEYS.S1_CODE);
       return s1Code ?? null;
     } catch (error) {
       console.error('Failed to get S1 code from cache:', error);
       return null;
+    }
+  }
+
+  static setS1Items(s1Items: S1Item[]): void {
+    try {
+      const s1ItemsJson = JSON.stringify(s1Items);
+      this.storage.set(this.KEYS.S1_ITEMS, s1ItemsJson);
+      console.log(`${s1Items.length} S1 items cached successfully`);
+    } catch (error) {
+      console.error('Failed to cache S1 items:', error);
+      throw error;
+    }
+  }
+
+  static getS1Items(): S1Item[] {
+    try {
+      const s1ItemsJson = this.storage.getString(this.KEYS.S1_ITEMS);
+      if (s1ItemsJson) {
+        return JSON.parse(s1ItemsJson);
+      }
+      return [];
+    } catch (error) {
+      console.error('Failed to get S1 items from cache:', error);
+      return [];
     }
   }
 
@@ -149,21 +175,21 @@ export class CacheService {
     }
   }
 
-  /**
-   * Get cache statistics
-   */
   static getCacheStats(): {
-    s1Code: number | null;
+    s1Code: string | null;
+    s1ItemsCount: number;
     hosesCount: number;
     lastSync: Date | null;
     cacheSize: string;
   } {
     const s1Code = this.getS1Code();
+    const s1Items = this.getS1Items();
     const hoses = this.getHoses();
     const lastSync = this.getLastSyncTime();
 
     return {
       s1Code,
+      s1ItemsCount: s1Items.length,
       hosesCount: hoses.length,
       lastSync,
       cacheSize: 'N/A', // MMKV doesn't provide direct size info

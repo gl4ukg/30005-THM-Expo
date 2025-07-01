@@ -1,4 +1,5 @@
 import { HoseData } from '@/lib/types/hose';
+import { S1Item } from '@/services/api/assetApi';
 import {
   TemporaryReplaceHoseFormData,
   TemporaryRFQFormData,
@@ -104,7 +105,8 @@ export const isSingleSelection = (
 interface DataState {
   isLoading: boolean;
   lastUpdate: null | Date;
-  s1Code: number | null; // Added S1 code
+  s1Code: string | null; // Changed to string to match API response
+  s1Items: S1Item[]; // Available S1 items for selection
   // define data state properties
   hoses: HoseData[];
   assignedUnits: {
@@ -153,6 +155,7 @@ const initialDataState: DataState = {
   isLoading: false,
   lastUpdate: new Date(),
   s1Code: null, // Will be set after login
+  s1Items: [], // Will be populated after login
   customer: { id: '223949', name: 'CUSTOMER WEB DEMO (Main)' },
   // initial data state values
   hoses: [],

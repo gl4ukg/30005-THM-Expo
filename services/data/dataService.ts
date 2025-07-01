@@ -1,10 +1,11 @@
 import { HoseData } from '@/lib/types/hose';
-import { AssetApi } from '@/services/api/assetApi';
+import { AssetApi, S1Item } from '@/services/api/assetApi';
 import { CacheService } from '@/services/cache/cacheService';
 
 export class DataService {
   static async initializeUserData(): Promise<{
-    s1Code: number;
+    s1Code: string;
+    s1Items: S1Item[];
     hoses: HoseData[];
   }> {
     try {
@@ -15,12 +16,15 @@ export class DataService {
       const s1Response = await AssetApi.getS1();
       console.log('S1 response received:', s1Response);
 
-      const s1Code = s1Response.s1Code;
+      const s1Code = s1Response.selectedS1Code;
+      const s1Items = s1Response.s1Items;
       console.log('Extracted S1 code:', s1Code, 'Type:', typeof s1Code);
+      console.log('S1 items count:', s1Items.length);
 
-      // Step 2: Cache S1 code
+      // Step 2: Cache S1 code and items
       CacheService.setS1Code(s1Code);
-      console.log('S1 code cached:', s1Code);
+      CacheService.setS1Items(s1Items);
+      console.log('S1 code and items cached:', s1Code);
 
       // Step 3: Get hoses from API using S1 code
       console.log('Fetching hoses from API with S1 code:', s1Code);
@@ -30,21 +34,29 @@ export class DataService {
         JSON.stringify(hosesResponse, null, 2),
       );
 
-      // Try to extract hoses from different possible response structures
+      // Extract hoses from API response
       let hoses: HoseData[] = [];
-      const response = hosesResponse as any;
 
-      if (Array.isArray(response)) {
-        hoses = response;
+      if (
+        hosesResponse &&
+        hosesResponse.hoses &&
+        Array.isArray(hosesResponse.hoses)
+      ) {
+        hoses = hosesResponse.hoses;
+      } else if (Array.isArray(hosesResponse)) {
+        hoses = hosesResponse;
       } else {
-        console.error('Could not extract hoses array from response:', response);
-        console.error('Response type:', typeof response);
+        console.error(
+          'Could not extract hoses array from response:',
+          hosesResponse,
+        );
+        console.error('Response type:', typeof hosesResponse);
         console.error(
           'Available properties:',
-          response ? Object.keys(response) : 'none',
+          hosesResponse ? Object.keys(hosesResponse) : 'none',
         );
         throw new Error(
-          `Invalid hoses response structure. Expected array of hoses, got: ${JSON.stringify(response)}`,
+          `Invalid hoses response structure. Expected hoses array, got: ${JSON.stringify(hosesResponse)}`,
         );
       }
 
@@ -56,6 +68,7 @@ export class DataService {
 
       return {
         s1Code,
+        s1Items,
         hoses,
       };
     } catch (error) {
@@ -63,12 +76,14 @@ export class DataService {
 
       // Fallback to cached data if available
       const cachedS1Code = CacheService.getS1Code();
+      const cachedS1Items = CacheService.getS1Items();
       const cachedHoses = CacheService.getHoses();
 
       if (cachedS1Code && cachedHoses.length > 0) {
         console.log('Using cached data as fallback');
         return {
           s1Code: cachedS1Code,
+          s1Items: cachedS1Items,
           hoses: cachedHoses,
         };
       }
@@ -100,7 +115,21 @@ export class DataService {
       }
 
       const hosesResponse = await AssetApi.getAllHosesByUser(s1Code);
-      const hoses = hosesResponse.hoses;
+
+      let hoses: HoseData[] = [];
+
+      if (
+        hosesResponse &&
+        hosesResponse.hoses &&
+        Array.isArray(hosesResponse.hoses)
+      ) {
+        hoses = hosesResponse.hoses;
+      } else if (Array.isArray(hosesResponse)) {
+        hoses = hosesResponse;
+      } else {
+        console.warn('Unexpected hoses response format:', hosesResponse);
+        hoses = []; // Default to empty array
+      }
 
       // Update cache
       CacheService.setHoses(hoses);
@@ -191,5 +220,46 @@ export class DataService {
       console.error('Sync failed:', error);
       return false;
     }
+  }
+
+  static async changeS1Selection(newS1Code: string): Promise<HoseData[]> {
+    try {
+      console.log('Changing S1 selection to:', newS1Code);
+
+      CacheService.setS1Code(newS1Code);
+
+      const hosesResponse = await AssetApi.getAllHosesByUser(newS1Code);
+
+      let hoses: HoseData[] = [];
+
+      if (
+        hosesResponse &&
+        hosesResponse.hoses &&
+        Array.isArray(hosesResponse.hoses)
+      ) {
+        hoses = hosesResponse.hoses;
+      } else if (Array.isArray(hosesResponse)) {
+        hoses = hosesResponse;
+      } else {
+        console.warn('Unexpected hoses response format:', hosesResponse);
+        hoses = [];
+      }
+
+      CacheService.setHoses(hoses);
+      console.log(`S1 changed to ${newS1Code}, ${hoses.length} hoses loaded`);
+
+      return hoses;
+    } catch (error) {
+      console.error('Failed to change S1 selection:', error);
+      throw error;
+    }
+  }
+
+  static getS1Items(): S1Item[] {
+    return CacheService.getS1Items();
+  }
+
+  static getCurrentS1Code(): string | null {
+    return CacheService.getS1Code();
   }
 }

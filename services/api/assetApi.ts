@@ -2,10 +2,23 @@ import { HoseData } from '@/lib/types/hose';
 import { getFromStore } from '@/lib/util/secureStore';
 
 const BASE_URL =
+  process.env.EXPO_PUBLIC_API_BASE_URL ||
   'https://30011-proxyapi-cuafeua6bha7ckby.norwayeast-01.azurewebsites.net';
 
+export interface S1Item {
+  S1Id: number;
+  S1Code: string;
+  S1Name: string;
+  S2Id: number;
+  S2Code: string;
+  S2Name: string | null;
+  dimensionId: number;
+  dimensionType: string;
+}
+
 export interface GetS1Response {
-  s1Code: number;
+  s1Items: S1Item[];
+  selectedS1Code: string;
 }
 
 export interface GetAllHosesByUserResponse {
@@ -30,7 +43,6 @@ export class AssetApi {
         authHeaders = {
           accessToken: accessToken,
         };
-        console.log('Using access token for API request');
       } else {
         console.warn('No authentication cookie found');
       }
@@ -72,26 +84,22 @@ export class AssetApi {
 
   static async getS1(): Promise<GetS1Response> {
     try {
-      // hard coded s1 with hoses
-      return { s1Code: 1203108 };
+      const response = await this.request<S1Item[]>('/asset/getS1');
 
-      // TODO: Uncomment when API s1 is available
-      // const response = await this.request<GetS1Response>('/asset/getS1');
-      // console.log('Raw S1 API response:', response);
-      //
-      // // Validate the response structure
-      // if (typeof response !== 'object' || response === null) {
-      //   throw new Error('Invalid S1 response: expected object');
-      // }
-      //
-      // if (typeof response.s1Code !== 'number') {
-      //   console.error('Invalid s1Code in response:', response);
-      //   throw new Error(
-      //     `Invalid s1Code: expected number, got ${typeof response.s1Code}`,
-      //   );
-      // }
-      //
-      // return response;
+      if (!Array.isArray(response) || response.length === 0) {
+        throw new Error('No S1 items found in response');
+      }
+
+      // Use the first S1 item's code as the selected one
+      const selectedS1Code = response[0].S1Code;
+
+      console.log('Retrieved S1 items:', response.length);
+      console.log('Selected S1 Code:', selectedS1Code);
+
+      return {
+        s1Items: response,
+        selectedS1Code: selectedS1Code,
+      };
     } catch (error) {
       console.error('getS1 failed:', error);
       throw error;
@@ -99,18 +107,38 @@ export class AssetApi {
   }
 
   static async getAllHosesByUser(
-    s1Code: number,
+    s1Code: string,
   ): Promise<GetAllHosesByUserResponse> {
     try {
       const endpoint = `/asset/getAllHosesByUser?s1Code=${s1Code}`;
-      const fullUrl = `${BASE_URL}${endpoint}`;
-      console.log('Making API call to:', fullUrl);
+      console.log('Making API call to:', `${BASE_URL}${endpoint}`);
 
       const response = await this.request<GetAllHosesByUserResponse>(endpoint);
-
       return response;
     } catch (error) {
       console.error('getAllHosesByUser failed:', error);
+      throw error;
+    }
+  }
+
+  // Convenience method to get S1 data and automatically fetch hoses for the first S1 item
+  static async getS1AndHoses(): Promise<{
+    s1Data: GetS1Response;
+    hosesData: GetAllHosesByUserResponse;
+  }> {
+    try {
+      console.log('Getting S1 data and hoses...');
+
+      // First get S1 data
+      const s1Data = await this.getS1();
+
+      // Then get hoses using the first S1 code
+      const hosesData = await this.getAllHosesByUser(s1Data.selectedS1Code);
+
+      console.log('Successfully retrieved S1 data and hoses');
+      return { s1Data, hosesData };
+    } catch (error) {
+      console.error('getS1AndHoses failed:', error);
       throw error;
     }
   }

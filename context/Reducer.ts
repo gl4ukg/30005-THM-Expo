@@ -14,6 +14,7 @@ import {
   SingleSelectionActionsType,
 } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
+import { S1Item } from '@/services/api/assetApi';
 import { createContext } from 'react';
 import { CacheService } from '@/services/cache/cacheService';
 
@@ -106,7 +107,9 @@ type AuthAction =
 type DataAction =
   | ActionWithPayload<'SET_ASSIGNED_UNITS', DataState['assignedUnits']>
   | ActionWithPayload<'SET_WORKING_UNIT', string>
-  | ActionWithPayload<'SET_S1_CODE', number>
+  | ActionWithPayload<'SET_S1_CODE', string>
+  | ActionWithPayload<'SET_S1_ITEMS', S1Item[]>
+  | ActionWithPayload<'CHANGE_S1_SELECTION', string>
   | ActionWithPayload<
       'REMOVE_ACTION',
       { id: string; actionType: SingleSelectionActionsType }
@@ -210,6 +213,17 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       return {
         ...state,
         s1Code: action.payload,
+      };
+    case 'SET_S1_ITEMS':
+      return {
+        ...state,
+        s1Items: action.payload,
+      };
+    case 'CHANGE_S1_SELECTION':
+      return {
+        ...state,
+        s1Code: action.payload,
+        isLoading: true,
       };
     case 'SET_HOSE_DATA':
       return {
