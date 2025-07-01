@@ -44,6 +44,7 @@ import Tooltip from './icons/Tooltip';
 import Calendar from './icons/Calendar';
 import Edit from './icons/Edit';
 import Time from './icons/Time';
+import Dashboard from './icons/Dashboard';
 
 export type IconName =
   | 'Alert'
@@ -91,7 +92,8 @@ export type IconName =
   | 'Tooltip'
   | 'Calendar'
   | 'Edit'
-  | 'Time';
+  | 'Time'
+  | 'Dashboard';
 
 export const iconMapping: Record<IconName, React.FC<any>> = {
   Alert,
@@ -140,4 +142,5 @@ export const iconMapping: Record<IconName, React.FC<any>> = {
   Calendar,
   Edit,
   Time,
+  Dashboard,
 };

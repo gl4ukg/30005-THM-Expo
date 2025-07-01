@@ -3,10 +3,11 @@ import { Typography } from '@/components/Typography';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
 import { mockedData } from '@/context/mocked';
-import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
+import { MultiSelectionActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { reverseHexString } from '@/lib/util/rfid';
+import { generateNumericDraftId } from '@/lib/util/unikId';
 import { Href, router, useFocusEffect } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -33,17 +34,23 @@ export type ScanPurpose =
   | MultiSelectionActionsType
   | 'REGISTER_HOSE'
   | 'INSPECT_HOSE';
-export const getScanUrl = (scanPurpose: ScanPurpose): Href =>
-  `/(app)/scan?scanPurpose=${scanPurpose}`;
+export const getScanUrl = (
+  scanPurpose: ScanPurpose,
+  draftId?: string,
+): Href => {
+  return `/(app)/scan?scanPurpose=${scanPurpose}&draftId=${draftId ?? ''}`;
+};
 
 const Scan = () => {
-  const { scanPurpose } = useLocalSearchParams<{
+  let { scanPurpose, draftId } = useLocalSearchParams<{
     scanPurpose?: ScanPurpose;
+    draftId?: string;
   }>();
   const { state, dispatch } = useAppContext();
   const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(
     'Barcode',
   );
+
   const inputRef = useRef<TextInput>(null);
   const cameraRef = useRef<Camera>(null);
   const device = useCameraDevice('back');
@@ -191,30 +198,61 @@ const Scan = () => {
 
     if (hose) {
       if (scanPurpose === 'REGISTER_HOSE' || scanPurpose === 'INSPECT_HOSE') {
+        const draftId = generateNumericDraftId(
+          state.data.drafts.map((d) => d.id),
+        ).toString();
         const params: { [key: string]: any } = {
           hoseId: hose.assetId,
+          draftId: draftId,
         };
+        dispatch({
+          type: 'CREATE_DRAFT',
+          payload: {
+            id: +draftId,
+            selectedIds: [hose.assetId],
+            type: scanPurpose === 'REGISTER_HOSE' ? 'REGISTER_HOSE' : 'INSPECT',
+            status: 'draft',
+            formData: hose,
+          },
+        });
         router.replace({
           pathname: `/dashboard/hoses/${scanPurpose === 'REGISTER_HOSE' ? 'register' : 'inspect'}`,
           params,
         });
         return;
       } else if (scanPurpose) {
-        if (!isMultiSelection(state.data.selection)) {
+        if (draftId) {
           dispatch({
-            type: 'START_MULTI_SELECTION',
-            payload: scanPurpose,
+            type: 'ADD_HOSE_TO_DRAFT',
+            payload: {
+              draftId: +draftId,
+              hoseId: hose.assetId,
+            },
+          });
+        } else {
+          draftId = generateNumericDraftId(
+            state.data.drafts.map((d) => d.id),
+          ).toString();
+          dispatch({
+            type: 'CREATE_DRAFT',
+            payload: {
+              id: +draftId,
+              status: 'draft',
+              selectedIds: [hose.assetId],
+              type: scanPurpose,
+              formData: {},
+            },
           });
         }
-        dispatch({
-          type: 'ADD_HOSE_TO_EXISTING_MULTI_SELECTION',
-          payload: hose.assetId,
-        });
         setId(null);
         setScanMethod('Barcode');
         isProcessingHose.current = false;
+        console.log(
+          'Navigating to action screen',
+          `/(app)/dashboard/actions?action=${scanPurpose}&allowScan=true${draftId ? `&draftId=${draftId}` : ''}`,
+        );
         router.replace(
-          `/(app)/dashboard/actions?action=${scanPurpose}&allowScan=true`,
+          `/(app)/dashboard/actions?action=${scanPurpose}&allowScan=true${draftId ? `&draftId=${draftId}` : ''}`,
         );
       }
     } else {

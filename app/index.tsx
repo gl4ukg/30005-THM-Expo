@@ -22,9 +22,8 @@ import { mockedData } from '@/context/mocked';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { Link, useRouter } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { getScanUrl } from '@/app/(app)/scan';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Login = () => {
   const router = useRouter();
@@ -88,7 +87,7 @@ const Login = () => {
               </Pressable>
             </Link>
             <Link
-              href={getScanUrl('INSPECT_HOSE')}
+              href={'/photo'}
               asChild
               style={[
                 styles.link,
@@ -101,7 +100,7 @@ const Login = () => {
                   { flex: 1, backgroundColor: colors.extendedBlue },
                 ]}
               >
-                <Typography name='navigation' text='Scan' numberOfLines={1} />
+                <Typography name='navigation' text='Photos' numberOfLines={1} />
               </Pressable>
             </Link>
             <Link

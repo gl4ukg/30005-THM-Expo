@@ -19,7 +19,7 @@ export const EditGeneralInfo: React.FC<{
   ) => void;
   isRegisterView?: boolean;
 }> = ({ info, onInputChange, isRegisterView }) => {
-  const [rfid, setRfid] = useState<string>('');
+  const [rfid, setRfid] = useState<string>(info.RFID ?? '');
   const { state } = useAppContext();
 
   const handleRFIDScanned = (newRFID: string | null) => {
@@ -42,7 +42,11 @@ export const EditGeneralInfo: React.FC<{
           <TooltipWrapper
             tooltipData={{ title: 'RFID', message: 'This is the RFID' }}
           >
-            <RFIDInput label='RFID' onRFIDScanned={handleRFIDScanned} />
+            <RFIDInput
+              initialValue={rfid}
+              label='RFID'
+              onRFIDScanned={handleRFIDScanned}
+            />
           </TooltipWrapper>
           <TooltipWrapper
             tooltipData={{

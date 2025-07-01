@@ -1,13 +1,11 @@
 import { HoseData } from '@/lib/types/hose';
 import { S1Item } from '@/services/api/assetApi';
 import {
-  TemporaryReplaceHoseFormData,
-  TemporaryRFQFormData,
-  TemporarySendMailFormData,
-  TemporaryInspectionData,
-  TemporaryRegistrationData,
-  TemporaryHoseEditData,
+  PartialReplaceHoseFormData,
+  PartialRFQFormData,
+  PartialSendMailFormData,
 } from './Reducer';
+import { Activity } from '@/components/dashboard/activitiesList/activity';
 
 interface AppState {
   auth: AuthState;
@@ -121,13 +119,47 @@ interface DataState {
   selection: HoseSelection | null;
   hoseTemplate?: Partial<HoseData>;
   isCancelable: boolean;
-  temporaryContactFormData?: TemporaryRFQFormData | null;
-  temporarySendMailFormData?: TemporarySendMailFormData | null;
-  temporaryReplaceHoseFormData?: TemporaryReplaceHoseFormData | null;
-  temporaryInspectionData?: TemporaryInspectionData | null;
-  temporaryRegistrationData?: TemporaryRegistrationData | null;
-  temporaryHoseEditData?: TemporaryHoseEditData | null;
+  drafts: ActivityDraft[];
+  done: ActivityDone[];
+  editedHoses: Partial<HoseData>[];
 }
+
+interface DraftAction extends Activity {
+  type: 'RFQ' | 'SCRAP' | 'CONTACT';
+  status: 'draft';
+  formData: PartialRFQFormData;
+}
+interface DraftSendMail extends Activity {
+  type: 'CONTACT_SUPPORT';
+  status: 'draft';
+  formData: PartialSendMailFormData;
+}
+interface DraftReplaceHose extends Activity {
+  type: 'REPLACE_HOSE';
+  status: 'draft';
+  formData: PartialReplaceHoseFormData;
+}
+interface DraftRegisterHose extends Activity {
+  type: 'REGISTER_HOSE';
+  status: 'draft';
+  formData: Partial<HoseData>;
+}
+interface DraftInspectHose extends Activity {
+  type: 'INSPECT';
+  status: 'draft';
+  formData: Partial<HID>;
+}
+
+export type ActivityDraft =
+  | DraftAction
+  | DraftSendMail
+  | DraftReplaceHose
+  | DraftRegisterHose
+  | DraftInspectHose;
+
+export type ActivityDone = Omit<ActivityDraft, 'status'> & {
+  status: 'done';
+};
 
 interface SettingsState {
   // define settings state properties
@@ -167,11 +199,74 @@ const initialDataState: DataState = {
   selection: null,
   hoseTemplate: undefined,
   isCancelable: false,
-  temporaryContactFormData: null,
-  temporarySendMailFormData: null,
-  temporaryReplaceHoseFormData: null,
-  temporaryInspectionData: null,
-  temporaryRegistrationData: null,
+  drafts: [
+    {
+      id: 191818,
+      type: 'SCRAP',
+      status: 'draft',
+      selectedIds: [27, 30],
+      modifiedAt: new Date(),
+      formData: {
+        comment: 'test',
+        email: 'slange_mester@tess.no',
+        name: 'Ole Slange Mester',
+        phone: '123123123',
+      },
+    },
+    {
+      id: 191819,
+      type: 'RFQ',
+      status: 'draft',
+      selectedIds: [27],
+      formData: {},
+      modifiedAt: new Date('2016-07-29T20:23:01.804Z'),
+    },
+    {
+      id: 191820,
+      type: 'REPLACE_HOSE',
+      status: 'draft',
+      selectedIds: [27],
+      modifiedAt: new Date('2016-07-19T20:25:01.804Z'),
+      formData: {
+        comment: 'test',
+        email: 'slange_mester@tess.no',
+        name: 'Ole Slange Mester',
+        phone: '123123123',
+        replacementImpacts: ['test'],
+        replacementReasons: ['test'],
+        replacementType: 'Unplanned',
+        downtime: '100',
+      },
+    },
+  ],
+  done: [
+    {
+      id: 153819,
+      type: 'RFQ',
+      status: 'done',
+      selectedIds: [27],
+      modifiedAt: new Date('2016-07-19T20:21:01.804Z'),
+      formData: {},
+    },
+    {
+      id: 391821,
+      type: 'REPLACE_HOSE',
+      status: 'done',
+      selectedIds: [27],
+      modifiedAt: new Date('2017-07-29T20:23:01.804Z'),
+      formData: {
+        comment: 'test',
+        email: 'slange_mester@tess.no',
+        name: 'Ole Slange Mester',
+        phone: '123123123',
+        replacementImpacts: ['test'],
+        replacementReasons: ['test'],
+        replacementType: 'Unplanned',
+        downtime: '100',
+      },
+    },
+  ],
+  editedHoses: [],
 };
 
 const initialSettingsState: SettingsState = {

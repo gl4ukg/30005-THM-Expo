@@ -1,45 +1,70 @@
+import { getScanUrl } from '@/app/(app)/scan';
 import { ListTable } from '@/components/dashboard/listTable';
-import {
-  replaceImpacts,
-  replaceReasons,
-} from '@/components/detailView/data/lists';
-import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
-import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
-import { PartialReplaceHoseFormData } from '@/context/Reducer';
-
-import { getScanUrl } from '@/app/(app)/scan';
+import { PartialRFQFormData } from '@/context/Reducer'; // Use TemporaryRFQFormData from Reducer.ts
+import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { colors } from '@/lib/tokens/colors';
+import { HoseData } from '@/lib/types/hose';
 import { emailValidation } from '@/lib/util/validation';
 import { router, useFocusEffect } from 'expo-router';
-import { FC, useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { UnitInput } from '../detailView/edit/UnitInput';
+import { TooltipWrapper } from '../detailView/edit/TooltipWrapper';
+
+const formLabels: Record<
+  Extract<MultiSelectionActionsType, 'RFQ' | 'CONTACT' | 'SCRAP'>,
+  { title: string; subtitle: string; confirmButton: string }
+> = {
+  RFQ: {
+    title: 'Order hoses',
+    subtitle: 'Request for quote',
+    confirmButton: 'Send RFQ',
+  },
+  CONTACT: {
+    title: 'Contact TESS Team',
+    subtitle: 'Message',
+    confirmButton: 'Send message',
+  },
+  SCRAP: {
+    title: 'Scrap hoses',
+    subtitle: 'Scrap report',
+    confirmButton: 'Scrap hoses',
+  },
+};
+const rfqOptions = [
+  'TESS to quote with pressure test and certificate',
+  'TESS to quote without pressure test',
+  'Unspecified',
+];
 
 interface Props {
   draftId: string;
+  allowScanToAdd?: boolean;
 }
 
-export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
+export const ActionForm: React.FC<Props> = ({
+  draftId,
+  allowScanToAdd = false,
+}) => {
   const { state, dispatch } = useAppContext();
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
-
-  const [formData, setFormData] = useState<PartialReplaceHoseFormData>({});
+  const [hoses, setHoses] = useState<HoseData[]>([]);
+  const [formData, setFormData] = useState<PartialRFQFormData>({});
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [canSelectHoses, setCanSelectHoses] = useState<boolean>(false);
+  const [actionType, setActionType] =
+    useState<Extract<MultiSelectionActionsType, 'RFQ' | 'CONTACT' | 'SCRAP'>>(
+      'RFQ',
+    );
   const flatListRef = useRef<FlatList>(null);
 
-  const originallySelectedHoses = useMemo(() => {
-    const draft = state.data.drafts.find((d) => d.id === +draftId);
-    if (!draft) return [];
-    return state.data.hoses.filter((hose) =>
-      draft.selectedIds?.includes(hose.assetId),
-    );
-  }, [selectedIds]);
+  usePreventGoBack();
 
   useFocusEffect(
     useCallback(() => {
@@ -47,28 +72,28 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
         flatListRef.current.scrollToOffset({ offset: 0, animated: true });
       }
       const draft = state.data.drafts.find((d) => d.id === +draftId);
-      if (!draft) {
-        setFormData({});
-        setSelectedIds([]);
-        return;
-      }
-      setFormData(draft.formData as PartialReplaceHoseFormData);
+      if (!draft) return;
+      setFormData(draft.formData as PartialRFQFormData);
       setSelectedIds([...draft.selectedIds]);
+      setCanSelectHoses(draft.selectedIds.length > 0);
+      setHoses(
+        state.data.hoses.filter((h) => draft.selectedIds.includes(h.assetId)),
+      );
+      setActionType(draft.type as 'RFQ' | 'CONTACT' | 'SCRAP');
     }, [draftId, state.data.drafts]),
   );
 
-  const handleEmailInput = (emailValue: string) => {
-    const updatedFormData = { ...formData, email: emailValue };
-    setFormData(updatedFormData);
-    const validation = emailValidation(emailValue);
-    if (validation === true) {
+  const handleMail = (email: string) => {
+    setFormData((prev) => ({ ...prev, mail: email }));
+    const isValid = emailValidation(email);
+    if (isValid === true) {
       setEmailError(undefined);
-    } else setEmailError(validation);
+    } else setEmailError(isValid);
   };
 
   const handleInputChange = (
-    field: keyof PartialReplaceHoseFormData,
-    value: string | string[],
+    field: keyof PartialRFQFormData, // Use TemporaryRFQFormData here
+    value: string | null,
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -83,21 +108,20 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
     });
   }, []);
 
-  const handleSend = () => {
+  const onSend = () => {
     dispatch({
       type: 'MOVE_DRAFT_TO_DONE',
       payload: +draftId,
     });
     router.push('/dashboard');
   };
-
   const handleSaveAsDraft = () => {
     dispatch({
       type: 'SAVE_DRAFT',
       payload: {
         id: +draftId,
         selectedIds,
-        type: 'REPLACE_HOSE',
+        type: actionType,
         status: 'draft',
         formData,
       },
@@ -109,23 +133,42 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   };
 
   const handleAddHoses = () => {
-    const draft = state.data.drafts.find((d) => d.id === +draftId);
-    if (!draft) return;
     dispatch({
       type: 'SAVE_DRAFT',
       payload: {
         id: +draftId,
         selectedIds,
+        type: actionType,
         status: 'draft',
-        type: 'REPLACE_HOSE',
         formData,
       },
     });
-    router.push(getScanUrl('REPLACE_HOSE', draftId.toString()));
+    router.navigate(getScanUrl(actionType, draftId.toString()));
   };
 
-  const isButtonDisabled =
-    !formData.name || !formData.email || !!emailError || !formData.phone;
+  const renderItem = () => {
+    return (
+      <>
+        {selectedIds.length > 0 && (
+          <ListTable
+            items={hoses}
+            selectedIds={selectedIds}
+            onSelectionChange={handleSelectionChange}
+            canSelect={canSelectHoses}
+          />
+        )}
+        {allowScanToAdd && (
+          <View style={styles.addHoseContainer}>
+            <LinkButton
+              variant='light'
+              title={`+ Add hoses to this ${formLabels[actionType].title.toLowerCase()}`}
+              onPress={handleAddHoses}
+            />
+          </View>
+        )}
+      </>
+    );
+  };
   return (
     <FlatList
       ref={flatListRef}
@@ -133,72 +176,39 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
         <View style={styles.listHeaderComponent}>
           <Typography
             name='navigationBold'
-            text='Replace hose'
+            text={formLabels[actionType].title}
             style={styles.contactTitle}
           />
           <Typography
             name='navigation'
-            text='Replacement'
+            text={formLabels[actionType].subtitle}
             style={styles.contactSubtitle}
           />
         </View>
       }
       ListFooterComponent={
         <View style={styles.inputsContainer}>
-          <TooltipWrapper
-            tooltipData={{ title: 'Replacement type', message: '' }}
-          >
-            <Select
-              label='Replacement type:'
-              selectedOption={formData.replacementType || ''}
-              onChange={(value) =>
-                handleInputChange('replacementType', value as string)
-              }
-              hasAlternativeOption={false}
-              options={['Planned', 'Unplanned']}
-            />
-          </TooltipWrapper>
-          {formData.replacementType === 'Unplanned' && (
-            <>
-              <TooltipWrapper
-                tooltipData={{ title: 'Reason for replacement', message: '' }}
-              >
-                <MultiSelect
-                  label='Reason:'
-                  options={replaceReasons}
-                  selectedOptions={formData.replacementReasons || []}
-                  onSave={(value) =>
-                    handleInputChange('replacementReasons', value)
-                  }
-                />
-              </TooltipWrapper>
-              <TooltipWrapper
-                tooltipData={{ title: 'Impact of replacement', message: '' }}
-              >
-                <MultiSelect
-                  label='Impact:'
-                  options={replaceImpacts}
-                  selectedOptions={formData.replacementImpacts || []}
-                  onSave={(value) =>
-                    handleInputChange('replacementImpacts', value)
-                  }
-                />
-              </TooltipWrapper>
-              <TooltipWrapper tooltipData={{ title: 'Downtime', message: '' }}>
-                <UnitInput
-                  value={formData.downtime ? Number(formData.downtime) : null}
-                  onChange={(value) =>
-                    handleInputChange('downtime', String(value))
-                  }
-                  unit={'hours'}
-                  label='Did it cause any downtime? (hours)'
-                />
-              </TooltipWrapper>
-            </>
+          {actionType === 'RFQ' && (
+            <TooltipWrapper
+              tooltipData={{
+                title: 'RFQ type',
+                message: '',
+              }}
+            >
+              <Select
+                label={'RFQ type'}
+                selectedOption={formData.rfq || ''}
+                onChange={(value) => handleInputChange('rfq', value)}
+                hasAlternativeOption={false}
+                options={rfqOptions}
+              />
+            </TooltipWrapper>
           )}
           <Input
             type='textArea'
-            label='Comment:'
+            label={
+              actionType === 'RFQ' ? 'Delivery address / Comments' : 'Comment:'
+            }
             value={formData.comment || ''}
             onChangeText={(value) => handleInputChange('comment', value)}
           />
@@ -212,7 +222,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
             type='email'
             label={'Mail:'}
             value={formData.email || ''}
-            onChangeText={handleEmailInput}
+            onChangeText={handleMail}
             errorMessage={emailError}
           />
           <Input
@@ -223,10 +233,10 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
           />
           <View style={styles.buttonContainer}>
             <ButtonTHS
-              title='Replace hoses'
+              title={formLabels[actionType].confirmButton}
               size='sm'
-              disabled={isButtonDisabled}
-              onPress={handleSend}
+              disabled={false}
+              onPress={onSend}
             />
             <ButtonTHS
               title='Save as draft'
@@ -244,26 +254,12 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
         </View>
       }
       data={['one']}
-      renderItem={() => (
-        <>
-          <ListTable
-            items={originallySelectedHoses}
-            selectedIds={selectedIds}
-            onSelectionChange={handleSelectionChange}
-            canSelect={true}
-          />
-          <View style={styles.addHoseContainer}>
-            <LinkButton
-              variant='light'
-              title={`+ Add hose to this replacement report`}
-              onPress={handleAddHoses}
-            />
-          </View>
-        </>
-      )}
+      renderItem={renderItem}
+      keyExtractor={(item, index) => `form-content-${index}`}
     />
   );
 };
+
 const styles = StyleSheet.create({
   listHeaderComponent: {
     alignItems: 'center',

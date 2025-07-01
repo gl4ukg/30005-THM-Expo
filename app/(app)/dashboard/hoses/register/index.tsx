@@ -12,14 +12,14 @@ import { RFIDInput } from '@/components/UI/Input/RFID';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
-import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState, useCallback } from 'react';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { BarcodeInput } from '@/components/UI/Input/BarcodeInput';
 import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
-import { DataService } from '@/services/data/dataService';
+import { generateNumericDraftId } from '@/lib/util/unikId';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -31,24 +31,25 @@ const excludedTemplateFields: (keyof HoseData)[] = [
 ];
 
 const RegisterHose = () => {
+  usePreventGoBack();
   const {
     hoseId: incomingId,
     rfid: incomingRfid,
     scanMethod,
+    draftId,
   } = useLocalSearchParams<{
     hoseId?: string;
     rfid?: string;
     scanMethod?: 'RFID' | 'Barcode';
+    draftId?: string;
   }>();
-
   const { state, dispatch } = useAppContext();
   const [registerMultiple, setRegisterMultiple] = useState(false);
   const [rfid, setRfid] = useState<string | undefined>(incomingRfid);
   const [isBarcodeModalVisible, setIsBarcodeModalVisible] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
 
-  usePreventGoBack();
-
-  const [localState, setLocalState] = useState<
+  const [hoseData, setHoseData] = useState<
     Partial<HoseData> & { showValidationErrors?: boolean }
   >(() => {
     const templateData = state.data.hoseTemplate || {};
@@ -58,7 +59,6 @@ const RegisterHose = () => {
     excludedTemplateFields.forEach((field) => {
       delete mergedTemplate[field];
     });
-
     return {
       ...mergedTemplate,
       assetId: incomingId ? Number(incomingId) : undefined,
@@ -66,6 +66,30 @@ const RegisterHose = () => {
       showValidationErrors: false,
     };
   });
+  let id = useMemo(
+    () =>
+      draftId
+        ? +draftId
+        : generateNumericDraftId(state.data.drafts.map((d) => d.id)),
+    [],
+  );
+  useFocusEffect(
+    useCallback(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({ y: 0 });
+      }
+
+      if (draftId) {
+        const draft = state.data.drafts.find((d) => d.id === +draftId);
+        if (draft) {
+          setHoseData({
+            ...(draft.formData as Partial<HoseData>),
+            showValidationErrors: false,
+          });
+        }
+      }
+    }, [draftId, state.data.drafts]),
+  );
 
   const handleCheckboxChange = () => {
     setRegisterMultiple((prevState) => !prevState);
@@ -96,7 +120,7 @@ const RegisterHose = () => {
     field: keyof HoseData,
     value: HoseData[keyof HoseData] | undefined,
   ) => {
-    setLocalState((prevState) => ({
+    setHoseData((prevState) => ({
       ...prevState,
       [field]: value,
     }));
@@ -105,13 +129,13 @@ const RegisterHose = () => {
   const handleRFIDScanned = useCallback((newRfid: string | null) => {
     if (newRfid) {
       setRfid(newRfid);
-      setLocalState((prevState) => ({
+      setHoseData((prevState) => ({
         ...prevState,
         RFID: newRfid,
       }));
     } else {
       setRfid(undefined);
-      setLocalState((prevState) => ({
+      setHoseData((prevState) => ({
         ...prevState,
         RFID: undefined,
       }));
@@ -125,7 +149,7 @@ const RegisterHose = () => {
 
   const handleBarcodeScannedFromModal = (barcode: string | null) => {
     if (barcode) {
-      setLocalState((prevState) => ({
+      setHoseData((prevState) => ({
         ...prevState,
         id: barcode,
       }));
@@ -159,9 +183,9 @@ const RegisterHose = () => {
 
     const missing = requiredFieldsList.filter(
       (field) =>
-        localState[field] === undefined ||
-        localState[field] === null ||
-        localState[field] === '',
+        hoseData[field] === undefined ||
+        hoseData[field] === null ||
+        hoseData[field] === '',
     );
 
     if (missing.length > 0) {
@@ -169,7 +193,7 @@ const RegisterHose = () => {
         'Missing Required Fields',
         `Please fill in the following fields: ${missing.join(', ')}`,
       );
-      setLocalState((prevState) => ({
+      setHoseData((prevState) => ({
         ...prevState,
         showValidationErrors: true,
       }));
@@ -178,61 +202,59 @@ const RegisterHose = () => {
 
     dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
 
-    // Generate a unique asset ID for the new hose
-    const maxAssetId = Math.max(...state.data.hoses.map((h) => h.assetId), 0);
-    const newAssetId = maxAssetId + 1;
+    const newHoseData = hoseData as HoseData;
 
-    const newHoseData: HoseData = {
-      ...localState,
-      assetId: newAssetId,
-    } as HoseData;
-
-    try {
-      // Add the new hose to cache and update context
-      await DataService.addHose(newHoseData);
-
-      // Update the context with the new hose
+    if (registerMultiple) {
+      const newDraftId = generateNumericDraftId(
+        state.data.drafts.map((d) => d.id),
+      );
       dispatch({
-        type: 'SET_HOSE_DATA',
-        payload: [...state.data.hoses, newHoseData],
+        type: 'CREATE_DRAFT',
+        payload: {
+          formData: newHoseData,
+          selectedIds: [],
+          type: 'REGISTER_HOSE',
+          status: 'draft',
+          id: newDraftId,
+        },
       });
-
-      if (registerMultiple) {
-        dispatch({ type: 'SET_HOSE_TEMPLATE', payload: newHoseData });
-        Alert.alert(
-          'Success',
-          'Hose registered successfully and added to cache. Ready for next hose.',
-        );
-        router.push('/scan?scanPurpose=REGISTER_HOSE');
-      } else {
-        Alert.alert(
-          'Success',
-          'Hose registered successfully and added to cache.',
-        );
-        router.push('/(app)/dashboard');
-      }
-    } catch (error) {
-      console.error('Failed to save hose:', error);
       Alert.alert(
         'Save Error',
         'Failed to save hose to cache. Please try again.',
         [{ text: 'OK' }],
       );
-      dispatch({ type: 'SET_IS_CANCELABLE', payload: true });
+      router.push(`/scan?scanPurpose=REGISTER_HOSE&draftId=${newDraftId}`);
+    } else {
+      dispatch({
+        type: 'MOVE_DRAFT_TO_DONE',
+        payload: +id,
+      });
+      router.push('/(app)/dashboard');
     }
-  }, [localState, dispatch, router, registerMultiple, state.data.hoses]);
+  }, [hoseData, dispatch, router, registerMultiple]);
+
+  const handleSaveAsDraft = () => {
+    dispatch({
+      type: 'SAVE_DRAFT',
+      payload: {
+        formData: hoseData,
+        selectedIds: [],
+        type: 'REGISTER_HOSE',
+        id: +id,
+        status: 'draft',
+      },
+    });
+    router.push('/(app)/dashboard');
+  };
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView ref={scrollViewRef}>
         <View style={styles.header}>
           <Typography name='navigationBold' text='Register hose' />
           <Typography name='navigation'>
             Hose ID:
-            <Typography
-              name={'navigationBold'}
-              text={`${localState.assetId}`}
-            />
+            <Typography name={'navigationBold'} text={` ${hoseData.assetId}`} />
           </Typography>
         </View>
 
@@ -246,7 +268,7 @@ const RegisterHose = () => {
             <BarcodeInput
               label='Barcode (Hose ID)'
               onPress={openBarcodeModal}
-              value={`${localState.assetId}`}
+              value={`${hoseData.assetId}`}
               disableScan={scanMethod === 'Barcode' && !!incomingId}
             />
           </TooltipWrapper>
@@ -270,8 +292,8 @@ const RegisterHose = () => {
             <DateInput
               label='Production date'
               value={
-                localState.productionDate
-                  ? new Date(localState.productionDate)
+                hoseData.productionDate
+                  ? new Date(hoseData.productionDate)
                   : null
               }
               onChange={(date) =>
@@ -288,9 +310,7 @@ const RegisterHose = () => {
             <DateInput
               label='Installation date'
               value={
-                localState.installedDate
-                  ? new Date(localState.installedDate)
-                  : null
+                hoseData.installedDate ? new Date(hoseData.installedDate) : null
               }
               onChange={(date) =>
                 handleInputChange('installedDate', date?.toISOString())
@@ -300,22 +320,22 @@ const RegisterHose = () => {
         </View>
 
         <EditGeneralInfo
-          info={localState}
+          info={hoseData}
           onInputChange={handleInputChange}
           isRegisterView
         />
         <EditUniversalHoseData
-          info={localState}
+          info={hoseData}
           onInputChange={handleInputChange}
-          showValidationErrors={localState.showValidationErrors}
+          showValidationErrors={hoseData.showValidationErrors}
         />
         <EditTessPartNumbers
-          info={localState}
+          info={hoseData}
           onInputChange={handleInputChange}
-          showValidationErrors={localState.showValidationErrors}
+          showValidationErrors={hoseData.showValidationErrors}
         />
         <EditMaintenanceInfo
-          info={localState}
+          info={hoseData}
           onInputChange={handleInputChange}
         />
         <Documents />
@@ -331,7 +351,13 @@ const RegisterHose = () => {
           />
         </View>
         <View style={styles.buttonContainer}>
-          <ButtonTHS title='Save & close' size='sm' onPress={handleSave} />
+          <ButtonTHS title={`Save & close`} size='sm' onPress={handleSave} />
+          <ButtonTHS
+            title='Save as draft'
+            variant='secondary'
+            size='sm'
+            onPress={handleSaveAsDraft}
+          />
           <ButtonTHS
             title='Cancel'
             onPress={handleCancel}

@@ -90,7 +90,7 @@ const App = () => {
           <>
             <Stack.Screen name='index' />
             <Stack.Screen name='/login' />
-            {/* <Stack.Screen name='/scan' /> */}
+            <Stack.Screen name='/photo' />
             <Stack.Screen name='/ui' />
           </>
         )}
