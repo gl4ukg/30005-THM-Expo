@@ -26,7 +26,9 @@
       "package": "no.tess.THM",
       "permissions": [
         "android.permission.CAMERA",
-        "android.permission.NFC"
+        "android.permission.NFC",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
       ],
       "runtimeVersion": {
         "policy": "appVersion"
@@ -94,12 +96,8 @@
         "react-native-nfc-manager",
         {
           "nfcPermission": "$(PRODUCT_NAME) needs access to your NFC reader.",
-          "selectIdentifiers": [
-            "A0000002471001"
-          ],
-          "systemCodes": [
-            "8008"
-          ],
+          "selectIdentifiers": ["A0000002471001"],
+          "systemCodes": ["8008"],
           "includeNdefEntitlement": false
         }
       ],
