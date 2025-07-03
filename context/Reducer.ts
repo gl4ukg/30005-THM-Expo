@@ -162,7 +162,8 @@ type DataAction =
 
 type SettingsAction =
   // | ActionWithPayload<'UPDATE_SETTINGS', any>
-  ActionWithPayload<'UPDATE_CONNECTION_TYPE', 'wifi' | 'mobile' | null>;
+  | ActionWithPayload<'UPDATE_CONNECTION_TYPE', 'wifi' | 'mobile' | null>
+  | ActionWithPayload<'SET_IS_MENU_OPEN', boolean>;
 
 // Reducers for each slice of the app state (these should be defined elsewhere)
 const authReducer = (state: AuthState, action: AppAction): AuthState => {
@@ -413,6 +414,11 @@ const settingReducer = (
       return {
         ...state,
         connectionType: action.payload,
+      };
+    case 'SET_IS_MENU_OPEN':
+      return {
+        ...state,
+        isMenuOpen: action.payload,
       };
     default:
       return state;

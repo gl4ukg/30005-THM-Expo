@@ -169,6 +169,7 @@ interface SettingsState {
     environment: string;
     webServiceEndpoint: string;
   };
+  isMenuOpen: boolean;
 }
 
 // Define initial states for each slice of the app state
@@ -275,6 +276,7 @@ const initialSettingsState: SettingsState = {
     environment: 'DEV',
     webServiceEndpoint: 'http://localhost:3000',
   },
+  isMenuOpen: false,
 };
 
 const initialState: AppState = {
