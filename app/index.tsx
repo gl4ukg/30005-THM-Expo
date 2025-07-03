@@ -179,7 +179,6 @@ const Login = () => {
                     <View style={styles.semiFooter}>
                       <Typography
                         name={'navigation'}
-                        text={'We hose the world'}
                         style={styles.whiteText}
                       />
                       <NorwegianFlag width={32} />
