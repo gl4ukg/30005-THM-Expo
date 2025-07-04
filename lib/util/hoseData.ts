@@ -1,6 +1,5 @@
-import { mockedData } from '@/context/mocked';
+import { DataService } from '@/services/data/dataService';
 
 export const getHoseData = async (customerNumbers: string[]) => {
-  // TODO fetch data
-  return mockedData; // TODO: get data
+  return await DataService.getHoses();
 };

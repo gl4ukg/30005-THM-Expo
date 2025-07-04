@@ -158,6 +158,7 @@ type DataAction =
       }
     >
   | ActionWithPayload<'ADD_HOSE_TO_EDITED_HOSES', Partial<HoseData>>
+  | ActionWithPayload<'ADD_NEW_HOSE', HoseData>
   | ActionWithPayload<'MOVE_DRAFT_TO_DONE', number>
   | ActionWithPayload<'REMOVE_FROM_DRAFT', number>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_REGISTRATION_DATA'>
@@ -237,6 +238,11 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       return {
         ...state,
         hoses: action.payload,
+      };
+    case 'ADD_NEW_HOSE':
+      return {
+        ...state,
+        hoses: [...state.hoses, action.payload],
       };
     case 'SAVE_HOSE_DATA':
       console.log('SAVE_HOSE_DATA', action.payload.hoseId),

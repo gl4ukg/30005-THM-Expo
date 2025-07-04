@@ -2,7 +2,6 @@ import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
-import { mockedData } from '@/context/mocked';
 import { MultiSelectionActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
@@ -155,14 +154,6 @@ const Scan = () => {
       setShowRfidScanView(false);
     }
   }, [isNfcSupported, rfid, isProcessingHose]);
-
-  useEffect(() => {
-    //TODO: remove it
-    dispatch({
-      type: 'SET_HOSE_DATA',
-      payload: mockedData,
-    });
-  }, []);
 
   const handleRFIDPress = () => {
     isProcessingHose.current = false;

@@ -1,4 +1,4 @@
-import { HoseData } from '@/lib/types/hose';
+import { HID, HoseData } from '@/lib/types/hose';
 import { S1Item } from '@/services/api/assetApi';
 import {
   PartialReplaceHoseFormData,
@@ -186,8 +186,8 @@ const initialAuthState: AuthState = {
 const initialDataState: DataState = {
   isLoading: false,
   lastUpdate: new Date(),
-  s1Code: null, // Will be set after login
-  s1Items: [], // Will be populated after login
+  s1Code: null,
+  s1Items: [],
   customer: { id: '223949', name: 'CUSTOMER WEB DEMO (Main)' },
   // initial data state values
   hoses: [],
