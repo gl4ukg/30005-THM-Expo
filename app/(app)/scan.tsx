@@ -186,7 +186,28 @@ const Scan = () => {
     } else {
       hose = state.data.hoses.find((hose) => hose.assetId === +id);
     }
+    if (scanPurpose === 'REGISTER_HOSE' && !hose) {
+      const draftId = generateNumericDraftId(
+        state.data.drafts.map((d) => d.id),
+      ).toString();
+      const params: { [key: string]: any } = {
+        draftId: draftId,
+      };
+      const newHoseData: Partial<HoseData> = {};
+      if (withRfId) {
+        params.rfid = id;
+        newHoseData.RFID = id;
+      } else {
+        params.hoseId = id;
+        newHoseData.assetId = +id;
+      }
 
+      router.replace({
+        pathname: `/dashboard/hoses/register`,
+        params,
+      });
+      return;
+    }
     if (hose) {
       if (scanPurpose === 'REGISTER_HOSE' || scanPurpose === 'INSPECT_HOSE') {
         const draftId = generateNumericDraftId(
