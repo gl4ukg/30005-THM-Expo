@@ -1,6 +1,6 @@
 import { MMKV } from 'react-native-mmkv';
 import { HoseData } from '@/lib/types/hose';
-import { S1Item } from '@/services/api/assetApi';
+import { S1Item } from '@/services/api/asset';
 
 /**
  * Cache Layer - Handles local storage using MMKV
@@ -155,7 +155,8 @@ export class CacheService {
   }
 
   // Check if cache is stale based on last sync time
-  static isCacheStale(maxAgeMinutes: number = 30): boolean {
+  // default 1 day
+  static isCacheStale(maxAgeMinutes: number = 1440): boolean {
     const lastSync = this.getLastSyncTime();
     if (!lastSync) return true;
 

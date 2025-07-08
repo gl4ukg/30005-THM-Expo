@@ -1,7 +1,7 @@
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
-import { S1Item } from '@/services/api/assetApi';
+import { S1Item } from '@/services/api/asset';
 import { useState } from 'react';
 import {
   LayoutAnimation,

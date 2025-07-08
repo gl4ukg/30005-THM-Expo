@@ -217,7 +217,11 @@ export interface RegisterHoseRequest {
 
 export const transformHoseDataForAPI = (
   hoseData: HoseData,
+  customerNumber?: string,
 ): RegisterHoseRequest => {
+  const resolvedCustomerNumber =
+    customerNumber || hoseData.customerNumber || '';
+
   return {
     documentControl: {
       extSystemCode: hoseData.extSystemCode || 'XX',
@@ -232,7 +236,7 @@ export const transformHoseDataForAPI = (
       methodName: hoseData.methodName || 'registerHose',
     },
     registerHoseHeader: {
-      customerNumber: hoseData.customerNumber || '',
+      customerNumber: resolvedCustomerNumber,
       otherInfo: hoseData.otherInfo || 'string',
       customerOrderNumber: hoseData.customerOrderNumber || 0,
       tessOrderNumber: Number(hoseData.tessOrderNumber) || 0,

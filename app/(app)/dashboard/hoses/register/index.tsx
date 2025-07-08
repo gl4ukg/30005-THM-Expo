@@ -21,7 +21,7 @@ import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { generateNumericDraftId } from '@/lib/util/unikId';
 import { DataService } from '@/services/data/dataService';
-import { AssetApi } from '@/services/api/assetApi';
+import { AssetApi } from '@/services/api/asset';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -247,8 +247,9 @@ const RegisterHose = () => {
             console.log('newHoseData keys:', Object.keys(newHoseData));
             console.log('newHoseData assetId:', newHoseData.assetId);
             console.log('newHoseData RFID:', newHoseData.RFID);
+            console.log('Customer number from state:', state.data.customer.id);
 
-            await AssetApi.registerHose(newHoseData);
+            await AssetApi.registerHose(newHoseData, state.data.customer.id);
             console.log('Hose successfully registered with API');
           } catch (apiError) {
             console.error(

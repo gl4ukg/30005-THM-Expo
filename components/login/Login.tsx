@@ -7,6 +7,7 @@ import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { emailValidation } from '@/lib/util/validation';
+import { getCustomers } from '@/services/api/customer';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
@@ -40,14 +41,12 @@ export const LoginScreen: React.FC<Props> = ({ nextView }) => {
     } else setNameError(undefined);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     dispatch({
       type: 'SET_LOGIN_LOADING',
       payload: true,
     });
-    // check if valid.
-    // if valid send request to api or do something else.
-    setTimeout(() => {
+    setTimeout(async () => {
       if (password.length < 3) {
         // login and navigate to dashboard
         dispatch({
@@ -71,17 +70,42 @@ export const LoginScreen: React.FC<Props> = ({ nextView }) => {
           },
         ]);
       } else {
-        // update state
-        dispatch({
-          type: 'LOGIN',
-          payload: { email, name: fullName, id: password },
-        });
-        // login and navigate to dashboard
-        dispatch({
-          type: 'SET_LOGIN_LOADING',
-          payload: false,
-        });
-        router.push('/(app)/dashboard');
+        try {
+          const customers = await getCustomers();
+          if (customers && customers.length > 0) {
+            const firstCustomer = customers[0];
+            dispatch({
+              type: 'SET_CUSTOMER',
+              payload: {
+                id: firstCustomer.customerNumber,
+                name: firstCustomer.customerName,
+              },
+            });
+            console.log('Set customer in state:', firstCustomer);
+          }
+
+          dispatch({
+            type: 'LOGIN',
+            payload: { email, name: fullName, id: password },
+          });
+
+          dispatch({
+            type: 'SET_LOGIN_LOADING',
+            payload: false,
+          });
+          router.push('/(app)/dashboard');
+        } catch (error) {
+          console.error('Failed to fetch customers during login:', error);
+          dispatch({
+            type: 'SET_LOGIN_LOADING',
+            payload: false,
+          });
+          Alert.alert('Login - failed', 'Failed to fetch customer data', [
+            {
+              text: 'OK',
+            },
+          ]);
+        }
       }
     }, 3000);
   };

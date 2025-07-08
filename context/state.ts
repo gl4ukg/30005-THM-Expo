@@ -1,5 +1,5 @@
 import { HID, HoseData } from '@/lib/types/hose';
-import { S1Item } from '@/services/api/assetApi';
+import { S1Item } from '@/services/api/asset';
 import {
   PartialReplaceHoseFormData,
   PartialRFQFormData,

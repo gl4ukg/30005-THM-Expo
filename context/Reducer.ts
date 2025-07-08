@@ -16,7 +16,7 @@ import {
   SingleSelectionActionsType,
 } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
-import { S1Item } from '@/services/api/assetApi';
+import { S1Item } from '@/services/api/asset';
 import { createContext } from 'react';
 import { CacheService } from '@/services/cache/cacheService';
 
@@ -119,6 +119,7 @@ type DataAction =
     >
   | ActionWithPayload<'SET_HOSE_DATA', HoseData[]>
   | ActionWithPayload<'SET_DATA_LOADING', boolean>
+  | ActionWithPayload<'SET_CUSTOMER', { id: string; name: string }>
   | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: number; hoseData: any }>
   | ActionWithPayload<'REMOVE_HOSES', number[]>
   | ActionWithPayload<'SELECT_ONE_HOSE', SingleSelection>
@@ -238,6 +239,11 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       return {
         ...state,
         hoses: action.payload,
+      };
+    case 'SET_CUSTOMER':
+      return {
+        ...state,
+        customer: action.payload,
       };
     case 'ADD_NEW_HOSE':
       return {

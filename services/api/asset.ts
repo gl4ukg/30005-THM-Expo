@@ -50,12 +50,16 @@ export class AssetApi {
     return apiCall<GetAllHosesByUserResponse>(endpoint);
   }
 
-  static async registerHose(hoseData: HoseData): Promise<HoseData> {
+  static async registerHose(
+    hoseData: HoseData,
+    customerNumber?: string,
+  ): Promise<HoseData> {
     console.log('Registering hose with data:', hoseData);
     console.log('HoseData keys:', Object.keys(hoseData));
+    console.log('Customer number provided:', customerNumber);
 
     // Transform the flat hose data to API expected format
-    const requestData = transformHoseDataForAPI(hoseData);
+    const requestData = transformHoseDataForAPI(hoseData, customerNumber);
 
     console.log(
       'Transformed API payload:',

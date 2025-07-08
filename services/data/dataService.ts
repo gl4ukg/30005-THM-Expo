@@ -1,5 +1,5 @@
 import { HoseData } from '@/lib/types/hose';
-import { AssetApi, S1Item } from '@/services/api/assetApi';
+import { AssetApi, S1Item } from '@/services/api/asset';
 import { CacheService } from '@/services/cache/cacheService';
 
 export class DataService {
