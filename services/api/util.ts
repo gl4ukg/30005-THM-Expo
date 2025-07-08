@@ -1,5 +1,106 @@
 import { HoseData } from '@/lib/types/hose';
 import { convertToISOFormat, formatDate } from '@/lib/util/formatDate';
+import { getFromStore } from '@/lib/util/secureStore';
+
+// Base URL for all API requests
+export const BASE_URL =
+  process.env.EXPO_PUBLIC_API_BASE_URL ||
+  'https://30011-proxyapi-cuafeua6bha7ckby.norwayeast-01.azurewebsites.net';
+
+export interface ApiRequestOptions {
+  headers?: Record<string, string>;
+  timeout?: number;
+}
+
+export async function apiRequest<T>(
+  endpoint: string,
+  options: RequestInit = {},
+): Promise<T> {
+  const url = `${BASE_URL}${endpoint}`;
+
+  let authHeaders = {};
+  try {
+    const cookie = await getFromStore('cookie');
+    if (cookie) {
+      const accessToken = cookie.split(';')[0].split('=')[1];
+      authHeaders = {
+        accessToken: accessToken,
+      };
+    } else {
+      console.warn('No authentication cookie found');
+    }
+  } catch (error) {
+    console.error('Failed to get authentication token:', error);
+  }
+
+  const defaultHeaders = {
+    'Content-Type': 'application/json',
+    ...authHeaders,
+  };
+
+  const config: RequestInit = {
+    ...options,
+    headers: {
+      ...defaultHeaders,
+      ...options.headers,
+    },
+  };
+
+  try {
+    console.log('Making API request to:', url);
+    console.log('Request headers:', config.headers);
+    console.log('Request method:', config.method || 'GET');
+    if (config.body) {
+      console.log('Request body:', config.body);
+    }
+
+    const response = await fetch(url, config);
+
+    if (!response.ok) {
+      throw new Error(
+        `API request failed: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`API request failed for ${endpoint}:`, error);
+    throw error;
+  }
+}
+
+export async function apiCall<T>(
+  endpoint: string,
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
+  data?: any,
+  options: RequestInit = {},
+): Promise<T> {
+  const methodName = `${method} ${endpoint}`;
+
+  try {
+    console.log(`API Call: ${methodName}`);
+    if (data) {
+      console.log(`API Call Data:`, data);
+    }
+
+    const config: RequestInit = {
+      method,
+      ...options,
+    };
+
+    if (data && method !== 'GET') {
+      config.body = JSON.stringify(data);
+      console.log(`API Call Body:`, config.body);
+    }
+
+    const response = await apiRequest<T>(endpoint, config);
+    console.log(`API Success: ${methodName}`);
+    return response;
+  } catch (error) {
+    console.error(`API Error: ${methodName}`, error);
+    throw error;
+  }
+}
 
 export interface RegisterHoseRequest {
   documentControl: {
