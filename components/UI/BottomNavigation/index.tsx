@@ -6,7 +6,7 @@ import { NavMenu } from '@/components/UI/NavMenu/navMenu';
 import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
 import { Href, Link, useRouter } from 'expo-router';
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,6 +17,10 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { state, dispatch } = useContext(AppContext);
+
+  useEffect(() => {
+    dispatch({ type: 'SET_IS_MENU_OPEN', payload: isOpen });
+  }, [isOpen, dispatch]);
 
   const handleLinkPress = (to: Href) => {
     setIsOpen(false);
@@ -100,9 +104,13 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
           />
           <Pressable
             style={styles.button}
-            onPress={() =>
-              isOpen ? setIsOpen(false) : router.canGoBack() && router.back()
-            }
+            onPress={() => {
+              if (isOpen) {
+                setIsOpen(false);
+              } else if (router.canGoBack()) {
+                router.back();
+              }
+            }}
           >
             <Icon name='ChevronLeft' color='#fff' />
           </Pressable>

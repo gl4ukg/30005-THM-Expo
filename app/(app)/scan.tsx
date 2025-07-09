@@ -61,6 +61,7 @@ const Scan = () => {
   const [rfid, setRfid] = useState<string | null>(null);
   const previousRfid = useRef<string | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const title = getScanTitle(scanPurpose);
   const isProcessingHose = useRef(false);
@@ -298,6 +299,14 @@ const Scan = () => {
     }
   }, [device, scanMethod, hasPermission]);
 
+  useEffect(() => {
+    if (isModalOpen) {
+      if (scanMethod === 'Barcode') setScanMethod(null);
+    } else {
+      if (!scanMethod && device && hasPermission) setScanMethod('Barcode');
+    }
+  }, [isModalOpen, scanMethod, device, hasPermission]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={{ flex: 1 }}>
@@ -307,15 +316,17 @@ const Scan = () => {
           style={{ flex: 1 }}
         >
           <View style={styles.readerContainer}>
-            {device && scanMethod === 'Barcode' && (
-              <Camera
-                ref={cameraRef}
-                style={styles.camera}
-                device={device}
-                codeScanner={codeScanner}
-                isActive={scanMethod === 'Barcode'}
-              />
-            )}
+            {device &&
+              scanMethod === 'Barcode' &&
+              !state.settings.isMenuOpen && (
+                <Camera
+                  ref={cameraRef}
+                  style={styles.camera}
+                  device={device}
+                  codeScanner={codeScanner}
+                  isActive={true}
+                />
+              )}
             {scanMethod === 'RFID' && (
               <View style={styles.rfidContainer}>
                 <Icon name='RFID' size='lg' />
@@ -499,6 +510,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
+    backgroundColor: colors.black,
   },
   camera: { flex: 1, width: '100%', borderColor: colors.black },
   rfidContainer: {
