@@ -36,7 +36,7 @@ const User = () => {
         <View style={styles.sectionData}>
           <DataField label='User ID:' value={state.auth.user?.id} />
           <DataField label='Full name:' value={user.name} />
-          {user.phoneNumber && (
+          {state.auth.user?.phoneNumber && (
             <DataField label='Phone number:' value={user.phoneNumber} />
           )}
           {user.customerNumbers &&

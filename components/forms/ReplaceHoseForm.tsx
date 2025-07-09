@@ -14,8 +14,8 @@ import { useAppContext } from '@/context/ContextProvider';
 import { PartialReplaceHoseFormData } from '@/context/Reducer';
 
 import { getScanUrl } from '@/app/(app)/scan';
+import { useUserValidation } from '@/hooks/useUserValidation';
 import { colors } from '@/lib/tokens/colors';
-import { emailValidation } from '@/lib/util/validation';
 import { router, useFocusEffect } from 'expo-router';
 import { FC, useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
@@ -28,10 +28,9 @@ interface Props {
 export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   const { state, dispatch } = useAppContext();
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-
   const [formData, setFormData] = useState<PartialReplaceHoseFormData>({});
-  const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const flatListRef = useRef<FlatList>(null);
+  const { hasErrors } = useUserValidation();
 
   const originallySelectedHoses = useMemo(() => {
     const draft = state.data.drafts.find((d) => d.id === +draftId);
@@ -56,15 +55,6 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
       setSelectedIds([...draft.selectedIds]);
     }, [draftId, state.data.drafts]),
   );
-
-  const handleEmailInput = (emailValue: string) => {
-    const updatedFormData = { ...formData, email: emailValue };
-    setFormData(updatedFormData);
-    const validation = emailValidation(emailValue);
-    if (validation === true) {
-      setEmailError(undefined);
-    } else setEmailError(validation);
-  };
 
   const handleInputChange = (
     field: keyof PartialReplaceHoseFormData,
@@ -124,8 +114,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
     router.push(getScanUrl('REPLACE_HOSE', draftId.toString()));
   };
 
-  const isButtonDisabled =
-    !formData.name || !formData.email || !!emailError || !formData.phone;
+  const isButtonDisabled = !hasErrors || selectedIds.length === 0;
   return (
     <FlatList
       ref={flatListRef}
@@ -202,25 +191,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
             value={formData.comment || ''}
             onChangeText={(value) => handleInputChange('comment', value)}
           />
-          <Input
-            type='text'
-            label={'Name:'}
-            value={formData.name || ''}
-            onChangeText={(value) => handleInputChange('name', value)}
-          />
-          <Input
-            type='email'
-            label={'Mail:'}
-            value={formData.email || ''}
-            onChangeText={handleEmailInput}
-            errorMessage={emailError}
-          />
-          <Input
-            type='tel'
-            label={'Phone:'}
-            value={formData.phone || ''}
-            onChangeText={(value) => handleInputChange('phone', value)}
-          />
+
           <View style={styles.buttonContainer}>
             <ButtonTHS
               title='Replace hoses'

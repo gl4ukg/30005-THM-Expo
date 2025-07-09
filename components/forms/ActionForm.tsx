@@ -6,14 +6,14 @@ import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
-import { PartialRFQFormData } from '@/context/Reducer'; // Use TemporaryRFQFormData from Reducer.ts
-import { isMultiSelection, MultiSelectionActionsType } from '@/context/state';
+import { PartialRFQFormData } from '@/context/Reducer';
+import { MultiSelectionActionsType } from '@/context/state';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+import { useUserValidation } from '@/hooks/useUserValidation';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
-import { emailValidation } from '@/lib/util/validation';
 import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { TooltipWrapper } from '../detailView/edit/TooltipWrapper';
 
@@ -55,7 +55,6 @@ export const ActionForm: React.FC<Props> = ({
   const { state, dispatch } = useAppContext();
   const [hoses, setHoses] = useState<HoseData[]>([]);
   const [formData, setFormData] = useState<PartialRFQFormData>({});
-  const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [canSelectHoses, setCanSelectHoses] = useState<boolean>(false);
   const [actionType, setActionType] =
@@ -63,6 +62,7 @@ export const ActionForm: React.FC<Props> = ({
       'RFQ',
     );
   const flatListRef = useRef<FlatList>(null);
+  const { hasErrors } = useUserValidation();
 
   usePreventGoBack();
 
@@ -82,14 +82,6 @@ export const ActionForm: React.FC<Props> = ({
       setActionType(draft.type as 'RFQ' | 'CONTACT' | 'SCRAP');
     }, [draftId, state.data.drafts]),
   );
-
-  const handleMail = (email: string) => {
-    setFormData((prev) => ({ ...prev, mail: email }));
-    const isValid = emailValidation(email);
-    if (isValid === true) {
-      setEmailError(undefined);
-    } else setEmailError(isValid);
-  };
 
   const handleInputChange = (
     field: keyof PartialRFQFormData, // Use TemporaryRFQFormData here
@@ -145,6 +137,26 @@ export const ActionForm: React.FC<Props> = ({
     });
     router.navigate(getScanUrl(actionType, draftId.toString()));
   };
+
+  let isButtonDisabled;
+
+  switch (actionType) {
+    case 'RFQ':
+      isButtonDisabled =
+        hasErrors ||
+        selectedIds.length === 0 ||
+        formData.rfq === '' ||
+        !formData.rfq;
+      break;
+    case 'CONTACT':
+      isButtonDisabled = hasErrors || selectedIds.length === 0;
+      break;
+    case 'SCRAP':
+      isButtonDisabled = hasErrors || selectedIds.length === 0;
+      break;
+    default:
+      isButtonDisabled = true;
+  }
 
   const renderItem = () => {
     return (
@@ -212,30 +224,12 @@ export const ActionForm: React.FC<Props> = ({
             value={formData.comment || ''}
             onChangeText={(value) => handleInputChange('comment', value)}
           />
-          <Input
-            type='text'
-            label={'Name:'}
-            value={formData.name || ''}
-            onChangeText={(value) => handleInputChange('name', value)}
-          />
-          <Input
-            type='email'
-            label={'Mail:'}
-            value={formData.email || ''}
-            onChangeText={handleMail}
-            errorMessage={emailError}
-          />
-          <Input
-            type='tel'
-            label={'Phone:'}
-            value={formData.phone || ''}
-            onChangeText={(value) => handleInputChange('phone', value)}
-          />
+
           <View style={styles.buttonContainer}>
             <ButtonTHS
               title={formLabels[actionType].confirmButton}
               size='sm'
-              disabled={false}
+              disabled={isButtonDisabled}
               onPress={onSend}
             />
             <ButtonTHS
