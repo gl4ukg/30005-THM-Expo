@@ -110,43 +110,58 @@ export const PDFViewer: React.FC<PdfViewerProps> = ({
       const downloadFileName = fileName.endsWith('.pdf')
         ? fileName
         : `${fileName}.pdf`;
-      const downloadPath = `${RNBlobUtil.fs.dirs.DownloadDir}/${downloadFileName}`;
 
-      const response = await RNBlobUtil.config({
-        fileCache: true,
-        addAndroidDownloads: {
-          useDownloadManager: true,
-          notification: true,
-          mime: 'application/pdf',
-          description: 'Downloading PDF document',
-          path: downloadPath,
-        },
-        trusty: true,
-      }).fetch('GET', uri);
+      if (Platform.OS === 'android') {
+        const downloadPath = `${RNBlobUtil.fs.dirs.DownloadDir}/${downloadFileName}`;
 
-      if (Platform.OS === 'ios') {
-        await Sharing.shareAsync(response.path());
+        await RNBlobUtil.config({
+          fileCache: true,
+          addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+            mime: 'application/pdf',
+            description: 'Downloading PDF document',
+            path: downloadPath,
+          },
+          trusty: true,
+        }).fetch('GET', uri);
+
+        Alert.alert('Success', 'Document downloaded to Downloads folder!');
+      } else {
+        const documentsPath = `${RNBlobUtil.fs.dirs.DocumentDir}/${downloadFileName}`;
+
+        const response = await RNBlobUtil.config({
+          fileCache: true,
+          path: documentsPath,
+          trusty: true,
+        }).fetch('GET', uri);
+
+        Alert.alert(
+          'Download Complete',
+          'Document saved to Files app. Would you like to share it?',
+          [
+            {
+              text: 'Share',
+              onPress: async () => {
+                try {
+                  await Sharing.shareAsync(response.path(), {
+                    mimeType: 'application/pdf',
+                    dialogTitle: 'Share PDF',
+                  });
+                } catch (shareError) {
+                  console.error('Share error:', shareError);
+                }
+              },
+            },
+            { text: 'Done', style: 'default' },
+          ],
+        );
       }
-
-      Alert.alert('Success', 'Document downloaded successfully!');
     } catch (error) {
       console.error('Download error:', error);
       Alert.alert('Error', 'Failed to download document.');
     } finally {
       setDownloading(false);
-    }
-  };
-
-  const handleRetry = () => {
-    validateAndPrepareUri();
-  };
-
-  const handleOpenInBrowser = async () => {
-    try {
-      await WebBrowser.openBrowserAsync(uri);
-    } catch (error) {
-      console.error('Error opening browser:', error);
-      Alert.alert('Error', 'Failed to open document in browser.');
     }
   };
 
@@ -161,7 +176,10 @@ export const PDFViewer: React.FC<PdfViewerProps> = ({
       </Typography>
 
       <View style={styles.errorActions}>
-        <Pressable onPress={handleRetry} style={styles.retryButton}>
+        <Pressable
+          onPress={() => validateAndPrepareUri()}
+          style={styles.retryButton}
+        >
           <Icon name='Upload' size='sm' color='white' />
           <Typography name='button' style={styles.retryButtonText}>
             Retry

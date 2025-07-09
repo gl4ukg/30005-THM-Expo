@@ -6,9 +6,8 @@ import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
 import { PartialSendMailFormData } from '@/context/Reducer';
-
+import { useUserValidation } from '@/hooks/useUserValidation';
 import { colors } from '@/lib/tokens/colors';
-import { emailValidation } from '@/lib/util/validation';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
@@ -19,9 +18,10 @@ interface Props {
 export const SendMailForm: React.FC<Props> = ({ draftId }) => {
   const { state, dispatch } = useAppContext();
   const [formData, setFormData] = useState<PartialSendMailFormData>({});
-  const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const flatListRef = useRef<FlatList>(null);
+  const { hasErrors } = useUserValidation();
+
   const originallySelectedHoses = useMemo(() => {
     const draft = state.data.drafts.find((d) => d.id === +draftId);
     if (!draft) return [];
@@ -45,15 +45,6 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
       setSelectedIds([...draft.selectedIds]);
     }, [draftId, state.data.drafts]),
   );
-
-  const handleEmailInput = (emailValue: string) => {
-    const updatedFormData = { ...formData, email: emailValue };
-    setFormData(updatedFormData);
-    const validation = emailValidation(emailValue);
-    if (validation === true) {
-      setEmailError(undefined);
-    } else setEmailError(validation);
-  };
 
   const handleInputChange = (
     field: keyof PartialSendMailFormData,
@@ -125,12 +116,7 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
     router.navigate(getScanUrl('CONTACT_SUPPORT', draftId.toString()));
   };
 
-  const isButtonDisabled =
-    !formData.name ||
-    !formData.email ||
-    !!emailError ||
-    !formData.phone ||
-    selectedIds.length === 0;
+  const isButtonDisabled = hasErrors || selectedIds.length === 0;
 
   return (
     <>
@@ -162,25 +148,6 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
         }
         ListFooterComponent={
           <View style={[styles.inputsContainer, styles.paddingHorizontal]}>
-            <Input
-              type='text'
-              label={'From (your name):'}
-              value={formData.name || ''}
-              onChangeText={(value) => handleInputChange('name', value)}
-            />
-            <Input
-              type='email'
-              label={'Your email address:'}
-              value={formData.email || ''}
-              onChangeText={handleEmailInput}
-              errorMessage={emailError}
-            />
-            <Input
-              type='tel'
-              label={'Phone:'}
-              value={formData.phone || ''}
-              onChangeText={(value) => handleInputChange('phone', value)}
-            />
             <View style={styles.buttonContainer}>
               <ButtonTHS
                 title='Send'

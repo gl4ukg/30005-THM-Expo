@@ -62,13 +62,14 @@ const removeCookie = async () => {
     console.error('Error deleting cookie:', error);
   }
 };
+
 export type User = {
   userId: number;
   firstName: string;
   lastName: string;
   username: string;
   email: string;
-  phoneNumber: string;
+  phoneNumber: number;
   defaultAddressId: number;
   defaultWarehouseId: string;
   assortmentIds: number[];
