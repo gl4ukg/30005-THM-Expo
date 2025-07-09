@@ -3,9 +3,6 @@ import {
   PartialReplaceHoseFormData,
   PartialRFQFormData,
   PartialSendMailFormData,
-  TemporaryInspectionData,
-  TemporaryRegistrationData,
-  TemporaryHoseEditData,
 } from './Reducer';
 import { Activity } from '@/components/dashboard/activitiesList/activity';
 
@@ -22,7 +19,7 @@ interface AuthState {
     email: string;
     name: string;
     id: string;
-    phoneNumber?: string;
+    phoneNumber?: number;
     customerNumbers?: string[];
   };
   isLoingLoading: boolean;
@@ -178,6 +175,7 @@ const initialAuthState: AuthState = {
   user: {
     email: 'slange_mester@tess.no ',
     name: 'Ole Slange Mester',
+    phoneNumber: 12345678,
     id: '223949MOB',
   },
   isLoingLoading: false,
@@ -207,9 +205,6 @@ const initialDataState: DataState = {
       modifiedAt: new Date(),
       formData: {
         comment: 'test',
-        email: 'slange_mester@tess.no',
-        name: 'Ole Slange Mester',
-        phone: '123123123',
       },
     },
     {
@@ -228,9 +223,6 @@ const initialDataState: DataState = {
       modifiedAt: new Date('2016-07-19T20:25:01.804Z'),
       formData: {
         comment: 'test',
-        email: 'slange_mester@tess.no',
-        name: 'Ole Slange Mester',
-        phone: '123123123',
         replacementImpacts: ['test'],
         replacementReasons: ['test'],
         replacementType: 'Unplanned',
@@ -255,9 +247,6 @@ const initialDataState: DataState = {
       modifiedAt: new Date('2017-07-29T20:23:01.804Z'),
       formData: {
         comment: 'test',
-        email: 'slange_mester@tess.no',
-        name: 'Ole Slange Mester',
-        phone: '123123123',
         replacementImpacts: ['test'],
         replacementReasons: ['test'],
         replacementType: 'Unplanned',

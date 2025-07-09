@@ -101,3 +101,36 @@ export const areValuesEqual = (a: PossibleType, b: PossibleType): boolean => {
   // Both values exist, check strict equality
   return a === b;
 };
+
+export const validateUserData = (
+  user: { email?: string; name?: string; phoneNumber?: string | number } | null,
+): { isValid: boolean; errors: string[] } => {
+  const errors: string[] = [];
+
+  if (!user) {
+    errors.push('User information is missing');
+    return { isValid: false, errors };
+  }
+
+  if (!user.name || user.name.trim() === '') {
+    errors.push('User name is required');
+  }
+
+  if (!user.email || user.email.trim() === '') {
+    errors.push('User email is required');
+  } else {
+    const emailValidationResult = emailValidation(user.email);
+    if (emailValidationResult !== true) {
+      errors.push(emailValidationResult);
+    }
+  }
+
+  if (
+    !user.phoneNumber ||
+    (typeof user.phoneNumber === 'string' && user.phoneNumber.trim() === '')
+  ) {
+    errors.push('User phone number is required');
+  }
+
+  return { isValid: errors.length === 0, errors };
+};

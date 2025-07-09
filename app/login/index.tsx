@@ -71,7 +71,6 @@ export default function Login() {
             email: user.email,
             name: `${user.firstName} ${user.lastName}`,
             id: `${user.userId}`,
-            phoneNumber: user.phoneNumber,
             customerNumbers: user.customerNumbers,
           },
         });

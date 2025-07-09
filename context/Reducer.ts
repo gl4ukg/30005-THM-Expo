@@ -20,9 +20,6 @@ import { act, createContext } from 'react';
 
 export interface PartialFormData {
   comment?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
 }
 export interface PartialRFQFormData extends PartialFormData {
   rfq?: string | null;
@@ -94,7 +91,7 @@ export function combineReducers<S, A>(
 }
 
 type AuthAction =
-  | ActionWithPayload<'LOGIN', AuthState['user']>
+  | ActionWithPayload<'LOGIN', Partial<AuthState['user']>>
   | ActionWithoutPayload<'LOGOUT'>
   | ActionWithPayload<'SET_TOKEN', string>
   | ActionWithPayload<'SET_LOGIN_LOADING', boolean>;
@@ -172,7 +169,15 @@ const authReducer = (state: AuthState, action: AppAction): AuthState => {
       console.log('LOGIN', action.payload);
       return {
         ...state,
-        user: action.payload,
+        // Populate with default value for phone number to enable submitting forms
+        user: {
+          email: state.user?.email || 'slange_mester@tess.no',
+          name: state.user?.name || 'Ole Slange Mester',
+          id: state.user?.id || '223949MOB',
+          customerNumbers: state.user?.customerNumbers || [],
+          ...action.payload,
+          phoneNumber: state.user?.phoneNumber || 12345678,
+        },
       };
     case 'LOGOUT':
       return {
