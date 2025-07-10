@@ -1,5 +1,5 @@
-import { DataService } from '@/services/data/dataService';
+import { getHosesData } from '@/services/data/dataService';
 
 export const getHoseData = async (customerNumbers: string[]) => {
-  return await DataService.getHoses();
+  return await getHosesData();
 };

@@ -18,7 +18,7 @@ import {
 import { HoseData } from '@/lib/types/hose';
 import { S1Item } from '@/services/api/asset';
 import { createContext } from 'react';
-import { CacheService } from '@/services/cache/cacheService';
+import { updateHose } from '@/services/cache/cacheService';
 
 export interface PartialFormData {
   comment?: string;
@@ -273,7 +273,7 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
           };
 
           try {
-            CacheService.updateHose(updatedHose);
+            updateHose(updatedHose);
           } catch (error) {
             console.error('Failed to update hose in cache:', error);
           }
