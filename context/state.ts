@@ -103,8 +103,8 @@ export const isSingleSelection = (
 interface DataState {
   isLoading: boolean;
   lastUpdate: null | Date;
-  s1Code: string | null; // Changed to string to match API response
-  s1Items: S1Item[]; // Available S1 items for selection
+  s1Code: string | null;
+  s1Items: S1Item[];
   // define data state properties
   hoses: HoseData[];
   assignedUnits: {

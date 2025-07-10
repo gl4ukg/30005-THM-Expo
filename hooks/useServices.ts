@@ -12,20 +12,10 @@ export const useServices = () => {
   const dataService = useDataService();
 
   return {
-    // Asset API operations
     api: assetApi,
-
-    // Cache operations
     cache: cacheService,
-
-    // Data service operations (high-level business logic)
     data: dataService,
   };
 };
-
-// Individual service hooks are also available for more granular usage:
-// - useAssetApi() from '@/services/api/asset'
-// - useCacheService() from '@/services/cache/cacheService'
-// - useDataService() from '@/services/data/dataService'
 
 export { useAssetApi, useCacheService, useDataService };

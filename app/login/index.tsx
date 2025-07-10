@@ -8,7 +8,7 @@ import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { login } from '@/lib/util/login';
 import { emailValidation } from '@/lib/util/validation';
-import { DataService } from '@/services/data/dataService';
+import { initializeUserData } from '@/services/data/dataService';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
@@ -75,7 +75,7 @@ export default function Login() {
         });
 
         try {
-          const userData = await DataService.initializeUserData();
+          const userData = await initializeUserData();
 
           dispatch({
             type: 'SET_S1_CODE',

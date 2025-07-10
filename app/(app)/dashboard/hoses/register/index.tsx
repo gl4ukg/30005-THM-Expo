@@ -20,8 +20,8 @@ import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { generateNumericDraftId } from '@/lib/util/unikId';
-import { DataService } from '@/services/data/dataService';
-import { AssetApi } from '@/services/api/asset';
+import { addHose } from '@/services/data/dataService';
+import { registerHose } from '@/services/api/asset';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -204,7 +204,10 @@ const RegisterHose = () => {
 
     dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
 
-    const newHoseData = hoseData as HoseData;
+    const newHoseData = {
+      ...hoseData,
+      s1Code: state.data.s1Code,
+    } as HoseData;
 
     if (registerMultiple) {
       const newDraftId = generateNumericDraftId(
@@ -235,7 +238,7 @@ const RegisterHose = () => {
         });
 
         // Step 2: Update cache with new hose
-        await DataService.addHose(newHoseData);
+        await addHose(newHoseData);
 
         // Step 3: If online, send to API
         if (
@@ -243,13 +246,12 @@ const RegisterHose = () => {
           state.settings.connectionType === 'mobile'
         ) {
           try {
-            console.log('About to register hose with API, data:', newHoseData);
             console.log('newHoseData keys:', Object.keys(newHoseData));
             console.log('newHoseData assetId:', newHoseData.assetId);
             console.log('newHoseData RFID:', newHoseData.RFID);
             console.log('Customer number from state:', state.data.customer.id);
 
-            await AssetApi.registerHose(newHoseData, state.data.customer.id);
+            await registerHose(newHoseData, state.data.customer.id);
             console.log('Hose successfully registered with API');
           } catch (apiError) {
             console.error(

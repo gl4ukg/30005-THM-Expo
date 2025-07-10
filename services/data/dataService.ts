@@ -134,11 +134,7 @@ export const getHosesData = async (
       hoses = hosesResponse.hoses;
     } else if (Array.isArray(hosesResponse)) {
       hoses = hosesResponse;
-    } else {
-      console.warn('Unexpected hoses response format:', hosesResponse);
-      hoses = [];
     }
-
     setHoses(hoses);
     console.log('Fresh hoses data cached');
 
@@ -179,10 +175,6 @@ export const updateHose = async (updatedHose: HoseData): Promise<HoseData> => {
 
 export const addHose = async (newHose: HoseData): Promise<HoseData> => {
   try {
-    // TODO: Send to API when endpoint is available
-    // const apiResponse = await createHoseAPI(newHose);
-
-    // Add to cache
     cacheAddHose(newHose);
     console.log('New hose added:', newHose.assetId);
 
@@ -193,12 +185,10 @@ export const addHose = async (newHose: HoseData): Promise<HoseData> => {
   }
 };
 
-// Get cached data summary
 export const getCacheStats = () => {
   return getCacheStatsFromCache();
 };
 
-// Clear all cached data
 export const clearAllData = (): void => {
   clearCache();
   console.log('All cached data cleared');
@@ -235,9 +225,6 @@ export const changeS1Selection = async (
       hoses = hosesResponse.hoses;
     } else if (Array.isArray(hosesResponse)) {
       hoses = hosesResponse;
-    } else {
-      console.warn('Unexpected hoses response format:', hosesResponse);
-      hoses = [];
     }
 
     setHoses(hoses);
@@ -258,7 +245,6 @@ export const getCurrentS1Code = (): string | null => {
   return getS1Code();
 };
 
-// Custom hook for data service operations
 export const useDataService = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -270,7 +256,7 @@ export const useDataService = () => {
       const result = await initializeUserData();
       return result;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      const errorMessage = (err as Error).message;
       setError(errorMessage);
       throw err;
     } finally {
@@ -285,7 +271,7 @@ export const useDataService = () => {
       const result = await getHosesData(forceRefresh);
       return result;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      const errorMessage = (err as Error).message;
       setError(errorMessage);
       throw err;
     } finally {
@@ -300,7 +286,7 @@ export const useDataService = () => {
       const result = await updateHose(updatedHose);
       return result;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      const errorMessage = (err as Error).message;
       setError(errorMessage);
       throw err;
     } finally {
@@ -315,7 +301,7 @@ export const useDataService = () => {
       const result = await addHose(newHose);
       return result;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      const errorMessage = (err as Error).message;
       setError(errorMessage);
       throw err;
     } finally {
@@ -330,7 +316,7 @@ export const useDataService = () => {
       const result = await changeS1Selection(newS1Code);
       return result;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      const errorMessage = (err as Error).message;
       setError(errorMessage);
       throw err;
     } finally {
@@ -345,7 +331,7 @@ export const useDataService = () => {
       const result = await syncWithAPI();
       return result;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      const errorMessage = (err as Error).message;
       setError(errorMessage);
       throw err;
     } finally {

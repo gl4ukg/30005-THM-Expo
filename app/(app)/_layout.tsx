@@ -1,7 +1,7 @@
 import { BottomNavigation } from '@/components/UI/BottomNavigation';
 import { TopBarNavigation } from '@/components/UI/TopBarNavigation';
 import { useAppContext } from '@/context/ContextProvider';
-import { DataService } from '@/services/data/dataService';
+import { changeS1Selection } from '@/services/data/dataService';
 import { colors } from '@/lib/tokens/colors';
 import { Redirect, Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -33,7 +33,7 @@ export default function TabLayout() {
                 payload: s1Code,
               });
 
-              const newHoses = await DataService.changeS1Selection(s1Code);
+              const newHoses = await changeS1Selection(s1Code);
 
               dispatch({
                 type: 'SET_HOSE_DATA',

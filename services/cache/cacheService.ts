@@ -121,19 +121,6 @@ export const addHose = (newHose: HoseData): void => {
   }
 };
 
-export const removeHose = (assetId: number): void => {
-  try {
-    const hoses = getHoses();
-    const filteredHoses = hoses.filter((hose) => hose.assetId !== assetId);
-    setHoses(filteredHoses);
-    console.log('Hose removed from cache:', assetId);
-  } catch (error) {
-    console.error('Failed to remove hose from cache:', error);
-    throw error;
-  }
-};
-
-// Sync time operations
 export const getLastSyncTime = (): Date | null => {
   try {
     const timestamp = storage.getNumber(CACHE_KEYS.LAST_SYNC);
@@ -153,7 +140,6 @@ export const isCacheStale = (maxAgeMinutes: number = 1440): boolean => {
   return ageMinutes > maxAgeMinutes;
 };
 
-// Cache management
 export const clearCache = (): void => {
   try {
     storage.clearAll();
@@ -185,7 +171,6 @@ export const getCacheStats = (): {
   };
 };
 
-// Custom hook for cache operations
 export const useCacheService = () => {
   const cacheOperations = useMemo(
     () => ({
@@ -198,7 +183,6 @@ export const useCacheService = () => {
       getHoses: () => getHoses(),
       updateHose: (updatedHose: HoseData) => updateHose(updatedHose),
       addHose: (newHose: HoseData) => addHose(newHose),
-      removeHose: (assetId: number) => removeHose(assetId),
 
       getLastSyncTime: () => getLastSyncTime(),
       isCacheStale: (maxAgeMinutes?: number) => isCacheStale(maxAgeMinutes),

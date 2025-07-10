@@ -9,25 +9,23 @@ export const convertToISOFormat = (dateString: string): string => {
   if (!dateString) {
     return '';
   }
-
-  const date = new Date(dateString);
+  let date = new Date(dateString);
   if (isNaN(date.getTime())) {
     const parts = dateString.split(/[-/]/);
     if (parts.length === 3) {
-      const [day, month, year] = parts.map(Number);
-      if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
-        const isoDate = new Date(year, month - 1, day);
-        if (!isNaN(isoDate.getTime())) {
-          return isoDate.toISOString().split('T')[0];
-        }
+      const [day, month, year] = parts.map((p) => parseInt(p, 10));
+      if (![day, month, year].some(isNaN) && year > 1000) {
+        date = new Date(Date.UTC(year, month - 1, day));
       }
     }
+  }
+
+  if (isNaN(date.getTime())) {
     return '';
   }
 
   return date.toISOString().split('T')[0];
 };
-
 export const stringToDate = (dateString: string) => {
   try {
     const parts = dateString.split('/');
