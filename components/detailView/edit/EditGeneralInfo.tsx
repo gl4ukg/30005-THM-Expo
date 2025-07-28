@@ -78,9 +78,8 @@ export const EditGeneralInfo: React.FC<{
       <DataField
         label='S1 Plant, Vessel, Unit:'
         value={
-          state.data.assignedUnits.find(
-            (unit) => unit.unitId === state.data.workingUnitId,
-          )?.unitName
+          state.data.s1Items.find((unit) => unit.S1Code === state.data.s1Code)
+            ?.S1Name
         }
       />
       <TooltipWrapper

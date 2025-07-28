@@ -98,8 +98,6 @@ type AuthAction =
   | ActionWithPayload<'SET_TOKEN', string>
   | ActionWithPayload<'SET_LOGIN_LOADING', boolean>;
 type DataAction =
-  | ActionWithPayload<'SET_ASSIGNED_UNITS', DataState['assignedUnits']>
-  | ActionWithPayload<'SET_WORKING_UNIT', string>
   | ActionWithPayload<'SET_S1_CODE', string>
   | ActionWithPayload<'SET_S1_ITEMS', S1Item[]>
   | ActionWithPayload<'CHANGE_S1_SELECTION', string>
@@ -214,16 +212,6 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       return {
         ...state,
         isLoading: action.payload,
-      };
-    case 'SET_ASSIGNED_UNITS':
-      return {
-        ...state,
-        assignedUnits: action.payload,
-      };
-    case 'SET_WORKING_UNIT':
-      return {
-        ...state,
-        workingUnitId: action.payload,
       };
     case 'SET_S1_CODE':
       return {

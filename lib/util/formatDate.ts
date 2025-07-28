@@ -20,10 +20,6 @@ export const convertToISOFormat = (dateString: string): string => {
     }
   }
 
-  if (isNaN(date.getTime())) {
-    return '';
-  }
-
   return date.toISOString().split('T')[0];
 };
 export const stringToDate = (dateString: string) => {

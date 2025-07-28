@@ -107,15 +107,10 @@ interface DataState {
   s1Items: S1Item[];
   // define data state properties
   hoses: HoseData[];
-  assignedUnits: {
-    unitId: string;
-    unitName: string;
-  }[];
   customer: {
     id: string;
     name: string;
   };
-  workingUnitId: null | string;
   selection: HoseSelection | null;
   hoseTemplate?: Partial<HoseData>;
   isCancelable: boolean;
@@ -193,11 +188,6 @@ const initialDataState: DataState = {
   customer: { id: '223949', name: 'CUSTOMER WEB DEMO (Main)' },
   // initial data state values
   hoses: [],
-  assignedUnits: [
-    { unitId: '1203108', unitName: 'Test Princess' },
-    { unitId: '2406216', unitName: 'Test Prince' },
-  ],
-  workingUnitId: '1203108',
   selection: null,
   hoseTemplate: undefined,
   isCancelable: false,

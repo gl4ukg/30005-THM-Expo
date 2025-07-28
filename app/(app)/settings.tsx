@@ -12,8 +12,8 @@ const User = () => {
 
   let { user } = state.auth;
   const { appInfo } = state.settings;
-  const { customer, workingUnitId, assignedUnits, lastUpdate } = state.data;
-  const location = assignedUnits.find((unit) => unit.unitId === workingUnitId);
+  const { customer, s1Code, s1Items, lastUpdate } = state.data;
+  const location = s1Items.find((unit) => unit.S1Code === s1Code);
   if (!user) {
     router.push('/');
     return null;
@@ -63,7 +63,7 @@ const User = () => {
           <DataField label='Customer Description:' value={`${customer.name}`} />
           <DataField
             label='Location:'
-            value={`${location?.unitId} - ${location?.unitName}`}
+            value={`${location?.S1Code} - ${location?.S1Name}`}
           />
         </View>
       </View>
