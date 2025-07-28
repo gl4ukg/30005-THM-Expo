@@ -2,7 +2,6 @@ import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
-import { mockedData } from '@/context/mocked';
 import { MultiSelectionActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
@@ -157,14 +156,6 @@ const Scan = () => {
     }
   }, [isNfcSupported, rfid, isProcessingHose]);
 
-  useEffect(() => {
-    //TODO: remove it
-    dispatch({
-      type: 'SET_HOSE_DATA',
-      payload: mockedData,
-    });
-  }, []);
-
   const handleRFIDPress = () => {
     isProcessingHose.current = false;
     inputRef.current?.blur();
@@ -196,7 +187,28 @@ const Scan = () => {
     } else {
       hose = state.data.hoses.find((hose) => hose.assetId === +id);
     }
+    if (scanPurpose === 'REGISTER_HOSE' && !hose) {
+      const draftId = generateNumericDraftId(
+        state.data.drafts.map((d) => d.id),
+      ).toString();
+      const params: { [key: string]: any } = {
+        draftId: draftId,
+      };
+      const newHoseData: Partial<HoseData> = {};
+      if (withRfId) {
+        params.rfid = id;
+        newHoseData.RFID = id;
+      } else {
+        params.hoseId = id;
+        newHoseData.assetId = +id;
+      }
 
+      router.replace({
+        pathname: `/dashboard/hoses/register`,
+        params,
+      });
+      return;
+    }
     if (hose) {
       if (scanPurpose === 'REGISTER_HOSE' || scanPurpose === 'INSPECT_HOSE') {
         const draftId = generateNumericDraftId(

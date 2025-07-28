@@ -1,6 +1,7 @@
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
+import { S1Item } from '@/services/api/asset';
 import { useState } from 'react';
 import {
   LayoutAnimation,
@@ -13,15 +14,15 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
-  selectedUnit: string | null;
-  optionalUnits: { unitId: string; unitName: string }[];
-  onSelectUnit: (unit: string) => void;
+  selectedS1Code: string | null;
+  s1Items: S1Item[];
+  onSelectS1: (s1Code: string) => void;
 }
 
 export const TopBarNavigation: React.FC<Props> = ({
-  onSelectUnit,
-  selectedUnit,
-  optionalUnits,
+  onSelectS1,
+  selectedS1Code,
+  s1Items = [],
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const insets = useSafeAreaInsets();
@@ -31,10 +32,14 @@ export const TopBarNavigation: React.FC<Props> = ({
     setIsExpanded((exp) => !exp);
   };
 
-  const selectSubUnit = (unitId: string) => {
-    onSelectUnit(unitId);
+  const selectS1 = (s1Code: string) => {
+    onSelectS1(s1Code);
     setIsExpanded(false);
   };
+
+  const selectedS1Item = s1Items?.find(
+    (item) => item.S1Code === selectedS1Code,
+  );
 
   return (
     <View style={styles.container}>
@@ -42,10 +47,7 @@ export const TopBarNavigation: React.FC<Props> = ({
         <Icon name='Industry' color={colors.white} size='xsm' />
         <Typography
           name='navigation'
-          text={
-            optionalUnits.find((unit) => unit.unitId === selectedUnit)
-              ?.unitName || 'Select'
-          }
+          text={selectedS1Item?.S1Name || 'Select S1'}
           style={styles.selectText}
         />
         <Icon name='ChevronDown' color={colors.white} size='xsm' />
@@ -59,25 +61,25 @@ export const TopBarNavigation: React.FC<Props> = ({
             { top: Platform.OS === 'ios' ? insets.top : 0 },
           ]}
         >
-          {optionalUnits.map((unit) => (
+          {s1Items?.map((s1Item) => (
             <Pressable
-              key={unit.unitId}
+              key={s1Item.S1Code}
               style={({ pressed }) => [
                 styles.option,
                 pressed && styles.optionPressed,
               ]}
-              onPress={() => selectSubUnit(unit.unitId)}
+              onPress={() => selectS1(s1Item.S1Code)}
             >
-              {unit.unitId === selectedUnit && (
+              {s1Item.S1Code === selectedS1Code && (
                 <Icon name='Industry' color={colors.white} size='xsm' />
               )}
               <Typography
                 name='navigation'
-                text={unit.unitName}
+                text={s1Item.S1Name}
                 style={styles.optionText}
               />
             </Pressable>
-          ))}
+          )) || []}
         </View>
       </Modal>
     </View>

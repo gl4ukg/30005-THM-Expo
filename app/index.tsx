@@ -18,9 +18,7 @@ import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { useAppContext } from '@/context/ContextProvider';
-import { mockedData } from '@/context/mocked';
 import { colors } from '@/lib/tokens/colors';
-import { HoseData } from '@/lib/types/hose';
 import { Link, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -58,34 +56,6 @@ const Login = () => {
               Register Hose 123
             </Link>
 
-            <Link
-              href={'/dashboard'}
-              asChild
-              style={[
-                styles.link,
-                { flex: 1, backgroundColor: colors.dashboardGreen },
-              ]}
-            >
-              <Pressable
-                style={[
-                  styles.link,
-                  { flex: 1, backgroundColor: colors.extendedBlue },
-                ]}
-                onPress={() => {
-                  dispatch({
-                    type: 'SET_HOSE_DATA',
-                    payload: mockedData as HoseData[],
-                  });
-                  router.push('/dashboard');
-                }}
-              >
-                <Typography
-                  name='navigation'
-                  text='dashboard'
-                  numberOfLines={1}
-                />
-              </Pressable>
-            </Link>
             <Link
               href={'/photo'}
               asChild

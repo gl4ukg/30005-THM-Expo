@@ -70,13 +70,13 @@ export const ListElement: FC<ElementProps> = ({
           <View style={elementStyle.subtitleDateContainer}>
             <Typography
               name='tableContent'
-              text={'44-Visible leakage - and some more defects'}
+              text={item.hoseCondition}
               style={elementStyle.subtitle}
               numberOfLines={1}
             />
             <Typography
               name='tableContentNumber'
-              text={'H_CODED'}
+              text={item.inspectedDate}
               style={elementStyle.date}
             />
           </View>

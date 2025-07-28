@@ -1,6 +1,7 @@
 import { BottomNavigation } from '@/components/UI/BottomNavigation';
 import { TopBarNavigation } from '@/components/UI/TopBarNavigation';
 import { useAppContext } from '@/context/ContextProvider';
+import { changeS1Selection } from '@/services/data/dataService';
 import { colors } from '@/lib/tokens/colors';
 import { Redirect, Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -23,13 +24,33 @@ export default function TabLayout() {
       <IosStatusBarBackground height={insets.top} />
       <SafeAreaView style={{ flex: 1 }}>
         <TopBarNavigation
-          selectedUnit={state.data.workingUnitId}
-          optionalUnits={state.data.assignedUnits}
-          onSelectUnit={(unit) => {
-            dispatch({
-              type: 'SET_WORKING_UNIT',
-              payload: unit,
-            });
+          selectedS1Code={state.data.s1Code}
+          s1Items={state.data.s1Items}
+          onSelectS1={async (s1Code: string) => {
+            try {
+              dispatch({
+                type: 'CHANGE_S1_SELECTION',
+                payload: s1Code,
+              });
+
+              const newHoses = await changeS1Selection(s1Code);
+
+              dispatch({
+                type: 'SET_HOSE_DATA',
+                payload: newHoses,
+              });
+
+              dispatch({
+                type: 'SET_DATA_LOADING',
+                payload: false,
+              });
+            } catch (error) {
+              console.error('Failed to change S1 selection:', error);
+              dispatch({
+                type: 'SET_DATA_LOADING',
+                payload: false,
+              });
+            }
           }}
         />
         <Tabs

@@ -16,7 +16,9 @@ import {
   SingleSelectionActionsType,
 } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
-import { act, createContext } from 'react';
+import { S1Item } from '@/services/api/asset';
+import { createContext } from 'react';
+import { updateHose } from '@/services/cache/cacheService';
 
 export interface PartialFormData {
   comment?: string;
@@ -96,8 +98,9 @@ type AuthAction =
   | ActionWithPayload<'SET_TOKEN', string>
   | ActionWithPayload<'SET_LOGIN_LOADING', boolean>;
 type DataAction =
-  | ActionWithPayload<'SET_ASSIGNED_UNITS', DataState['assignedUnits']>
-  | ActionWithPayload<'SET_WORKING_UNIT', string>
+  | ActionWithPayload<'SET_S1_CODE', string>
+  | ActionWithPayload<'SET_S1_ITEMS', S1Item[]>
+  | ActionWithPayload<'CHANGE_S1_SELECTION', string>
   | ActionWithPayload<
       'REMOVE_ACTION',
       { id: string; actionType: SingleSelectionActionsType }
@@ -111,7 +114,9 @@ type DataAction =
     >
   | ActionWithPayload<'SET_HOSE_DATA', HoseData[]>
   | ActionWithPayload<'SET_DATA_LOADING', boolean>
+  | ActionWithPayload<'SET_CUSTOMER', { id: string; name: string }>
   | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: number; hoseData: any }>
+  | ActionWithPayload<'REMOVE_HOSES', number[]>
   | ActionWithPayload<'SELECT_ONE_HOSE', SingleSelection>
   | ActionWithPayload<'START_MULTI_SELECTION', MultiSelection['type']>
   | ActionWithPayload<'ADD_HOSE_TO_EXISTING_MULTI_SELECTION', number>
@@ -149,6 +154,7 @@ type DataAction =
       }
     >
   | ActionWithPayload<'ADD_HOSE_TO_EDITED_HOSES', Partial<HoseData>>
+  | ActionWithPayload<'ADD_NEW_HOSE', HoseData>
   | ActionWithPayload<'MOVE_DRAFT_TO_DONE', number>
   | ActionWithPayload<'REMOVE_FROM_DRAFT', number>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_REGISTRATION_DATA'>
@@ -207,20 +213,36 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         ...state,
         isLoading: action.payload,
       };
-    case 'SET_ASSIGNED_UNITS':
+    case 'SET_S1_CODE':
       return {
         ...state,
-        assignedUnits: action.payload,
+        s1Code: action.payload,
       };
-    case 'SET_WORKING_UNIT':
+    case 'SET_S1_ITEMS':
       return {
         ...state,
-        workingUnitId: action.payload,
+        s1Items: action.payload,
+      };
+    case 'CHANGE_S1_SELECTION':
+      return {
+        ...state,
+        s1Code: action.payload,
+        isLoading: true,
       };
     case 'SET_HOSE_DATA':
       return {
         ...state,
         hoses: action.payload,
+      };
+    case 'SET_CUSTOMER':
+      return {
+        ...state,
+        customer: action.payload,
+      };
+    case 'ADD_NEW_HOSE':
+      return {
+        ...state,
+        hoses: [...state.hoses, action.payload],
       };
     case 'SAVE_HOSE_DATA':
       console.log('SAVE_HOSE_DATA', action.payload.hoseId),
@@ -229,18 +251,29 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         console.error('hoseId is undefined', action.payload.hoseId);
         return state;
       }
+
+      // On submit, when the hose is to be saved, update the cache to persist the changes
+      const updatedHoses = state.hoses.map((hose) => {
+        if (hose.assetId === action.payload.hoseId) {
+          const updatedHose = {
+            ...hose,
+            ...action.payload.hoseData,
+          };
+
+          try {
+            updateHose(updatedHose);
+          } catch (error) {
+            console.error('Failed to update hose in cache:', error);
+          }
+
+          return updatedHose;
+        }
+        return hose;
+      });
+
       return {
         ...state,
-
-        hoses: state.hoses.map((hose) => {
-          if (hose.assetId === action.payload.hoseId) {
-            return {
-              ...hose,
-              ...action.payload.hoseData,
-            };
-          }
-          return hose;
-        }),
+        hoses: updatedHoses,
       };
     case 'START_MULTI_SELECTION':
       return {

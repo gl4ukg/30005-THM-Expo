@@ -1,4 +1,5 @@
 import { HID, HoseData } from '@/lib/types/hose';
+import { S1Item } from '@/services/api/asset';
 import {
   PartialReplaceHoseFormData,
   PartialRFQFormData,
@@ -102,17 +103,14 @@ export const isSingleSelection = (
 interface DataState {
   isLoading: boolean;
   lastUpdate: null | Date;
+  s1Code: string | null;
+  s1Items: S1Item[];
   // define data state properties
   hoses: HoseData[];
-  assignedUnits: {
-    unitId: string;
-    unitName: string;
-  }[];
   customer: {
     id: string;
     name: string;
   };
-  workingUnitId: null | string;
   selection: HoseSelection | null;
   hoseTemplate?: Partial<HoseData>;
   isCancelable: boolean;
@@ -185,14 +183,11 @@ const initialAuthState: AuthState = {
 const initialDataState: DataState = {
   isLoading: false,
   lastUpdate: new Date(),
+  s1Code: null,
+  s1Items: [],
   customer: { id: '223949', name: 'CUSTOMER WEB DEMO (Main)' },
   // initial data state values
   hoses: [],
-  assignedUnits: [
-    { unitId: '1203108', unitName: 'Test Princess' },
-    { unitId: '2406216', unitName: 'Test Prince' },
-  ],
-  workingUnitId: '1203108',
   selection: null,
   hoseTemplate: undefined,
   isCancelable: false,
