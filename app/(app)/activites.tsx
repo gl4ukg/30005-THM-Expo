@@ -1,11 +1,12 @@
 import { Activity } from '@/components/dashboard/activitiesList/activity';
 import { ActivitiesList } from '@/components/dashboard/activitiesList/indext';
 import { Typography } from '@/components/Typography';
-import { ActionMenu } from '@/components/UI/ActionMenu';
+import { SelectDropdown } from '@/components/UI/ActionMenu';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+
 const options = [
   {
     label: 'All activities',
@@ -20,7 +21,7 @@ const options = [
     value: 'REGISTER_HOSE',
   },
   {
-    label: 'Scraped hoses',
+    label: 'Scrapped hoses',
     value: 'SCRAP',
   },
   {
@@ -72,10 +73,11 @@ const Activities: React.FC = () => {
             text='Recent activities'
             style={styles.contactTitle}
           />
-          <ActionMenu
+          <SelectDropdown
             selected={filter}
             options={options}
             onChange={setFilter}
+            placeholder='Select activity type'
           />
           <View style={styles.switchContainer}>
             <Pressable
@@ -106,7 +108,7 @@ const Activities: React.FC = () => {
                 text='Drafts'
                 style={[
                   styles.switchButtonText,
-                  status === 'all' && styles.switchButtonTextSelected,
+                  status === 'draft' && styles.switchButtonTextSelected,
                 ]}
               />
             </Pressable>
@@ -122,7 +124,7 @@ const Activities: React.FC = () => {
                 text='Done'
                 style={[
                   styles.switchButtonText,
-                  status === 'all' && styles.switchButtonTextSelected,
+                  status === 'done' && styles.switchButtonTextSelected,
                 ]}
               />
             </Pressable>

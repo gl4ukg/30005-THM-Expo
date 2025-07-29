@@ -1,34 +1,27 @@
-import { Section } from '@/app/(app)/dashboard/hoses/hose/[hoseId]';
+import { RadioButton } from '@/components/detailView/common/RadioButton';
 import { Icon } from '@/components/Icon/Icon';
-import { IconName } from '@/components/Icon/iconMapping';
 import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
 import { FC, useRef, useState } from 'react';
-import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
 
 type Option<T> = {
-  icon?: IconName;
   label: string;
   value: T;
 };
+
 interface Props<T> {
-  menuTitle?: string;
   selected?: T | null;
   options: Option<T>[];
   onChange: (value: T) => void;
-  detailPage?: boolean;
-  scrollToSection?: (sectionId: string) => void;
-  shortcuts?: Section[];
+  placeholder?: string;
 }
 
-export const ActionMenu: FC<Props<string>> = ({
+export const SelectDropdown: FC<Props<string>> = ({
   selected,
   options,
   onChange,
-  menuTitle,
-  detailPage,
-  scrollToSection,
-  shortcuts,
+  placeholder = 'Select an option',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [buttonLayout, setButtonLayout] = useState({
@@ -42,11 +35,6 @@ export const ActionMenu: FC<Props<string>> = ({
   const handleChange = (value: string) => {
     onChange(value);
     setIsOpen(false);
-  };
-
-  const handleShortcutPress = (sectionId: string) => {
-    setIsOpen(false);
-    scrollToSection?.(sectionId);
   };
 
   const handleButtonPress = () => {
@@ -64,63 +52,45 @@ export const ActionMenu: FC<Props<string>> = ({
     width: number;
     height: number;
   }) => ({
-    top: buttonLayout.y + buttonLayout.height,
+    top: buttonLayout.y + buttonLayout.height + 5,
     left: 20,
     right: 20,
   });
+
+  const selectedOption = options.find((o) => o.value === selected);
 
   return (
     <View>
       <Pressable
         ref={buttonRef}
         onPress={handleButtonPress}
-        style={style.button}
+        style={[styles.button, isOpen && styles.buttonOpen]}
       >
-        <Text style={style.buttonText}>
-          {selected
-            ? options.find((o) => o.value === selected)?.label
-            : menuTitle || 'Select'}
-        </Text>
+        <Typography
+          name='navigation'
+          text={selectedOption?.label || placeholder}
+          style={[styles.buttonText, !selectedOption && styles.placeholderText]}
+        />
         <Icon
           name={isOpen ? 'ChevronUp' : 'ChevronDown'}
           color={colors.primary}
+          size='sm'
         />
       </Pressable>
 
-      <Modal visible={isOpen} transparent>
-        <Pressable onPress={() => setIsOpen(false)} style={style.modal}>
-          <View style={[style.options, getDropdownPosition(buttonLayout)]}>
+      <Modal visible={isOpen} transparent animationType='fade'>
+        <Pressable onPress={() => setIsOpen(false)} style={styles.overlay}>
+          <View style={[styles.dropdown, getDropdownPosition(buttonLayout)]}>
             {options.map((option) => (
-              <Pressable
+              <RadioButton
                 key={option.value}
-                onPress={() => handleChange(option.value)}
-                style={style.option}
-              >
-                {option.icon && <Icon name={option.icon} size='sm' />}
-                <Typography name='navigation' text={option.label} />
-              </Pressable>
+                label={option.label}
+                isSelected={selected === option.value}
+                onChange={() => handleChange(option.value)}
+                menu
+                id={option.value}
+              />
             ))}
-
-            {detailPage && shortcuts && (
-              <>
-                <View style={style.divider} />
-                <Typography style={style.boldText} name='navigation'>
-                  Jump to:
-                </Typography>
-                <View style={style.jumpToContainer}>
-                  {shortcuts.map((section, index) => (
-                    <Pressable
-                      key={`${section.id}-${index}`}
-                      onPress={() => handleShortcutPress(section.id)}
-                      style={style.jumpToItem}
-                    >
-                      <Typography name='navigation' text={section.title} />
-                      <Icon name='ArrowRight' size='sm' />
-                    </Pressable>
-                  ))}
-                </View>
-              </>
-            )}
           </View>
         </Pressable>
       </Modal>
@@ -128,60 +98,47 @@ export const ActionMenu: FC<Props<string>> = ({
   );
 };
 
-const style = StyleSheet.create({
-  modal: {
-    flex: 1,
-    backgroundColor: colors.black + '75',
-  },
+const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: colors.white,
+  },
+  buttonOpen: {
+    borderColor: colors.primary,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
   },
   buttonText: {
-    color: colors.primary,
+    flex: 1, // Allows the text to take up available space
+    color: colors.black,
+    marginRight: 8, // <-- RE-INTRODUCED: This creates space to the left of the chevron
   },
-  options: {
-    backgroundColor: colors.dashboardGreen,
+  placeholderText: {
+    color: colors.extended333,
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  dropdown: {
+    backgroundColor: colors.lightContrast25,
     position: 'absolute',
-    padding: 20,
-    gap: 20,
-    borderTopWidth: 2,
-    borderBottomWidth: 2,
-    borderTopColor: colors.primary,
-    borderBottomColor: colors.primary,
+    paddingTop: 16,
+    gap: 8,
+    borderWidth: 1,
+    borderColor: colors.primary,
     borderRadius: 8,
     shadowColor: colors.black,
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 4,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    alignItems: 'center',
-  },
-  option: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 10,
-    paddingVertical: 5,
-  },
-  boldText: {
-    fontWeight: 'bold',
-  },
-  divider: {
-    borderBottomWidth: 3,
-    borderBottomColor: colors.primary25,
-  },
-  jumpToContainer: {
-    marginLeft: 10,
-    gap: 8,
-  },
-  jumpToItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    shadowRadius: 4,
+    elevation: 8,
   },
 });

@@ -1,7 +1,7 @@
 import { BarChart, Primary, Secondary } from '@/components/dashboard';
 import { BarData } from '@/components/dashboard/BarChart';
 import { Typography } from '@/components/Typography';
-import { ActionMenu } from '@/components/UI/ActionMenu';
+import { SelectDropdown } from '@/components/UI/ActionMenu';
 import { AppContext } from '@/context/Reducer';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
@@ -194,10 +194,11 @@ const Dashboard = () => {
       <ScrollView contentContainerStyle={style.container}>
         <View style={style.header}>
           <Typography name='tableHeader' text='Inspections' />
-          <ActionMenu
+          <SelectDropdown
             selected={selected}
             options={options}
-            onChange={setSelected}
+            onChange={(value) => setSelected(value)}
+            placeholder='Select time period'
           />
         </View>
         <BarChart barData={barData} />
