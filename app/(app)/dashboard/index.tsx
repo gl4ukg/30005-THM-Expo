@@ -198,7 +198,6 @@ const Dashboard = () => {
             selected={selected}
             options={options}
             onChange={(value) => setSelected(value)}
-            placeholder='Select time period'
           />
         </View>
         <BarChart barData={barData} />

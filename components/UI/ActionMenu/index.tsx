@@ -14,14 +14,12 @@ interface Props<T> {
   selected?: T | null;
   options: Option<T>[];
   onChange: (value: T) => void;
-  placeholder?: string;
 }
 
 export const SelectDropdown: FC<Props<string>> = ({
   selected,
   options,
   onChange,
-  placeholder = 'Select an option',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [buttonLayout, setButtonLayout] = useState({
@@ -46,6 +44,10 @@ export const SelectDropdown: FC<Props<string>> = ({
     setIsOpen(!isOpen);
   };
 
+  const handleOverlayPress = () => {
+    setIsOpen(false);
+  };
+
   const getDropdownPosition = (buttonLayout: {
     x: number;
     y: number;
@@ -58,19 +60,24 @@ export const SelectDropdown: FC<Props<string>> = ({
   });
 
   const selectedOption = options.find((o) => o.value === selected);
+  const displayLabel =
+    selectedOption?.label ||
+    (options.length > 0 ? options[0].label : 'No options available');
 
   return (
-    <View>
+    <>
       <Pressable
         ref={buttonRef}
         onPress={handleButtonPress}
         style={[styles.button, isOpen && styles.buttonOpen]}
       >
-        <Typography
-          name='navigation'
-          text={selectedOption?.label || placeholder}
-          style={[styles.buttonText, !selectedOption && styles.placeholderText]}
-        />
+        <View>
+          <Typography
+            name='navigation'
+            text={displayLabel}
+            style={styles.buttonText}
+          />
+        </View>
         <Icon
           name={isOpen ? 'ChevronUp' : 'ChevronDown'}
           color={colors.primary}
@@ -78,23 +85,34 @@ export const SelectDropdown: FC<Props<string>> = ({
         />
       </Pressable>
 
-      <Modal visible={isOpen} transparent animationType='fade'>
-        <Pressable onPress={() => setIsOpen(false)} style={styles.overlay}>
-          <View style={[styles.dropdown, getDropdownPosition(buttonLayout)]}>
-            {options.map((option) => (
-              <RadioButton
-                key={option.value}
-                label={option.label}
-                isSelected={selected === option.value}
-                onChange={() => handleChange(option.value)}
-                menu
-                id={option.value}
-              />
-            ))}
-          </View>
-        </Pressable>
-      </Modal>
-    </View>
+      {isOpen && (
+        <Modal
+          visible={isOpen}
+          transparent
+          animationType='fade'
+          onRequestClose={handleOverlayPress}
+        >
+          <Pressable onPress={handleOverlayPress} style={styles.overlay}>
+            <Pressable onPress={(e) => e.stopPropagation()}>
+              <View
+                style={[styles.dropdown, getDropdownPosition(buttonLayout)]}
+              >
+                {options.map((option) => (
+                  <RadioButton
+                    key={option.value}
+                    label={option.label}
+                    isSelected={selected === option.value}
+                    onChange={() => handleChange(option.value)}
+                    menu
+                    id={option.value}
+                  />
+                ))}
+              </View>
+            </Pressable>
+          </Pressable>
+        </Modal>
+      )}
+    </>
   );
 };
 
@@ -113,12 +131,8 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 0,
   },
   buttonText: {
-    flex: 1, // Allows the text to take up available space
     color: colors.black,
-    marginRight: 8, // <-- RE-INTRODUCED: This creates space to the left of the chevron
-  },
-  placeholderText: {
-    color: colors.extended333,
+    marginRight: 8,
   },
   overlay: {
     flex: 1,
