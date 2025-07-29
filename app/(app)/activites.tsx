@@ -77,7 +77,6 @@ const Activities: React.FC = () => {
             selected={filter}
             options={options}
             onChange={setFilter}
-            placeholder='Select activity type'
           />
           <View style={styles.switchContainer}>
             <Pressable

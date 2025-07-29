@@ -14,14 +14,12 @@ interface Props<T> {
   selected?: T | null;
   options: Option<T>[];
   onChange: (value: T) => void;
-  placeholder?: string;
 }
 
 export const SelectDropdown: FC<Props<string>> = ({
   selected,
   options,
   onChange,
-  placeholder = 'Select an option',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [buttonLayout, setButtonLayout] = useState({
@@ -58,19 +56,24 @@ export const SelectDropdown: FC<Props<string>> = ({
   });
 
   const selectedOption = options.find((o) => o.value === selected);
+  const displayLabel =
+    selectedOption?.label ||
+    (options.length > 0 ? options[0].label : 'No options available');
 
   return (
-    <View>
+    <View style={styles.buttonText}>
       <Pressable
         ref={buttonRef}
         onPress={handleButtonPress}
         style={[styles.button, isOpen && styles.buttonOpen]}
       >
-        <Typography
-          name='navigation'
-          text={selectedOption?.label || placeholder}
-          style={[styles.buttonText, !selectedOption && styles.placeholderText]}
-        />
+        <View>
+          <Typography
+            name='navigation'
+            text={displayLabel}
+            style={styles.buttonText}
+          />
+        </View>
         <Icon
           name={isOpen ? 'ChevronUp' : 'ChevronDown'}
           color={colors.primary}
@@ -113,12 +116,9 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 0,
   },
   buttonText: {
-    flex: 1, // Allows the text to take up available space
+    flex: 1,
     color: colors.black,
-    marginRight: 8, // <-- RE-INTRODUCED: This creates space to the left of the chevron
-  },
-  placeholderText: {
-    color: colors.extended333,
+    marginRight: 8,
   },
   overlay: {
     flex: 1,

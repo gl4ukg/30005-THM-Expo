@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
   },
   menuSelected: {
     borderColor: colors.primary25,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderTopWidth: 2,
+    borderBottomWidth: 2,
   },
   menuWrapper: {
     paddingHorizontal: 8,
