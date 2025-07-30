@@ -143,9 +143,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     paddingTop: 16,
     gap: 8,
-    borderWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
     borderColor: colors.primary,
-    borderRadius: 8,
     shadowColor: colors.black,
     shadowOffset: {
       width: 0,
