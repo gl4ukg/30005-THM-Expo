@@ -1,4 +1,3 @@
-import { ActivityType } from '@/components/dashboard/activitiesList/activity';
 import {
   Action,
   ActionCONTACT,

@@ -28,6 +28,7 @@ export interface Activity {
   status: 'done' | 'draft';
   selectedIds: number[];
   modifiedAt: Date;
+  description?: string;
   formData:
     | PartialRFQFormData
     | PartialFormData
@@ -42,19 +43,23 @@ interface Props {
   onRowPress: () => void;
 }
 export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
+  console.log('Activity item:', item);
   const { type, status, id, formData } = item;
   const { state } = useAppContext();
-  // const hasAttachment = useMemo(() => Math.random() > 0.5, []);
   const actionTilte = (): string => {
     if ('subtitle' in item.formData && item.selectedIds.length === 0)
       return (item.formData.subtitle as string) ?? '';
     if (item.selectedIds.length > 1) return `${item.selectedIds.length} hoses`;
+
     if (item.selectedIds.length === 1) {
-      return (
-        state.data.hoses.find((hose) => hose.assetId === item.selectedIds[0])
-          ?.equipmentSubunit ?? ''
+      const hose = state.data.hoses.find(
+        (hose) => hose.assetId === item.selectedIds[0],
       );
-    } else return '';
+      if (!hose) return '';
+
+      return hose.itemDescription || '';
+    }
+    return '';
   };
   const singleHose =
     item.selectedIds.length === 1

@@ -1,5 +1,5 @@
 import { Activity } from '@/components/dashboard/activitiesList/activity';
-import { ActivitiesList } from '@/components/dashboard/activitiesList/indext';
+import { ActivitiesList } from '@/components/dashboard/activitiesList';
 import { Typography } from '@/components/Typography';
 import { SelectDropdown } from '@/components/UI/ActionMenu';
 import { Icon } from '@/components/Icon/Icon';
