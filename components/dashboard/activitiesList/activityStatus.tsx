@@ -23,7 +23,7 @@ export const ActivityStatus: FC<Props> = ({ status, type }) => {
     <View style={styles.container}>
       <Typography
         name='tableContent'
-        text={status}
+        text={status === 'done' ? 'Done' : 'Draft'}
         style={[
           styles.textBox,
           styles[`status_${status}`],
