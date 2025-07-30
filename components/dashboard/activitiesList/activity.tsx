@@ -11,7 +11,7 @@ import {
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { FC } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
 
 export type ActivityType =
   | 'INSPECT'
@@ -46,6 +46,26 @@ export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
   console.log('Activity item:', item);
   const { type, status, id, formData } = item;
   const { state } = useAppContext();
+
+  const handleDeletePress = () => {
+    Alert.alert(
+      'Delete Draft',
+      'Are you sure you want to delete draft?',
+      [
+        {
+          text: 'No, go back',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes, continue',
+          style: 'destructive',
+          onPress: () => onRemove(`${id}`),
+        },
+      ],
+      { cancelable: true },
+    );
+  };
+
   const actionTilte = (): string => {
     if ('subtitle' in item.formData && item.selectedIds.length === 0)
       return (item.formData.subtitle as string) ?? '';
@@ -61,6 +81,7 @@ export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
     }
     return '';
   };
+
   const singleHose =
     item.selectedIds.length === 1
       ? state.data.hoses.find((hose) => hose.assetId === item.selectedIds[0])
@@ -118,7 +139,7 @@ export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
         <View style={elementStyle.columnThree}>
           {status === 'draft' && (
             <Pressable
-              onPress={() => onRemove(`${id}`)}
+              onPress={handleDeletePress}
               style={elementStyle.removeButton}
             >
               <Icon name='Cross' color={colors.error} size='md' />
