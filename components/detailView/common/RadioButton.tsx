@@ -21,18 +21,29 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
       onPress={onChange}
       style={[
         styles.button,
-        isSelected && styles.buttonSelected,
         menu && styles.menu,
+        menu && isSelected && styles.menuSelected,
       ]}
     >
-      <View style={styles.wrapper}>
+      <View style={[styles.wrapper, menu && styles.menuWrapper]}>
         <View
           style={[
             styles.circle,
-            { borderColor: isSelected ? colors.primary25 : colors.extended333 },
+            menu && styles.menuCircle,
+            menu
+              ? { borderColor: colors.black }
+              : {
+                  borderColor: isSelected
+                    ? colors.primary25
+                    : colors.extended333,
+                },
           ]}
         >
-          {isSelected && <View style={styles.innerCircle} />}
+          {isSelected && (
+            <View
+              style={[styles.innerCircle, menu && styles.menuInnerCircle]}
+            />
+          )}
         </View>
         <Typography
           style={[styles.label, isSelected && styles.selectedLabel]}
@@ -48,27 +59,33 @@ const styles = StyleSheet.create({
   circle: {
     width: 14,
     height: 14,
-    borderRadius: '50%',
+    borderRadius: 50,
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 5,
   },
+  menuCircle: {
+    marginTop: 0,
+  },
   innerCircle: {
     width: 6,
     height: 6,
-    borderRadius: '50%',
+    borderRadius: 50,
     backgroundColor: colors.primary25,
   },
+  menuInnerCircle: {
+    backgroundColor: colors.black,
+  },
+
   button: {
-    paddingHorizontal: 8,
     flex: 1,
     minHeight: 48,
     borderWidth: 1,
     borderColor: colors.strokeInputField,
   },
   buttonSelected: {
-    backgroundColor: colors.lightContrast25,
+    backgroundColor: colors.lightContrast75,
     borderColor: colors.primary25,
   },
   label: {
@@ -81,12 +98,23 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
     alignItems: 'flex-start',
     gap: 7,
   },
   menu: {
     borderColor: 'transparent',
-    justifyContent: 'center',
+    borderWidth: 0,
+    paddingHorizontal: 0,
+  },
+  menuSelected: {
+    borderColor: colors.primary25,
+    backgroundColor: colors.lightContrast75,
+    borderWidth: 1,
+  },
+  menuWrapper: {
+    paddingHorizontal: 8,
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 });
