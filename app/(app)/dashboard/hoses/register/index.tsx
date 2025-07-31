@@ -22,6 +22,8 @@ import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { generateNumericDraftId } from '@/lib/util/unikId';
 import { addHose } from '@/services/data/dataService';
 import { registerHose } from '@/services/api/asset';
+import { Toast } from 'toastify-react-native';
+import { saveAsDraftToast } from '@/lib/util/toasts';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -307,6 +309,7 @@ const RegisterHose = () => {
         status: 'draft',
       },
     });
+    saveAsDraftToast();
     router.push('/(app)/dashboard');
   };
 

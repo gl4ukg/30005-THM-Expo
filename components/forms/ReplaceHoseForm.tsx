@@ -18,8 +18,10 @@ import { useUserValidation } from '@/hooks/useUserValidation';
 import { colors } from '@/lib/tokens/colors';
 import { router, useFocusEffect } from 'expo-router';
 import { FC, useCallback, useMemo, useRef, useState } from 'react';
+import { Toast } from 'toastify-react-native';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { UnitInput } from '../detailView/edit/UnitInput';
+import { saveAsDraftToast } from '@/lib/util/toasts';
 
 interface Props {
   draftId: string;
@@ -92,6 +94,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
         formData,
       },
     });
+    saveAsDraftToast();
     router.push('/dashboard');
   };
   const handleCancel = () => {

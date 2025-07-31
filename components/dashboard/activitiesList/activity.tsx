@@ -10,8 +10,10 @@ import {
 } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
+import { resumeDraftToast, saveAsDraftToast } from '@/lib/util/toasts';
 import { FC } from 'react';
 import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import ToastManager, { Toast } from 'toastify-react-native';
 
 export type ActivityType =
   | 'INSPECT'
@@ -66,6 +68,11 @@ export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
     );
   };
 
+  const handleDraftPress = () => {
+    resumeDraftToast();
+    onRowPress();
+  };
+
   const actionTilte = (): string => {
     if ('subtitle' in item.formData && item.selectedIds.length === 0)
       return (item.formData.subtitle as string) ?? '';
@@ -88,7 +95,7 @@ export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
       : undefined;
 
   return (
-    <Pressable onPress={() => (status === 'draft' ? onRowPress() : null)}>
+    <Pressable onPress={() => (status === 'draft' ? handleDraftPress() : null)}>
       <View style={[elementStyle.container]}>
         <View style={elementStyle.columnOne}>
           <Typography name='tableContentNumber' text={`${id}`} />

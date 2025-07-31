@@ -7,14 +7,15 @@ import { useNetInfo } from '@react-native-community/netinfo';
 import * as BackgroundTask from 'expo-background-task';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
-import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import ToastManager from 'toastify-react-native';
 
 export default function RootLayout() {
   return (
     <ContextProvider>
       <SafeAreaProvider>
         <App />
+        <ToastManager />
       </SafeAreaProvider>
     </ContextProvider>
   );
