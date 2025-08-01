@@ -1,35 +1,55 @@
 import { Toast } from 'toastify-react-native';
+import { colors } from '../tokens/colors';
 
-export const saveAsDraftToast = () => {
+export const successToast = (title: string, message: string) => {
   Toast.show({
     type: 'success',
-    text1: 'Saved as draft',
+    text1: title,
+    text2: message,
     position: 'top',
-    visibilityTime: 5000,
     autoHide: true,
-    iconColor: '#4CAF50',
+    iconColor: colors.black,
     iconSize: 24,
     theme: 'light',
-    closeIcon: 'times-circle',
-    closeIconFamily: 'FontAwesome',
-    closeIconSize: 20,
-    closeIconColor: '#fff',
   });
 };
 
-export const resumeDraftToast = () => {
+export const infoToast = (title: string, message: string) => {
   Toast.show({
     type: 'info',
-    text1: 'Draft resumed',
+    text1: title,
+    text2: message,
     position: 'top',
-    visibilityTime: 5000,
     autoHide: true,
-    iconColor: '#2196F3',
+    iconColor: colors.black,
     iconSize: 24,
     theme: 'light',
-    closeIcon: 'times-circle',
-    closeIconFamily: 'FontAwesome',
-    closeIconSize: 20,
-    closeIconColor: '#fff',
+  });
+};
+
+export const errorToast = (title: string, message: string) => {
+  Toast.show({
+    type: 'error',
+    text1: title,
+    text2: message,
+    position: 'top',
+    autoHide: true,
+    iconColor: colors.error,
+    iconSize: 24,
+    theme: 'light',
+  });
+};
+
+export const warnToast = (title: string, message: string) => {
+  Toast.show({
+    type: 'warn',
+    text1: title,
+    text2: message,
+    backgroundColor: colors.dashboardYellow,
+    position: 'top',
+    autoHide: true,
+    iconColor: colors.dashboardYellowText,
+    iconSize: 24,
+    theme: 'light',
   });
 };

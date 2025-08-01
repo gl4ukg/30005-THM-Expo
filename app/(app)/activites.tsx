@@ -1,15 +1,11 @@
 import { Activity } from '@/components/dashboard/activitiesList/activity';
-import { ActivitiesList } from '@/components/dashboard/activitiesList';
+import { ActivitiesList } from '@/components/dashboard/activitiesList/indext';
 import { Typography } from '@/components/Typography';
-import { SelectDropdown } from '@/components/UI/ActionMenu';
-import { Icon } from '@/components/Icon/Icon';
+import { ActionMenu } from '@/components/UI/ActionMenu';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
-import { router } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 const options = [
   {
     label: 'All activities',
@@ -24,7 +20,7 @@ const options = [
     value: 'REGISTER_HOSE',
   },
   {
-    label: 'Scrapped hoses',
+    label: 'Scraped hoses',
     value: 'SCRAP',
   },
   {
@@ -51,191 +47,98 @@ const Activities: React.FC = () => {
     setActivities(activities.filter((activity) => activity.id !== +id));
     // TODO remove from state, add reducer
   };
-
-  // Get the label of the currently selected filter option
-  const getSelectedOptionLabel = () => {
-    const selectedOption = options.find((option) => option.value === filter);
-    return selectedOption ? selectedOption.label : 'All activities';
-  };
-
-  const getActionLabel = (filterValue: string) => {
-    switch (filterValue) {
-      case 'REGISTER_HOSE':
-        return 'Register Hose';
-      case 'RFQ':
-        return 'Create RFQ';
-      case 'INSPECT':
-        return 'Start Inspection';
-      case 'SCRAP':
-        return 'Scrap Hose';
-      case 'REPLACE_HOSE':
-        return 'Replace Hose';
-      case 'CONTACT':
-        return 'Contact TESS';
-      default:
-        return getSelectedOptionLabel();
-    }
-  };
-
-  const handleDirectAction = () => {
-    navigateToAction(filter);
-  };
-
-  const navigateToAction = (actionType: string) => {
-    switch (actionType) {
-      case 'REGISTER_HOSE':
-        router.push('/dashboard/hoses/register');
-        break;
-      case 'RFQ':
-        router.push('/dashboard/actions');
-        break;
-      case 'INSPECT':
-        router.push('/dashboard/hoses/inspect');
-        break;
-      case 'SCRAP':
-        router.push('/dashboard/actions');
-        break;
-      case 'REPLACE_HOSE':
-        router.push('/dashboard/actions');
-        break;
-      case 'CONTACT':
-        router.push('/dashboard/actions');
-        break;
-      default:
-        console.log(`No navigation defined for action: ${actionType}`);
-    }
-  };
   useEffect(() => {
     const filteredActivities = activities.filter((activity) => {
-      const activityStatus = activity.status.toLowerCase();
       return (
-        (status === 'all' || activityStatus === status) &&
+        (status === 'all' || activity.status === status) &&
         (filter === 'ALL' || activity.type === filter)
       );
     });
     setActivitiesToShow(filteredActivities);
   }, [activities, filter, status, state]);
-
   useEffect(() => {
-    const mappedActivities = [...state.data.drafts, ...state.data.done]
-      .map(
-        (activity): Activity => ({
-          ...activity,
-          status: activity.status === 'draft' ? 'draft' : 'done',
-        }),
-      )
-      .sort((a, b) => b.modifiedAt.getTime() - a.modifiedAt.getTime());
-    setActivities(mappedActivities);
-    setActivitiesToShow(mappedActivities);
+    const activities = [...state.data.drafts, ...state.data.done].sort(
+      (a, b) => b.modifiedAt.getTime() - a.modifiedAt.getTime(),
+    );
+    setActivities(activities);
+    setActivitiesToShow(activities);
   }, [state.data.drafts, state.data.done]);
   return (
-    <View style={styles.container}>
-      <FlatList
-        ListHeaderComponent={
-          <View style={styles.listHeaderComponent}>
-            <Typography
-              name='navigationBold'
-              text='Recent activities'
-              style={styles.contactTitle}
-            />
-            <SelectDropdown
-              selected={filter}
-              options={options}
-              onChange={setFilter}
-            />
-            <View style={styles.switchContainer}>
-              <Pressable
-                onPress={() => setStatus('all')}
+    <FlatList
+      ListHeaderComponent={
+        <View style={styles.listHeaderComponent}>
+          <Typography
+            name='navigationBold'
+            text='Recent activities'
+            style={styles.contactTitle}
+          />
+          <ActionMenu
+            selected={filter}
+            options={options}
+            onChange={setFilter}
+          />
+          <View style={styles.switchContainer}>
+            <Pressable
+              onPress={() => setStatus('all')}
+              style={[
+                styles.switchButton,
+                status === 'all' && styles.switchButtonSelected,
+              ]}
+            >
+              <Typography
+                name='navigation'
+                text='All'
                 style={[
-                  styles.switchButton,
-                  status === 'all' && styles.switchButtonSelected,
+                  styles.switchButtonText,
+                  status === 'all' && styles.switchButtonTextSelected,
                 ]}
-              >
-                <Typography
-                  name='navigation'
-                  text='All'
-                  style={[
-                    styles.switchButtonText,
-                    status === 'all' && styles.switchButtonTextSelected,
-                  ]}
-                />
-              </Pressable>
-              <Pressable
-                onPress={() => setStatus('draft')}
+              />
+            </Pressable>
+            <Pressable
+              onPress={() => setStatus('draft')}
+              style={[
+                styles.switchButton,
+                status === 'draft' && styles.switchButtonSelected,
+              ]}
+            >
+              <Typography
+                name='navigation'
+                text='Drafts'
                 style={[
-                  styles.switchButton,
-                  status === 'draft' && styles.switchButtonSelected,
+                  styles.switchButtonText,
+                  status === 'all' && styles.switchButtonTextSelected,
                 ]}
-              >
-                <Typography
-                  name='navigation'
-                  text='Drafts'
-                  style={[
-                    styles.switchButtonText,
-                    status === 'draft' && styles.switchButtonTextSelected,
-                  ]}
-                />
-              </Pressable>
-              <Pressable
-                onPress={() => setStatus('done')}
+              />
+            </Pressable>
+            <Pressable
+              onPress={() => setStatus('done')}
+              style={[
+                styles.switchButton,
+                status === 'done' && styles.switchButtonSelected,
+              ]}
+            >
+              <Typography
+                name='navigation'
+                text='Done'
                 style={[
-                  styles.switchButton,
-                  status === 'done' && styles.switchButtonSelected,
+                  styles.switchButtonText,
+                  status === 'all' && styles.switchButtonTextSelected,
                 ]}
-              >
-                <Typography
-                  name='navigation'
-                  text='Done'
-                  style={[
-                    styles.switchButtonText,
-                    status === 'done' && styles.switchButtonTextSelected,
-                  ]}
-                />
-              </Pressable>
-            </View>
+              />
+            </Pressable>
           </View>
-        }
-        data={['one']}
-        renderItem={() => (
-          <ActivitiesList onRemove={removeActivity} items={activitiesToShow} />
-        )}
-        keyExtractor={(_, index) => `form-content-${index}`}
-      />
-      {filter !== 'ALL' && (
-        <DirectActionButton
-          label={getActionLabel(filter)}
-          onPress={handleDirectAction}
-        />
+        </View>
+      }
+      data={['one']}
+      renderItem={() => (
+        <ActivitiesList onRemove={removeActivity} items={activitiesToShow} />
       )}
-    </View>
-  );
-};
-
-const DirectActionButton: React.FC<{ label: string; onPress: () => void }> = ({
-  label,
-  onPress,
-}) => {
-  const insets = useSafeAreaInsets();
-
-  return (
-    <Pressable
-      onPress={onPress}
-      style={[styles.directActionButton, { bottom: 20 + insets.bottom }]}
-    >
-      <Typography
-        name='navigation'
-        text={label}
-        style={styles.directActionButtonText}
-      />
-      <Icon name='Plus' color={colors.white} size='sm' />
-    </Pressable>
+      keyExtractor={(_, index) => `form-content-${index}`}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   listHeaderComponent: {
     alignItems: 'center',
     gap: 6,
@@ -271,30 +174,6 @@ const styles = StyleSheet.create({
   },
   switchButtonTextSelected: {
     color: colors.primary95,
-  },
-  directActionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    padding: 12,
-    borderRadius: 8,
-    backgroundColor: colors.black,
-    position: 'absolute',
-    right: 20,
-    bottom: 20,
-    zIndex: 10000,
-    shadowColor: colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  directActionButtonText: {
-    color: colors.white,
-    fontWeight: '600',
   },
 });
 

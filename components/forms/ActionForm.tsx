@@ -16,8 +16,6 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { TooltipWrapper } from '../detailView/edit/TooltipWrapper';
-import { Toast } from 'toastify-react-native';
-import { saveAsDraftToast } from '@/lib/util/toasts';
 
 const formLabels: Record<
   Extract<MultiSelectionActionsType, 'RFQ' | 'CONTACT' | 'SCRAP'>,
@@ -120,7 +118,6 @@ export const ActionForm: React.FC<Props> = ({
         formData,
       },
     });
-    saveAsDraftToast();
     router.push('/dashboard');
   };
   const handleCancel = () => {

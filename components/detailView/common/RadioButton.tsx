@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     borderColor: colors.strokeInputField,
   },
   buttonSelected: {
-    backgroundColor: colors.lightContrast25,
+    backgroundColor: colors.lightContrast75,
     borderColor: colors.primary25,
   },
   label: {
@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
   },
   menuSelected: {
     borderColor: colors.primary25,
-    borderTopWidth: 2,
-    borderBottomWidth: 2,
+    backgroundColor: colors.lightContrast75,
+    borderWidth: 1,
   },
   menuWrapper: {
     paddingHorizontal: 8,

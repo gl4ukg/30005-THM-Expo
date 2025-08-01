@@ -12,7 +12,6 @@ import { generateNumericDraftId } from '@/lib/util/unikId';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
-import { Toast } from 'toastify-react-native';
 
 const requiredFields: (keyof HoseData)[] = [
   'itemDescription',

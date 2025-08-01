@@ -10,10 +10,8 @@ import {
 } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
-import { resumeDraftToast, saveAsDraftToast } from '@/lib/util/toasts';
 import { FC } from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
-import ToastManager, { Toast } from 'toastify-react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 export type ActivityType =
   | 'INSPECT'
@@ -30,7 +28,6 @@ export interface Activity {
   status: 'done' | 'draft';
   selectedIds: number[];
   modifiedAt: Date;
-  description?: string;
   formData:
     | PartialRFQFormData
     | PartialFormData
@@ -45,57 +42,27 @@ interface Props {
   onRowPress: () => void;
 }
 export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
-  console.log('Activity item:', item);
   const { type, status, id, formData } = item;
   const { state } = useAppContext();
-
-  const handleDeletePress = () => {
-    Alert.alert(
-      'Delete Draft',
-      'Are you sure you want to delete draft?',
-      [
-        {
-          text: 'No, go back',
-          style: 'cancel',
-        },
-        {
-          text: 'Yes, continue',
-          style: 'destructive',
-          onPress: () => onRemove(`${id}`),
-        },
-      ],
-      { cancelable: true },
-    );
-  };
-
-  const handleDraftPress = () => {
-    resumeDraftToast();
-    onRowPress();
-  };
-
+  // const hasAttachment = useMemo(() => Math.random() > 0.5, []);
   const actionTilte = (): string => {
     if ('subtitle' in item.formData && item.selectedIds.length === 0)
       return (item.formData.subtitle as string) ?? '';
     if (item.selectedIds.length > 1) return `${item.selectedIds.length} hoses`;
-
     if (item.selectedIds.length === 1) {
-      const hose = state.data.hoses.find(
-        (hose) => hose.assetId === item.selectedIds[0],
+      return (
+        state.data.hoses.find((hose) => hose.assetId === item.selectedIds[0])
+          ?.equipmentSubunit ?? ''
       );
-      if (!hose) return '';
-
-      return hose.itemDescription || '';
-    }
-    return '';
+    } else return '';
   };
-
   const singleHose =
     item.selectedIds.length === 1
       ? state.data.hoses.find((hose) => hose.assetId === item.selectedIds[0])
       : undefined;
 
   return (
-    <Pressable onPress={() => (status === 'draft' ? handleDraftPress() : null)}>
+    <Pressable onPress={() => (status === 'draft' ? onRowPress() : null)}>
       <View style={[elementStyle.container]}>
         <View style={elementStyle.columnOne}>
           <Typography name='tableContentNumber' text={`${id}`} />
@@ -146,7 +113,7 @@ export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
         <View style={elementStyle.columnThree}>
           {status === 'draft' && (
             <Pressable
-              onPress={handleDeletePress}
+              onPress={() => onRemove(`${id}`)}
               style={elementStyle.removeButton}
             >
               <Icon name='Cross' color={colors.error} size='md' />

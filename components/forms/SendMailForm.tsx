@@ -8,11 +8,9 @@ import { useAppContext } from '@/context/ContextProvider';
 import { PartialSendMailFormData } from '@/context/Reducer';
 import { useUserValidation } from '@/hooks/useUserValidation';
 import { colors } from '@/lib/tokens/colors';
-import { saveAsDraftToast } from '@/lib/util/toasts';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { Toast } from 'toastify-react-native';
 
 interface Props {
   draftId: string;
@@ -84,7 +82,6 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
         formData,
       },
     });
-    saveAsDraftToast();
     router.push('/dashboard');
   };
   const handleCancel = () => {

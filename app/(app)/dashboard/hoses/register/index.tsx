@@ -20,10 +20,6 @@ import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { generateNumericDraftId } from '@/lib/util/unikId';
-import { addHose } from '@/services/data/dataService';
-import { registerHose } from '@/services/api/asset';
-import { Toast } from 'toastify-react-native';
-import { saveAsDraftToast } from '@/lib/util/toasts';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -109,7 +105,7 @@ const RegisterHose = () => {
       const defaultRequired = getDefaultRequiredHoseData();
       const mergedTemplate = { ...defaultRequired, ...templateData };
 
-      setHoseData((prevState) => ({
+      setLocalState((prevState) => ({
         ...mergedTemplate,
         ...prevState,
         assetId: incomingId
@@ -206,10 +202,7 @@ const RegisterHose = () => {
 
     dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
 
-    const newHoseData = {
-      ...hoseData,
-      s1Code: state.data.s1Code,
-    } as HoseData;
+    const newHoseData = hoseData as HoseData;
 
     if (registerMultiple) {
       const newDraftId = generateNumericDraftId(
@@ -232,71 +225,13 @@ const RegisterHose = () => {
       );
       router.push(`/scan?scanPurpose=REGISTER_HOSE&draftId=${newDraftId}`);
     } else {
-      try {
-        // Step 1: Update context with new hose
-        dispatch({
-          type: 'ADD_NEW_HOSE',
-          payload: newHoseData,
-        });
-
-        // Step 2: Update cache with new hose
-        await addHose(newHoseData);
-
-        // Step 3: If online, send to API
-        if (
-          state.settings.connectionType === 'wifi' ||
-          state.settings.connectionType === 'mobile'
-        ) {
-          try {
-            console.log('newHoseData keys:', Object.keys(newHoseData));
-            console.log('newHoseData assetId:', newHoseData.assetId);
-            console.log('newHoseData RFID:', newHoseData.RFID);
-            console.log('Customer number from state:', state.data.customer.id);
-
-            await registerHose(newHoseData, state.data.customer.id);
-            console.log('Hose successfully registered with API');
-          } catch (apiError) {
-            console.error(
-              'API registration failed, but hose saved locally:',
-              apiError,
-            );
-            Alert.alert(
-              'Partial Success',
-              'Hose saved locally but could not sync with server. It will be synced when connection is restored.',
-              [{ text: 'OK' }],
-            );
-          }
-        } else {
-          console.log('No internet connection, hose saved locally only');
-        }
-
-        dispatch({
-          type: 'MOVE_DRAFT_TO_DONE',
-          payload: +id,
-        });
-
-        Alert.alert('Success', 'Hose registered successfully!', [
-          { text: 'OK', onPress: () => router.push('/(app)/dashboard') },
-        ]);
-      } catch (error) {
-        console.error('Failed to register hose:', error);
-        Alert.alert(
-          'Registration Failed',
-          'Failed to register hose. Please try again.',
-          [{ text: 'OK' }],
-        );
-        dispatch({ type: 'SET_IS_CANCELABLE', payload: true });
-      }
+      dispatch({
+        type: 'MOVE_DRAFT_TO_DONE',
+        payload: +id,
+      });
+      router.push('/(app)/dashboard');
     }
-  }, [
-    hoseData,
-    dispatch,
-    router,
-    registerMultiple,
-    state.settings.connectionType,
-    state.data.drafts,
-    id,
-  ]);
+  }, [hoseData, dispatch, router, registerMultiple]);
 
   const handleSaveAsDraft = () => {
     dispatch({
@@ -309,7 +244,6 @@ const RegisterHose = () => {
         status: 'draft',
       },
     });
-    saveAsDraftToast();
     router.push('/(app)/dashboard');
   };
 
