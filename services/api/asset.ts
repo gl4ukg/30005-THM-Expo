@@ -61,8 +61,6 @@ export const registerHose = async (
   // Transform the flat hose data to API expected format
   const requestData = transformHoseDataForAPI(hoseData, customerNumber);
 
-  console.log('Transformed API payload:', JSON.stringify(requestData, null, 2));
-
   return apiCall<HoseData>('/asset/registerHose', 'POST', requestData);
 };
 
