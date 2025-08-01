@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   synced: { backgroundColor: colors.black },
-  syncing: { backgroundColor: '#1A4A77' },
+  syncing: { backgroundColor: colors.extendedBlue },
   error: { backgroundColor: colors.error },
   uptoDate: { backgroundColor: colors.primary },
 });
