@@ -114,6 +114,7 @@ type DataAction =
     >
   | ActionWithPayload<'SET_HOSE_DATA', HoseData[]>
   | ActionWithPayload<'SET_DATA_LOADING', boolean>
+  | ActionWithPayload<'SET_LAST_UPDATE', 'error' | 'syncing' | 'synced'>
   | ActionWithPayload<'SET_CUSTOMER', { id: string; name: string }>
   | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: number; hoseData: any }>
   | ActionWithPayload<'REMOVE_HOSES', number[]>
@@ -212,6 +213,17 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       return {
         ...state,
         isLoading: action.payload,
+      };
+    case 'SET_LAST_UPDATE':
+      return {
+        ...state,
+        lastUpdate:
+          action.payload === 'error'
+            ? null
+            : action.payload === 'synced'
+              ? new Date()
+              : null,
+        lastUpdateStatus: action.payload,
       };
     case 'SET_S1_CODE':
       return {
