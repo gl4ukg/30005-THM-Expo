@@ -1,4 +1,3 @@
-import { Typography } from '@/components/Typography';
 import { ContextProvider, useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { syncData } from '@/lib/util/sync';
@@ -7,14 +6,15 @@ import { useNetInfo } from '@react-native-community/netinfo';
 import * as BackgroundTask from 'expo-background-task';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
-import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import ToastManager from 'toastify-react-native/components/ToastManager';
 
 export default function RootLayout() {
   return (
     <ContextProvider>
       <SafeAreaProvider>
         <App />
+        <ToastManager showProgressBar={false} />
       </SafeAreaProvider>
     </ContextProvider>
   );

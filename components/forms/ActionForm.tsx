@@ -16,6 +16,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { TooltipWrapper } from '../detailView/edit/TooltipWrapper';
+import { infoToast } from '@/lib/util/toasts';
 
 const formLabels: Record<
   Extract<MultiSelectionActionsType, 'RFQ' | 'CONTACT' | 'SCRAP'>,
@@ -47,6 +48,9 @@ interface Props {
   draftId: string;
   allowScanToAdd?: boolean;
 }
+export const saveAsDraftToast = () => {
+  infoToast('Draft saved', 'Your draft has been saved successfully.');
+};
 
 export const ActionForm: React.FC<Props> = ({
   draftId,
@@ -118,6 +122,7 @@ export const ActionForm: React.FC<Props> = ({
         formData,
       },
     });
+
     router.push('/dashboard');
   };
   const handleCancel = () => {

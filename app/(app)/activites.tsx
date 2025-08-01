@@ -1,11 +1,11 @@
 import { Activity } from '@/components/dashboard/activitiesList/activity';
-import { ActivitiesList } from '@/components/dashboard/activitiesList/indext';
+import { ActivitiesList } from '@/components/dashboard/activitiesList/';
 import { Typography } from '@/components/Typography';
-import { ActionMenu } from '@/components/UI/ActionMenu';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { SelectDropdown } from '@/components/UI/ActionMenu';
 const options = [
   {
     label: 'All activities',
@@ -72,7 +72,7 @@ const Activities: React.FC = () => {
             text='Recent activities'
             style={styles.contactTitle}
           />
-          <ActionMenu
+          <SelectDropdown
             selected={filter}
             options={options}
             onChange={setFilter}
