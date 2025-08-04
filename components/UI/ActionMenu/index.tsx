@@ -142,7 +142,6 @@ const styles = StyleSheet.create({
   dropdown: {
     backgroundColor: colors.lightContrast25,
     position: 'absolute',
-    paddingTop: 16,
     gap: 8,
     borderTopWidth: 1,
     borderBottomWidth: 1,

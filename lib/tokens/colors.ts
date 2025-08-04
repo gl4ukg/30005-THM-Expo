@@ -30,4 +30,6 @@ export const colors = {
   strokeInputField: '#B9B9B9',
   inputBackground: '#C9C9C9',
   linkLightGreen: '#70FFAE',
+  baseMuted: '#F4F4F5',
+  baseMutedForeground: '#71717A',
 } as const;

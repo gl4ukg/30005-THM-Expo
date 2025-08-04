@@ -18,6 +18,7 @@ export const successToast = (title: string, message: string) => {
     autoHide: true,
     theme: 'light',
     icon: checkCircleIcon,
+    useModal: false,
   });
 };
 export const infoToast = (title: string, message: string) => {
@@ -33,6 +34,7 @@ export const infoToast = (title: string, message: string) => {
     autoHide: true,
     theme: 'light',
     icon: infoIcon,
+    useModal: false,
   });
 };
 
