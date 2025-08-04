@@ -44,6 +44,10 @@ export const SelectDropdown: FC<Props<string>> = ({
     setIsOpen(!isOpen);
   };
 
+  const handleOverlayPress = () => {
+    setIsOpen(false);
+  };
+
   const getDropdownPosition = (buttonLayout: {
     x: number;
     y: number;
@@ -81,22 +85,33 @@ export const SelectDropdown: FC<Props<string>> = ({
         />
       </Pressable>
 
-      <Modal visible={isOpen} transparent animationType='fade'>
-        <Pressable onPress={() => setIsOpen(false)} style={styles.overlay}>
-          <View style={[styles.dropdown, getDropdownPosition(buttonLayout)]}>
-            {options.map((option) => (
-              <RadioButton
-                key={option.value}
-                label={option.label}
-                isSelected={selected === option.value}
-                onChange={() => handleChange(option.value)}
-                menu
-                id={option.value}
-              />
-            ))}
-          </View>
-        </Pressable>
-      </Modal>
+      {isOpen && (
+        <Modal
+          visible={isOpen}
+          transparent
+          animationType='fade'
+          onRequestClose={handleOverlayPress}
+        >
+          <Pressable onPress={handleOverlayPress} style={styles.overlay}>
+            <Pressable onPress={(e) => e.stopPropagation()}>
+              <View
+                style={[styles.dropdown, getDropdownPosition(buttonLayout)]}
+              >
+                {options.map((option) => (
+                  <RadioButton
+                    key={option.value}
+                    label={option.label}
+                    isSelected={selected === option.value}
+                    onChange={() => handleChange(option.value)}
+                    menu
+                    id={option.value}
+                  />
+                ))}
+              </View>
+            </Pressable>
+          </Pressable>
+        </Modal>
+      )}
     </View>
   );
 };
@@ -129,9 +144,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     paddingTop: 16,
     gap: 8,
-    borderWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
     borderColor: colors.primary,
-    borderRadius: 8,
     shadowColor: colors.black,
     shadowOffset: {
       width: 0,

@@ -106,7 +106,7 @@ const Activities: React.FC = () => {
                 text='Drafts'
                 style={[
                   styles.switchButtonText,
-                  status === 'all' && styles.switchButtonTextSelected,
+                  status === 'draft' && styles.switchButtonTextSelected,
                 ]}
               />
             </Pressable>
@@ -122,7 +122,7 @@ const Activities: React.FC = () => {
                 text='Done'
                 style={[
                   styles.switchButtonText,
-                  status === 'all' && styles.switchButtonTextSelected,
+                  status === 'done' && styles.switchButtonTextSelected,
                 ]}
               />
             </Pressable>

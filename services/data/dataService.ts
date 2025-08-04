@@ -41,7 +41,6 @@ export const initializeUserData = async (): Promise<{
     // Step 3: Get hoses from API using S1 code
     console.log('Fetching hoses from API with S1 code:', s1Code);
     const hosesResponse = await getAllHosesByUser(s1Code);
-    console.log('Full hoses response:', JSON.stringify(hosesResponse, null, 2));
 
     // Extract hoses from API response
     let hoses: HoseData[] = [];

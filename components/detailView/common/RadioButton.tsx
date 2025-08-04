@@ -29,6 +29,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
         <View
           style={[
             styles.circle,
+            menu && styles.menuCircle,
             menu
               ? { borderColor: colors.black }
               : {
@@ -63,6 +64,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 5,
+  },
+  menuCircle: {
+    marginTop: 0,
   },
   innerCircle: {
     width: 6,
@@ -111,5 +115,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     flex: 1,
     alignItems: 'center',
+    flexDirection: 'row',
   },
 });

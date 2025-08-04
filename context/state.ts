@@ -103,6 +103,7 @@ export const isSingleSelection = (
 interface DataState {
   isLoading: boolean;
   lastUpdate: null | Date;
+  lastUpdateStatus?: 'error' | 'syncing' | 'synced';
   s1Code: string | null;
   s1Items: S1Item[];
   // define data state properties
@@ -182,7 +183,7 @@ const initialAuthState: AuthState = {
 
 const initialDataState: DataState = {
   isLoading: false,
-  lastUpdate: new Date(),
+  lastUpdate: null,
   s1Code: null,
   s1Items: [],
   customer: { id: '223949', name: 'CUSTOMER WEB DEMO (Main)' },
