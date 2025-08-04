@@ -69,6 +69,15 @@ const styles = StyleSheet.create({
       ios: 'OpenSans-Regular',
     }),
   },
+  boldOnBlack: {
+    fontSize: 14,
+    lineHeight: 16,
+    fontWeight: '600',
+    fontFamily: Platform.select({
+      android: 'OpenSans_600SemiBold',
+      ios: 'OpenSans-SemiBold',
+    }),
+  },
   sectionHeader: {
     fontSize: 20,
     lineHeight: 22,

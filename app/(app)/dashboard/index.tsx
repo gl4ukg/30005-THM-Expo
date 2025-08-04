@@ -1,5 +1,6 @@
 import { BarChart, Primary, Secondary } from '@/components/dashboard';
 import { BarData } from '@/components/dashboard/BarChart';
+import { SyncStatus } from '@/components/dashboard/SyncStatus';
 import { Typography } from '@/components/Typography';
 import { SelectDropdown } from '@/components/UI/ActionMenu';
 import { AppContext } from '@/context/Reducer';
@@ -149,7 +150,7 @@ const options = [
 const Dashboard = () => {
   const [selected, setSelected] =
     useState<(typeof options)[0]['value']>('month');
-  const { dispatch } = useContext(AppContext);
+  const { dispatch, state } = useContext(AppContext);
 
   useFocusEffect(
     useCallback(() => {
@@ -193,6 +194,24 @@ const Dashboard = () => {
     <>
       <ScrollView contentContainerStyle={style.container}>
         <View style={style.header}>
+          <SyncStatus
+            timestamp={state.data.lastUpdate?.getTime() ?? null}
+            status={state.data.lastUpdateStatus}
+            onRetry={() => {
+              const random = Math.random();
+              dispatch({
+                type: 'SET_LAST_UPDATE',
+                payload: 'syncing',
+              });
+              // TODO: add syncing
+              setTimeout(() => {
+                dispatch({
+                  type: 'SET_LAST_UPDATE',
+                  payload: random < 0.5 ? 'synced' : 'error',
+                });
+              }, 2000);
+            }}
+          />
           <Typography name='tableHeader' text='Inspections' />
           <SelectDropdown
             selected={selected}

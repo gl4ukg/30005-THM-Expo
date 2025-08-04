@@ -51,32 +51,8 @@ const App = () => {
       });
     }
   }, [type]);
-  return (
-    <>
-      {/* {state.data.isLoading && (
-        <View
-          style={{
-            width: '100%',
-            position: 'absolute',
-            opacity: 0.3,
-            top: 75,
-            left: 0,
-            right: 0,
-            height: 50,
-            backgroundColor: 'red',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 10000,
-            flexDirection: 'row',
-            gap: 15,
-          }}
-        >
-          <Typography name='button'>
-            Connection type: {state.settings.connectionType}
-          </Typography>
-          <ActivityIndicator color={colors.white} />
-        </View>
-      )} */}
+  if (!state.auth.user)
+    return (
       <Stack
         screenOptions={{
           headerShown: false,
@@ -86,20 +62,23 @@ const App = () => {
           },
         }}
       >
-        {state.auth.user === null && (
-          <>
-            <Stack.Screen name='index' />
-            <Stack.Screen name='/login' />
-            <Stack.Screen name='/photo' />
-            <Stack.Screen name='/ui' />
-          </>
-        )}
-        {state.auth.user !== null && (
-          <>
-            <Stack.Screen name='(app)' />
-          </>
-        )}
+        <Stack.Screen name='index' />
+        <Stack.Screen name='/login' />
+        <Stack.Screen name='/photo' />
+        <Stack.Screen name='/ui' />
       </Stack>
-    </>
+    );
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        animationTypeForReplace: 'push',
+        contentStyle: {
+          backgroundColor: colors.white,
+        },
+      }}
+    >
+      <Stack.Screen name='(app)' />
+    </Stack>
   );
 };
