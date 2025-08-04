@@ -201,9 +201,15 @@ const Dashboard = () => {
               const random = Math.random();
               dispatch({
                 type: 'SET_LAST_UPDATE',
-                payload:
-                  random < 0.3 ? 'synced' : random < 0.6 ? 'syncing' : 'error',
+                payload: 'syncing',
               });
+              // TODO: add syncing
+              setTimeout(() => {
+                dispatch({
+                  type: 'SET_LAST_UPDATE',
+                  payload: random < 0.5 ? 'synced' : 'error',
+                });
+              }, 2000);
             }}
           />
           <Typography name='tableHeader' text='Inspections' />

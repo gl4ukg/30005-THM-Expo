@@ -1,4 +1,5 @@
 import { Icon } from '@/components/Icon/Icon';
+import { IconName } from '@/components/Icon/iconMapping';
 import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
 import React, { useEffect } from 'react';
@@ -29,6 +30,29 @@ export const SyncStatus: React.FC<Props> = ({
     Props['status'] | 'uptoDate'
   >('synced');
   const [returnString, setReturnString] = React.useState<string>('');
+
+  const handlePress = () => {
+    Alert.alert(
+      returnString,
+      `Inspection data may not be current. New inspections from other users may not be visible. ${timestamp !== null ? `Last sync: ${new Date(timestamp).toLocaleDateString()}` : ''} `,
+      [
+        {
+          text: 'Retry sync',
+          onPress: onRetry,
+        },
+        {
+          text: 'Cancel',
+          onPress: () => {},
+        },
+      ],
+    );
+  };
+
+  const iconName: Record<'uptoDate' | 'syncing' | 'error', IconName> = {
+    uptoDate: 'Success',
+    syncing: 'Syncing',
+    error: 'Alert',
+  };
 
   useEffect(() => {
     if (status === 'error') {
@@ -69,40 +93,13 @@ export const SyncStatus: React.FC<Props> = ({
     }
   }, [timestamp, status]);
   return (
-    <Pressable
-      onPress={() => {
-        Alert.alert(
-          returnString,
-          `Inspection data may not be current. New inspections from other users may not be visible. ${timestamp !== null ? `Last sync: ${new Date(timestamp).toLocaleDateString()}` : ''} `,
-          [
-            {
-              text: 'Retry sync',
-              onPress: onRetry,
-            },
-            {
-              text: 'Cancel',
-              onPress: () => {},
-            },
-          ],
-        );
-      }}
-    >
+    <Pressable onPress={handlePress}>
       <View style={[styles.container, syncState && styles[syncState]]}>
         <Typography name={'boldOnBlack'} style={{ color: colors.white }}>
           {`${returnString ? returnString : ''}`}
         </Typography>
-        {syncState !== 'synced' && (
-          <Icon
-            name={
-              syncState === 'uptoDate'
-                ? 'Success'
-                : syncState === 'error'
-                  ? 'Alert'
-                  : 'Syncing'
-            }
-            size={'xsm'}
-            color={colors.white}
-          />
+        {syncState !== 'synced' && !!syncState && (
+          <Icon name={iconName[syncState]} size={'xsm'} color={colors.white} />
         )}
       </View>
     </Pressable>
