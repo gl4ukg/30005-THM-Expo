@@ -105,7 +105,7 @@ const RegisterHose = () => {
       const defaultRequired = getDefaultRequiredHoseData();
       const mergedTemplate = { ...defaultRequired, ...templateData };
 
-      setLocalState((prevState) => ({
+      setHoseData((prevState) => ({
         ...mergedTemplate,
         ...prevState,
         assetId: incomingId

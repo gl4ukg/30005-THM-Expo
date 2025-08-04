@@ -190,16 +190,17 @@ const Dashboard = () => {
   };
 
   return (
-    <>
+    <View>
       <ScrollView contentContainerStyle={style.container}>
         <View style={style.header}>
-          <Typography name='tableHeader' text='Inspections' />
-          <SelectDropdown
-            selected={selected}
-            options={options}
-            onChange={(value) => setSelected(value)}
-          />
+          <Typography name='sectionHeader' text='Inspections' />
         </View>
+        <SelectDropdown
+          selected={selected}
+          options={options}
+          onChange={(value) => setSelected(value)}
+        />
+
         <BarChart barData={barData} />
         <View
           style={[
@@ -264,7 +265,7 @@ const Dashboard = () => {
         />
         <View></View>
       </ScrollView>
-    </>
+    </View>
   );
 };
 
@@ -280,8 +281,7 @@ const style = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    padding: 20,
-    gap: 6,
+    marginBottom: -10,
   },
   menu: {
     width: '100%',

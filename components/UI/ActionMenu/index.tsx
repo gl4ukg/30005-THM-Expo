@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     flex: 1,
-    color: colors.black,
+    color: colors.primary,
     marginRight: 8,
   },
   overlay: {
