@@ -20,6 +20,7 @@ import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { generateNumericDraftId } from '@/lib/util/unikId';
+import { saveAsDraftToast } from '@/components/forms/ActionForm';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -244,6 +245,7 @@ const RegisterHose = () => {
         status: 'draft',
       },
     });
+    saveAsDraftToast();
     router.push('/(app)/dashboard');
   };
 

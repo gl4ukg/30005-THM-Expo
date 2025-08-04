@@ -10,8 +10,9 @@ import {
 } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
+import { infoToast } from '@/lib/util/toasts';
 import { FC } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
 
 export type ActivityType =
   | 'INSPECT'
@@ -61,8 +62,40 @@ export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
       ? state.data.hoses.find((hose) => hose.assetId === item.selectedIds[0])
       : undefined;
 
+  const handlePress = () => {
+    if (status === 'draft') {
+      infoToast(
+        'Draft resumed',
+        'Fill in all required information before saving.',
+      );
+      onRowPress();
+    }
+  };
+
+  const handleDeletePress = () => {
+    Alert.alert(
+      'Delete Draft',
+      'Are you sure you want to delete draft?',
+      [
+        {
+          text: 'No, go back',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes, continue',
+          style: 'destructive',
+          onPress: () => {
+            onRemove(`${id}`);
+            infoToast('Draft deleted', 'Your draft wasdeleted successfully.');
+          },
+        },
+      ],
+      { cancelable: true },
+    );
+  };
+
   return (
-    <Pressable onPress={() => (status === 'draft' ? onRowPress() : null)}>
+    <Pressable onPress={handlePress}>
       <View style={[elementStyle.container]}>
         <View style={elementStyle.columnOne}>
           <Typography name='tableContentNumber' text={`${id}`} />
@@ -113,7 +146,7 @@ export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
         <View style={elementStyle.columnThree}>
           {status === 'draft' && (
             <Pressable
-              onPress={() => onRemove(`${id}`)}
+              onPress={handleDeletePress}
               style={elementStyle.removeButton}
             >
               <Icon name='Cross' color={colors.error} size='md' />

@@ -10,7 +10,7 @@ type Props = Pick<Activity, 'status' | 'type'>;
 const typeTextDictionary: Record<Activity['type'], string> = {
   INSPECT: 'Inspected',
   REGISTER_HOSE: 'Registered',
-  SCRAP: 'Scraped',
+  SCRAP: 'Scrapped',
   REPLACE_HOSE: 'Replaced',
   RFQ: 'RFQ',
   CONTACT_SUPPORT: 'Support',

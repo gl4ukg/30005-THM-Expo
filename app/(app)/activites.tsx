@@ -20,7 +20,7 @@ const options = [
     value: 'REGISTER_HOSE',
   },
   {
-    label: 'Scraped hoses',
+    label: 'Scrapped hoses',
     value: 'SCRAP',
   },
   {

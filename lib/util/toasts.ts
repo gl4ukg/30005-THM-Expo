@@ -1,29 +1,38 @@
+import React from 'react';
 import { Toast } from 'toastify-react-native';
 import { colors } from '../tokens/colors';
+import CheckCircle from '@/components/Icon/icons/CheckCircle';
+import InfoCircle from '@/components/Icon/icons/InfoCircle';
 
 export const successToast = (title: string, message: string) => {
+  const checkCircleIcon = React.createElement(CheckCircle, {
+    size: 24,
+    color: colors.black,
+  });
+
   Toast.show({
     type: 'success',
     text1: title,
     text2: message,
     position: 'top',
     autoHide: true,
-    iconColor: colors.black,
-    iconSize: 24,
     theme: 'light',
+    icon: checkCircleIcon,
   });
 };
-
 export const infoToast = (title: string, message: string) => {
+  const infoIcon = React.createElement(InfoCircle, {
+    size: 24,
+    color: colors.black,
+  });
   Toast.show({
     type: 'info',
     text1: title,
     text2: message,
     position: 'top',
     autoHide: true,
-    iconColor: colors.black,
-    iconSize: 24,
     theme: 'light',
+    icon: infoIcon,
   });
 };
 

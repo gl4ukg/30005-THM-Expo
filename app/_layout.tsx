@@ -7,7 +7,7 @@ import * as BackgroundTask from 'expo-background-task';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import ToastManager from 'toastify-react-native/components/ToastManager';
+import ToastManager from 'toastify-react-native';
 
 export default function RootLayout() {
   return (
