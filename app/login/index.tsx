@@ -73,55 +73,55 @@ export default function Login() {
             customerNumbers: user.customerNumbers,
           },
         });
+        router.push('/(app)/dashboard');
 
-        try {
-          const userData = await initializeUserData();
+        // try {
+        //   const userData = await initializeUserData();
+        //   console.log('user data', userData);
+        //   dispatch({
+        //     type: 'SET_S1_CODE',
+        //     payload: userData.s1Code,
+        //   });
 
-          dispatch({
-            type: 'SET_S1_CODE',
-            payload: userData.s1Code,
-          });
+        //   dispatch({
+        //     type: 'SET_S1_ITEMS',
+        //     payload: userData.s1Items,
+        //   });
 
-          dispatch({
-            type: 'SET_S1_ITEMS',
-            payload: userData.s1Items,
-          });
+        //   dispatch({
+        //     type: 'SET_HOSE_DATA',
+        //     payload: userData.hoses,
+        //   });
 
-          dispatch({
-            type: 'SET_HOSE_DATA',
-            payload: userData.hoses,
-          });
+        //   console.log(
+        //     `Login successful: S1 Code: ${userData.s1Code}, S1 Items: ${userData.s1Items.length}, Hoses: ${userData.hoses.length}`,
+        //   );
 
-          console.log(
-            `Login successful: S1 Code: ${userData.s1Code}, S1 Items: ${userData.s1Items.length}, Hoses: ${userData.hoses.length}`,
-          );
+        //   // Only navigate on successful data initialization
+        //   router.push('/(app)/dashboard');
+        // } catch (dataError) {
+        //   console.error('Failed to initialize user data:', dataError);
+        //   Alert.alert(
+        //     'Data Loading Error',
+        //     'Login successful but failed to load user data. Please try again.',
+        //     [{ text: 'OK' }],
+        //   );
 
-          // Only navigate on successful data initialization
-          router.push('/(app)/dashboard');
-        } catch (dataError) {
-          console.error('Failed to initialize user data:', dataError);
-          Alert.alert(
-            'Data Loading Error',
-            'Login successful but failed to load user data. Please try again.',
-            [{ text: 'OK' }],
-          );
-          return;
-        }
+        //   return;
+        // }
       }
     } catch (error) {
       const message = (error as Error).message;
+      dispatch({
+        type: 'SET_LOGIN_LOADING',
+        payload: false,
+      });
       Alert.alert(
         'Login - failed',
         message || 'Invalid password or user not found',
         [
           {
             text: 'OK',
-            onPress: () => {
-              dispatch({
-                type: 'SET_LOGIN_LOADING',
-                payload: false,
-              });
-            },
           },
         ],
       );

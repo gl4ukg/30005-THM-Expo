@@ -5,13 +5,13 @@ import {
   saveInStore,
 } from '@/lib/util/secureStore';
 
+const baseUrl: string | undefined = process.env.EXPO_PUBLIC_API_BASE_URL;
 export const login = async (username: string, password: string) => {
-  const url: string | undefined = process.env.EXPO_PUBLIC_API_URL;
-  if (!url) {
+  if (!baseUrl) {
     throw new Error('API_URL is not defined');
   }
   try {
-    const response = await fetch(`${url}/login`, {
+    const response = await fetch(`${baseUrl}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
@@ -23,9 +23,8 @@ export const login = async (username: string, password: string) => {
       throw new Error('User not found');
     } else if (response.status === 200) {
       const cookie = response.headers.get('Set-Cookie');
-      let userData: AuthState['user'] = null;
       if (cookie) {
-        // cookie 'accessToken=abc.def.ghi; Path=/; HttpOnly; Secure; SameSite=None'
+        await removeCookie();
         await saveCookie(cookie);
         // get user data
         const user = await getUserData();
@@ -86,7 +85,7 @@ const getUserData = async () => {
     }
     const accessToken = cookie.split(';')[0].split('=')[1];
     console.log('accessToken', accessToken);
-    const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/user`, {
+    const response = await fetch(`${baseUrl}/user`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -96,7 +95,7 @@ const getUserData = async () => {
 
     if (response.status === 200) {
       const userData: User[] = await response.json();
-      console.log('userData', userData);
+      // console.log('userData', userData)
       return userData.length > 0 ? userData[0] : null;
     } else {
       throw new Error('Failed to get user data');
