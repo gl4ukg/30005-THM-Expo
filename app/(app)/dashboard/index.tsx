@@ -191,34 +191,33 @@ const Dashboard = () => {
   };
 
   return (
-    <>
+    <View>
       <ScrollView contentContainerStyle={style.container}>
-        <View style={style.header}>
-          <SyncStatus
-            timestamp={state.data.lastUpdate?.getTime() ?? null}
-            status={state.data.lastUpdateStatus}
-            onRetry={() => {
-              const random = Math.random();
+        <SyncStatus
+          timestamp={state.data.lastUpdate?.getTime() ?? null}
+          status={state.data.lastUpdateStatus}
+          onRetry={() => {
+            const random = Math.random();
+            dispatch({
+              type: 'SET_LAST_UPDATE',
+              payload: 'syncing',
+            });
+            // TODO: add syncing
+            setTimeout(() => {
               dispatch({
                 type: 'SET_LAST_UPDATE',
-                payload: 'syncing',
+                payload: random < 0.5 ? 'synced' : 'error',
               });
-              // TODO: add syncing
-              setTimeout(() => {
-                dispatch({
-                  type: 'SET_LAST_UPDATE',
-                  payload: random < 0.5 ? 'synced' : 'error',
-                });
-              }, 2000);
-            }}
-          />
-          <Typography name='tableHeader' text='Inspections' />
-          <SelectDropdown
-            selected={selected}
-            options={options}
-            onChange={(value) => setSelected(value)}
-          />
-        </View>
+            }, 2000);
+          }}
+        />
+        <Typography name='sectionHeader' text='Inspections' />
+        <SelectDropdown
+          selected={selected}
+          options={options}
+          onChange={(value) => setSelected(value)}
+        />
+
         <BarChart barData={barData} />
         <View
           style={[
@@ -283,7 +282,7 @@ const Dashboard = () => {
         />
         <View></View>
       </ScrollView>
-    </>
+    </View>
   );
 };
 
@@ -299,8 +298,7 @@ const style = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    padding: 20,
-    gap: 6,
+    marginBottom: -10,
   },
   menu: {
     width: '100%',

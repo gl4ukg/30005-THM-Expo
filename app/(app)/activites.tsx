@@ -1,12 +1,11 @@
 import { Activity } from '@/components/dashboard/activitiesList/activity';
-import { ActivitiesList } from '@/components/dashboard/activitiesList/indext';
+import { ActivitiesList } from '@/components/dashboard/activitiesList/';
 import { Typography } from '@/components/Typography';
-import { SelectDropdown } from '@/components/UI/ActionMenu';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
-
+import { SelectDropdown } from '@/components/UI/ActionMenu';
 const options = [
   {
     label: 'All activities',
@@ -17,7 +16,7 @@ const options = [
     value: 'INSPECT',
   },
   {
-    label: 'Register hose ',
+    label: 'Register hose',
     value: 'REGISTER_HOSE',
   },
   {
@@ -69,7 +68,7 @@ const Activities: React.FC = () => {
       ListHeaderComponent={
         <View style={styles.listHeaderComponent}>
           <Typography
-            name='navigationBold'
+            name='sectionHeader'
             text='Recent activities'
             style={styles.contactTitle}
           />
@@ -87,7 +86,7 @@ const Activities: React.FC = () => {
               ]}
             >
               <Typography
-                name='navigation'
+                name='navigationBold'
                 text='All'
                 style={[
                   styles.switchButtonText,
@@ -103,7 +102,7 @@ const Activities: React.FC = () => {
               ]}
             >
               <Typography
-                name='navigation'
+                name='navigationBold'
                 text='Drafts'
                 style={[
                   styles.switchButtonText,
@@ -119,7 +118,7 @@ const Activities: React.FC = () => {
               ]}
             >
               <Typography
-                name='navigation'
+                name='navigationBold'
                 text='Done'
                 style={[
                   styles.switchButtonText,
@@ -152,16 +151,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 10,
     alignItems: 'center',
-    backgroundColor: colors.secondary95,
+    backgroundColor: colors.baseMuted,
     borderRadius: 8,
     padding: 2,
     width: '80%',
   },
   switchButton: {
-    borderRadius: 8,
+    borderRadius: 3,
     backgroundColor: 'transparent',
     margin: 4,
-    paddingInline: 10,
     paddingVertical: 5,
     flex: 1,
     justifyContent: 'center',
@@ -171,10 +169,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   switchButtonText: {
-    color: colors.extended333,
+    color: colors.baseMutedForeground,
   },
   switchButtonTextSelected: {
-    color: colors.primary95,
+    color: colors.primary,
   },
 });
 

@@ -10,7 +10,7 @@ type Props = Pick<Activity, 'status' | 'type'>;
 const typeTextDictionary: Record<Activity['type'], string> = {
   INSPECT: 'Inspected',
   REGISTER_HOSE: 'Registered',
-  SCRAP: 'Scraped',
+  SCRAP: 'Scrapped',
   REPLACE_HOSE: 'Replaced',
   RFQ: 'RFQ',
   CONTACT_SUPPORT: 'Support',
@@ -23,7 +23,7 @@ export const ActivityStatus: FC<Props> = ({ status, type }) => {
     <View style={styles.container}>
       <Typography
         name='tableContent'
-        text={status}
+        text={status === 'done' ? 'Done' : 'Draft'}
         style={[
           styles.textBox,
           styles[`status_${status}`],
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 1,
     paddingHorizontal: 10,
-    borderRadius: 3,
+    borderRadius: 5,
     borderWidth: 1,
     borderColor: 'transparent',
   },

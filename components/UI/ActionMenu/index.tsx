@@ -65,7 +65,7 @@ export const SelectDropdown: FC<Props<string>> = ({
     (options.length > 0 ? options[0].label : 'No options available');
 
   return (
-    <>
+    <View style={styles.buttonText}>
       <Pressable
         ref={buttonRef}
         onPress={handleButtonPress}
@@ -112,7 +112,7 @@ export const SelectDropdown: FC<Props<string>> = ({
           </Pressable>
         </Modal>
       )}
-    </>
+    </View>
   );
 };
 
@@ -131,7 +131,8 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 0,
   },
   buttonText: {
-    color: colors.black,
+    flex: 1,
+    color: colors.primary,
     marginRight: 8,
   },
   overlay: {
@@ -141,7 +142,6 @@ const styles = StyleSheet.create({
   dropdown: {
     backgroundColor: colors.lightContrast25,
     position: 'absolute',
-    paddingTop: 16,
     gap: 8,
     borderTopWidth: 1,
     borderBottomWidth: 1,

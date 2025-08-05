@@ -11,6 +11,7 @@ import { colors } from '@/lib/tokens/colors';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
+import { saveAsDraftToast } from './ActionForm';
 
 interface Props {
   draftId: string;
@@ -82,6 +83,7 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
         formData,
       },
     });
+    saveAsDraftToast();
     router.push('/dashboard');
   };
   const handleCancel = () => {

@@ -45,6 +45,8 @@ import Calendar from './icons/Calendar';
 import Edit from './icons/Edit';
 import Time from './icons/Time';
 import Dashboard from './icons/Dashboard';
+import CheckCircle from './icons/CheckCircle';
+import InfoCircle from './icons/InfoCircle';
 import Syncing from './icons/Syncing';
 import Success from './icons/Success';
 
@@ -95,6 +97,9 @@ export type IconName =
   | 'Calendar'
   | 'Edit'
   | 'Time'
+  | 'Dashboard'
+  | 'CheckCircle'
+  | 'InfoCircle'
   | 'Syncing'
   | 'Success'
   | 'Dashboard';
@@ -149,4 +154,6 @@ export const iconMapping: Record<IconName, React.FC<any>> = {
   Syncing,
   Success,
   Dashboard,
+  CheckCircle,
+  InfoCircle,
 };

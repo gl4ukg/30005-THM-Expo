@@ -20,6 +20,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { FC, useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { UnitInput } from '../detailView/edit/UnitInput';
+import { saveAsDraftToast } from './ActionForm';
 
 interface Props {
   draftId: string;
@@ -92,6 +93,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
         formData,
       },
     });
+    saveAsDraftToast();
     router.push('/dashboard');
   };
   const handleCancel = () => {
