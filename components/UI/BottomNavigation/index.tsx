@@ -29,6 +29,13 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
   };
   return (
     <View style={[styles.modal, isOpen && styles.modalOpen]}>
+      {isOpen && (
+        <Pressable
+          style={styles.overlay}
+          onPress={() => setIsOpen(false)}
+          accessible={false}
+        />
+      )}
       <View style={{ bottom: insets.bottom }}>
         <Collapsible collapsed={!isOpen} style={[styles.collapsible]}>
           <NavMenu
@@ -112,7 +119,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               }
             }}
           >
-            <Icon name='ChevronLeft' color='#fff' />
+            <Icon name='ChevronLeft' color={colors.white} />
           </Pressable>
         </View>
       </View>
@@ -136,6 +143,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#00000075',
     justifyContent: 'flex-end',
     top: 0,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 999,
   },
   collapsible: {
     position: 'absolute',
