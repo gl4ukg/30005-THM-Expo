@@ -12,6 +12,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { saveAsDraftToast } from './ActionForm';
+import { successToast } from '@/lib/util/toasts';
 
 interface Props {
   draftId: string;
@@ -69,6 +70,10 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
       type: 'MOVE_DRAFT_TO_DONE',
       payload: +draftId,
     });
+    successToast(
+      'Contact request sent',
+      'Your contact request has been sent successfully.',
+    );
     router.push('/dashboard');
   };
 
