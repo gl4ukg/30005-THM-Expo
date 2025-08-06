@@ -2,10 +2,12 @@ import { getScanUrl } from '@/app/(app)/scan';
 import { ListTable } from '@/components/dashboard/listTable';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
+import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
 import { PartialSendMailFormData } from '@/context/Reducer';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { useUserValidation } from '@/hooks/useUserValidation';
 import { colors } from '@/lib/tokens/colors';
 import { router, useFocusEffect } from 'expo-router';
@@ -22,6 +24,8 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
+
+  usePreventGoBack();
 
   const originallySelectedHoses = useMemo(() => {
     const draft = state.data.drafts.find((d) => d.id === +draftId);
@@ -69,7 +73,8 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
       type: 'MOVE_DRAFT_TO_DONE',
       payload: +draftId,
     });
-    router.push('/dashboard');
+    router.dismissAll();
+    router.replace('/dashboard');
   };
 
   const handleSaveAsDraft = () => {
@@ -84,10 +89,11 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
       },
     });
     saveAsDraftToast();
-    router.push('/dashboard');
+    router.dismissAll();
+    router.replace('/dashboard');
   };
   const handleCancel = () => {
-    router.push('/dashboard');
+    showDiscardChangesAlert(dispatch);
   };
 
   const handleAddHoses = () => {

@@ -6,6 +6,7 @@ import {
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
+import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
 import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
@@ -14,6 +15,7 @@ import { useAppContext } from '@/context/ContextProvider';
 import { PartialReplaceHoseFormData } from '@/context/Reducer';
 
 import { getScanUrl } from '@/app/(app)/scan';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { useUserValidation } from '@/hooks/useUserValidation';
 import { colors } from '@/lib/tokens/colors';
 import { router, useFocusEffect } from 'expo-router';
@@ -32,6 +34,8 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   const [formData, setFormData] = useState<PartialReplaceHoseFormData>({});
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
+
+  usePreventGoBack();
 
   const originallySelectedHoses = useMemo(() => {
     const draft = state.data.drafts.find((d) => d.id === +draftId);
@@ -79,7 +83,8 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
       type: 'MOVE_DRAFT_TO_DONE',
       payload: +draftId,
     });
-    router.push('/dashboard');
+    router.dismissAll();
+    router.replace('/dashboard');
   };
 
   const handleSaveAsDraft = () => {
@@ -94,10 +99,11 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
       },
     });
     saveAsDraftToast();
-    router.push('/dashboard');
+    router.dismissAll();
+    router.replace('/dashboard');
   };
   const handleCancel = () => {
-    router.push('/dashboard');
+    showDiscardChangesAlert(dispatch);
   };
 
   const handleAddHoses = () => {

@@ -3,7 +3,6 @@ import { ReplaceHoseForm } from '@/components/forms/ReplaceHoseForm';
 import { SendMailForm } from '@/components/forms/SendMailForm';
 import { useAppContext } from '@/context/ContextProvider';
 import { MultiSelectionActionsType } from '@/context/state';
-import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { generateNumericDraftId } from '@/lib/util/unikId';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 
@@ -15,7 +14,6 @@ const Action: React.FC<Props> = (props) => {
     draftId?: string;
   }>();
   const { state } = useAppContext();
-  usePreventGoBack();
   const id = draftId
     ? draftId
     : `${generateNumericDraftId(state.data.drafts.map((d) => d.id))}`;

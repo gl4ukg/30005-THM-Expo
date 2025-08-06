@@ -5,6 +5,7 @@ import { Photos } from '@/components/detailView/common/Photos';
 import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
+import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { useAppContext } from '@/context/ContextProvider';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { HoseData } from '@/lib/types/hose';
@@ -90,7 +91,8 @@ export const InspectHose = () => {
       type: 'MOVE_DRAFT_TO_DONE',
       payload: id,
     });
-    router.push('/dashboard');
+    router.dismissAll();
+    router.replace('/dashboard');
   };
   const handleSend = () => {
     if (!hoseData) return;
@@ -145,12 +147,13 @@ export const InspectHose = () => {
         formData: hoseData,
       },
     });
-    router.push('/dashboard');
+    router.dismissAll();
+    router.replace('/dashboard');
   };
 
   const handleCancel = () => {
     console.log('Cancel Inspection');
-    router.back();
+    showDiscardChangesAlert(dispatch);
   };
 
   if (!hoseData.assetId) {
