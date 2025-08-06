@@ -114,6 +114,10 @@ export const ActionForm: React.FC<Props> = ({
     });
     router.dismissAll();
     router.replace('/dashboard');
+    successToast(
+      `${formLabels[actionType].title} request sent`,
+      `Your ${formLabels[actionType].title.toLowerCase()} has been sent successfully.`,
+    );
   };
   const handleSaveAsDraft = () => {
     dispatch({

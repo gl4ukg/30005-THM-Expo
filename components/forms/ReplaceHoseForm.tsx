@@ -23,6 +23,7 @@ import { FC, useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { UnitInput } from '../detailView/edit/UnitInput';
 import { saveAsDraftToast } from './ActionForm';
+import { successToast } from '@/lib/util/toasts';
 
 interface Props {
   draftId: string;
@@ -85,6 +86,10 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
     });
     router.dismissAll();
     router.replace('/dashboard');
+    successToast(
+      'Hose replacement report sent',
+      'Your hose replacement report has been sent successfully.',
+    );
   };
 
   const handleSaveAsDraft = () => {

@@ -9,6 +9,7 @@ import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDi
 import { useAppContext } from '@/context/ContextProvider';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { HoseData } from '@/lib/types/hose';
+import { successToast } from '@/lib/util/toasts';
 import { generateNumericDraftId } from '@/lib/util/unikId';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
@@ -93,6 +94,7 @@ export const InspectHose = () => {
     });
     router.dismissAll();
     router.replace('/dashboard');
+    successToast('Inspection completed', 'The inspection has been completed.');
   };
   const handleSend = () => {
     if (!hoseData) return;

@@ -22,6 +22,7 @@ import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { generateNumericDraftId } from '@/lib/util/unikId';
 import { saveAsDraftToast } from '@/components/forms/ActionForm';
+import { successToast } from '@/lib/util/toasts';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -233,6 +234,10 @@ const RegisterHose = () => {
       });
       router.dismissAll();
       router.replace('/(app)/dashboard');
+      successToast(
+        'Hose registered successfully',
+        'The hose has been registered.',
+      );
     }
   }, [hoseData, dispatch, router, registerMultiple]);
 
