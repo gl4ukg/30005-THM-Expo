@@ -112,6 +112,10 @@ export const ActionForm: React.FC<Props> = ({
       type: 'MOVE_DRAFT_TO_DONE',
       payload: +draftId,
     });
+    successToast(
+      `${formLabels[actionType].title} request sent`,
+      `Your ${formLabels[actionType].title.toLowerCase()} has been sent successfully.`,
+    );
     router.push('/dashboard');
   };
   const handleSaveAsDraft = () => {

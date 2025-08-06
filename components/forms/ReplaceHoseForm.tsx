@@ -21,6 +21,7 @@ import { FC, useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { UnitInput } from '../detailView/edit/UnitInput';
 import { saveAsDraftToast } from './ActionForm';
+import { successToast } from '@/lib/util/toasts';
 
 interface Props {
   draftId: string;
@@ -79,6 +80,10 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
       type: 'MOVE_DRAFT_TO_DONE',
       payload: +draftId,
     });
+    successToast(
+      'Hose replacement report sent',
+      'Your hose replacement report has been sent successfully.',
+    );
     router.push('/dashboard');
   };
 
