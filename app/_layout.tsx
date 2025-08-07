@@ -31,14 +31,19 @@ const App = () => {
   const updateAsync = async () => {
     const status = await BackgroundTask.getStatusAsync();
     const isRegistered = BackgroundTask.BackgroundTaskStatus;
-    console.log('status', status, isRegistered);
+    console.log(
+      'BackgroundTask status: ',
+      status,
+      ' isRegistered: ',
+      isRegistered,
+    );
   };
   useEffect(() => {
     dispatch({
       type: 'UPDATE_CONNECTION_TYPE',
-      payload: type as 'wifi' | 'mobile' | null,
+      payload: type === 'wifi' ? 'wifi' : type === 'cellular' ? 'mobile' : null,
     });
-    if (type === 'wifi' && isInternetReachable) {
+    if (isInternetReachable) {
       // sync application data
       syncData({
         userEventsArray: [],
@@ -47,10 +52,17 @@ const App = () => {
             type: 'SET_DATA_LOADING',
             payload: isLoading,
           });
+          setTimeout(() => {
+            console.log('loading data is finished , TODO, remove this');
+            dispatch({
+              type: 'SET_LAST_UPDATE',
+              payload: 'synced',
+            });
+          }, 3000);
         },
       });
     }
-  }, [type]);
+  }, [type, isInternetReachable]);
   if (!state.auth.user)
     return (
       <Stack

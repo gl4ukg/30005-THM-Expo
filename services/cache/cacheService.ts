@@ -23,7 +23,6 @@ const CACHE_KEYS = {
 export const setS1Code = (s1Code: string): void => {
   try {
     storage.set(CACHE_KEYS.S1_CODE, s1Code);
-    console.log('S1 code cached successfully:', s1Code);
   } catch (error) {
     console.error('Failed to cache S1 code:', error);
     throw error;
@@ -69,7 +68,6 @@ export const setHoses = (hoses: HoseData[]): void => {
     const hosesJson = JSON.stringify(hoses);
     storage.set(CACHE_KEYS.HOSES, hosesJson);
     storage.set(CACHE_KEYS.LAST_SYNC, Date.now());
-    console.log(`${hoses.length} hoses cached successfully`);
   } catch (error) {
     console.error('Failed to cache hoses data:', error);
     throw error;
@@ -105,6 +103,15 @@ export const updateHose = (updatedHose: HoseData): void => {
     }
   } catch (error) {
     console.error('Failed to update hose in cache:', error);
+    throw error;
+  }
+};
+
+export const clearHoses = (): void => {
+  try {
+    storage.set(CACHE_KEYS.HOSES, JSON.stringify([]));
+  } catch (error) {
+    console.error('Failed to remove hose from cache:', error);
     throw error;
   }
 };
@@ -181,6 +188,7 @@ export const useCacheService = () => {
 
       setHoses: (hoses: HoseData[]) => setHoses(hoses),
       getHoses: () => getHoses(),
+      clearHoses,
       updateHose: (updatedHose: HoseData) => updateHose(updatedHose),
       addHose: (newHose: HoseData) => addHose(newHose),
 

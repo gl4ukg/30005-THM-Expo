@@ -1,15 +1,12 @@
-import { AuthState } from '@/context/state';
-import {
-  deleteFromStore,
-  getFromStore,
-  saveInStore,
-} from '@/lib/util/secureStore';
+import { getS1 } from '@/services/api/asset';
+import { loginCacheService } from '@/services/cache/loginCacheService';
 
 const baseUrl: string | undefined = process.env.EXPO_PUBLIC_API_BASE_URL;
 export const login = async (username: string, password: string) => {
   if (!baseUrl) {
     throw new Error('API_URL is not defined');
   }
+  const { setApiKey } = loginCacheService;
   try {
     const response = await fetch(`${baseUrl}/login`, {
       method: 'POST',
@@ -24,8 +21,12 @@ export const login = async (username: string, password: string) => {
     } else if (response.status === 200) {
       const cookie = response.headers.get('Set-Cookie');
       if (cookie) {
-        await removeCookie();
-        await saveCookie(cookie);
+        const token = parseAuthCookie(cookie);
+        if (!token) {
+          throw new Error('Failed to parse authentication cookie');
+        }
+        const { accessToken, expiresDate } = token;
+        setApiKey(accessToken, expiresDate);
         // get user data
         const user = await getUserData();
         return user;
@@ -37,29 +38,24 @@ export const login = async (username: string, password: string) => {
     throw error;
   }
 };
-const saveCookie = async (cookie: string) => {
-  try {
-    await saveInStore('cookie', cookie);
-  } catch (error) {
-    console.error('Error saving cookie:', error);
-  }
-};
 
-const getCookie = async () => {
-  try {
-    const cookie = await getFromStore('cookie');
-    return cookie;
-  } catch (error) {
-    console.error('Error getting cookie:', error);
-  }
-};
+const parseAuthCookie = (
+  cookieString: string,
+): { accessToken: string; expiresDate: string } | null => {
+  // 1. Extract access token
+  const tokenMatch = cookieString.match(/accessToken=([^;]+)/);
+  if (!tokenMatch) return null;
+  // 2. Extract expiration date
+  const expiresMatch = cookieString.match(/Expires=([^;]+)/);
+  if (!expiresMatch) return null;
+  // 3. Parse and format expiration date
+  const expiresDate = new Date(expiresMatch[1]);
+  if (isNaN(expiresDate.getTime())) return null;
 
-const removeCookie = async () => {
-  try {
-    await deleteFromStore('cookie');
-  } catch (error) {
-    console.error('Error deleting cookie:', error);
-  }
+  return {
+    accessToken: tokenMatch[1],
+    expiresDate: expiresDate.toISOString(),
+  };
 };
 
 export type User = {
@@ -77,19 +73,17 @@ export type User = {
 };
 
 const getUserData = async () => {
+  const { getApiKey } = loginCacheService;
   try {
-    const cookie = await getCookie();
-    console.log('cookie', cookie);
-    if (!cookie) {
-      throw new Error('Cookie not found');
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      throw new Error('Api key not found');
     }
-    const accessToken = cookie.split(';')[0].split('=')[1];
-    console.log('accessToken', accessToken);
     const response = await fetch(`${baseUrl}/user`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        accessToken: accessToken,
+        accessToken: apiKey,
       },
     });
 

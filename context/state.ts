@@ -23,7 +23,7 @@ interface AuthState {
     phoneNumber?: number;
     customerNumbers?: string[];
   };
-  isLoingLoading: boolean;
+  isLogingLoading: boolean;
   token: null | string;
 }
 
@@ -177,7 +177,7 @@ const initialAuthState: AuthState = {
     phoneNumber: 12345678,
     id: '223949MOB',
   },
-  isLoingLoading: false,
+  isLogingLoading: false,
   token: null,
 };
 
