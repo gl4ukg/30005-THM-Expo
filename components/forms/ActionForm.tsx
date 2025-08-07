@@ -61,6 +61,7 @@ export const ActionForm: React.FC<Props> = ({
   allowScanToAdd = false,
 }) => {
   const { state, dispatch } = useAppContext();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [hoses, setHoses] = useState<HoseData[]>([]);
   const [formData, setFormData] = useState<PartialRFQFormData>({});
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -71,7 +72,7 @@ export const ActionForm: React.FC<Props> = ({
     );
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
-  usePreventGoBack();
+  usePreventGoBack(isSubmitting);
 
   useFocusEffect(
     useCallback(() => {
@@ -108,6 +109,7 @@ export const ActionForm: React.FC<Props> = ({
   }, []);
 
   const onSend = () => {
+    setIsSubmitting(true);
     dispatch({
       type: 'MOVE_DRAFT_TO_DONE',
       payload: +draftId,
@@ -120,6 +122,7 @@ export const ActionForm: React.FC<Props> = ({
     );
   };
   const handleSaveAsDraft = () => {
+    setIsSubmitting(true);
     dispatch({
       type: 'SAVE_DRAFT',
       payload: {

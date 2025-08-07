@@ -33,10 +33,11 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   const { state, dispatch } = useAppContext();
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [formData, setFormData] = useState<PartialReplaceHoseFormData>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
 
-  usePreventGoBack();
+  usePreventGoBack(isSubmitting);
 
   const originallySelectedHoses = useMemo(() => {
     const draft = state.data.drafts.find((d) => d.id === +draftId);
@@ -80,6 +81,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   }, []);
 
   const handleSend = () => {
+    setIsSubmitting(true);
     dispatch({
       type: 'MOVE_DRAFT_TO_DONE',
       payload: +draftId,
@@ -93,6 +95,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   };
 
   const handleSaveAsDraft = () => {
+    setIsSubmitting(true);
     dispatch({
       type: 'SAVE_DRAFT',
       payload: {
@@ -127,7 +130,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
     router.push(getScanUrl('REPLACE_HOSE', draftId.toString()));
   };
 
-  const isButtonDisabled = !hasErrors || selectedIds.length === 0;
+  const isButtonDisabled = hasErrors || selectedIds.length === 0;
   return (
     <FlatList
       ref={flatListRef}

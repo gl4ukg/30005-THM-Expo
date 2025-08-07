@@ -21,12 +21,13 @@ interface Props {
 }
 export const SendMailForm: React.FC<Props> = ({ draftId }) => {
   const { state, dispatch } = useAppContext();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<PartialSendMailFormData>({});
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
 
-  usePreventGoBack();
+  usePreventGoBack(isSubmitting);
 
   const originallySelectedHoses = useMemo(() => {
     const draft = state.data.drafts.find((d) => d.id === +draftId);
@@ -70,6 +71,7 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
   }, []);
 
   const handleSend = () => {
+    setIsSubmitting(true);
     dispatch({
       type: 'MOVE_DRAFT_TO_DONE',
       payload: +draftId,
@@ -83,6 +85,7 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
   };
 
   const handleSaveAsDraft = () => {
+    setIsSubmitting(true);
     dispatch({
       type: 'SAVE_DRAFT',
       payload: {
