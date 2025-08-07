@@ -31,66 +31,67 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
     <View style={[styles.modal, isOpen && styles.modalOpen]}>
       {isOpen && (
         <Pressable
-          style={styles.overlay}
           onPress={() => setIsOpen(false)}
-          accessible={false}
+          style={StyleSheet.absoluteFill}
         />
       )}
       <View style={{ bottom: insets.bottom }}>
-        <Collapsible collapsed={!isOpen} style={[styles.collapsible]}>
-          <NavMenu
-            handleLinkPress={handleLinkPress}
-            elements={[
-              {
-                title: 'Dashboard / Home',
-                to: '/(app)/dashboard',
-                icon: () => <Icon name='Meter' color={colors.primary} />,
-              },
-              {
-                title: 'Recent activities',
-                to: '/(app)/activites',
-                icon: () => <Icon name='Dashboard' color={colors.primary} />,
-              },
-              {
-                title: 'Register hose / equipment',
-                to: getScanUrl('REGISTER_HOSE'),
-                icon: () => (
-                  <Icon name='RegisterHoses' color={colors.primary} />
-                ),
-              },
-              {
-                title: 'Inspect hose / equipment',
-                to: getScanUrl('INSPECT_HOSE'),
-                icon: () => <Icon name='Inspect' color={colors.primary} />,
-              },
-              {
-                title: 'Order hose',
-                to: getScanUrl('RFQ'),
-                icon: () => <Icon name='Cart' color={colors.primary} />,
-              },
-              {
-                title: 'Replace hose / pressure testing',
-                to: getScanUrl('REPLACE_HOSE'),
-                icon: () => <Icon name='Task' color={colors.primary} />,
-              },
-              {
-                title: 'Scrap hose',
-                to: getScanUrl('SCRAP'),
-                icon: () => <Icon name='Trash' color={colors.primary} />,
-              },
-              {
-                title: 'Contact TESS Support',
-                to: '/(app)/dashboard/actions?action=CONTACT_SUPPORT',
-                icon: () => <Icon name='Email' color={colors.primary} />,
-              },
-              {
-                title: 'Settings',
-                to: '/(app)/settings',
-                icon: () => <Icon name='Settings' color={colors.primary} />,
-              },
-            ]}
-          />
-        </Collapsible>
+        <Pressable>
+          <Collapsible collapsed={!isOpen} style={[styles.collapsible]}>
+            <NavMenu
+              handleLinkPress={handleLinkPress}
+              elements={[
+                {
+                  title: 'Dashboard / Home',
+                  to: '/(app)/dashboard',
+                  icon: () => <Icon name='Meter' color={colors.primary} />,
+                },
+                {
+                  title: 'Recent activities',
+                  to: '/(app)/activites',
+                  icon: () => <Icon name='Dashboard' color={colors.primary} />,
+                },
+                {
+                  title: 'Register hose / equipment',
+                  to: getScanUrl('REGISTER_HOSE'),
+                  icon: () => (
+                    <Icon name='RegisterHoses' color={colors.primary} />
+                  ),
+                },
+                {
+                  title: 'Inspect hose / equipment',
+                  to: getScanUrl('INSPECT_HOSE'),
+                  icon: () => <Icon name='Inspect' color={colors.primary} />,
+                },
+                {
+                  title: 'Order hose',
+                  to: getScanUrl('RFQ'),
+                  icon: () => <Icon name='Cart' color={colors.primary} />,
+                },
+                {
+                  title: 'Replace hose / pressure testing',
+                  to: getScanUrl('REPLACE_HOSE'),
+                  icon: () => <Icon name='Task' color={colors.primary} />,
+                },
+                {
+                  title: 'Scrap hose',
+                  to: getScanUrl('SCRAP'),
+                  icon: () => <Icon name='Trash' color={colors.primary} />,
+                },
+                {
+                  title: 'Contact TESS Support',
+                  to: '/(app)/dashboard/actions?action=CONTACT_SUPPORT',
+                  icon: () => <Icon name='Email' color={colors.primary} />,
+                },
+                {
+                  title: 'Settings',
+                  to: '/(app)/settings',
+                  icon: () => <Icon name='Settings' color={colors.primary} />,
+                },
+              ]}
+            />
+          </Collapsible>
+        </Pressable>
       </View>
       <View style={[styles.navigationContainer, { bottom: insets.bottom }]}>
         <View style={[styles.background, { bottom: -insets.bottom }]}>
@@ -144,14 +145,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     top: 0,
   },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 999,
-  },
+
   collapsible: {
     position: 'absolute',
     left: 20,
