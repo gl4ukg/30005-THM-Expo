@@ -1,4 +1,3 @@
-import { getS1 } from '@/services/api/asset';
 import { loginCacheService } from '@/services/cache/loginCacheService';
 
 const baseUrl: string | undefined = process.env.EXPO_PUBLIC_API_BASE_URL;

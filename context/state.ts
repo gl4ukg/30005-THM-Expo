@@ -160,6 +160,7 @@ export type ActivityDone = Omit<ActivityDraft, 'status'> & {
 interface SettingsState {
   // define settings state properties
   connectionType: 'wifi' | 'mobile' | null;
+  internetReachable: boolean;
   appInfo: {
     version: string;
     environment: string;
@@ -256,6 +257,7 @@ const initialDataState: DataState = {
 const initialSettingsState: SettingsState = {
   // initial settings state values
   connectionType: null,
+  internetReachable: false,
   appInfo: {
     version: '1.0.0',
     environment: 'DEV',

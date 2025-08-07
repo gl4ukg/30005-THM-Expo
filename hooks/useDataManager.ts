@@ -18,7 +18,7 @@ export const useDataManager = (): {
   const apiKey = loginCacheService.getApiKey();
 
   const getHoseData = async (): Promise<DataAction> => {
-    if (!state.settings.connectionType) {
+    if (!state.settings.internetReachable) {
       // check if mmkv storage is available
       dispatch({
         type: 'SET_LAST_UPDATE',

@@ -40,29 +40,10 @@ const App = () => {
   };
   useEffect(() => {
     dispatch({
-      type: 'UPDATE_CONNECTION_TYPE',
-      payload: type === 'wifi' ? 'wifi' : type === 'cellular' ? 'mobile' : null,
+      type: 'SET_INTERNET_REACHABLE',
+      payload: !!isInternetReachable,
     });
-    if (isInternetReachable) {
-      // sync application data
-      syncData({
-        userEventsArray: [],
-        onUpdate: (isLoading: boolean) => {
-          dispatch({
-            type: 'SET_DATA_LOADING',
-            payload: isLoading,
-          });
-          setTimeout(() => {
-            console.log('loading data is finished , TODO, remove this');
-            dispatch({
-              type: 'SET_LAST_UPDATE',
-              payload: 'synced',
-            });
-          }, 3000);
-        },
-      });
-    }
-  }, [type, isInternetReachable]);
+  }, [isInternetReachable]);
   if (!state.auth.user)
     return (
       <Stack

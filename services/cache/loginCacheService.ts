@@ -1,8 +1,8 @@
 import { MMKV } from 'react-native-mmkv';
 
 const storage = new MMKV({
-  id: 'app-cache',
-  encryptionKey: 'THM-app-cache-key',
+  id: 'app_login_cache',
+  encryptionKey: 'THM-app_login_cache_key',
 });
 
 const CACHE_KEYS = {

@@ -17,7 +17,7 @@ export const useLoginManager = (): {
     email: string,
     password: string,
   ): Promise<LoginAction> => {
-    if (!state.settings.connectionType) {
+    if (!state.settings.internetReachable) {
       const apiKey = loginCacheService.getApiKey();
       if (apiKey) {
         // getApiKey() check if it is not expired end logout if needed
