@@ -1,6 +1,5 @@
 import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { BarToPsiInput } from '@/components/detailView/edit/BarToPsiInput';
-import { options } from '@/components/detailView/edit/fakeOptions';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { UnitInput } from '@/components/detailView/edit/UnitInput';
 import {
@@ -16,6 +15,7 @@ import { Select } from '@/components/UI/SelectModal/Select';
 import { type UHD } from '@/lib/types/hose';
 import React, { useEffect, useState, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { options } from './fakeOptions';
 
 export const couplingsFields = [
   'materialQualityEnd1',
@@ -65,40 +65,162 @@ const uhdDependencyMap: DependencyMap<UHD> = {
   hoseStandard: {
     childField: 'innerDiameter',
     filterMap: {
-      'Option 1': ['Option 1', 'Option 2', 'Option 3'],
-      'Option 2': ['Option 4', 'Option 5'],
-      'Option 3': ['Option 1', 'Option 5'],
+      '1SC': ['6L M12x1,5', '6S M14x1,5', '8L M14x1,5'],
+      '2SC': ['8S M16x1,5', '10L M16x1,5', '10S M18x1,5', '12L M18x1,5'],
+      '1SN': ['12S M20x1,5', '14S M22x1,5', '15L M22x1,5', '16S M24x1,5'],
+      '2SN': ['18L M26x1,5', '20S M30x2', '22L M30x2', '25S M36x2'],
+      '4SP': ['28L M36x2', '30S M42x2', '35L M45x2', '38S M52x2'],
+      '4SH': ['42L M52x2', '6L M12x1,5', '8S M16x1,5', '12L M18x1,5'],
+      R13: ['15L M22x1,5', '20S M30x2', '25S M36x2', '30S M42x2'],
+      R15: ['35L M45x2', '38S M52x2', '42L M52x2'],
+      ISO18752: ['6S M14x1,5', '10S M18x1,5', '16S M24x1,5', '22L M30x2'],
+      'Steel 1 Layer': ['6L M12x1,5', '8L M14x1,5', '10L M16x1,5'],
+      'Steel 2 Layer': ['12L M18x1,5', '15L M22x1,5', '18L M26x1,5'],
+      'LP Sea Water': ['20S M30x2', '25S M36x2', '30S M42x2'],
+      'LP Fresh Water': ['22L M30x2', '28L M36x2', '35L M45x2'],
+      'LP Air': ['6L M12x1,5', '10L M16x1,5', '15L M22x1,5'],
+      'LP N2': ['8S M16x1,5', '12S M20x1,5', '16S M24x1,5'],
+      'LP HC': ['14S M22x1,5', '18L M26x1,5', '22L M30x2'],
+      Thermoplast: ['6L M12x1,5', '8L M14x1,5', '10L M16x1,5', '12L M18x1,5'],
+    },
+  },
+  innerDiameter: {
+    childField: 'materialQualityEnd1',
+    filterMap: {
+      '6L M12x1,5': ['AISI 316', 'Carbon steel', 'Brass'],
+      '6S M14x1,5': ['AISI 316', 'Carbon steel', 'Duplex 22Cr'],
+      '8L M14x1,5': ['AISI 316', 'Carbon steel', '6MO'],
+      '8S M16x1,5': ['AISI 316', 'Carbon steel', 'Superduplex 25Cr'],
+      '10L M16x1,5': ['Carbon steel', 'Cast iron'],
+      '12L M18x1,5': ['AISI 316', 'Carbon steel', 'Titan'],
+      '20S M30x2': ['6MO', 'Duplex 22Cr', 'Superduplex 25Cr'],
+      '25S M36x2': ['Hastelloy', 'Titan'],
     },
   },
   materialQualityEnd1: {
     childField: 'typeFittingEnd1',
     filterMap: {
-      'Option 1': ['Option 2', 'Option 4'],
-      'Option 3': ['Option 1', 'Option 5'],
+      '6MO': ['SAE6000', 'DIN 2633 Flange', 'BOSS'],
+      'AISI 316': ['BSP', 'JIC', 'NPT', 'SAE3000', 'TW Female', 'TW Male'],
+      Aluminum: [
+        'CAM-LOCK type A',
+        'CAM-LOCK type B',
+        'CAM-LOCK type C',
+        'CAM-LOCK type D',
+        'CAM-LOCK type DC',
+        'CAM-LOCK type DP',
+        'CAM-LOCK type E',
+        'CAM-LOCK type F',
+      ],
+      Brass: ['BSP', 'NPT', 'Clawcoupling', 'Clawc. AM'],
+      'Carbon steel': ['JIC', 'SAE3000', 'SAE6000', 'Flange ASA 150 rf'],
+      'Cast iron': ['DIN 2633 Flange', 'Flange ASA 150 rf'],
+      'Duplex 22Cr': ['SAE6000', 'DIN 2633 Flange', 'BOSS'],
+      Hastelloy: ['DIN 2633 Flange', 'BOSS'],
+      'Superduplex 25Cr': ['SAE6000', 'DIN 2633 Flange', 'BOSS'],
+      Titan: ['DIN 2633 Flange', 'BOSS'],
     },
   },
   typeFittingEnd1: {
     childField: 'genericDimensionEnd1',
     filterMap: {
-      'Option 2': ['Option 1', 'Option 3', 'Option 5'],
-      'Option 4': ['Option 2', 'Option 4'],
+      BSP: ['6L M12x1,5', '8L M14x1,5', '10L M16x1,5', '12L M18x1,5'],
+      JIC: ['6S M14x1,5', '8S M16x1,5', '10S M18x1,5', '12S M20x1,5'],
+      MM: ['14S M22x1,5', '15L M22x1,5', '16S M24x1,5', '18L M26x1,5'],
+      NPT: ['6L M12x1,5', '8L M14x1,5', '10L M16x1,5', '12L M18x1,5'],
+      SAE3000: ['20S M30x2', '22L M30x2', '25S M36x2', '28L M36x2'],
+      SAE6000: ['30S M42x2', '35L M45x2', '38S M52x2', '42L M52x2'],
+      'CAM-LOCK type A': ['6L M12x1,5', '8L M14x1,5'],
+      'CAM-LOCK type B': ['10L M16x1,5', '12L M18x1,5'],
+      'CAM-LOCK type C': ['15L M22x1,5', '18L M26x1,5'],
+      'CAM-LOCK type D': ['22L M30x2', '28L M36x2'],
+      'CAM-LOCK type DC': ['6S M14x1,5', '8S M16x1,5'],
+      'CAM-LOCK type DP': ['10S M18x1,5', '12S M20x1,5'],
+      'CAM-LOCK type E': ['14S M22x1,5', '16S M24x1,5'],
+      'CAM-LOCK type F': ['20S M30x2', '25S M36x2'],
+      'TW Female': ['30S M42x2', '35L M45x2'],
+      'TW Male': ['38S M52x2', '42L M52x2'],
+      'DDC Hose unit': ['6L M12x1,5', '6S M14x1,5', '8L M14x1,5', '8S M16x1,5'],
+      Clawcoupling: [
+        '10L M16x1,5',
+        '10S M18x1,5',
+        '12L M18x1,5',
+        '12S M20x1,5',
+      ],
+      'Clawc. AM': ['14S M22x1,5', '15L M22x1,5', '16S M24x1,5', '18L M26x1,5'],
+      'DIN 2633 Flange': ['20S M30x2', '22L M30x2', '25S M36x2', '28L M36x2'],
+      'Flange ASA 150 rf': ['30S M42x2', '35L M45x2', '38S M52x2', '42L M52x2'],
+      BOSS: ['18L M26x1,5', '20S M30x2', '22L M30x2', '25S M36x2'],
     },
   },
   materialQualityEnd2: {
     childField: 'typeFittingEnd2',
     filterMap: {
-      'Option 1': ['Option 2', 'Option 4'],
-      'Option 3': ['Option 1', 'Option 5'],
+      '6MO': ['SAE6000', 'DIN 2633 Flange', 'BOSS'],
+      'AISI 316': ['BSP', 'JIC', 'NPT', 'SAE3000', 'TW Female', 'TW Male'],
+      Aluminum: [
+        'CAM-LOCK type A',
+        'CAM-LOCK type B',
+        'CAM-LOCK type C',
+        'CAM-LOCK type D',
+        'CAM-LOCK type DC',
+        'CAM-LOCK type DP',
+        'CAM-LOCK type E',
+        'CAM-LOCK type F',
+      ],
+      Brass: ['BSP', 'NPT', 'Clawcoupling', 'Clawc. AM'],
+      'Carbon steel': ['JIC', 'SAE3000', 'SAE6000', 'Flange ASA 150 rf'],
+      'Cast iron': ['DIN 2633 Flange', 'Flange ASA 150 rf'],
+      'Duplex 22Cr': ['SAE6000', 'DIN 2633 Flange', 'BOSS'],
+      Hastelloy: ['DIN 2633 Flange', 'BOSS'],
+      'Superduplex 25Cr': ['SAE6000', 'DIN 2633 Flange', 'BOSS'],
+      Titan: ['DIN 2633 Flange', 'BOSS'],
     },
   },
   typeFittingEnd2: {
     childField: 'genericDimensionEnd2',
     filterMap: {
-      'Option 2': ['Option 1', 'Option 3', 'Option 5'],
-      'Option 4': ['Option 2', 'Option 4'],
+      BSP: ['6L M12x1,5', '8L M14x1,5', '10L M16x1,5', '12L M18x1,5'],
+      JIC: ['6S M14x1,5', '8S M16x1,5', '10S M18x1,5', '12S M20x1,5'],
+      MM: ['14S M22x1,5', '15L M22x1,5', '16S M24x1,5', '18L M26x1,5'],
+      NPT: ['6L M12x1,5', '8L M14x1,5', '10L M16x1,5', '12L M18x1,5'],
+      SAE3000: ['20S M30x2', '22L M30x2', '25S M36x2', '28L M36x2'],
+      SAE6000: ['30S M42x2', '35L M45x2', '38S M52x2', '42L M52x2'],
+      'CAM-LOCK type A': ['6L M12x1,5', '8L M14x1,5'],
+      'CAM-LOCK type B': ['10L M16x1,5', '12L M18x1,5'],
+      'CAM-LOCK type C': ['15L M22x1,5', '18L M26x1,5'],
+      'CAM-LOCK type D': ['22L M30x2', '28L M36x2'],
+      'CAM-LOCK type DC': ['6S M14x1,5', '8S M16x1,5'],
+      'CAM-LOCK type DP': ['10S M18x1,5', '12S M20x1,5'],
+      'CAM-LOCK type E': ['14S M22x1,5', '16S M24x1,5'],
+      'CAM-LOCK type F': ['20S M30x2', '25S M36x2'],
+      'TW Female': ['30S M42x2', '35L M45x2'],
+      'TW Male': ['38S M52x2', '42L M52x2'],
+      'DDC Hose unit': ['6L M12x1,5', '6S M14x1,5', '8L M14x1,5', '8S M16x1,5'],
+      Clawcoupling: [
+        '10L M16x1,5',
+        '10S M18x1,5',
+        '12L M18x1,5',
+        '12S M20x1,5',
+      ],
+      'Clawc. AM': ['14S M22x1,5', '15L M22x1,5', '16S M24x1,5', '18L M26x1,5'],
+      'DIN 2633 Flange': ['20S M30x2', '22L M30x2', '25S M36x2', '28L M36x2'],
+      'Flange ASA 150 rf': ['30S M42x2', '35L M45x2', '38S M52x2', '42L M52x2'],
+      BOSS: ['18L M26x1,5', '20S M30x2', '22L M30x2', '25S M36x2'],
     },
   },
 };
+
+const allDependencyOptions = [
+  ...new Set(
+    Object.values(uhdDependencyMap).flatMap((dependency) => {
+      if (!dependency) return [];
+      const parentOptions = Object.keys(dependency.filterMap);
+      const childOptions = Object.values(dependency.filterMap).flat();
+      return [...parentOptions, ...childOptions];
+    }),
+  ),
+];
 
 export const EditUniversalHoseData: React.FC<{
   info: Partial<UHD>;
@@ -112,12 +234,21 @@ export const EditUniversalHoseData: React.FC<{
   const [localInfo, setLocalInfo] = useState<Partial<UHD>>(info);
 
   const fieldDependencyConfig: FieldDependencyConfig<UHD> = useMemo(
-    () => buildDependencyConfig(uhdDependencyMap, options),
+    () => buildDependencyConfig(uhdDependencyMap, allDependencyOptions),
     [],
   );
 
   const { getFilteredOptionsForField, shouldResetField, isParentField } =
     useFieldDependencies(localInfo, fieldDependencyConfig);
+
+  const getCascadingChildren = (parentField: keyof UHD): (keyof UHD)[] => {
+    const dependency = uhdDependencyMap[parentField];
+    if (!dependency?.childField) {
+      return [];
+    }
+    const childField = dependency.childField;
+    return [childField, ...getCascadingChildren(childField)];
+  };
 
   useEffect(() => {
     const newLocalInfo = { ...info };
@@ -160,7 +291,7 @@ export const EditUniversalHoseData: React.FC<{
     let nextInfo = { ...localInfo, [field]: value };
 
     if (isParentField(field)) {
-      const fieldsToReset = shouldResetField(field, value);
+      const fieldsToReset = getCascadingChildren(field);
       fieldsToReset.forEach((childField) => {
         nextInfo[childField] = '';
         onInputChange(childField as keyof Partial<UHD>, '');
@@ -219,7 +350,7 @@ export const EditUniversalHoseData: React.FC<{
             label='Hose Standard'
             selectedOption={localInfo.hoseStandard || ''}
             onChange={(value) => handleFieldChange('hoseStandard', value)}
-            options={options}
+            options={Object.keys(uhdDependencyMap.hoseStandard!.filterMap)}
             required={showValidationErrors}
           />
         </TooltipWrapper>

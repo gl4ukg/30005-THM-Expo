@@ -6,7 +6,7 @@ import {
 } from '@/lib/util/secureStore';
 
 export const login = async (username: string, password: string) => {
-  const url: string | undefined = process.env.EXPO_PUBLIC_API_URL;
+  const url: string | undefined = process.env.EXPO_PUBLIC_API_BASE_URL;
   if (!url) {
     throw new Error('API_URL is not defined');
   }
@@ -86,13 +86,16 @@ const getUserData = async () => {
     }
     const accessToken = cookie.split(';')[0].split('=')[1];
     console.log('accessToken', accessToken);
-    const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/user`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        accessToken: accessToken,
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/user`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          accessToken: accessToken,
+        },
       },
-    });
+    );
 
     if (response.status === 200) {
       const userData: User[] = await response.json();
