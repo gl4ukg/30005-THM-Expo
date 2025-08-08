@@ -25,29 +25,23 @@ export interface GetAllHosesByUserResponse {
 
 // API functions - Handles all HTTP requests to the backend
 export const getS1 = async (): Promise<GetS1Response> => {
-  const response = await apiCall<S1Item[]>('/asset/getS1');
+  const response = await apiCall<S1Item[]>('/asset/getS1', 'GET');
 
   if (!Array.isArray(response) || response.length === 0) {
     throw new Error('No S1 items found in response');
   }
-
   // Use the first S1 item's code as the selected one
   const selectedS1Code = response[0].S1Code;
-
-  console.log('Retrieved S1 items:', response.length);
-  console.log('Selected S1 Code:', selectedS1Code);
-
   return {
     s1Items: response,
     selectedS1Code: selectedS1Code,
   };
 };
 
-export const getAllHosesByUser = async (
-  s1Code: string,
-): Promise<GetAllHosesByUserResponse> => {
+export const getAllHosesByS1 = async (s1Code: string): Promise<HoseData[]> => {
   const endpoint = `/asset/getAllHosesByUser?s1Code=${s1Code}`;
-  return apiCall<GetAllHosesByUserResponse>(endpoint);
+  const response = await apiCall<HoseData[]>(endpoint, 'GET');
+  return response.length ? response : [];
 };
 
 export const registerHose = async (
@@ -66,7 +60,7 @@ export const registerHose = async (
 
 export const getS1AndHoses = async (): Promise<{
   s1Data: GetS1Response;
-  hosesData: GetAllHosesByUserResponse;
+  hosesData: HoseData[];
 }> => {
   console.log('Getting S1 data and hoses...');
 
@@ -74,7 +68,7 @@ export const getS1AndHoses = async (): Promise<{
   const s1Data = await getS1();
 
   // Then get hoses using the first S1 code
-  const hosesData = await getAllHosesByUser(s1Data.selectedS1Code);
+  const hosesData = await getAllHosesByS1(s1Data.selectedS1Code);
 
   console.log('Successfully retrieved S1 data and hoses');
   return { s1Data, hosesData };
@@ -86,7 +80,7 @@ export const useAssetApi = () => {
   }, []);
 
   const getHosesByUser = useCallback(async (s1Code: string) => {
-    return await getAllHosesByUser(s1Code);
+    return await getAllHosesByS1(s1Code);
   }, []);
 
   const registerNewHose = useCallback(

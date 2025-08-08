@@ -166,13 +166,13 @@ type DataAction =
 type SettingsAction =
   // | ActionWithPayload<'UPDATE_SETTINGS', any>
   | ActionWithPayload<'UPDATE_CONNECTION_TYPE', 'wifi' | 'mobile' | null>
+  | ActionWithPayload<'SET_INTERNET_REACHABLE', boolean>
   | ActionWithPayload<'SET_IS_MENU_OPEN', boolean>;
 
 // Reducers for each slice of the app state (these should be defined elsewhere)
 const authReducer = (state: AuthState, action: AppAction): AuthState => {
   switch (action.type) {
     case 'LOGIN':
-      console.log('LOGIN', action.payload);
       return {
         ...state,
         // Populate with default value for phone number to enable submitting forms
@@ -199,7 +199,7 @@ const authReducer = (state: AuthState, action: AppAction): AuthState => {
     case 'SET_LOGIN_LOADING':
       return {
         ...state,
-        isLoingLoading: action.payload,
+        isLogingLoading: action.payload,
       };
     default:
       return state;
@@ -212,6 +212,7 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       return {
         ...state,
         isLoading: action.payload,
+        lastUpdateStatus: action.payload ? 'syncing' : state.lastUpdateStatus,
       };
     case 'SET_LAST_UPDATE':
       return {
@@ -256,8 +257,8 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         hoses: [...state.hoses, action.payload],
       };
     case 'SAVE_HOSE_DATA':
-      console.log('SAVE_HOSE_DATA', action.payload.hoseId),
-        action.payload.hoseData.installationDate;
+      (console.log('SAVE_HOSE_DATA', action.payload.hoseId),
+        action.payload.hoseData.installationDate);
       if (action.payload.hoseId === undefined) {
         console.error('hoseId is undefined', action.payload.hoseId);
         return state;
@@ -459,10 +460,14 @@ const settingReducer = (
     // case 'UPDATE_SETTINGS':
     //   return state;
     case 'UPDATE_CONNECTION_TYPE':
-      console.log('UPDATE_CONNECTION_TYPE', action.payload);
       return {
         ...state,
         connectionType: action.payload,
+      };
+    case 'SET_INTERNET_REACHABLE':
+      return {
+        ...state,
+        internetReachable: action.payload,
       };
     case 'SET_IS_MENU_OPEN':
       return {

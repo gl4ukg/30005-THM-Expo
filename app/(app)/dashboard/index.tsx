@@ -4,10 +4,11 @@ import { SyncStatus } from '@/components/dashboard/SyncStatus';
 import { Typography } from '@/components/Typography';
 import { SelectDropdown } from '@/components/UI/ActionMenu';
 import { AppContext } from '@/context/Reducer';
+import { useDataManager } from '@/hooks/useDataManager';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 
 const month: BarData = [
   {
@@ -151,12 +152,37 @@ const Dashboard = () => {
   const [selected, setSelected] =
     useState<(typeof options)[0]['value']>('month');
   const { dispatch, state } = useContext(AppContext);
+  const { getHoseData } = useDataManager();
+
+  const fetchData = useCallback(async () => {
+    try {
+      const { status, message } = await getHoseData();
+      if (status === 'error') {
+        Alert.alert('Data Loading Error', message, [
+          {
+            text: 'OK',
+            onPress: () => {},
+          },
+        ]);
+        return;
+      }
+    } catch (dataError) {
+      console.error('Failed to initialize user data:', dataError);
+      Alert.alert(
+        'Data Loading Error',
+        'Login successful but failed to load user data. Please try again.',
+        [{ text: 'OK' }],
+      );
+      return;
+    }
+  }, [dispatch]);
 
   useFocusEffect(
     useCallback(() => {
       dispatch({
         type: 'FINISH_SELECTION',
       });
+      fetchData();
     }, [dispatch]),
   );
 
@@ -196,20 +222,7 @@ const Dashboard = () => {
         <SyncStatus
           timestamp={state.data.lastUpdate?.getTime() ?? null}
           status={state.data.lastUpdateStatus}
-          onRetry={() => {
-            const random = Math.random();
-            dispatch({
-              type: 'SET_LAST_UPDATE',
-              payload: 'syncing',
-            });
-            // TODO: add syncing
-            setTimeout(() => {
-              dispatch({
-                type: 'SET_LAST_UPDATE',
-                payload: random < 0.5 ? 'synced' : 'error',
-              });
-            }, 2000);
-          }}
+          onRetry={fetchData}
         />
         <Typography name='sectionHeader' text='Inspections' />
         <SelectDropdown

@@ -1,5 +1,5 @@
 import { HoseData } from '@/lib/types/hose';
-import { getS1, getAllHosesByUser, S1Item } from '@/services/api/asset';
+import { getS1, getAllHosesByS1, S1Item } from '@/services/api/asset';
 import {
   setS1Code,
   getS1Code,
@@ -40,44 +40,33 @@ export const initializeUserData = async (): Promise<{
 
     // Step 3: Get hoses from API using S1 code
     console.log('Fetching hoses from API with S1 code:', s1Code);
-    const hosesResponse = await getAllHosesByUser(s1Code);
+    const hosesResponse = await getAllHosesByS1(s1Code);
 
     // Extract hoses from API response
-    let hoses: HoseData[] = [];
 
-    if (
-      hosesResponse &&
-      hosesResponse.hoses &&
-      Array.isArray(hosesResponse.hoses)
-    ) {
-      hoses = hosesResponse.hoses;
+    if (hosesResponse && Array.isArray(hosesResponse)) {
     } else if (Array.isArray(hosesResponse)) {
-      hoses = hosesResponse;
+      hosesResponse;
     } else {
       console.error(
         'Could not extract hoses array from response:',
         hosesResponse,
-      );
-      console.error('Response type:', typeof hosesResponse);
-      console.error(
-        'Available properties:',
-        hosesResponse ? Object.keys(hosesResponse) : 'none',
       );
       throw new Error(
         `Invalid hoses response structure. Expected hoses array, got: ${JSON.stringify(hosesResponse)}`,
       );
     }
 
-    console.log(`Extracted ${hoses.length} hoses from API response`);
+    console.log(`Extracted ${hosesResponse.length} hoses from API response`);
 
     // Step 4: Cache hoses data
-    setHoses(hoses);
-    console.log(`${hoses.length} hoses cached successfully`);
+    setHoses(hosesResponse);
+    console.log(`${hosesResponse.length} hoses cached successfully`);
 
     return {
       s1Code,
       s1Items,
-      hoses,
+      hoses: hosesResponse,
     };
   } catch (error) {
     console.error('Failed to initialize user data:', error);
@@ -121,16 +110,12 @@ export const getHosesData = async (
       throw new Error('S1 code not found in cache. Please login again.');
     }
 
-    const hosesResponse = await getAllHosesByUser(s1Code);
+    const hosesResponse = await getAllHosesByS1(s1Code);
 
     let hoses: HoseData[] = [];
 
-    if (
-      hosesResponse &&
-      hosesResponse.hoses &&
-      Array.isArray(hosesResponse.hoses)
-    ) {
-      hoses = hosesResponse.hoses;
+    if (hosesResponse && Array.isArray(hosesResponse)) {
+      hoses = hosesResponse;
     } else if (Array.isArray(hosesResponse)) {
       hoses = hosesResponse;
     }
@@ -212,16 +197,12 @@ export const changeS1Selection = async (
 
     setS1Code(newS1Code);
 
-    const hosesResponse = await getAllHosesByUser(newS1Code);
+    const hosesResponse = await getAllHosesByS1(newS1Code);
 
     let hoses: HoseData[] = [];
 
-    if (
-      hosesResponse &&
-      hosesResponse.hoses &&
-      Array.isArray(hosesResponse.hoses)
-    ) {
-      hoses = hosesResponse.hoses;
+    if (hosesResponse && Array.isArray(hosesResponse)) {
+      hoses = hosesResponse;
     } else if (Array.isArray(hosesResponse)) {
       hoses = hosesResponse;
     }

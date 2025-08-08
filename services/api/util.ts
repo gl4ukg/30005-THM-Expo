@@ -1,6 +1,7 @@
 import { HoseData } from '@/lib/types/hose';
 import { convertToISOFormat, formatDate } from '@/lib/util/formatDate';
 import { getFromStore } from '@/lib/util/secureStore';
+import { loginCacheService } from '@/services/cache/loginCacheService';
 
 // Base URL for all API requests
 export const BASE_URL =
@@ -17,17 +18,15 @@ export async function apiRequest<T>(
   options: RequestInit = {},
 ): Promise<T> {
   const url = `${BASE_URL}${endpoint}`;
-
   let authHeaders = {};
   try {
-    const cookie = await getFromStore('cookie');
-    if (cookie) {
-      const accessToken = cookie.split(';')[0].split('=')[1];
+    const apiKey = loginCacheService.getApiKey();
+    if (apiKey) {
       authHeaders = {
-        accessToken: accessToken,
+        accessToken: apiKey,
       };
     } else {
-      console.warn('No authentication cookie found');
+      throw new Error('API key not found');
     }
   } catch (error) {
     console.error('Failed to get authentication token:', error);
@@ -47,9 +46,8 @@ export async function apiRequest<T>(
   };
 
   try {
-    console.log('Making API request to:', url);
-    console.log('Request headers:', config.headers);
-    console.log('Request method:', config.method || 'GET');
+    // console.log('Making API request to:', url);
+    // console.log('Request method:', config.method || 'GET');
     if (config.body) {
       console.log('Request body:', config.body);
     }
@@ -78,11 +76,6 @@ export async function apiCall<T>(
   const methodName = `${method} ${endpoint}`;
 
   try {
-    console.log(`API Call: ${methodName}`);
-    if (data) {
-      console.log(`API Call Data:`, data);
-    }
-
     const config: RequestInit = {
       method,
       ...options,
@@ -94,7 +87,6 @@ export async function apiCall<T>(
     }
 
     const response = await apiRequest<T>(endpoint, config);
-    console.log(`API Success: ${methodName}`);
     return response;
   } catch (error) {
     console.error(`API Error: ${methodName}`, error);
