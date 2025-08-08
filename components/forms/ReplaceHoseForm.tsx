@@ -6,6 +6,7 @@ import {
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
+import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
 import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
@@ -14,6 +15,7 @@ import { useAppContext } from '@/context/ContextProvider';
 import { PartialReplaceHoseFormData } from '@/context/Reducer';
 
 import { getScanUrl } from '@/app/(app)/scan';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { useUserValidation } from '@/hooks/useUserValidation';
 import { colors } from '@/lib/tokens/colors';
 import { router, useFocusEffect } from 'expo-router';
@@ -31,8 +33,11 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   const { state, dispatch } = useAppContext();
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [formData, setFormData] = useState<PartialReplaceHoseFormData>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
+
+  usePreventGoBack(isSubmitting);
 
   const originallySelectedHoses = useMemo(() => {
     const draft = state.data.drafts.find((d) => d.id === +draftId);
@@ -76,18 +81,21 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   }, []);
 
   const handleSend = () => {
+    setIsSubmitting(true);
     dispatch({
       type: 'MOVE_DRAFT_TO_DONE',
       payload: +draftId,
     });
+    router.dismissAll();
+    router.replace('/dashboard');
     successToast(
       'Hose replacement report sent',
       'Your hose replacement report has been sent successfully.',
     );
-    router.push('/dashboard');
   };
 
   const handleSaveAsDraft = () => {
+    setIsSubmitting(true);
     dispatch({
       type: 'SAVE_DRAFT',
       payload: {
@@ -99,10 +107,11 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
       },
     });
     saveAsDraftToast();
-    router.push('/dashboard');
+    router.dismissAll();
+    router.replace('/dashboard');
   };
   const handleCancel = () => {
-    router.push('/dashboard');
+    showDiscardChangesAlert(dispatch);
   };
 
   const handleAddHoses = () => {
@@ -121,7 +130,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
     router.push(getScanUrl('REPLACE_HOSE', draftId.toString()));
   };
 
-  const isButtonDisabled = !hasErrors || selectedIds.length === 0;
+  const isButtonDisabled = hasErrors || selectedIds.length === 0;
   return (
     <FlatList
       ref={flatListRef}

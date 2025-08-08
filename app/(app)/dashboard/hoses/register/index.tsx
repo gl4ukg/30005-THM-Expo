@@ -6,6 +6,7 @@ import { EditUniversalHoseData } from '@/components/detailView/edit/EditUniversa
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
+import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
@@ -98,7 +99,7 @@ const RegisterHose = () => {
   };
 
   const handleCancel = () => {
-    router.back();
+    showDiscardChangesAlert(dispatch);
   };
 
   useEffect(() => {
@@ -231,11 +232,12 @@ const RegisterHose = () => {
         type: 'MOVE_DRAFT_TO_DONE',
         payload: +id,
       });
+      router.dismissAll();
+      router.replace('/(app)/dashboard');
       successToast(
         'Hose registered successfully',
         'The hose has been registered.',
       );
-      router.push('/(app)/dashboard');
     }
   }, [hoseData, dispatch, router, registerMultiple]);
 
@@ -251,7 +253,8 @@ const RegisterHose = () => {
       },
     });
     saveAsDraftToast();
-    router.push('/(app)/dashboard');
+    router.dismissAll();
+    router.replace('/(app)/dashboard');
   };
 
   return (

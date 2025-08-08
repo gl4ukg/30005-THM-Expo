@@ -90,8 +90,7 @@ const HoseDetails = () => {
 
   const router = useRouter();
 
-  // Use preventGoBack when in edit mode
-  usePreventGoBack();
+  usePreventGoBack(false);
   useEffect(() => {
     dispatch({
       type: 'SET_IS_CANCELABLE',

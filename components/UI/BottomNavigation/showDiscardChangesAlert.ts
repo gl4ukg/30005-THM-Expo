@@ -23,8 +23,8 @@ export const showDiscardChangesAlert = (
             payload: false,
           });
           requestAnimationFrame(() => {
-            // router.dismissAll();
-            router.back();
+            router.dismissAll();
+            router.replace('/dashboard');
           });
         },
       },
