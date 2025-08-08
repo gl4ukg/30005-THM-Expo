@@ -3,12 +3,20 @@ import { BarToPsiInput } from '@/components/detailView/edit/BarToPsiInput';
 import { options } from '@/components/detailView/edit/fakeOptions';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { UnitInput } from '@/components/detailView/edit/UnitInput';
+import {
+  useFieldDependencies,
+  createDependencyRule,
+  createDefaultFilter,
+  createMockHoseStandardFilter,
+  createMockCouplingFilter,
+  type FieldDependencyConfig,
+} from '@/components/detailView/edit/useFieldDependencies';
 import { Typography } from '@/components/Typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { UHD } from '@/lib/types/hose';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 export const couplingsFields = [
@@ -66,6 +74,33 @@ export const EditUniversalHoseData: React.FC<{
   const [sameAsEnd1, setSameAsEnd1] = useState(false);
   const [localInfo, setLocalInfo] = useState<Partial<UHD>>(info);
 
+  const fieldDependencyConfig: FieldDependencyConfig<UHD> = useMemo(
+    () => ({
+      rules: [
+        createDependencyRule<UHD>(
+          'hoseStandard',
+          'innerDiameter',
+          createMockHoseStandardFilter(),
+        ),
+        createDependencyRule<UHD>(
+          'materialQualityEnd1',
+          'typeFittingEnd1',
+          createMockCouplingFilter(),
+        ),
+        createDependencyRule<UHD>(
+          'typeFittingEnd1',
+          'genericDimensionEnd1',
+          createMockCouplingFilter(),
+        ),
+      ],
+      allOptions: options,
+    }),
+    [],
+  );
+
+  const { getFilteredOptionsForField, shouldResetField, isParentField } =
+    useFieldDependencies(localInfo, fieldDependencyConfig);
+
   useEffect(() => {
     const newLocalInfo = { ...info };
     setLocalInfo(newLocalInfo);
@@ -106,6 +141,31 @@ export const EditUniversalHoseData: React.FC<{
   const handleFieldChange = (field: keyof UHD, value: any) => {
     const oldInfo = { ...localInfo };
     let nextInfo = { ...oldInfo, [field]: value };
+
+    if (isParentField(field)) {
+      const tempData = { ...localInfo, [field]: value };
+      const config = { ...fieldDependencyConfig };
+
+      config.rules.forEach((rule) => {
+        if (rule.parentField === field) {
+          const currentChildValue = localInfo[rule.childField] as
+            | string
+            | undefined;
+          const newFilteredOptions = rule.getFilteredOptions(
+            value,
+            config.allOptions,
+          );
+
+          if (
+            currentChildValue &&
+            !newFilteredOptions.includes(currentChildValue)
+          ) {
+            nextInfo[rule.childField] = '';
+            onInputChange(rule.childField as keyof Partial<UHD>, '');
+          }
+        }
+      });
+    }
 
     if (['hoseStandard', 'innerDiameter', 'hoseLength_mm'].includes(field)) {
       const descriptionData = {
@@ -173,7 +233,7 @@ export const EditUniversalHoseData: React.FC<{
             label='Inner Diameter'
             selectedOption={localInfo.innerDiameter || ''}
             onChange={(value) => handleFieldChange('innerDiameter', value)}
-            options={options}
+            options={getFilteredOptionsForField('innerDiameter')}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -239,7 +299,7 @@ export const EditUniversalHoseData: React.FC<{
             onChange={(value) =>
               handleFieldChange('materialQualityEnd1', value)
             }
-            options={options}
+            options={getFilteredOptionsForField('materialQualityEnd1')}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -249,7 +309,7 @@ export const EditUniversalHoseData: React.FC<{
             label='Type Fitting'
             selectedOption={info.typeFittingEnd1 || ''}
             onChange={(value) => handleFieldChange('typeFittingEnd1', value)}
-            options={options}
+            options={getFilteredOptionsForField('typeFittingEnd1')}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -266,7 +326,7 @@ export const EditUniversalHoseData: React.FC<{
             onChange={(value) =>
               handleFieldChange('genericDimensionEnd1', value)
             }
-            options={options}
+            options={getFilteredOptionsForField('genericDimensionEnd1')}
             required={showValidationErrors}
           />
         </TooltipWrapper>
