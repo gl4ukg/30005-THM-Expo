@@ -11,10 +11,11 @@ import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { useUserValidation } from '@/hooks/useUserValidation';
 import { colors } from '@/lib/tokens/colors';
 import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { act, useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { saveAsDraftToast } from './ActionForm';
 import { successToast } from '@/lib/util/toasts';
+import { useDataManager } from '@/hooks/useDataManager';
 
 interface Props {
   draftId: string;
@@ -26,6 +27,7 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
+  const { activitiesData } = useDataManager();
 
   usePreventGoBack(isSubmitting);
 
@@ -72,10 +74,15 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
 
   const handleSend = () => {
     setIsSubmitting(true);
-    dispatch({
-      type: 'MOVE_DRAFT_TO_DONE',
-      payload: +draftId,
+    activitiesData.saveDraft({
+      id: +draftId,
+      selectedIds,
+      type: 'CONTACT_SUPPORT',
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
+    activitiesData.moveDraftToDone(+draftId);
     router.dismissAll();
     router.replace('/dashboard');
     successToast(
@@ -86,15 +93,13 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
 
   const handleSaveAsDraft = () => {
     setIsSubmitting(true);
-    dispatch({
-      type: 'SAVE_DRAFT',
-      payload: {
-        id: +draftId,
-        selectedIds,
-        type: 'CONTACT_SUPPORT',
-        status: 'draft',
-        formData,
-      },
+    activitiesData.saveDraft({
+      id: +draftId,
+      selectedIds,
+      type: 'CONTACT_SUPPORT',
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
     saveAsDraftToast();
     router.dismissAll();
@@ -105,30 +110,14 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
   };
 
   const handleAddHoses = () => {
-    const draft = state.data.drafts.find((d) => d.id === +draftId);
-    if (!draft) {
-      dispatch({
-        type: 'CREATE_DRAFT',
-        payload: {
-          id: +draftId,
-          status: 'draft',
-          selectedIds,
-          type: 'CONTACT_SUPPORT',
-          formData,
-        },
-      });
-    } else {
-      dispatch({
-        type: 'SAVE_DRAFT',
-        payload: {
-          id: +draftId,
-          selectedIds,
-          status: 'draft',
-          type: 'CONTACT_SUPPORT',
-          formData,
-        },
-      });
-    }
+    activitiesData.saveDraft({
+      id: +draftId,
+      selectedIds,
+      type: 'CONTACT_SUPPORT',
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
+    });
     router.navigate(getScanUrl('CONTACT_SUPPORT', draftId.toString()));
   };
 

@@ -1,10 +1,15 @@
 import { useAppContext } from '@/context/ContextProvider';
+import { ActivityDone, ActivityDraft } from '@/context/state';
+import { generateNumericDraftId } from '@/lib/util/unikId';
 import { getAllHosesByS1 } from '@/services/api/asset';
 import {
   clearHoses,
   getHoses,
   getS1Code,
   setHoses,
+  activities,
+  moveDraftToDone,
+  addHose,
 } from '@/services/cache/cacheService';
 import { loginCacheService } from '@/services/cache/loginCacheService';
 
@@ -13,6 +18,7 @@ export const useDataManager = (): {
   isLoading: boolean;
   getHoseData: () => Promise<DataAction>;
   removeHoseData: () => Promise<DataAction>;
+  activitiesData: typeof activitiesData;
 } => {
   const { state, dispatch } = useAppContext();
   const apiKey = loginCacheService.getApiKey();
@@ -125,9 +131,83 @@ export const useDataManager = (): {
       };
     }
   };
+
+  const activitiesData = {
+    syncStoreToContext: () => {
+      dispatch({
+        type: 'SET_ACTIVITIES_DONE',
+        payload: activities.done.getAll(),
+      });
+    },
+    setAllDone: (activitiesToSet: ActivityDone[]) => {
+      activities.done.setAll(activitiesToSet);
+      dispatch({
+        type: 'SET_ACTIVITIES_DONE',
+        payload: activitiesToSet,
+      });
+    },
+    updateDoneTimestamp: (activityDone: ActivityDone, timestamp: number) => {
+      activities.done.updateOne({
+        ...activityDone,
+        syncingTimestamp: timestamp,
+      });
+      dispatch({
+        type: 'ACTIVITY_DONE_TIMESTAMP',
+        payload: { id: activityDone.id, timestamp },
+      });
+    },
+    createDraft: (activityDraft: Omit<ActivityDraft, 'id'>) => {
+      const newId = generateNumericDraftId(state.data.drafts.map((d) => d.id));
+      activities.draft.addOne({ ...activityDraft, id: newId } as ActivityDraft);
+      dispatch({
+        type: 'CREATE_DRAFT',
+        payload: { ...activityDraft, id: newId },
+      });
+      return newId;
+    },
+    saveDraft: (activityDraft: ActivityDraft) => {
+      activities.draft.addOne(activityDraft);
+      dispatch({
+        type: 'SAVE_DRAFT',
+        payload: activityDraft,
+      });
+    },
+    addHoseToDraft: (hoseId: number, draftId: number) => {
+      activities.draft.addHoseToDraft(hoseId, draftId);
+      dispatch({
+        type: 'ADD_HOSE_TO_DRAFT',
+        payload: {
+          hoseId,
+          draftId,
+        },
+      });
+    },
+    removeDraft: (id: number) => {
+      activities.draft.removeOne(id);
+      dispatch({
+        type: 'REMOVE_DRAFT',
+        payload: id,
+      });
+    },
+    moveDraftToDone: (id: number) => {
+      activities.draft.moveToDone(id);
+      dispatch({
+        type: 'MOVE_DRAFT_TO_DONE',
+        payload: id,
+      });
+    },
+    clearAllDone: () => {
+      activities.done.clearAll();
+      dispatch({
+        type: 'SET_ACTIVITIES_DONE',
+        payload: [],
+      });
+    },
+  };
   return {
     isLoading: state.data.isLoading,
     getHoseData,
     removeHoseData,
+    activitiesData,
   };
 };

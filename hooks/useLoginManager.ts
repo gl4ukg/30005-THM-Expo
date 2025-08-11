@@ -21,7 +21,7 @@ export const useLoginManager = (): {
       const apiKey = loginCacheService.getApiKey();
       if (apiKey) {
         // getApiKey() check if it is not expired end logout if needed
-        const { userName, userId, userEmail } =
+        const { name: userName, id: userId, email: userEmail } =
           loginCacheService.getLoginCache();
         dispatch({
           type: 'LOGIN',
@@ -96,6 +96,7 @@ export const useLoginManager = (): {
           name: `${user.firstName} ${user.lastName}`,
           id: `${user.userId}`,
           email: user.email,
+          phoneNumber: `${user.phoneNumber}`,
         });
         return {
           status: 'success',

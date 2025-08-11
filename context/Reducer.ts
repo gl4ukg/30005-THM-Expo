@@ -13,6 +13,7 @@ import {
   SettingsState,
   SingleSelection,
   SingleSelectionActionsType,
+  ActivityDone,
 } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
 import { S1Item } from '@/services/api/asset';
@@ -145,6 +146,7 @@ type DataAction =
       TemporaryRegistrationData
     >
   | ActionWithPayload<'CREATE_DRAFT', Omit<ActivityDraft, 'modifiedAt'>>
+  | ActionWithPayload<'REMOVE_DRAFT', number>
   | ActionWithPayload<'SAVE_DRAFT', Omit<ActivityDraft, 'modifiedAt'>>
   | ActionWithPayload<
       'ADD_HOSE_TO_DRAFT',
@@ -153,9 +155,16 @@ type DataAction =
         hoseId: number;
       }
     >
+  | ActionWithPayload<'SET_ACTIVITIES_DONE', ActivityDone[]>
+  | ActionWithPayload<'ADD_ACTIVITY_DONE', ActivityDone>
+  | ActionWithPayload<
+      'ACTIVITY_DONE_TIMESTAMP',
+      { id: number; timestamp: number }
+    >
   | ActionWithPayload<'ADD_HOSE_TO_EDITED_HOSES', Partial<HoseData>>
   | ActionWithPayload<'ADD_NEW_HOSE', HoseData>
   | ActionWithPayload<'MOVE_DRAFT_TO_DONE', number>
+  | ActionWithPayload<'SET_TIMESTAMP', { id: number; timestamp: number }>
   | ActionWithPayload<'REMOVE_FROM_DRAFT', number>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_REGISTRATION_DATA'>
   | ActionWithPayload<'SET_TEMPORARY_HOSE_EDIT_DATA', TemporaryHoseEditData>
@@ -175,14 +184,12 @@ const authReducer = (state: AuthState, action: AppAction): AuthState => {
     case 'LOGIN':
       return {
         ...state,
-        // Populate with default value for phone number to enable submitting forms
         user: {
-          email: state.user?.email || 'slange_mester@tess.no',
-          name: state.user?.name || 'Ole Slange Mester',
-          id: state.user?.id || '223949MOB',
-          customerNumbers: state.user?.customerNumbers || [],
-          ...action.payload,
-          phoneNumber: state.user?.phoneNumber || 12345678,
+          name: action.payload?.name || '',
+          email: action.payload?.email || '',
+          id: action.payload?.id || '',
+          phoneNumber: action.payload?.phoneNumber,
+          customerNumbers: action.payload?.customerNumbers,
         },
       };
     case 'LOGOUT':
@@ -365,7 +372,7 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       const newDraft = {
         ...action.payload,
         status: 'draft',
-        modifiedAt: new Date(),
+        modifiedAt: new Date().toISOString(),
       } as ActivityDraft;
       return {
         ...state,
@@ -380,18 +387,27 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
             if (draft.id === action.payload.id) {
               return {
                 ...action.payload,
-                modifiedAt: new Date(),
+                modifiedAt: new Date().toISOString(),
               } as ActivityDraft;
             }
             return draft;
           })
         : [
             ...state.drafts,
-            { ...action.payload, modifiedAt: new Date() } as ActivityDraft,
+            {
+              ...action.payload,
+              modifiedAt: new Date().toISOString(),
+            } as ActivityDraft,
           ];
       return {
         ...state,
         drafts,
+      };
+    }
+    case 'REMOVE_DRAFT': {
+      return {
+        ...state,
+        drafts: state.drafts.filter((draft) => draft.id !== action.payload),
       };
     }
     case 'ADD_HOSE_TO_DRAFT': {
@@ -404,7 +420,7 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
           if (draft.id === draftId) {
             return {
               ...draft,
-              modifiedAt: new Date(),
+              modifiedAt: new Date().toISOString(),
               selectedIds: draft.selectedIds.includes(hoseId)
                 ? draft.selectedIds
                 : [...draft.selectedIds, hoseId],
@@ -433,9 +449,29 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         done: draft
           ? [
               ...state.done,
-              { ...draft, status: 'done', modifiedAt: new Date() },
+              {
+                ...draft,
+                status: 'done',
+                modifiedAt: new Date().toISOString(),
+              },
             ]
           : state.done,
+      };
+    }
+    case 'SET_TIMESTAMP': {
+      const done = state.done.find((d) => d.id === action.payload.id);
+      if (!done) return state;
+      return {
+        ...state,
+        done: state.done.map((d) => {
+          if (d.id === action.payload.id) {
+            return {
+              ...d,
+              syncingTimestamp: action.payload.timestamp,
+            };
+          }
+          return d;
+        }),
       };
     }
     case 'ADD_HOSE_TO_EDITED_HOSES': {

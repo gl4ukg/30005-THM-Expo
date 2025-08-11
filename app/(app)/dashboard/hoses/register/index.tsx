@@ -23,6 +23,7 @@ import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { generateNumericDraftId } from '@/lib/util/unikId';
 import { saveAsDraftToast } from '@/components/forms/ActionForm';
 import { successToast } from '@/lib/util/toasts';
+import { useDataManager } from '@/hooks/useDataManager';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -51,7 +52,7 @@ const RegisterHose = () => {
   const [rfid, setRfid] = useState<string | undefined>(incomingRfid);
   const [isBarcodeModalVisible, setIsBarcodeModalVisible] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
-
+  const { activitiesData } = useDataManager();
   const [hoseData, setHoseData] = useState<
     Partial<HoseData> & { showValidationErrors?: boolean }
   >(() => {
@@ -69,13 +70,13 @@ const RegisterHose = () => {
       showValidationErrors: false,
     };
   });
-  let id = useMemo(
-    () =>
-      draftId
-        ? +draftId
-        : generateNumericDraftId(state.data.drafts.map((d) => d.id)),
-    [],
-  );
+  // let id = useMemo(
+  //   () =>
+  //     draftId
+  //       ? +draftId
+  //       : generateNumericDraftId(state.data.drafts.map((d) => d.id)),
+  //   [],
+  // );
   useFocusEffect(
     useCallback(() => {
       if (scrollViewRef.current) {
@@ -208,18 +209,12 @@ const RegisterHose = () => {
     const newHoseData = hoseData as HoseData;
 
     if (registerMultiple) {
-      const newDraftId = generateNumericDraftId(
-        state.data.drafts.map((d) => d.id),
-      );
-      dispatch({
-        type: 'CREATE_DRAFT',
-        payload: {
-          formData: newHoseData,
-          selectedIds: [],
-          type: 'REGISTER_HOSE',
-          status: 'draft',
-          id: newDraftId,
-        },
+      const newDraftId = activitiesData.createDraft({
+        formData: newHoseData,
+        selectedIds: [newHoseData.assetId],
+        type: 'REGISTER_HOSE',
+        status: 'draft',
+        modifiedAt: new Date().toISOString(),
       });
       Alert.alert(
         'Save Error',
@@ -227,31 +222,45 @@ const RegisterHose = () => {
         [{ text: 'OK' }],
       );
       router.push(`/scan?scanPurpose=REGISTER_HOSE&draftId=${newDraftId}`);
-    } else {
-      dispatch({
-        type: 'MOVE_DRAFT_TO_DONE',
-        payload: +id,
+    } else if (draftId) {
+      activitiesData.saveDraft({
+        formData: newHoseData,
+        selectedIds: [newHoseData.assetId],
+        type: 'REGISTER_HOSE',
+        id: +draftId,
+        status: 'draft',
+        modifiedAt: new Date().toISOString(),
       });
+      activitiesData.moveDraftToDone(+draftId);
       router.dismissAll();
       router.replace('/(app)/dashboard');
       successToast(
         'Hose registered successfully',
         'The hose has been registered.',
       );
+    } else {
     }
   }, [hoseData, dispatch, router, registerMultiple]);
 
   const handleSaveAsDraft = () => {
-    dispatch({
-      type: 'SAVE_DRAFT',
-      payload: {
+    if (!draftId) {
+      activitiesData.createDraft({
         formData: hoseData,
-        selectedIds: [],
+        selectedIds: [hoseData.assetId!],
         type: 'REGISTER_HOSE',
-        id: +id,
         status: 'draft',
-      },
-    });
+        modifiedAt: new Date().toISOString(),
+      });
+    } else {
+      activitiesData.saveDraft({
+        formData: hoseData,
+        selectedIds: [hoseData.assetId!],
+        type: 'REGISTER_HOSE',
+        id: +draftId,
+        status: 'draft',
+        modifiedAt: new Date().toISOString(),
+      });
+    }
     saveAsDraftToast();
     router.dismissAll();
     router.replace('/(app)/dashboard');

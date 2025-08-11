@@ -7,6 +7,7 @@ import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { useAppContext } from '@/context/ContextProvider';
+import { useDataManager } from '@/hooks/useDataManager';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { HoseData } from '@/lib/types/hose';
 import { successToast } from '@/lib/util/toasts';
@@ -47,6 +48,7 @@ export const InspectHose = () => {
     draftId?: string;
   }>();
   const [hoseData, setHoseData] = useState<Partial<HoseData>>({});
+  const { activitiesData } = useDataManager();
   const router = useRouter();
   const scrollViewRef = useRef<ScrollView>(null);
   let id = useMemo(
@@ -88,10 +90,15 @@ export const InspectHose = () => {
   };
 
   const sendInspection = () => {
-    dispatch({
-      type: 'MOVE_DRAFT_TO_DONE',
-      payload: id,
+    activitiesData.saveDraft({
+      id: id,
+      selectedIds: [hoseData.assetId!],
+      type: 'INSPECT',
+      status: 'draft',
+      formData: hoseData,
+      modifiedAt: new Date().toISOString(),
     });
+    activitiesData.moveDraftToDone(id);
     router.dismissAll();
     router.replace('/dashboard');
     successToast('Inspection completed', 'The inspection has been completed.');
@@ -139,22 +146,19 @@ export const InspectHose = () => {
     }
   };
   const handleSaveAsDraft = () => {
-    dispatch({
-      type: 'SAVE_DRAFT',
-      payload: {
-        id: id,
-        selectedIds: [hoseData.assetId!],
-        type: 'INSPECT',
-        status: 'draft',
-        formData: hoseData,
-      },
+    activitiesData.saveDraft({
+      id: id,
+      selectedIds: [hoseData.assetId!],
+      type: 'INSPECT',
+      status: 'draft',
+      formData: hoseData,
+      modifiedAt: new Date().toISOString(),
     });
     router.dismissAll();
     router.replace('/dashboard');
   };
 
   const handleCancel = () => {
-    console.log('Cancel Inspection');
     showDiscardChangesAlert(dispatch);
   };
 

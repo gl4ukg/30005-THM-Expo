@@ -6,6 +6,15 @@ import {
   PartialSendMailFormData,
 } from './Reducer';
 import { Activity } from '@/components/dashboard/activitiesList/activity';
+import { loginCacheService } from '@/services/cache/loginCacheService';
+import { useCacheService } from '@/hooks/useServices';
+import {
+  activities,
+  getHoses,
+  getLastSyncTime,
+  getS1Code,
+  getS1Items,
+} from '@/services/cache/cacheService';
 
 interface AppState {
   auth: AuthState;
@@ -20,7 +29,7 @@ interface AuthState {
     email: string;
     name: string;
     id: string;
-    phoneNumber?: number;
+    phoneNumber?: string;
     customerNumbers?: string[];
   };
   isLogingLoading: boolean;
@@ -109,8 +118,8 @@ interface DataState {
   // define data state properties
   hoses: HoseData[];
   customer: {
-    id: string;
-    name: string;
+    id?: string;
+    name?: string;
   };
   selection: HoseSelection | null;
   hoseTemplate?: Partial<HoseData>;
@@ -152,9 +161,9 @@ export type ActivityDraft =
   | DraftReplaceHose
   | DraftRegisterHose
   | DraftInspectHose;
-
 export type ActivityDone = Omit<ActivityDraft, 'status'> & {
   status: 'done';
+  syncingTimestamp?: number;
 };
 
 interface SettingsState {
@@ -175,7 +184,7 @@ const initialAuthState: AuthState = {
   user: {
     email: 'slange_mester@tess.no ',
     name: 'Ole Slange Mester',
-    phoneNumber: 12345678,
+    phoneNumber: '+4799999999',
     id: '223949MOB',
   },
   isLogingLoading: false,
@@ -199,7 +208,7 @@ const initialDataState: DataState = {
       type: 'SCRAP',
       status: 'draft',
       selectedIds: [27, 30],
-      modifiedAt: new Date(),
+      modifiedAt: new Date().toISOString(),
       formData: {
         comment: 'test',
       },
@@ -210,14 +219,14 @@ const initialDataState: DataState = {
       status: 'draft',
       selectedIds: [27],
       formData: {},
-      modifiedAt: new Date('2016-07-29T20:23:01.804Z'),
+      modifiedAt: '2016-07-29T20:23:01.804Z',
     },
     {
       id: 191820,
       type: 'REPLACE_HOSE',
       status: 'draft',
       selectedIds: [27],
-      modifiedAt: new Date('2016-07-19T20:25:01.804Z'),
+      modifiedAt: '2016-07-19T20:25:01.804Z',
       formData: {
         comment: 'test',
         replacementImpacts: ['test'],
@@ -233,7 +242,7 @@ const initialDataState: DataState = {
       type: 'RFQ',
       status: 'done',
       selectedIds: [27],
-      modifiedAt: new Date('2016-07-19T20:21:01.804Z'),
+      modifiedAt: '2016-07-19T20:21:01.804Z',
       formData: {},
     },
     {
@@ -241,7 +250,7 @@ const initialDataState: DataState = {
       type: 'REPLACE_HOSE',
       status: 'done',
       selectedIds: [27],
-      modifiedAt: new Date('2017-07-29T20:23:01.804Z'),
+      modifiedAt: '2017-07-29T20:23:01.804Z',
       formData: {
         comment: 'test',
         replacementImpacts: ['test'],
@@ -265,12 +274,58 @@ const initialSettingsState: SettingsState = {
   },
   isMenuOpen: false,
 };
-
-const initialState: AppState = {
-  auth: initialAuthState,
-  data: initialDataState,
-  settings: initialSettingsState,
+const getInitialState = (): AppState => {
+  const token = loginCacheService.getApiKey();
+  if (token) {
+    //
+    const user = loginCacheService.getLoginCache();
+    return {
+      auth: {
+        user,
+        token: token,
+        isLogingLoading: false,
+      },
+      data: {
+        customer: {},
+        hoses: getHoses(),
+        selection: null,
+        isCancelable: false,
+        drafts: activities.draft.getAll(),
+        done: activities.done.getAll(),
+        editedHoses: [],
+        isLoading: false,
+        s1Code: getS1Code(),
+        s1Items: getS1Items(),
+        lastUpdate: getLastSyncTime() || null,
+      },
+      settings: initialSettingsState,
+    };
+  } else {
+    return {
+      auth: {
+        user: null,
+        token: null,
+        isLogingLoading: false,
+      },
+      data: {
+        customer: {},
+        hoses: [],
+        selection: null,
+        isCancelable: false,
+        drafts: [],
+        done: [],
+        editedHoses: [],
+        isLoading: false,
+        s1Code: null,
+        s1Items: [],
+        lastUpdate: null,
+      },
+      settings: initialSettingsState,
+    };
+  }
 };
+
+const initialState: AppState = getInitialState();
 
 export {
   initialState,

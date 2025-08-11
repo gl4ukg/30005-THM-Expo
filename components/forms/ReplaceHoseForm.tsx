@@ -24,6 +24,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import { UnitInput } from '../detailView/edit/UnitInput';
 import { saveAsDraftToast } from './ActionForm';
 import { successToast } from '@/lib/util/toasts';
+import { useDataManager } from '@/hooks/useDataManager';
 
 interface Props {
   draftId: string;
@@ -36,6 +37,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
+  const { activitiesData } = useDataManager();
 
   usePreventGoBack(isSubmitting);
 
@@ -82,10 +84,15 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
 
   const handleSend = () => {
     setIsSubmitting(true);
-    dispatch({
-      type: 'MOVE_DRAFT_TO_DONE',
-      payload: +draftId,
+    activitiesData.saveDraft({
+      id: +draftId,
+      selectedIds,
+      type: 'REPLACE_HOSE',
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
+    activitiesData.moveDraftToDone(+draftId);
     router.dismissAll();
     router.replace('/dashboard');
     successToast(
@@ -96,15 +103,13 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
 
   const handleSaveAsDraft = () => {
     setIsSubmitting(true);
-    dispatch({
-      type: 'SAVE_DRAFT',
-      payload: {
-        id: +draftId,
-        selectedIds,
-        type: 'REPLACE_HOSE',
-        status: 'draft',
-        formData,
-      },
+    activitiesData.saveDraft({
+      id: +draftId,
+      selectedIds,
+      type: 'REPLACE_HOSE',
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
     saveAsDraftToast();
     router.dismissAll();
@@ -115,17 +120,15 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   };
 
   const handleAddHoses = () => {
-    const draft = state.data.drafts.find((d) => d.id === +draftId);
-    if (!draft) return;
-    dispatch({
-      type: 'SAVE_DRAFT',
-      payload: {
-        id: +draftId,
-        selectedIds,
-        status: 'draft',
-        type: 'REPLACE_HOSE',
-        formData,
-      },
+    // const draft = state.data.drafts.find((d) => d.id === +draftId);
+    // if (!draft) return;
+    activitiesData.saveDraft({
+      type: 'REPLACE_HOSE',
+      id: +draftId,
+      selectedIds,
+      status: 'draft',
+      modifiedAt: new Date().toISOString(),
+      formData,
     });
     router.push(getScanUrl('REPLACE_HOSE', draftId.toString()));
   };

@@ -1,6 +1,5 @@
 import { ContextProvider, useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
-import { syncData } from '@/lib/util/sync';
 import { registerBackgroundTaskAsync } from '@/tasks';
 import { useNetInfo } from '@react-native-community/netinfo';
 import * as BackgroundTask from 'expo-background-task';
@@ -23,7 +22,7 @@ export default function RootLayout() {
 registerBackgroundTaskAsync();
 const App = () => {
   const { state, dispatch } = useAppContext();
-  const { type, isInternetReachable } = useNetInfo();
+  const { isInternetReachable } = useNetInfo();
   useEffect(() => {
     updateAsync();
   }, []);
@@ -49,7 +48,6 @@ const App = () => {
       <Stack
         screenOptions={{
           headerShown: false,
-          animationTypeForReplace: 'push',
           contentStyle: {
             backgroundColor: colors.white,
           },
@@ -65,7 +63,6 @@ const App = () => {
     <Stack
       screenOptions={{
         headerShown: false,
-        animationTypeForReplace: 'push',
         contentStyle: {
           backgroundColor: colors.white,
         },
