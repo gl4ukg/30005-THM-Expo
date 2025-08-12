@@ -1,5 +1,6 @@
 import { useAppContext } from '@/context/ContextProvider';
 import { ActivityDone, ActivityDraft } from '@/context/state';
+import { HoseData } from '@/lib/types/hose';
 import { generateNumericDraftId } from '@/lib/util/unikId';
 import { getAllHosesByS1 } from '@/services/api/asset';
 import {
@@ -10,6 +11,7 @@ import {
   activities,
   moveDraftToDone,
   addHose,
+  updateHose,
 } from '@/services/cache/cacheService';
 import { loginCacheService } from '@/services/cache/loginCacheService';
 
@@ -18,6 +20,7 @@ export const useDataManager = (): {
   isLoading: boolean;
   getHoseData: () => Promise<DataAction>;
   removeHoseData: () => Promise<DataAction>;
+  editHose: (hose: Partial<HoseData>) => Promise<DataAction>;
   activitiesData: typeof activitiesData;
 } => {
   const { state, dispatch } = useAppContext();
@@ -131,7 +134,28 @@ export const useDataManager = (): {
       };
     }
   };
-
+  const editHose = async (hose: Partial<HoseData>): Promise<DataAction> => {
+    try {
+      // find hose and update it in cache add hose to array of hose changes
+      updateHose(hose);
+      // update hose in context
+      dispatch({
+        type: 'SAVE_HOSE_DATA',
+        payload: {
+          hoseData: hose,
+          hoseId: hose.assetId!,
+        },
+      });
+      return {
+        status: 'success',
+      };
+    } catch (error) {
+      return {
+        status: 'error',
+        message: 'Failed to update hose',
+      };
+    }
+  };
   const activitiesData = {
     syncStoreToContext: () => {
       dispatch({
@@ -208,6 +232,7 @@ export const useDataManager = (): {
     isLoading: state.data.isLoading,
     getHoseData,
     removeHoseData,
+    editHose,
     activitiesData,
   };
 };

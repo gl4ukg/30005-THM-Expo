@@ -20,6 +20,7 @@ const CACHE_KEYS = {
   LAST_SYNC: 'last_sync_timestamp',
   ACTIVITIES_DONE: 'activities_done',
   ACTIVITIES_DRAFTS: 'activities_drafts',
+  EDITED_HOSES: 'edited_hoses',
 } as const;
 
 export const setS1Code = (s1Code: string): void => {
@@ -89,15 +90,23 @@ export const getHoses = (): HoseData[] => {
   }
 };
 
-export const updateHose = (updatedHose: HoseData): void => {
+export const updateHose = (updatedHose: Partial<HoseData>): void => {
   try {
     const hoses = getHoses();
     const index = hoses.findIndex(
       (hose) => hose.assetId === updatedHose.assetId,
     );
 
+    const editedHosesJson = storage.getString(CACHE_KEYS.EDITED_HOSES);
+    let editedHoses: Partial<HoseData>[] = [];
+    if (editedHosesJson) {
+      editedHoses = JSON.parse(editedHosesJson);
+    }
+    editedHoses.push(updatedHose);
+    storage.set(CACHE_KEYS.EDITED_HOSES, JSON.stringify(editedHoses));
+
     if (index !== -1) {
-      hoses[index] = updatedHose;
+      hoses[index] = updatedHose as HoseData;
       setHoses(hoses);
       console.log('Hose updated in cache:', updatedHose.assetId);
     } else {

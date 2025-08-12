@@ -161,7 +161,6 @@ type DataAction =
       'ACTIVITY_DONE_TIMESTAMP',
       { id: number; timestamp: number }
     >
-  | ActionWithPayload<'ADD_HOSE_TO_EDITED_HOSES', Partial<HoseData>>
   | ActionWithPayload<'ADD_NEW_HOSE', HoseData>
   | ActionWithPayload<'MOVE_DRAFT_TO_DONE', number>
   | ActionWithPayload<'SET_TIMESTAMP', { id: number; timestamp: number }>
@@ -264,32 +263,19 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         hoses: [...state.hoses, action.payload],
       };
     case 'SAVE_HOSE_DATA':
-      (console.log('SAVE_HOSE_DATA', action.payload.hoseId),
-        action.payload.hoseData.installationDate);
       if (action.payload.hoseId === undefined) {
         console.error('hoseId is undefined', action.payload.hoseId);
         return state;
       }
-
       // On submit, when the hose is to be saved, update the cache to persist the changes
-      const updatedHoses = state.hoses.map((hose) => {
-        if (hose.assetId === action.payload.hoseId) {
-          const updatedHose = {
-            ...hose,
-            ...action.payload.hoseData,
-          };
-
-          try {
-            updateHose(updatedHose);
-          } catch (error) {
-            console.error('Failed to update hose in cache:', error);
-          }
-
-          return updatedHose;
-        }
-        return hose;
-      });
-
+      const updatedHoses = state.hoses.map((hose) =>
+        hose.assetId === action.payload.hoseId
+          ? {
+              ...hose,
+              ...action.payload.hoseData,
+            }
+          : hose,
+      );
       return {
         ...state,
         hoses: updatedHoses,
@@ -472,12 +458,6 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
           }
           return d;
         }),
-      };
-    }
-    case 'ADD_HOSE_TO_EDITED_HOSES': {
-      return {
-        ...state,
-        editedHoses: [...state.editedHoses, action.payload],
       };
     }
 
