@@ -1,17 +1,21 @@
+import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
+import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
-import { Href, Link } from 'expo-router';
+import { Href, Link, router } from 'expo-router';
 import { FC } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 
 interface NavElement {
   title: string;
   icon?: FC<any>;
   key?: string;
+  userHasNoAccess?: true;
 }
 interface NavLink extends NavElement {
   to: Href;
+  userHasNoAccess?: true;
 }
 interface NavMenu extends NavElement {
   links: NavLink[];
@@ -22,13 +26,48 @@ interface NavMenu extends NavElement {
 export type NavElementsType =
   | NavLink
   | Omit<NavMenu, 'isCollapsed' | 'toggleCollapsed'>;
-type NavElementType = { handleLinkPress: (to: Href) => void } & (
-  | NavLink
-  | NavMenu
-);
+type NavElementType = {
+  handleLinkPress: (to: Href) => void;
+} & (NavLink | NavMenu);
 
 export const NavElement: FC<NavElementType> = (props) => {
-  if ('to' in props) {
+  const { dispatch } = useAppContext();
+  const handleGetAccess = () => {
+    Alert.alert(
+      'Unlock More Features',
+      'Your current access level only includes selected functions. To unlock this feature and explore the full potential of our platform, please get in touch with our team.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Contact TESS',
+          onPress: () => {
+            dispatch({ type: 'SET_IS_MENU_OPEN', payload: false });
+            router.push('/(app)/dashboard/actions?action=CONTACT_SUPPORT');
+          },
+        },
+      ],
+    );
+  };
+  if (props.userHasNoAccess) {
+    return (
+      <Pressable
+        style={({ pressed }) => [
+          styles.container,
+          styles.containerDisabled,
+          pressed && styles.containerPressed,
+        ]}
+        onPress={handleGetAccess}
+      >
+        <View>
+          <Icon name='Locked' size='sm' color={colors.primary} />
+        </View>
+        <Typography name='navigation' text={props.title} />
+      </Pressable>
+    );
+  } else if ('to' in props) {
     return (
       <Link asChild href={props.to} style={[styles.container]}>
         <Pressable
@@ -93,6 +132,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     gap: 8,
     backgroundColor: colors.dashboardGreen,
+  },
+  containerDisabled: {
+    opacity: 0.4,
   },
   containerPressed: {
     opacity: 0.6,

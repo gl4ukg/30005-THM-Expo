@@ -6,7 +6,7 @@ import { NavMenu } from '@/components/UI/NavMenu/navMenu';
 import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
 import { Href, Link, useRouter } from 'expo-router';
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,11 +22,23 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
     dispatch({ type: 'SET_IS_MENU_OPEN', payload: isOpen });
   }, [isOpen, dispatch]);
 
+  useEffect(() => {
+    setIsOpen(state.settings.isMenuOpen);
+  }, [state.settings.isMenuOpen]);
+
   const handleLinkPress = (to: Href) => {
     setIsOpen(false);
     router.push(to);
     dispatch({ type: 'FINISH_SELECTION' });
   };
+  const needsThisCodeToGetAccess = useCallback(
+    (accessCode: number): true | undefined => {
+      return state.auth.user?.userAccessCode?.includes(`${accessCode}`)
+        ? undefined
+        : true;
+    },
+    [state.auth.user?.userAccessCode],
+  );
   return (
     <View style={[styles.modal, isOpen && styles.modalOpen]}>
       {isOpen && (
@@ -43,6 +55,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               elements={[
                 {
                   title: 'Dashboard / Home',
+                  userHasNoAccess: needsThisCodeToGetAccess(1),
                   to: '/(app)/dashboard',
                   icon: () => <Icon name='Meter' color={colors.primary} />,
                 },
@@ -50,6 +63,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
                   title: 'Recent activities',
                   to: '/(app)/activites',
                   icon: () => <Icon name='Dashboard' color={colors.primary} />,
+                  userHasNoAccess: needsThisCodeToGetAccess(2),
                 },
                 {
                   title: 'Register hose / equipment',
@@ -57,26 +71,31 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
                   icon: () => (
                     <Icon name='RegisterHoses' color={colors.primary} />
                   ),
+                  userHasNoAccess: needsThisCodeToGetAccess(3),
                 },
                 {
                   title: 'Inspect hose / equipment',
                   to: getScanUrl('INSPECT_HOSE'),
                   icon: () => <Icon name='Inspect' color={colors.primary} />,
+                  userHasNoAccess: needsThisCodeToGetAccess(4),
                 },
                 {
                   title: 'Order hose',
                   to: getScanUrl('RFQ'),
                   icon: () => <Icon name='Cart' color={colors.primary} />,
+                  userHasNoAccess: needsThisCodeToGetAccess(5),
                 },
                 {
                   title: 'Replace hose / pressure testing',
                   to: getScanUrl('REPLACE_HOSE'),
                   icon: () => <Icon name='Task' color={colors.primary} />,
+                  userHasNoAccess: needsThisCodeToGetAccess(6),
                 },
                 {
                   title: 'Scrap hose',
                   to: getScanUrl('SCRAP'),
                   icon: () => <Icon name='Trash' color={colors.primary} />,
+                  userHasNoAccess: needsThisCodeToGetAccess(7),
                 },
                 {
                   title: 'Contact TESS Support',

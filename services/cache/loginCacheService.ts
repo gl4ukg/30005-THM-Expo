@@ -9,6 +9,7 @@ const CACHE_KEYS = {
   USER_NAME: 'user_name',
   USER_ID: 'user_id',
   USER_EMAIL: 'user_email',
+  USER_ACCESS_CODE: 'user_access_code',
   API_KEY: 'api_token',
   API_KEY_EXPIRATION: 'api_token_expiration',
 } as const;
@@ -23,11 +24,14 @@ const clearLoginCache = (): void => {
   }
 };
 
-const setLoginCache = (user: Record<'name' | 'id' | 'email', string>): void => {
+const setLoginCache = (
+  user: Record<'name' | 'id' | 'email' | 'userAccessCode', string>,
+): void => {
   try {
     storage.set(CACHE_KEYS.USER_NAME, user.name);
     storage.set(CACHE_KEYS.USER_ID, user.id);
     storage.set(CACHE_KEYS.USER_EMAIL, user.email);
+    storage.set(CACHE_KEYS.USER_ACCESS_CODE, user.userAccessCode);
   } catch (error) {
     console.error('Failed to set login cache:', error);
     throw error;

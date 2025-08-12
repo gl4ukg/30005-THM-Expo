@@ -22,6 +22,7 @@ interface AuthState {
     id: string;
     phoneNumber?: number;
     customerNumbers?: string[];
+    userAccessCode?: `${number}`;
   };
   isLogingLoading: boolean;
   token: null | string;
@@ -274,9 +275,6 @@ const initialState: AppState = {
 
 export {
   initialState,
-  initialAuthState,
-  initialDataState,
-  initialSettingsState,
   type AppState,
   type AuthState,
   type DataState,

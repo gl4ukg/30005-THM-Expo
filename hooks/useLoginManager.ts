@@ -3,7 +3,6 @@ import { login } from '@/lib/util/login';
 import { getS1 } from '@/services/api/asset';
 import { setS1Code, setS1Items } from '@/services/cache/cacheService';
 import { loginCacheService } from '@/services/cache/loginCacheService';
-import { Alert } from 'react-native';
 
 type LoginAction = { status: 'success' | 'error'; message: string };
 export const useLoginManager = (): {
@@ -56,6 +55,7 @@ export const useLoginManager = (): {
         };
       } else {
         const { selectedS1Code, s1Items } = await getS1();
+        const userAccessCode = '345'
         if (selectedS1Code) {
           dispatch({
             type: 'SET_S1_CODE',
@@ -83,6 +83,7 @@ export const useLoginManager = (): {
           type: 'SET_LOGIN_LOADING',
           payload: false,
         });
+        console.log('User logged in:', user.firstName, user.lastName, user );
         dispatch({
           type: 'LOGIN',
           payload: {
@@ -90,12 +91,14 @@ export const useLoginManager = (): {
             name: `${user.firstName} ${user.lastName}`,
             id: `${user.userId}`,
             customerNumbers: user.customerNumbers,
+            userAccessCode
           },
         });
         loginCacheService.setLoginCache({
           name: `${user.firstName} ${user.lastName}`,
           id: `${user.userId}`,
           email: user.email,
+          userAccessCode
         });
         return {
           status: 'success',
