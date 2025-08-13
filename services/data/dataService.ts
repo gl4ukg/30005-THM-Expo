@@ -101,27 +101,12 @@ export const getHosesData = async (
         return cachedHoses;
       }
     }
-
-    // Cache is stale or empty, fetch from API
-    console.log('Cache is stale or empty, fetching fresh data...');
     const s1Code = getS1Code();
-
     if (!s1Code) {
       throw new Error('S1 code not found in cache. Please login again.');
     }
-
-    const hosesResponse = await getAllHosesByS1(s1Code);
-
-    let hoses: HoseData[] = [];
-
-    if (hosesResponse && Array.isArray(hosesResponse)) {
-      hoses = hosesResponse;
-    } else if (Array.isArray(hosesResponse)) {
-      hoses = hosesResponse;
-    }
+    let hoses: HoseData[] = await getAllHosesByS1(s1Code);
     setHoses(hoses);
-    console.log('Fresh hoses data cached');
-
     return hoses;
   } catch (error) {
     console.error('Failed to get hoses data:', error);

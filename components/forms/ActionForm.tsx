@@ -18,6 +18,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import { TooltipWrapper } from '../detailView/edit/TooltipWrapper';
 import { successToast } from '@/lib/util/toasts';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+import { useDataManager } from '@/hooks/useDataManager';
 
 const formLabels: Record<
   Extract<MultiSelectionActionsType, 'RFQ' | 'CONTACT' | 'SCRAP'>,
@@ -70,6 +71,7 @@ export const ActionForm: React.FC<Props> = ({
     useState<Extract<MultiSelectionActionsType, 'RFQ' | 'CONTACT' | 'SCRAP'>>(
       'RFQ',
     );
+  const { activitiesData } = useDataManager();
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
   usePreventGoBack(isSubmitting);
@@ -110,10 +112,15 @@ export const ActionForm: React.FC<Props> = ({
 
   const onSend = () => {
     setIsSubmitting(true);
-    dispatch({
-      type: 'MOVE_DRAFT_TO_DONE',
-      payload: +draftId,
+    activitiesData.saveDraft({
+      id: +draftId,
+      selectedIds,
+      type: actionType,
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
+    activitiesData.moveDraftToDone(+draftId);
     router.dismissAll();
     router.replace('/dashboard');
     successToast(
@@ -123,15 +130,13 @@ export const ActionForm: React.FC<Props> = ({
   };
   const handleSaveAsDraft = () => {
     setIsSubmitting(true);
-    dispatch({
-      type: 'SAVE_DRAFT',
-      payload: {
-        id: +draftId,
-        selectedIds,
-        type: actionType,
-        status: 'draft',
-        formData,
-      },
+    activitiesData.saveDraft({
+      id: +draftId,
+      selectedIds,
+      type: actionType,
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
     saveAsDraftToast();
     router.dismissAll();
@@ -142,15 +147,13 @@ export const ActionForm: React.FC<Props> = ({
   };
 
   const handleAddHoses = () => {
-    dispatch({
-      type: 'SAVE_DRAFT',
-      payload: {
-        id: +draftId,
-        selectedIds,
-        type: actionType,
-        status: 'draft',
-        formData,
-      },
+    activitiesData.saveDraft({
+      id: +draftId,
+      selectedIds,
+      type: actionType,
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
     router.navigate(getScanUrl(actionType, draftId.toString()));
   };

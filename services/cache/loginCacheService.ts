@@ -9,6 +9,7 @@ const CACHE_KEYS = {
   USER_NAME: 'user_name',
   USER_ID: 'user_id',
   USER_EMAIL: 'user_email',
+  USER_PHONE_NUMBER: 'user_phone_number',
   USER_ACCESS_CODE: 'user_access_code',
   API_KEY: 'api_token',
   API_KEY_EXPIRATION: 'api_token_expiration',
@@ -25,12 +26,13 @@ const clearLoginCache = (): void => {
 };
 
 const setLoginCache = (
-  user: Record<'name' | 'id' | 'email' | 'userAccessCode', string>,
+  user: Record<'name' | 'id' | 'email' | 'userAccessCode' | 'phoneNumber', string>,
 ): void => {
   try {
     storage.set(CACHE_KEYS.USER_NAME, user.name);
     storage.set(CACHE_KEYS.USER_ID, user.id);
     storage.set(CACHE_KEYS.USER_EMAIL, user.email);
+    storage.set(CACHE_KEYS.USER_PHONE_NUMBER, user.phoneNumber);
     storage.set(CACHE_KEYS.USER_ACCESS_CODE, user.userAccessCode);
   } catch (error) {
     console.error('Failed to set login cache:', error);
@@ -39,25 +41,30 @@ const setLoginCache = (
 };
 
 const getLoginCache = (): {
-  userName: string;
-  userId: string;
-  userEmail: string;
+  name: string;
+  id: string;
+  email: string;
+  phoneNumber: string;
 } => {
   try {
     const userName = storage.getString(CACHE_KEYS.USER_NAME) ?? '';
     const userId = storage.getString(CACHE_KEYS.USER_ID) ?? '';
     const userEmail = storage.getString(CACHE_KEYS.USER_EMAIL) ?? '';
+    const userPhoneNumber =
+      storage.getString(CACHE_KEYS.USER_PHONE_NUMBER) ?? '';
     return {
-      userName,
-      userId,
-      userEmail,
+      name: userName,
+      id: userId,
+      email: userEmail,
+      phoneNumber: userPhoneNumber,
     };
   } catch (error) {
     console.error('Failed to get login cache:', error);
     return {
-      userName: '',
-      userId: '',
-      userEmail: '',
+      name: '',
+      id: '',
+      email: '',
+      phoneNumber: '',
     };
   }
 };
