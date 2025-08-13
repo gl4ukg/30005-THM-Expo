@@ -6,6 +6,7 @@ import { colors } from '@/lib/tokens/colors';
 import { useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { SelectDropdown } from '@/components/UI/ActionMenu';
+import { useDataManager } from '@/hooks/useDataManager';
 const options = [
   {
     label: 'All activities',
@@ -42,10 +43,11 @@ const Activities: React.FC = () => {
   const [filter, setFilter] = useState<(typeof options)[0]['value']>('ALL');
   const [status, setStatus] = useState<'all' | 'draft' | 'done'>('all');
   const [activitiesToShow, setActivitiesToShow] = useState<Activity[]>([]);
+  const { activitiesData } = useDataManager();
 
   const removeActivity = (id: string) => {
     setActivities(activities.filter((activity) => activity.id !== +id));
-    // TODO remove from state, add reducer
+    activitiesData.removeDraft(+id);
   };
   useEffect(() => {
     const filteredActivities = activities.filter((activity) => {
@@ -58,7 +60,8 @@ const Activities: React.FC = () => {
   }, [activities, filter, status, state]);
   useEffect(() => {
     const activities = [...state.data.drafts, ...state.data.done].sort(
-      (a, b) => b.modifiedAt.getTime() - a.modifiedAt.getTime(),
+      (a, b) =>
+        new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime(),
     );
     setActivities(activities);
     setActivitiesToShow(activities);

@@ -28,7 +28,7 @@ export interface Activity {
   type: ActivityType;
   status: 'done' | 'draft';
   selectedIds: number[];
-  modifiedAt: Date;
+  modifiedAt: string;
   formData:
     | PartialRFQFormData
     | PartialFormData
@@ -69,6 +69,8 @@ export const Activity: FC<Props> = ({ item, onRowPress, onRemove }) => {
         'Fill in all required information before saving.',
       );
       onRowPress();
+    } else {
+      console.log('handlePress done', item);
     }
   };
 

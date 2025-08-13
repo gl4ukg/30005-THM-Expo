@@ -15,6 +15,7 @@ import { UniversalHoseData } from '@/components/detailView/view/UniversalHoseDat
 import { AppContext, PartialRFQFormData } from '@/context/Reducer';
 import { mockedHistory } from '@/context/mocked';
 import { SingleSelection, SingleSelectionActionsType } from '@/context/state';
+import { useDataManager } from '@/hooks/useDataManager';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { EditProps } from '@/lib/types/edit';
 import { HID, HoseData } from '@/lib/types/hose';
@@ -74,7 +75,7 @@ const HoseDetails = () => {
   }>();
 
   const { state, dispatch } = useContext(AppContext);
-
+  const { activitiesData, editHose } = useDataManager();
   const scrollViewRef = useRef<ScrollView>(null);
 
   const [editMode, setEditMode] = useState(startInEditMode === 'true');
@@ -139,16 +140,7 @@ const HoseDetails = () => {
   };
 
   const saveHoseChanges = (markAsMissingData: boolean) => {
-    // Save hose data
-    dispatch({
-      type: 'SAVE_HOSE_DATA',
-      payload: { hoseId: hoseData?.assetId ?? +hoseId, hoseData },
-    });
-    dispatch({
-      type: 'ADD_HOSE_TO_EDITED_HOSES',
-      payload: hoseData,
-    });
-
+    editHose(hoseData);
     // Clear temporary data and exit edit mode
     dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
     setEditMode(false);
@@ -202,18 +194,12 @@ const HoseDetails = () => {
       setEditMode(true);
       return;
     } else if (value === 'INSPECT') {
-      const draftId = generateNumericDraftId(
-        state.data.drafts.map((d) => d.id),
-      );
-      dispatch({
-        type: 'CREATE_DRAFT',
-        payload: {
-          id: draftId,
-          status: 'draft',
-          selectedIds: [hoseData.assetId ?? +hoseId],
-          type: 'INSPECT',
-          formData: hoseData as Partial<HID>,
-        },
+      const draftId = activitiesData.createDraft({
+        type: 'INSPECT',
+        status: 'draft',
+        selectedIds: [hoseData.assetId ?? +hoseId],
+        formData: hoseData as Partial<HID>,
+        modifiedAt: new Date().toISOString(),
       });
       router.push({
         pathname: `/dashboard/hoses/inspect`,
@@ -221,18 +207,12 @@ const HoseDetails = () => {
       });
       return;
     } else {
-      const draftId = generateNumericDraftId(
-        state.data.drafts.map((d) => d.id),
-      );
-      dispatch({
-        type: 'CREATE_DRAFT',
-        payload: {
-          id: draftId,
-          status: 'draft',
-          selectedIds: [hoseData.assetId ?? +hoseId],
-          type: value,
-          formData: hoseData as PartialRFQFormData,
-        },
+      const draftId = activitiesData.createDraft({
+        type: value,
+        status: 'draft',
+        selectedIds: [hoseData.assetId ?? +hoseId],
+        formData: hoseData as Partial<HID>,
+        modifiedAt: new Date().toISOString(),
       });
       router.push({
         pathname: `/dashboard/actions`,

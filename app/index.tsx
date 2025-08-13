@@ -22,6 +22,7 @@ import { colors } from '@/lib/tokens/colors';
 import { Link, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useEffect } from 'react';
 
 const Login = () => {
   const router = useRouter();
@@ -132,7 +133,11 @@ const Login = () => {
                       <ButtonTHS
                         title={'LOGIN'}
                         onPress={() => {
-                          router.push('/login');
+                          if (state.auth.user !== null) {
+                            router.push('/dashboard');
+                          } else {
+                            router.push('/login');
+                          }
                         }}
                         variant={'primary'}
                       />
