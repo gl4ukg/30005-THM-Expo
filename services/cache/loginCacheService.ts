@@ -26,7 +26,10 @@ const clearLoginCache = (): void => {
 };
 
 const setLoginCache = (
-  user: Record<'name' | 'id' | 'email' | 'userAccessCode' | 'phoneNumber', string>,
+  user: Record<
+    'name' | 'id' | 'email' | 'userAccessCode' | 'phoneNumber',
+    string
+  >,
 ): void => {
   try {
     storage.set(CACHE_KEYS.USER_NAME, user.name);
@@ -45,6 +48,7 @@ const getLoginCache = (): {
   id: string;
   email: string;
   phoneNumber: string;
+  userAccessCode?: `${number}`;
 } => {
   try {
     const userName = storage.getString(CACHE_KEYS.USER_NAME) ?? '';
@@ -52,11 +56,16 @@ const getLoginCache = (): {
     const userEmail = storage.getString(CACHE_KEYS.USER_EMAIL) ?? '';
     const userPhoneNumber =
       storage.getString(CACHE_KEYS.USER_PHONE_NUMBER) ?? '';
+    const userAccessCode =
+      (storage.getString(CACHE_KEYS.USER_ACCESS_CODE) as
+        | `${number}`
+        | undefined) ?? undefined;
     return {
       name: userName,
       id: userId,
       email: userEmail,
       phoneNumber: userPhoneNumber,
+      userAccessCode: userAccessCode,
     };
   } catch (error) {
     console.error('Failed to get login cache:', error);

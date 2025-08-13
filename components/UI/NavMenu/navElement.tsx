@@ -2,6 +2,7 @@ import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
+import { handleGetAccess } from '@/lib/util/getAccess';
 import { Href, Link, router } from 'expo-router';
 import { FC } from 'react';
 import { Alert, Pressable, StyleSheet, View } from 'react-native';
@@ -32,25 +33,7 @@ type NavElementType = {
 
 export const NavElement: FC<NavElementType> = (props) => {
   const { dispatch } = useAppContext();
-  const handleGetAccess = () => {
-    Alert.alert(
-      'Unlock More Features',
-      'Your current access level only includes selected functions. To unlock this feature and explore the full potential of our platform, please get in touch with our team.',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Contact TESS',
-          onPress: () => {
-            dispatch({ type: 'SET_IS_MENU_OPEN', payload: false });
-            router.push('/(app)/dashboard/actions?action=CONTACT_SUPPORT');
-          },
-        },
-      ],
-    );
-  };
+
   if (props.userHasNoAccess) {
     return (
       <Pressable
@@ -59,7 +42,7 @@ export const NavElement: FC<NavElementType> = (props) => {
           styles.containerDisabled,
           pressed && styles.containerPressed,
         ]}
-        onPress={handleGetAccess}
+        onPress={() => handleGetAccess(dispatch)}
       >
         <View>
           <Icon name='Locked' size='sm' color={colors.primary} />

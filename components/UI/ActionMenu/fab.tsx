@@ -2,7 +2,9 @@ import { Section } from '@/app/(app)/dashboard/hoses/hose/[hoseId]';
 import { Icon } from '@/components/Icon/Icon';
 import { IconName } from '@/components/Icon/iconMapping';
 import { Typography } from '@/components/Typography';
+import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
+import { handleGetAccess } from '@/lib/util/getAccess';
 import { FC, useState } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,6 +13,7 @@ export type Option<T> = {
   icon?: IconName;
   label: string;
   value: T;
+  userHasNoAccess?: true;
 };
 interface Props<T> {
   menuTitle?: string;
@@ -27,6 +30,7 @@ export const ActionsFab: FC<Props<string>> = ({
   shortcuts,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { dispatch } = useAppContext();
 
   const handleChange = (value: Partial<string>) => {
     onChange(value);
@@ -67,23 +71,46 @@ export const ActionsFab: FC<Props<string>> = ({
                 ))}
               </View>
             )}
-            {options.map((option) => (
-              <Pressable
-                key={option.value}
-                onPress={() => handleChange(option.value)}
-              >
-                <View key={option.value} style={style.option}>
-                  <Typography name='navigation' text={option.label} />
-                  {option.icon && (
-                    <Icon
-                      name={option.icon}
-                      size='sm'
-                      color={colors.primary25}
-                    />
-                  )}
-                </View>
-              </Pressable>
-            ))}
+            {options.map((option) => {
+              if (option.userHasNoAccess)
+                return (
+                  <Pressable
+                    key={option.value}
+                    onPress={() => handleGetAccess(dispatch)}
+                  >
+                    <View
+                      key={option.value}
+                      style={[style.option, style.optionDisabled]}
+                    >
+                      <Typography name='navigation' text={option.label} />
+                      {option.icon && (
+                        <Icon
+                          name={'Locked'}
+                          size='sm'
+                          color={colors.primary25}
+                        />
+                      )}
+                    </View>
+                  </Pressable>
+                );
+              return (
+                <Pressable
+                  key={option.value}
+                  onPress={() => handleChange(option.value)}
+                >
+                  <View key={option.value} style={style.option}>
+                    <Typography name='navigation' text={option.label} />
+                    {option.icon && (
+                      <Icon
+                        name={option.icon}
+                        size='sm'
+                        color={colors.primary25}
+                      />
+                    )}
+                  </View>
+                </Pressable>
+              );
+            })}
           </View>
         </Pressable>
       </Modal>
@@ -147,6 +174,9 @@ const style = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     padding: 10,
+  },
+  optionDisabled: {
+    opacity: 0.4,
   },
   boldText: {
     fontWeight: 'bold',

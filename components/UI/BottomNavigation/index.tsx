@@ -5,6 +5,7 @@ import { OpenMenu } from '@/components/UI/BottomNavigation/openMenu';
 import { NavMenu } from '@/components/UI/NavMenu/navMenu';
 import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
+import { needsThisCodeToGetAccess } from '@/lib/util/getAccess';
 import { Href, Link, useRouter } from 'expo-router';
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
@@ -31,14 +32,7 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
     router.push(to);
     dispatch({ type: 'FINISH_SELECTION' });
   };
-  const needsThisCodeToGetAccess = useCallback(
-    (accessCode: number): true | undefined => {
-      return state.auth.user?.userAccessCode?.includes(`${accessCode}`)
-        ? undefined
-        : true;
-    },
-    [state.auth.user?.userAccessCode],
-  );
+
   return (
     <View style={[styles.modal, isOpen && styles.modalOpen]}>
       {isOpen && (
@@ -55,7 +49,6 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
               elements={[
                 {
                   title: 'Dashboard / Home',
-                  userHasNoAccess: needsThisCodeToGetAccess(1),
                   to: '/(app)/dashboard',
                   icon: () => <Icon name='Meter' color={colors.primary} />,
                 },
@@ -63,7 +56,6 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
                   title: 'Recent activities',
                   to: '/(app)/activites',
                   icon: () => <Icon name='Dashboard' color={colors.primary} />,
-                  userHasNoAccess: needsThisCodeToGetAccess(2),
                 },
                 {
                   title: 'Register hose / equipment',
@@ -71,31 +63,46 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
                   icon: () => (
                     <Icon name='RegisterHoses' color={colors.primary} />
                   ),
-                  userHasNoAccess: needsThisCodeToGetAccess(3),
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    3,
+                    state.auth.user?.userAccessCode,
+                  ),
                 },
                 {
                   title: 'Inspect hose / equipment',
                   to: getScanUrl('INSPECT_HOSE'),
                   icon: () => <Icon name='Inspect' color={colors.primary} />,
-                  userHasNoAccess: needsThisCodeToGetAccess(4),
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    4,
+                    state.auth.user?.userAccessCode,
+                  ),
                 },
                 {
                   title: 'Order hose',
                   to: getScanUrl('RFQ'),
                   icon: () => <Icon name='Cart' color={colors.primary} />,
-                  userHasNoAccess: needsThisCodeToGetAccess(5),
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    5,
+                    state.auth.user?.userAccessCode,
+                  ),
                 },
                 {
                   title: 'Replace hose / pressure testing',
                   to: getScanUrl('REPLACE_HOSE'),
                   icon: () => <Icon name='Task' color={colors.primary} />,
-                  userHasNoAccess: needsThisCodeToGetAccess(6),
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    6,
+                    state.auth.user?.userAccessCode,
+                  ),
                 },
                 {
                   title: 'Scrap hose',
                   to: getScanUrl('SCRAP'),
                   icon: () => <Icon name='Trash' color={colors.primary} />,
-                  userHasNoAccess: needsThisCodeToGetAccess(7),
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    7,
+                    state.auth.user?.userAccessCode,
+                  ),
                 },
                 {
                   title: 'Contact TESS Support',

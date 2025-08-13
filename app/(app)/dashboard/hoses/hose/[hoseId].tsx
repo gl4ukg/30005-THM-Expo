@@ -19,11 +19,13 @@ import { useDataManager } from '@/hooks/useDataManager';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { EditProps } from '@/lib/types/edit';
 import { HID, HoseData } from '@/lib/types/hose';
+import { needsThisCodeToGetAccess } from '@/lib/util/getAccess';
 import { generateNumericDraftId } from '@/lib/util/unikId';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 type ExtendedEditProps<T> = EditProps<T> & {
   missingFields?: string[];
@@ -226,21 +228,37 @@ const HoseDetails = () => {
       label: 'Inspect hose',
       value: 'INSPECT',
       icon: 'Inspect',
+      userHasNoAccess: needsThisCodeToGetAccess(
+        4,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       label: 'Edit hose data',
       value: 'EDIT',
       icon: 'Edit',
+      userHasNoAccess: needsThisCodeToGetAccess(
+        5,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       label: 'Order hose (RFQ)',
       value: 'RFQ',
       icon: 'Cart',
+      userHasNoAccess: needsThisCodeToGetAccess(
+        6,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       label: 'Scrap hose',
       value: 'SCRAP',
       icon: 'Trash',
+      userHasNoAccess: needsThisCodeToGetAccess(
+        7,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       label: 'Contact TESS Team',
