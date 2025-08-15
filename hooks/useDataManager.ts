@@ -4,7 +4,7 @@ import { HoseData } from '@/lib/types/hose';
 import { generateNumericDraftId } from '@/lib/util/unikId';
 import { getAllHosesByS1 } from '@/services/api/asset';
 import { cache } from '@/services/cache/cacheService';
-import { loginCacheService } from '@/services/cache/loginCacheService';
+import { loginCache } from '@/services/cache/loginCacheService';
 
 type DataAction = { status: 'success' | 'error'; message?: string };
 export const useDataManager = (): {
@@ -15,7 +15,7 @@ export const useDataManager = (): {
   activitiesData: typeof activitiesData;
 } => {
   const { state, dispatch } = useAppContext();
-  const apiKey = loginCacheService.getApiKey();
+  const apiKey = loginCache.apiKey.get();
 
   const getHoseData = async (): Promise<DataAction> => {
     if (!state.settings.internetReachable) {

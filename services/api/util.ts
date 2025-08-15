@@ -1,7 +1,6 @@
 import { HoseData } from '@/lib/types/hose';
-import { convertToISOFormat, formatDate } from '@/lib/util/formatDate';
-import { getFromStore } from '@/lib/util/secureStore';
-import { loginCacheService } from '@/services/cache/loginCacheService';
+import { convertToISOFormat } from '@/lib/util/formatDate';
+import { loginCache } from '@/services/cache/loginCacheService';
 
 // Base URL for all API requests
 export const BASE_URL =
@@ -20,7 +19,7 @@ export async function apiRequest<T>(
   const url = `${BASE_URL}${endpoint}`;
   let authHeaders = {};
   try {
-    const apiKey = loginCacheService.getApiKey();
+    const apiKey = loginCache.apiKey.get();
     if (apiKey) {
       authHeaders = {
         accessToken: apiKey,
