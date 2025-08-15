@@ -1,5 +1,5 @@
 import { useAppContext } from '@/context/ContextProvider';
-import { login } from '@/lib/util/login';
+import { login as loginApi } from '@/lib/util/login';
 import { getS1 } from '@/services/api/asset';
 import { cache } from '@/services/cache/cacheService';
 import { loginCache } from '@/services/cache/loginCacheService';
@@ -7,19 +7,19 @@ import { loginCache } from '@/services/cache/loginCacheService';
 type LoginAction = { status: 'success' | 'error'; message: string };
 export const useLoginManager = (): {
   login: (email: string, password: string) => Promise<LoginAction>;
-  isLoading: boolean;
   logout: () => void;
+  isLoading: boolean;
 } => {
   const { state, dispatch } = useAppContext();
 
-  const loginAction = async (
+  const login = async (
     email: string,
     password: string,
   ): Promise<LoginAction> => {
     if (!state.settings.internetReachable) {
       const apiKey = loginCache.apiKey.get();
       if (apiKey) {
-        // getApiKey() check if it is not expired end logout if needed
+        //  loginCache.user.get() checks if it is not expired end logout if needed
         const { name: userName, id: userId, email: userEmail } =
           loginCache.user.get();
         dispatch({
@@ -44,7 +44,7 @@ export const useLoginManager = (): {
     });
     // /login -> 200 and cookie or 400 and error
     try {
-      const user = await login(email, password);
+      const user = await loginApi(email, password);
       if (!user) {
         dispatch({
           type: 'SET_LOGIN_LOADING',
@@ -133,8 +133,8 @@ export const useLoginManager = (): {
     cache.clearCache();
   }
   return {
-    login: loginAction,
+    login,
+    logout,
     isLoading: state.auth.isLogingLoading,
-    logout
   };
 };
