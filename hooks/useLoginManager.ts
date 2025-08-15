@@ -1,9 +1,8 @@
 import { useAppContext } from '@/context/ContextProvider';
 import { login } from '@/lib/util/login';
 import { getS1 } from '@/services/api/asset';
-import { setS1Code, setS1Items } from '@/services/cache/cacheService';
+import { cache } from '@/services/cache/cacheService';
 import { loginCacheService } from '@/services/cache/loginCacheService';
-import { Alert } from 'react-native';
 
 type LoginAction = { status: 'success' | 'error'; message: string };
 export const useLoginManager = (): {
@@ -44,7 +43,9 @@ export const useLoginManager = (): {
     });
     // /login -> 200 and cookie or 400 and error
     try {
+      console.log('Logging in...');
       const user = await login(email, password);
+      console.log('User logged in:', user);
       if (!user) {
         dispatch({
           type: 'SET_LOGIN_LOADING',
@@ -65,8 +66,8 @@ export const useLoginManager = (): {
             type: 'SET_S1_ITEMS',
             payload: s1Items,
           });
-          setS1Code(selectedS1Code);
-          setS1Items(s1Items);
+          cache.s1.code.set(selectedS1Code);
+          cache.s1.items.set(s1Items);
         } else {
           dispatch({
             type: 'SET_S1_CODE',
@@ -76,8 +77,8 @@ export const useLoginManager = (): {
             type: 'SET_S1_ITEMS',
             payload: [],
           });
-          setS1Code('');
-          setS1Items([]);
+          cache.s1.code.set('');
+          cache.s1.items.set([]);
         }
         dispatch({
           type: 'SET_LOGIN_LOADING',

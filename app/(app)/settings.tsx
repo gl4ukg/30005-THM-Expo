@@ -5,7 +5,6 @@ import { ButtonTHS } from '@/components/UI';
 import { useAppContext } from '@/context/ContextProvider';
 import { useDataManager } from '@/hooks/useDataManager';
 import { useLoginManager } from '@/hooks/useLoginManager';
-import { clearCache } from '@/services/cache/cacheService';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';

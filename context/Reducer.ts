@@ -18,7 +18,6 @@ import {
 import { HoseData } from '@/lib/types/hose';
 import { S1Item } from '@/services/api/asset';
 import { createContext } from 'react';
-import { updateHose } from '@/services/cache/cacheService';
 
 export interface PartialFormData {
   comment?: string;
@@ -163,7 +162,10 @@ type DataAction =
     >
   | ActionWithPayload<'ADD_NEW_HOSE', HoseData>
   | ActionWithPayload<'MOVE_DRAFT_TO_DONE', number>
-  | ActionWithPayload<'SET_TIMESTAMP', { id: number; timestamp: number }>
+  | ActionWithPayload<
+      'ACTIVITY_DONE_TIMESTAMP',
+      { id: number; timestamp: number }
+    >
   | ActionWithPayload<'REMOVE_FROM_DRAFT', number>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_REGISTRATION_DATA'>
   | ActionWithPayload<'SET_TEMPORARY_HOSE_EDIT_DATA', TemporaryHoseEditData>
@@ -444,7 +446,14 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
           : state.done,
       };
     }
-    case 'SET_TIMESTAMP': {
+
+    case 'SET_ACTIVITIES_DONE': {
+      return {
+        ...state,
+        done: action.payload,
+      };
+    }
+    case 'ACTIVITY_DONE_TIMESTAMP': {
       const done = state.done.find((d) => d.id === action.payload.id);
       if (!done) return state;
       return {
