@@ -7,14 +7,7 @@ import {
 } from './Reducer';
 import { Activity } from '@/components/dashboard/activitiesList/activity';
 import { loginCacheService } from '@/services/cache/loginCacheService';
-import { useCacheService } from '@/hooks/useServices';
-import {
-  activities,
-  getHoses,
-  getLastSyncTime,
-  getS1Code,
-  getS1Items,
-} from '@/services/cache/cacheService';
+import { cache } from '@/services/cache/cacheService';
 
 interface AppState {
   auth: AuthState;
@@ -287,16 +280,16 @@ const getInitialState = (): AppState => {
       },
       data: {
         customer: {},
-        hoses: getHoses(),
+        hoses: cache.hoses.get(),
         selection: null,
         isCancelable: false,
-        drafts: activities.draft.getAll(),
-        done: activities.done.getAll(),
+        drafts: cache.activities.draft.get(),
+        done: cache.activities.done.get(),
         editedHoses: [],
         isLoading: false,
-        s1Code: getS1Code(),
-        s1Items: getS1Items(),
-        lastUpdate: getLastSyncTime() || null,
+        s1Code: cache.s1.code.get(),
+        s1Items: cache.s1.items.get(),
+        lastUpdate: cache.hoses.getSyncTime() || null,
       },
       settings: initialSettingsState,
     };

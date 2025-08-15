@@ -1,7 +1,7 @@
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { useAppContext } from '@/context/ContextProvider';
-import { clearAllData } from '@/services/data/dataService';
+import { cache } from '@/services/cache/cacheService';
 
 import { useRouter } from 'expo-router';
 import { SafeAreaView, View } from 'react-native';
@@ -11,7 +11,7 @@ const User = () => {
   const router = useRouter();
 
   const handleLogout = () => {
-    clearAllData();
+    cache.clearCache();
     dispatch({ type: 'LOGOUT' });
     router.push('/');
   };

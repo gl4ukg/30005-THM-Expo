@@ -3,16 +3,7 @@ import { ActivityDone, ActivityDraft } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
 import { generateNumericDraftId } from '@/lib/util/unikId';
 import { getAllHosesByS1 } from '@/services/api/asset';
-import {
-  clearHoses,
-  getHoses,
-  getS1Code,
-  setHoses,
-  activities,
-  moveDraftToDone,
-  addHose,
-  updateHose,
-} from '@/services/cache/cacheService';
+import { cache } from '@/services/cache/cacheService';
 import { loginCacheService } from '@/services/cache/loginCacheService';
 
 type DataAction = { status: 'success' | 'error'; message?: string };
@@ -33,7 +24,7 @@ export const useDataManager = (): {
         type: 'SET_LAST_UPDATE',
         payload: 'error',
       });
-      const hoses = getHoses();
+      const hoses = cache.hoses.get();
       if (hoses.length > 0) {
         return {
           status: 'error',
@@ -62,7 +53,7 @@ export const useDataManager = (): {
       };
     }
     try {
-      const S1Code = state.data.s1Code ?? getS1Code();
+      const S1Code = state.data.s1Code ?? cache.s1.code.get();
       if (!S1Code) {
         dispatch({
           type: 'SET_LAST_UPDATE',
@@ -92,7 +83,11 @@ export const useDataManager = (): {
           type: 'SET_HOSE_DATA',
           payload: S1Hoses,
         });
-        setHoses(S1Hoses);
+        cache.hoses.set(S1Hoses);
+        dispatch({
+          type: 'SET_DATA_LOADING',
+          payload: false,
+        });
         dispatch({
           type: 'SET_LAST_UPDATE',
           payload: 'synced',
@@ -123,7 +118,7 @@ export const useDataManager = (): {
         type: 'SET_HOSE_DATA',
         payload: [],
       });
-      clearHoses();
+      cache.hoses.set([]);
       return {
         status: 'success',
       };
@@ -137,7 +132,7 @@ export const useDataManager = (): {
   const editHose = async (hose: Partial<HoseData>): Promise<DataAction> => {
     try {
       // find hose and update it in cache add hose to array of hose changes
-      updateHose(hose);
+      cache.editedHoses.add(hose);
       // update hose in context
       dispatch({
         type: 'SAVE_HOSE_DATA',
@@ -160,18 +155,18 @@ export const useDataManager = (): {
     syncStoreToContext: () => {
       dispatch({
         type: 'SET_ACTIVITIES_DONE',
-        payload: activities.done.getAll(),
+        payload: cache.activities.done.get(),
       });
     },
     setAllDone: (activitiesToSet: ActivityDone[]) => {
-      activities.done.setAll(activitiesToSet);
+      cache.activities.done.set(activitiesToSet);
       dispatch({
         type: 'SET_ACTIVITIES_DONE',
         payload: activitiesToSet,
       });
     },
     updateDoneTimestamp: (activityDone: ActivityDone, timestamp: number) => {
-      activities.done.updateOne({
+      cache.activities.done.setAsSynced({
         ...activityDone,
         syncingTimestamp: timestamp,
       });
@@ -182,7 +177,10 @@ export const useDataManager = (): {
     },
     createDraft: (activityDraft: Omit<ActivityDraft, 'id'>) => {
       const newId = generateNumericDraftId(state.data.drafts.map((d) => d.id));
-      activities.draft.addOne({ ...activityDraft, id: newId } as ActivityDraft);
+      cache.activities.draft.save({
+        ...activityDraft,
+        id: newId,
+      } as ActivityDraft);
       dispatch({
         type: 'CREATE_DRAFT',
         payload: { ...activityDraft, id: newId },
@@ -190,14 +188,14 @@ export const useDataManager = (): {
       return newId;
     },
     saveDraft: (activityDraft: ActivityDraft) => {
-      activities.draft.addOne(activityDraft);
+      cache.activities.draft.save(activityDraft);
       dispatch({
         type: 'SAVE_DRAFT',
         payload: activityDraft,
       });
     },
     addHoseToDraft: (hoseId: number, draftId: number) => {
-      activities.draft.addHoseToDraft(hoseId, draftId);
+      cache.activities.draft.addHose(hoseId, draftId);
       dispatch({
         type: 'ADD_HOSE_TO_DRAFT',
         payload: {
@@ -207,21 +205,21 @@ export const useDataManager = (): {
       });
     },
     removeDraft: (id: number) => {
-      activities.draft.removeOne(id);
+      cache.activities.draft.delete(id);
       dispatch({
         type: 'REMOVE_DRAFT',
         payload: id,
       });
     },
     moveDraftToDone: (id: number) => {
-      activities.draft.moveToDone(id);
+      cache.activities.draft.moveToDone(id);
       dispatch({
         type: 'MOVE_DRAFT_TO_DONE',
         payload: id,
       });
     },
     clearAllDone: () => {
-      activities.done.clearAll();
+      cache.activities.done.set([]);
       dispatch({
         type: 'SET_ACTIVITIES_DONE',
         payload: [],

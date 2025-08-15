@@ -59,6 +59,7 @@ export default function Login() {
           onChangeText={handleEmail}
           darkMode={true}
           type='email'
+          disabled={isLoading}
           errorMessage={emailError}
         />
         <Input
@@ -68,6 +69,7 @@ export default function Login() {
           onChangeText={handleName}
           darkMode={true}
           errorMessage={nameError}
+          disabled={isLoading}
         />
         <Input
           icon='Password'
@@ -76,6 +78,7 @@ export default function Login() {
           onChangeText={setPassword}
           darkMode={true}
           type='password'
+          disabled={isLoading}
         />
         <View
           style={{
@@ -88,6 +91,7 @@ export default function Login() {
             variant='dark'
             title='Forgot Password?'
             onPress={() => router.push('/login/forgotPassword')}
+            disabled={isLoading}
           />
         </View>
       </View>
