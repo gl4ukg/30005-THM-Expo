@@ -13,7 +13,7 @@ const User = () => {
   const router = useRouter();
   const { state } = useAppContext();
   const { clearLogin } = useLoginManager();
-  const { removeHoseData } = useDataManager();
+  const { hoses } = useDataManager();
   let { user } = state.auth;
   const { appInfo } = state.settings;
   const { customer, s1Code, s1Items, lastUpdate } = state.data;
@@ -75,7 +75,7 @@ const User = () => {
         <Bookmark title='Synchronization status' />
         <DataField label='Last synced:' value={lastUpdate?.toLocaleString()} />
         <ButtonTHS title='Logout' onPress={clearLogin} />
-        <ButtonTHS title='Clear hoses' onPress={removeHoseData} />
+        <ButtonTHS title='Clear hoses' onPress={hoses.remove} />
       </View>
     </ScrollView>
   );

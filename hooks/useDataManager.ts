@@ -8,14 +8,30 @@ import { loginCacheService } from '@/services/cache/loginCacheService';
 
 type DataAction = { status: 'success' | 'error'; message?: string };
 export const useDataManager = (): {
-  isLoading: boolean;
-  getHoseData: () => Promise<DataAction>;
-  removeHoseData: () => Promise<DataAction>;
-  editHose: (hose: Partial<HoseData>) => Promise<DataAction>;
-  activitiesData: typeof activitiesData;
+  hoses: {
+    get: () => Promise<DataAction>;
+    remove: () => Promise<DataAction>;
+    save: (hose: Partial<HoseData>) => Promise<DataAction>;
+    isLoading: boolean;
+  };
+  activities: {
+    done: {
+      set: (activitiesToSet: ActivityDone[]) => void;
+      clear: () => void;
+      setAsSynced: (activityDone: ActivityDone, timestamp: number) => void;
+      getFromCache: () => void;
+    };
+    draft: {
+      get: () => ActivityDraft[];
+      add: (activityDraft: Omit<ActivityDraft, 'id'>) => number;
+      save: (activityDraft: ActivityDraft) => void;
+      addHose: (hoseId: number, draftId: number) => void;
+      remove: (id: number) => void;
+      moveToDone: (id: number) => void;
+    };
+  };
 } => {
   const { state, dispatch } = useAppContext();
-  const apiKey = loginCacheService.getApiKey();
 
   const getHoseData = async (): Promise<DataAction> => {
     if (!state.settings.internetReachable) {
@@ -42,6 +58,8 @@ export const useDataManager = (): {
       type: 'SET_DATA_LOADING',
       payload: true,
     });
+
+    const apiKey = loginCacheService.getApiKey();
     if (!state.auth.user && !apiKey) {
       dispatch({
         type: 'SET_LAST_UPDATE',
@@ -151,86 +169,109 @@ export const useDataManager = (): {
       };
     }
   };
-  const activitiesData = {
-    syncStoreToContext: () => {
-      dispatch({
-        type: 'SET_ACTIVITIES_DONE',
-        payload: cache.activities.done.get(),
-      });
-    },
-    setAllDone: (activitiesToSet: ActivityDone[]) => {
-      cache.activities.done.set(activitiesToSet);
-      dispatch({
-        type: 'SET_ACTIVITIES_DONE',
-        payload: activitiesToSet,
-      });
-    },
-    updateDoneTimestamp: (activityDone: ActivityDone, timestamp: number) => {
-      cache.activities.done.setAsSynced({
-        ...activityDone,
-        syncingTimestamp: timestamp,
-      });
-      dispatch({
-        type: 'ACTIVITY_DONE_TIMESTAMP',
-        payload: { id: activityDone.id, timestamp },
-      });
-    },
-    createDraft: (activityDraft: Omit<ActivityDraft, 'id'>) => {
-      const newId = generateNumericDraftId(state.data.drafts.map((d) => d.id));
-      cache.activities.draft.save({
-        ...activityDraft,
-        id: newId,
-      } as ActivityDraft);
-      dispatch({
-        type: 'CREATE_DRAFT',
-        payload: { ...activityDraft, id: newId },
-      });
-      return newId;
-    },
-    saveDraft: (activityDraft: ActivityDraft) => {
-      cache.activities.draft.save(activityDraft);
-      dispatch({
-        type: 'SAVE_DRAFT',
-        payload: activityDraft,
-      });
-    },
-    addHoseToDraft: (hoseId: number, draftId: number) => {
-      cache.activities.draft.addHose(hoseId, draftId);
-      dispatch({
-        type: 'ADD_HOSE_TO_DRAFT',
-        payload: {
-          hoseId,
-          draftId,
-        },
-      });
-    },
-    removeDraft: (id: number) => {
-      cache.activities.draft.delete(id);
-      dispatch({
-        type: 'REMOVE_DRAFT',
-        payload: id,
-      });
-    },
-    moveDraftToDone: (id: number) => {
-      cache.activities.draft.moveToDone(id);
-      dispatch({
-        type: 'MOVE_DRAFT_TO_DONE',
-        payload: id,
-      });
-    },
-    clearAllDone: () => {
-      cache.activities.done.set([]);
-      dispatch({
-        type: 'SET_ACTIVITIES_DONE',
-        payload: [],
-      });
-    },
+
+  // Activities
+  const setDoneActivities = (activitiesToSet: ActivityDone[]) => {
+    cache.activities.done.set(activitiesToSet);
+    dispatch({
+      type: 'SET_ACTIVITIES_DONE',
+      payload: activitiesToSet,
+    });
+  };
+  const moveDraftActivityToDone = (id: number) => {
+    cache.activities.draft.moveToDone(id);
+    dispatch({
+      type: 'MOVE_DRAFT_TO_DONE',
+      payload: id,
+    });
+  };
+
+  const syncDoneActivitiesFromCacheToState = () => {
+    dispatch({
+      type: 'SET_ACTIVITIES_DONE',
+      payload: cache.activities.done.get(),
+    });
+  };
+  const setDoneActivityAsSynced = (
+    activityDone: ActivityDone,
+    timestamp: number,
+  ) => {
+    cache.activities.done.setAsSynced({
+      ...activityDone,
+      syncingTimestamp: timestamp,
+    });
+    dispatch({
+      type: 'ACTIVITY_DONE_TIMESTAMP',
+      payload: { id: activityDone.id, timestamp },
+    });
+  };
+
+  const getDraftActivities = () => cache.activities.draft.get();
+  const removeDraftActivity = (id: number) => {
+    cache.activities.draft.delete(id);
+    dispatch({
+      type: 'REMOVE_DRAFT',
+      payload: id,
+    });
+  };
+  const clearAllDoneActivities = () => {
+    cache.activities.done.set([]);
+    dispatch({
+      type: 'SET_ACTIVITIES_DONE',
+      payload: [],
+    });
+  };
+  const createDraft = (activityDraft: Omit<ActivityDraft, 'id'>) => {
+    const newId = generateNumericDraftId(state.data.drafts.map((d) => d.id));
+    cache.activities.draft.save({
+      ...activityDraft,
+      id: newId,
+    } as ActivityDraft);
+    dispatch({
+      type: 'CREATE_DRAFT',
+      payload: { ...activityDraft, id: newId },
+    });
+    return newId;
+  };
+  const saveDraft = (activityDraft: ActivityDraft) => {
+    cache.activities.draft.save(activityDraft);
+    dispatch({
+      type: 'SAVE_DRAFT',
+      payload: activityDraft,
+    });
+  };
+  const addHoseToDraft = (hoseId: number, draftId: number) => {
+    cache.activities.draft.addHose(hoseId, draftId);
+    dispatch({
+      type: 'ADD_HOSE_TO_DRAFT',
+      payload: {
+        hoseId,
+        draftId,
+      },
+    });
   };
   return {
-    isLoading: state.data.isLoading,
-    getHoseData,
-    removeHoseData,
-    editHose,
-    activitiesData,
+    hoses: {
+      get: getHoseData,
+      remove: removeHoseData,
+      save: editHose,
+      isLoading: state.data.isLoading,
+    },
+    activities: {
+      done: {
+        set: setDoneActivities,
+        clear: clearAllDoneActivities,
+        setAsSynced: setDoneActivityAsSynced,
+        getFromCache: syncDoneActivitiesFromCacheToState,
+      },
+      draft: {
+        get: getDraftActivities,
+        add: createDraft,
+        save: saveDraft,
+        addHose: addHoseToDraft,
+        remove: removeDraftActivity,
+        moveToDone: moveDraftActivityToDone,
+      },
+    },
   };
 };

@@ -74,7 +74,7 @@ const HoseDetails = () => {
   }>();
 
   const { state, dispatch } = useContext(AppContext);
-  const { activitiesData, editHose } = useDataManager();
+  const { activities, hoses } = useDataManager();
   const scrollViewRef = useRef<ScrollView>(null);
 
   const [editMode, setEditMode] = useState(startInEditMode === 'true');
@@ -139,7 +139,7 @@ const HoseDetails = () => {
   };
 
   const saveHoseChanges = (markAsMissingData: boolean) => {
-    editHose(hoseData);
+    hoses.save(hoseData);
     // Clear temporary data and exit edit mode
     dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
     setEditMode(false);
@@ -193,7 +193,7 @@ const HoseDetails = () => {
       setEditMode(true);
       return;
     } else if (value === 'INSPECT') {
-      const draftId = activitiesData.createDraft({
+      const draftId = activities.draft.add({
         type: 'INSPECT',
         status: 'draft',
         selectedIds: [hoseData.assetId ?? +hoseId],
@@ -206,7 +206,7 @@ const HoseDetails = () => {
       });
       return;
     } else {
-      const draftId = activitiesData.createDraft({
+      const draftId = activities.draft.add({
         type: value,
         status: 'draft',
         selectedIds: [hoseData.assetId ?? +hoseId],

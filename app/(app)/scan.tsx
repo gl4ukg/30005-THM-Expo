@@ -62,7 +62,7 @@ const Scan = () => {
   const previousRfid = useRef<string | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { activitiesData } = useDataManager();
+  const { activities } = useDataManager();
 
   const title = getScanTitle(scanPurpose);
   const isProcessingHose = useRef(false);
@@ -217,7 +217,7 @@ const Scan = () => {
           hoseId: hose.assetId,
           draftId: draftId,
         };
-        activitiesData.createDraft({
+        activities.draft.add({
           type: scanPurpose === 'REGISTER_HOSE' ? 'REGISTER_HOSE' : 'INSPECT',
           formData: hose,
           selectedIds: [hose.assetId],
@@ -231,9 +231,9 @@ const Scan = () => {
         return;
       } else if (scanPurpose) {
         if (draftId) {
-          activitiesData.addHoseToDraft(hose.assetId, +draftId);
+          activities.draft.addHose(hose.assetId, +draftId);
         } else {
-          activitiesData.createDraft({
+          activities.draft.add({
             type: scanPurpose,
             formData: {},
             selectedIds: [hose.assetId],

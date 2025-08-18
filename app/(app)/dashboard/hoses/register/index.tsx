@@ -52,7 +52,7 @@ const RegisterHose = () => {
   const [rfid, setRfid] = useState<string | undefined>(incomingRfid);
   const [isBarcodeModalVisible, setIsBarcodeModalVisible] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
-  const { activitiesData } = useDataManager();
+  const { activities } = useDataManager();
   const [hoseData, setHoseData] = useState<
     Partial<HoseData> & { showValidationErrors?: boolean }
   >(() => {
@@ -209,7 +209,7 @@ const RegisterHose = () => {
     const newHoseData = hoseData as HoseData;
 
     if (registerMultiple) {
-      const newDraftId = activitiesData.createDraft({
+      const newDraftId = activities.draft.add({
         formData: newHoseData,
         selectedIds: [newHoseData.assetId],
         type: 'REGISTER_HOSE',
@@ -223,7 +223,7 @@ const RegisterHose = () => {
       );
       router.push(`/scan?scanPurpose=REGISTER_HOSE&draftId=${newDraftId}`);
     } else if (draftId) {
-      activitiesData.saveDraft({
+      activities.draft.save({
         formData: newHoseData,
         selectedIds: [newHoseData.assetId],
         type: 'REGISTER_HOSE',
@@ -231,7 +231,7 @@ const RegisterHose = () => {
         status: 'draft',
         modifiedAt: new Date().toISOString(),
       });
-      activitiesData.moveDraftToDone(+draftId);
+      activities.draft.moveToDone(+draftId);
       router.dismissAll();
       router.replace('/(app)/dashboard');
       successToast(
@@ -244,7 +244,7 @@ const RegisterHose = () => {
 
   const handleSaveAsDraft = () => {
     if (!draftId) {
-      activitiesData.createDraft({
+      activities.draft.add({
         formData: hoseData,
         selectedIds: [hoseData.assetId!],
         type: 'REGISTER_HOSE',
@@ -252,7 +252,7 @@ const RegisterHose = () => {
         modifiedAt: new Date().toISOString(),
       });
     } else {
-      activitiesData.saveDraft({
+      activities.draft.save({
         formData: hoseData,
         selectedIds: [hoseData.assetId!],
         type: 'REGISTER_HOSE',
