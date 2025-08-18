@@ -6,7 +6,7 @@ import {
   PartialSendMailFormData,
 } from './Reducer';
 import { Activity } from '@/components/dashboard/activitiesList/activity';
-import { loginCacheService } from '@/services/cache/loginCacheService';
+import { loginCache } from '@/services/cache/loginCacheService';
 import { cache } from '@/services/cache/cacheService';
 
 interface AppState {
@@ -268,10 +268,10 @@ const initialSettingsState: SettingsState = {
   isMenuOpen: false,
 };
 const getInitialState = (): AppState => {
-  const token = loginCacheService.getApiKey();
+  const token = loginCache.apiKey.get();
   if (token) {
     //
-    const user = loginCacheService.getLoginCache();
+    const user = loginCache.user.get();
     return {
       auth: {
         user,

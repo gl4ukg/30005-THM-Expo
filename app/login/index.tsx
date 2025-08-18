@@ -17,7 +17,6 @@ export default function Login() {
   const [password, setPassword] = useState('iteraTest');
   const [nameError, setNameError] = useState<undefined | string>(undefined);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
-
   const { login, isLoading } = useLoginManager();
   const handleEmail = (email: string) => {
     setEmail(email);
