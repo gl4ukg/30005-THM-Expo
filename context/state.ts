@@ -275,7 +275,7 @@ const getInitialState = (): AppState => {
     const user = loginCache.user.get();
     return {
       auth: {
-        user: { ...user, userAccessCode: '23456' }, //
+        user: { ...user, userAccessCode: '1' }, //
         token: token,
         isLogingLoading: false,
       },
