@@ -19,6 +19,7 @@ import { useDataManager } from '@/hooks/useDataManager';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { EditProps } from '@/lib/types/edit';
 import { HID, HoseData } from '@/lib/types/hose';
+import { needsThisCodeToGetAccess } from '@/lib/util/getAccess';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -225,26 +226,46 @@ const HoseDetails = () => {
       label: 'Inspect hose',
       value: 'INSPECT',
       icon: 'Inspect',
+      isAccessDenied: needsThisCodeToGetAccess(
+        4,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       label: 'Edit hose data',
       value: 'EDIT',
       icon: 'Edit',
+      isAccessDenied: needsThisCodeToGetAccess(
+        5,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       label: 'Order hose (RFQ)',
       value: 'RFQ',
       icon: 'Cart',
+      isAccessDenied: needsThisCodeToGetAccess(
+        6,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       label: 'Scrap hose',
       value: 'SCRAP',
       icon: 'Trash',
+      isAccessDenied: needsThisCodeToGetAccess(
+        7,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       label: 'Contact TESS Team',
       value: 'CONTACT',
       icon: 'Email',
+      isAccessDenied: needsThisCodeToGetAccess(
+        7,
+        state.auth.user?.userAccessCode,
+      ),
     },
   ];
 

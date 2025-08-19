@@ -69,6 +69,7 @@ export const useLoginManager = (): {
           name: `${user.firstName} ${user.lastName}`,
           id: `${user.userId}`,
           email: user.email,
+          userAccessCode: '1',
           customerNumbers: user.customerNumbers,
           phoneNumber: `${user.phoneNumber}`,
         });

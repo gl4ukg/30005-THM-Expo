@@ -36,14 +36,12 @@ import { ScrollView, StyleSheet } from 'react-native';
         ],
       },
  */
-export const NavMenu: FC<{
-  /**
-   * Navigation elements to display.
-   */
-  elements: NavElementsType[];
 
+interface Props {
+  elements: NavElementsType[];
   handleLinkPress: (to: Href) => void;
-}> = ({ elements, handleLinkPress }) => {
+}
+export const NavMenu: FC<Props> = ({ elements, handleLinkPress }) => {
   const collapsable = elements.filter((element) => 'links' in element);
   const [areCollapsed, updateAreCollapsed] = useState<Record<string, boolean>>(
     collapsable.reduce(
@@ -87,6 +85,7 @@ export const NavMenu: FC<{
               title={element.title}
               icon={element.icon}
               links={element.links}
+              userHasNoAccess={element.userHasNoAccess}
               handleLinkPress={handleLinkPress}
             />
           );
@@ -97,6 +96,7 @@ export const NavMenu: FC<{
               title={element.title}
               icon={element.icon}
               to={element.to}
+              userHasNoAccess={element.userHasNoAccess}
               handleLinkPress={() => handleLinkPress(element.to)}
             />
           );

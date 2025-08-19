@@ -7,6 +7,7 @@ import { useAppContext } from '@/context/ContextProvider';
 import { MultiSelectionActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
+import { needsThisCodeToGetAccess } from '@/lib/util/getAccess';
 import { generateNumericDraftId } from '@/lib/util/unikId';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -42,6 +43,7 @@ const FilteredHosesList: React.FC<Props> = (props) => {
     label: string;
     subtitle?: string;
     icon?: IconName;
+    isAccessDenied?: true;
   };
   const options: Option<MultiSelectionActionsType>[] = [
     {
@@ -49,18 +51,30 @@ const FilteredHosesList: React.FC<Props> = (props) => {
       label: 'Contact TESS Team',
       subtitle: '(add hoses to message)',
       icon: 'Email',
+      isAccessDenied: needsThisCodeToGetAccess(
+        2,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       value: 'RFQ',
       label: 'Request for quote',
       subtitle: '(add hoses to quote)',
       icon: 'Cart',
+      isAccessDenied: needsThisCodeToGetAccess(
+        4,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       value: 'SCRAP',
       label: 'Scrap hoses',
       subtitle: '(add hoses to bin)',
       icon: 'Trash',
+      isAccessDenied: needsThisCodeToGetAccess(
+        7,
+        state.auth.user?.userAccessCode,
+      ),
     },
   ] as const;
 

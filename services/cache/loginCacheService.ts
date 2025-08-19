@@ -10,6 +10,7 @@ const CACHE_KEYS = {
   USER_ID: 'user_id',
   USER_EMAIL: 'user_email',
   USER_PHONE_NUMBER: 'user_phone_number',
+  USER_ACCESS_CODE: 'user_access_code',
   USER_CUSTOMER_NUMBERS: 'user_customer_numbers',
   API_KEY: 'api_token',
   API_KEY_EXPIRATION: 'api_token_expiration',
@@ -30,6 +31,7 @@ const setUserCache = (user: {
   id: string;
   email: string;
   phoneNumber: string;
+  userAccessCode?: `${number}`;
   customerNumbers: string[];
 }): void => {
   try {
@@ -37,6 +39,7 @@ const setUserCache = (user: {
     storage.set(CACHE_KEYS.USER_ID, user.id);
     storage.set(CACHE_KEYS.USER_EMAIL, user.email);
     storage.set(CACHE_KEYS.USER_PHONE_NUMBER, user.phoneNumber);
+    storage.set(CACHE_KEYS.USER_ACCESS_CODE, user.userAccessCode ?? '');
     storage.set(
       CACHE_KEYS.USER_CUSTOMER_NUMBERS,
       JSON.stringify(user.customerNumbers),
@@ -52,6 +55,7 @@ const getUserCache = (): {
   id: string;
   email: string;
   phoneNumber: string;
+  userAccessCode?: `${number}`;
   customerNumbers: string[];
 } => {
   try {
@@ -60,6 +64,10 @@ const getUserCache = (): {
     const userEmail = storage.getString(CACHE_KEYS.USER_EMAIL) ?? '';
     const userPhoneNumber =
       storage.getString(CACHE_KEYS.USER_PHONE_NUMBER) ?? '';
+    const userAccessCode =
+      (storage.getString(CACHE_KEYS.USER_ACCESS_CODE) as
+        | `${number}`
+        | undefined) ?? undefined;
     return {
       name: userName,
       id: userId,
@@ -68,6 +76,7 @@ const getUserCache = (): {
       customerNumbers: JSON.parse(
         storage.getString(CACHE_KEYS.USER_CUSTOMER_NUMBERS) ?? '[]',
       ),
+      userAccessCode: userAccessCode,
     };
   } catch (error) {
     console.error('Failed to get login cache:', error);

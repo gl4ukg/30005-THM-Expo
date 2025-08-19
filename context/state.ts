@@ -24,6 +24,7 @@ interface AuthState {
     id: string;
     phoneNumber?: string;
     customerNumbers?: string[];
+    userAccessCode?: `${number}`;
   };
   isLogingLoading: boolean;
   token: null | string;
@@ -274,7 +275,7 @@ const getInitialState = (): AppState => {
     const user = loginCache.user.get();
     return {
       auth: {
-        user,
+        user: { ...user, userAccessCode: '1' }, //
         token: token,
         isLogingLoading: false,
       },
@@ -322,9 +323,6 @@ const initialState: AppState = getInitialState();
 
 export {
   initialState,
-  initialAuthState,
-  initialDataState,
-  initialSettingsState,
   type AppState,
   type AuthState,
   type DataState,
