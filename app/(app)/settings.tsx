@@ -5,7 +5,6 @@ import { ButtonTHS } from '@/components/UI';
 import { useAppContext } from '@/context/ContextProvider';
 import { useDataManager } from '@/hooks/useDataManager';
 import { useLoginManager } from '@/hooks/useLoginManager';
-import { clearCache } from '@/services/cache/cacheService';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -13,7 +12,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 const User = () => {
   const router = useRouter();
   const { state } = useAppContext();
-  const { clearLogin } = useLoginManager();
+  const { logout } = useLoginManager();
   const { removeHoseData } = useDataManager();
   let { user } = state.auth;
   const { appInfo } = state.settings;
@@ -75,7 +74,7 @@ const User = () => {
       <View style={styles.section}>
         <Bookmark title='Synchronization status' />
         <DataField label='Last synced:' value={lastUpdate?.toLocaleString()} />
-        <ButtonTHS title='Logout' onPress={clearLogin} />
+        <ButtonTHS title='Logout' onPress={logout} />
         <ButtonTHS title='Clear hoses' onPress={removeHoseData} />
       </View>
     </ScrollView>

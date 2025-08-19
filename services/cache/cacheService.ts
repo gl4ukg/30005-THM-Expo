@@ -1,8 +1,7 @@
-import { MMKV } from 'react-native-mmkv';
+import { ActivityDone, ActivityDraft } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
 import { S1Item } from '@/services/api/asset';
-import { useMemo } from 'react';
-import { ActivityDone, ActivityDraft } from '@/context/state';
+import { MMKV } from 'react-native-mmkv';
 
 /**
  * Cache Layer - Handles local storage using MMKV
@@ -23,7 +22,7 @@ const CACHE_KEYS = {
   EDITED_HOSES: 'edited_hoses',
 } as const;
 
-export const setS1Code = (s1Code: string): void => {
+const setS1Code = (s1Code: string): void => {
   try {
     storage.set(CACHE_KEYS.S1_CODE, s1Code);
   } catch (error) {
@@ -32,7 +31,7 @@ export const setS1Code = (s1Code: string): void => {
   }
 };
 
-export const getS1Code = (): string | null => {
+const getS1Code = (): string | null => {
   try {
     const s1Code = storage.getString(CACHE_KEYS.S1_CODE);
     return s1Code ?? null;
@@ -42,7 +41,7 @@ export const getS1Code = (): string | null => {
   }
 };
 
-export const setS1Items = (s1Items: S1Item[]): void => {
+const setS1Items = (s1Items: S1Item[]): void => {
   try {
     const s1ItemsJson = JSON.stringify(s1Items);
     storage.set(CACHE_KEYS.S1_ITEMS, s1ItemsJson);
@@ -53,7 +52,7 @@ export const setS1Items = (s1Items: S1Item[]): void => {
   }
 };
 
-export const getS1Items = (): S1Item[] => {
+const getS1Items = (): S1Item[] => {
   try {
     const s1ItemsJson = storage.getString(CACHE_KEYS.S1_ITEMS);
     if (s1ItemsJson) {
@@ -66,7 +65,7 @@ export const getS1Items = (): S1Item[] => {
   }
 };
 
-export const setHoses = (hoses: HoseData[]): void => {
+const setHoses = (hoses: HoseData[]): void => {
   try {
     const hosesJson = JSON.stringify(hoses);
     storage.set(CACHE_KEYS.HOSES, hosesJson);
@@ -77,7 +76,7 @@ export const setHoses = (hoses: HoseData[]): void => {
   }
 };
 
-export const getHoses = (): HoseData[] => {
+const getHoses = (): HoseData[] => {
   try {
     const hosesJson = storage.getString(CACHE_KEYS.HOSES);
     if (!hosesJson) {
@@ -90,56 +89,7 @@ export const getHoses = (): HoseData[] => {
   }
 };
 
-export const updateHose = (updatedHose: Partial<HoseData>): void => {
-  try {
-    const hoses = getHoses();
-    const index = hoses.findIndex(
-      (hose) => hose.assetId === updatedHose.assetId,
-    );
-
-    const editedHosesJson = storage.getString(CACHE_KEYS.EDITED_HOSES);
-    let editedHoses: Partial<HoseData>[] = [];
-    if (editedHosesJson) {
-      editedHoses = JSON.parse(editedHosesJson);
-    }
-    editedHoses.push(updatedHose);
-    storage.set(CACHE_KEYS.EDITED_HOSES, JSON.stringify(editedHoses));
-
-    if (index !== -1) {
-      hoses[index] = updatedHose as HoseData;
-      setHoses(hoses);
-      console.log('Hose updated in cache:', updatedHose.assetId);
-    } else {
-      console.warn('Hose not found in cache for update:', updatedHose.assetId);
-    }
-  } catch (error) {
-    console.error('Failed to update hose in cache:', error);
-    throw error;
-  }
-};
-
-export const clearHoses = (): void => {
-  try {
-    storage.set(CACHE_KEYS.HOSES, JSON.stringify([]));
-  } catch (error) {
-    console.error('Failed to remove hose from cache:', error);
-    throw error;
-  }
-};
-
-export const addHose = (newHose: HoseData): void => {
-  try {
-    const hoses = getHoses();
-    hoses.push(newHose);
-    setHoses(hoses);
-    console.log('New hose added to cache:', newHose.assetId);
-  } catch (error) {
-    console.error('Failed to add hose to cache:', error);
-    throw error;
-  }
-};
-
-export const getLastSyncTime = (): Date | null => {
+const getLastSyncTime = (): Date | null => {
   try {
     const timestamp = storage.getNumber(CACHE_KEYS.LAST_SYNC);
     return timestamp ? new Date(timestamp) : null;
@@ -148,8 +98,16 @@ export const getLastSyncTime = (): Date | null => {
     return null;
   }
 };
+const setSyncTime = () => {
+  try {
+    storage.set(CACHE_KEYS.LAST_SYNC, Date.now());
+  } catch (error) {
+    console.error('Failed to set last sync time:', error);
+    throw error;
+  }
+};
 
-export const setDoneActivities = (activitiesDone: ActivityDone[]): void => {
+const setDoneActivities = (activitiesDone: ActivityDone[]): void => {
   try {
     storage.set(CACHE_KEYS.ACTIVITIES_DONE, JSON.stringify(activitiesDone));
   } catch (error) {
@@ -158,7 +116,7 @@ export const setDoneActivities = (activitiesDone: ActivityDone[]): void => {
   }
 };
 
-export const getDoneActivities = (): ActivityDone[] => {
+const getDoneActivities = (): ActivityDone[] => {
   try {
     const activitiesDoneJson = storage.getString(CACHE_KEYS.ACTIVITIES_DONE);
     if (!activitiesDoneJson) {
@@ -170,21 +128,52 @@ export const getDoneActivities = (): ActivityDone[] => {
     return [];
   }
 };
-export const updateDoneActivity = (updatedActivityDone: ActivityDone): void => {
+
+const getEditedHoses = (): Partial<HoseData>[] => {
+  try {
+    const editedHosesJson = storage.getString(CACHE_KEYS.EDITED_HOSES);
+    if (!editedHosesJson) {
+      return [];
+    }
+    return JSON.parse(editedHosesJson) as Partial<HoseData>[];
+  } catch (error) {
+    console.error('Failed to get edited hoses from cache:', error);
+    return [];
+  }
+};
+const setEditedHoses = (editedHoses: Partial<HoseData>[]): void => {
+  try {
+    storage.set(CACHE_KEYS.EDITED_HOSES, JSON.stringify(editedHoses));
+  } catch (error) {
+    console.error('Failed to cache edited hoses:', error);
+    throw error;
+  }
+};
+const addEditedHose = (editedHose: Partial<HoseData>): void => {
+  try {
+    const editedHoses = getEditedHoses();
+    editedHoses.push(editedHose);
+    setEditedHoses(editedHoses);
+    console.log('New edited hose added to cache:', editedHose.assetId);
+  } catch (error) {
+    console.error('Failed to add edited hose to cache:', error);
+    throw error;
+  }
+};
+
+const setDoneActivityAsSynced = (activityDone: ActivityDone): void => {
   try {
     const activitiesDone = getDoneActivities();
     const index = activitiesDone.findIndex(
-      (activityDone) => activityDone.id === updatedActivityDone.id,
+      (doneActivity) => doneActivity.id === activityDone.id,
     );
-
     if (index !== -1) {
-      activitiesDone[index] = updatedActivityDone;
-      setDoneActivities(activitiesDone);
-      console.log('Activity done updated in cache:', updatedActivityDone.id);
+      activitiesDone[index] = { ...activityDone, syncingTimestamp: Date.now() };
+      console.log('Activity done updated in cache:', activityDone.id);
     } else {
       console.warn(
         'Activity done not found in cache for update:',
-        updatedActivityDone.id,
+        activityDone.id,
       );
     }
   } catch (error) {
@@ -193,16 +182,7 @@ export const updateDoneActivity = (updatedActivityDone: ActivityDone): void => {
   }
 };
 
-export const clearDoneActivities = (): void => {
-  try {
-    storage.set(CACHE_KEYS.ACTIVITIES_DONE, '[]');
-  } catch (error) {
-    console.error('Failed to clear activities done:', error);
-    throw error;
-  }
-};
-
-export const setDraftActivities = (activitiesDraft: ActivityDraft[]): void => {
+const setDraftActivities = (activitiesDraft: ActivityDraft[]): void => {
   try {
     storage.set(CACHE_KEYS.ACTIVITIES_DRAFTS, JSON.stringify(activitiesDraft));
   } catch (error) {
@@ -211,7 +191,7 @@ export const setDraftActivities = (activitiesDraft: ActivityDraft[]): void => {
   }
 };
 
-export const getDraftActivities = (): ActivityDraft[] => {
+const getDraftActivities = (): ActivityDraft[] => {
   try {
     const activitiesDraftJson = storage.getString(CACHE_KEYS.ACTIVITIES_DRAFTS);
     if (!activitiesDraftJson) {
@@ -224,52 +204,7 @@ export const getDraftActivities = (): ActivityDraft[] => {
   }
 };
 
-export const updateDraftActivity = (
-  updatedActivityDraft: ActivityDraft,
-): void => {
-  try {
-    const activitiesDraft = getDraftActivities();
-    const index = activitiesDraft.findIndex(
-      (activityDraft) => activityDraft.id === updatedActivityDraft.id,
-    );
-
-    if (index !== -1) {
-      activitiesDraft[index] = updatedActivityDraft;
-      setDraftActivities(activitiesDraft);
-      console.log('Activity draft updated in cache:', updatedActivityDraft.id);
-    } else {
-      console.warn(
-        'Activity draft not found in cache for update:',
-        updatedActivityDraft.id,
-      );
-    }
-  } catch (error) {
-    console.error('Failed to update activity draft in cache:', error);
-    throw error;
-  }
-};
-export const addHoseToDraft = (hoseId: number, draftId: number): void => {
-  try {
-    const activitiesDraft = getDraftActivities();
-    const updatedActivitiesDraft = activitiesDraft.map((activityDraft) => {
-      if (activityDraft.id === draftId) {
-        return {
-          ...activityDraft,
-          modifiedAt: new Date().toISOString(),
-          selectedIds: [...activityDraft.selectedIds, hoseId],
-        };
-      }
-      return activityDraft;
-    });
-    setDraftActivities(updatedActivitiesDraft);
-    console.log('Hose added to activity draft in cache:', draftId);
-  } catch (error) {
-    console.error('Failed to add hose to activity draft in cache:', error);
-    throw error;
-  }
-};
-
-export const deleteDraftActivity = (activityId: number): void => {
+const deleteDraftActivity = (activityId: ActivityDraft['id']): void => {
   try {
     const activitiesDraft = getDraftActivities();
     const updatedActivitiesDraft = activitiesDraft.filter(
@@ -283,7 +218,7 @@ export const deleteDraftActivity = (activityId: number): void => {
   }
 };
 
-export const moveDraftToDone = (activityId: number): void => {
+const moveDraftToDone = (activityId: ActivityDraft['id']): void => {
   try {
     const activitiesDraft = getDraftActivities();
     const updatedActivitiesDraft = activitiesDraft.filter(
@@ -305,16 +240,7 @@ export const moveDraftToDone = (activityId: number): void => {
   }
 };
 
-export const clearDraftActivities = (): void => {
-  try {
-    storage.set(CACHE_KEYS.ACTIVITIES_DRAFTS, '[]');
-  } catch (error) {
-    console.error('Failed to clear activities draft:', error);
-    throw error;
-  }
-};
-
-export const saveDraftActivity = (activityDraft: ActivityDraft): void => {
+const saveDraftActivity = (activityDraft: ActivityDraft): void => {
   try {
     const activitiesDraft = getDraftActivities();
     if (activitiesDraft.find((activity) => activity.id === activityDraft.id)) {
@@ -336,8 +262,26 @@ export const saveDraftActivity = (activityDraft: ActivityDraft): void => {
     throw error;
   }
 };
+const addHoseToDraft = (
+  assetId: HoseData['assetId'],
+  draftId: ActivityDraft['id'],
+): void => {
+  try {
+    const activitiesDraft = getDraftActivities();
+    const activityDraft = activitiesDraft.find(
+      (activity) => activity.id === draftId,
+    );
+    if (activityDraft) {
+      activityDraft.selectedIds.push(assetId);
+      setDraftActivities(activitiesDraft);
+    }
+  } catch (error) {
+    console.error('Failed to add hose to draft activity:', error);
+    throw error;
+  }
+};
 
-export const isCacheStale = (maxAgeMinutes: number = 1440): boolean => {
+const isCacheStale = (maxAgeMinutes: number = 1440): boolean => {
   const lastSync = getLastSyncTime();
   if (!lastSync) return true;
 
@@ -346,7 +290,7 @@ export const isCacheStale = (maxAgeMinutes: number = 1440): boolean => {
   return ageMinutes > maxAgeMinutes;
 };
 
-export const clearCache = (): void => {
+const clearCache = (): void => {
   try {
     storage.clearAll();
     console.log('Cache cleared successfully');
@@ -356,69 +300,42 @@ export const clearCache = (): void => {
   }
 };
 
-export const getCacheStats = (): {
-  s1Code: string | null;
-  s1ItemsCount: number;
-  hosesCount: number;
-  lastSync: Date | null;
-  cacheSize: string;
-} => {
-  const s1Code = getS1Code();
-  const s1Items = getS1Items();
-  const hoses = getHoses();
-  const lastSync = getLastSyncTime();
-
-  return {
-    s1Code,
-    s1ItemsCount: s1Items.length,
-    hosesCount: hoses.length,
-    lastSync,
-    cacheSize: 'N/A', // MMKV doesn't provide direct size info
-  };
-};
-
-export const activities = {
-  done: {
-    getAll: getDoneActivities,
-    setAll: setDoneActivities,
-    updateOne: updateDoneActivity,
-    clearAll: clearDoneActivities,
+export const cache = {
+  s1: {
+    code: {
+      get: getS1Code,
+      set: setS1Code,
+    },
+    items: {
+      get: getS1Items,
+      set: setS1Items,
+    },
   },
-  draft: {
-    getAll: getDraftActivities,
-    setAll: setDraftActivities,
-    addOne: saveDraftActivity,
-    addHoseToDraft,
-    updateOne: updateDraftActivity,
-    clearAll: clearDraftActivities,
-    moveToDone: moveDraftToDone,
-    removeOne: deleteDraftActivity,
+  hoses: {
+    get: getHoses,
+    set: setHoses,
+    getSyncTime: getLastSyncTime,
+    setSyncTime: setSyncTime,
   },
-};
-
-export const useCacheService = () => {
-  const cacheOperations = useMemo(
-    () => ({
-      setS1Code: (s1Code: string) => setS1Code(s1Code),
-      getS1Code: () => getS1Code(),
-      setS1Items: (s1Items: S1Item[]) => setS1Items(s1Items),
-      getS1Items: () => getS1Items(),
-
-      setHoses: (hoses: HoseData[]) => setHoses(hoses),
-      getHoses: () => getHoses(),
-      clearHoses,
-      updateHose: (updatedHose: HoseData) => updateHose(updatedHose),
-      addHose: (newHose: HoseData) => addHose(newHose),
-
-      activities,
-
-      getLastSyncTime: () => getLastSyncTime(),
-      isCacheStale: (maxAgeMinutes?: number) => isCacheStale(maxAgeMinutes),
-      clearCache: () => clearCache(),
-      getCacheStats: () => getCacheStats(),
-    }),
-    [],
-  );
-
-  return cacheOperations;
+  editedHoses: {
+    get: getEditedHoses,
+    set: setEditedHoses,
+    add: addEditedHose,
+  },
+  activities: {
+    draft: {
+      get: getDraftActivities,
+      set: setDraftActivities,
+      delete: deleteDraftActivity,
+      moveToDone: moveDraftToDone,
+      save: saveDraftActivity,
+      addHose: addHoseToDraft,
+    },
+    done: {
+      get: getDoneActivities,
+      set: setDoneActivities,
+      setAsSynced: setDoneActivityAsSynced,
+    },
+  },
+  clearCache,
 };

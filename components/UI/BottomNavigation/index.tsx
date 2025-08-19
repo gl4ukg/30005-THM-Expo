@@ -55,6 +55,10 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
                 {
                   title: 'Recent activities',
                   to: '/(app)/activites',
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    2,
+                    state.auth.user?.userAccessCode,
+                  ),
                   icon: () => <Icon name='Dashboard' color={colors.primary} />,
                 },
                 {
@@ -108,6 +112,10 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
                   title: 'Contact TESS Support',
                   to: '/(app)/dashboard/actions?action=CONTACT_SUPPORT',
                   icon: () => <Icon name='Email' color={colors.primary} />,
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    8,
+                    state.auth.user?.userAccessCode,
+                  ),
                 },
                 {
                   title: 'Settings',

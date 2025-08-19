@@ -11,11 +11,12 @@ const CACHE_KEYS = {
   USER_EMAIL: 'user_email',
   USER_PHONE_NUMBER: 'user_phone_number',
   USER_ACCESS_CODE: 'user_access_code',
+  USER_CUSTOMER_NUMBERS: 'user_customer_numbers',
   API_KEY: 'api_token',
   API_KEY_EXPIRATION: 'api_token_expiration',
 } as const;
 
-const clearLoginCache = (): void => {
+const logout = (): void => {
   try {
     storage.clearAll();
     console.log('Login cache cleared successfully');
@@ -25,30 +26,37 @@ const clearLoginCache = (): void => {
   }
 };
 
-const setLoginCache = (
-  user: Record<
-    'name' | 'id' | 'email' | 'userAccessCode' | 'phoneNumber',
-    string
-  >,
-): void => {
+const setUserCache = (user: {
+  name: string;
+  id: string;
+  email: string;
+  phoneNumber: string;
+  userAccessCode?: `${number}`;
+  customerNumbers: string[];
+}): void => {
   try {
     storage.set(CACHE_KEYS.USER_NAME, user.name);
     storage.set(CACHE_KEYS.USER_ID, user.id);
     storage.set(CACHE_KEYS.USER_EMAIL, user.email);
     storage.set(CACHE_KEYS.USER_PHONE_NUMBER, user.phoneNumber);
-    storage.set(CACHE_KEYS.USER_ACCESS_CODE, user.userAccessCode);
+    storage.set(CACHE_KEYS.USER_ACCESS_CODE, user.userAccessCode ?? '');
+    storage.set(
+      CACHE_KEYS.USER_CUSTOMER_NUMBERS,
+      JSON.stringify(user.customerNumbers),
+    );
   } catch (error) {
     console.error('Failed to set login cache:', error);
     throw error;
   }
 };
 
-const getLoginCache = (): {
+const getUserCache = (): {
   name: string;
   id: string;
   email: string;
   phoneNumber: string;
   userAccessCode?: `${number}`;
+  customerNumbers: string[];
 } => {
   try {
     const userName = storage.getString(CACHE_KEYS.USER_NAME) ?? '';
@@ -65,6 +73,9 @@ const getLoginCache = (): {
       id: userId,
       email: userEmail,
       phoneNumber: userPhoneNumber,
+      customerNumbers: JSON.parse(
+        storage.getString(CACHE_KEYS.USER_CUSTOMER_NUMBERS) ?? '[]',
+      ),
       userAccessCode: userAccessCode,
     };
   } catch (error) {
@@ -74,6 +85,7 @@ const getLoginCache = (): {
       id: '',
       email: '',
       phoneNumber: '',
+      customerNumbers: [],
     };
   }
 };
@@ -83,7 +95,7 @@ const getApiKey = (): string | null => {
     const apiKeyExpiration =
       storage.getString(CACHE_KEYS.API_KEY_EXPIRATION) ?? '';
     if (apiKeyExpiration && new Date(apiKeyExpiration) < new Date()) {
-      clearLoginCache();
+      logout();
       return null;
     }
     const apiKey = storage.getString(CACHE_KEYS.API_KEY) ?? '';
@@ -104,10 +116,14 @@ const setApiKey = (apiKey: string, apiKeyExpiration: string): void => {
   }
 };
 
-export const loginCacheService = {
-  clearLoginCache,
-  setLoginCache,
-  getLoginCache,
-  getApiKey,
-  setApiKey,
+export const loginCache = {
+  user: {
+    get: getUserCache,
+    set: setUserCache,
+    logout,
+  },
+  apiKey: {
+    get: getApiKey,
+    set: setApiKey,
+  },
 };

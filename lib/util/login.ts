@@ -1,18 +1,16 @@
-import { loginCacheService } from '@/services/cache/loginCacheService';
+import { loginCache } from '@/services/cache/loginCacheService';
 
 const baseUrl: string | undefined = process.env.EXPO_PUBLIC_API_BASE_URL;
 export const login = async (username: string, password: string) => {
   if (!baseUrl) {
     throw new Error('API_URL is not defined');
   }
-  const { setApiKey } = loginCacheService;
   try {
     const response = await fetch(`${baseUrl}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
     });
-
     if (response.status === 401) {
       throw new Error('Invalid username or password');
     } else if (response.status === 404) {
@@ -25,7 +23,7 @@ export const login = async (username: string, password: string) => {
           throw new Error('Failed to parse authentication cookie');
         }
         const { accessToken, expiresDate } = token;
-        setApiKey(accessToken, expiresDate);
+        loginCache.apiKey.set(accessToken, expiresDate);
         // get user data
         const user = await getUserData();
         return user;
@@ -72,9 +70,8 @@ export type User = {
 };
 
 const getUserData = async () => {
-  const { getApiKey } = loginCacheService;
   try {
-    const apiKey = getApiKey();
+    const apiKey = loginCache.apiKey.get();
     if (!apiKey) {
       throw new Error('Api key not found');
     }

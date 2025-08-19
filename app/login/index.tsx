@@ -17,7 +17,6 @@ export default function Login() {
   const [password, setPassword] = useState('iteraTest');
   const [nameError, setNameError] = useState<undefined | string>(undefined);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
-
   const { login, isLoading } = useLoginManager();
   const handleEmail = (email: string) => {
     setEmail(email);
@@ -59,6 +58,7 @@ export default function Login() {
           onChangeText={handleEmail}
           darkMode={true}
           type='email'
+          disabled={isLoading}
           errorMessage={emailError}
         />
         <Input
@@ -68,6 +68,7 @@ export default function Login() {
           onChangeText={handleName}
           darkMode={true}
           errorMessage={nameError}
+          disabled={isLoading}
         />
         <Input
           icon='Password'
@@ -76,6 +77,7 @@ export default function Login() {
           onChangeText={setPassword}
           darkMode={true}
           type='password'
+          disabled={isLoading}
         />
         <View
           style={{
@@ -88,6 +90,7 @@ export default function Login() {
             variant='dark'
             title='Forgot Password?'
             onPress={() => router.push('/login/forgotPassword')}
+            disabled={isLoading}
           />
         </View>
       </View>

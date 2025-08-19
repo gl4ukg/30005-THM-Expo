@@ -1,7 +1,6 @@
 import { BottomNavigation } from '@/components/UI/BottomNavigation';
 import { TopBarNavigation } from '@/components/UI/TopBarNavigation';
 import { useAppContext } from '@/context/ContextProvider';
-import { changeS1Selection } from '@/services/data/dataService';
 import { colors } from '@/lib/tokens/colors';
 import { Redirect, Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -10,10 +9,13 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import { cache } from '@/services/cache/cacheService';
+import { useDataManager } from '@/hooks/useDataManager';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
   const { state, dispatch } = useAppContext();
+  const { getHoseData } = useDataManager();
   if (!state.auth.user) {
     // in the headless Node process that the pages are rendered in.
     return <Redirect href='/' />;
@@ -32,18 +34,11 @@ export default function TabLayout() {
                 type: 'CHANGE_S1_SELECTION',
                 payload: s1Code,
               });
-
-              const newHoses = await changeS1Selection(s1Code);
-
-              dispatch({
-                type: 'SET_HOSE_DATA',
-                payload: newHoses,
-              });
-
-              dispatch({
-                type: 'SET_DATA_LOADING',
-                payload: false,
-              });
+              cache.s1.code.set(s1Code);
+              const { status } = await getHoseData();
+              if (status === 'error') {
+                throw new Error('Failed to get hoses');
+              }
             } catch (error) {
               console.error('Failed to change S1 selection:', error);
               dispatch({

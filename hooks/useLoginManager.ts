@@ -1,27 +1,27 @@
 import { useAppContext } from '@/context/ContextProvider';
-import { login } from '@/lib/util/login';
+import { login as loginApi } from '@/lib/util/login';
 import { getS1 } from '@/services/api/asset';
-import { setS1Code, setS1Items } from '@/services/cache/cacheService';
-import { loginCacheService } from '@/services/cache/loginCacheService';
+import { cache } from '@/services/cache/cacheService';
+import { loginCache } from '@/services/cache/loginCacheService';
 
 type LoginAction = { status: 'success' | 'error'; message: string };
 export const useLoginManager = (): {
   login: (email: string, password: string) => Promise<LoginAction>;
+  logout: () => void;
   isLoading: boolean;
-  clearLogin: () => void;
 } => {
   const { state, dispatch } = useAppContext();
 
-  const loginAction = async (
+  const login = async (
     email: string,
     password: string,
   ): Promise<LoginAction> => {
     if (!state.settings.internetReachable) {
-      const apiKey = loginCacheService.getApiKey();
+      const apiKey = loginCache.apiKey.get();
       if (apiKey) {
-        // getApiKey() check if it is not expired end logout if needed
+        //  loginCache.user.get() checks if it is not expired end logout if needed
         const { name: userName, id: userId, email: userEmail } =
-          loginCacheService.getLoginCache();
+          loginCache.user.get();
         dispatch({
           type: 'LOGIN',
           payload: {
@@ -37,13 +37,14 @@ export const useLoginManager = (): {
         };
       }
     }
+    
     dispatch({
       type: 'SET_LOGIN_LOADING',
       payload: true,
     });
     // /login -> 200 and cookie or 400 and error
     try {
-      const user = await login(email, password);
+      const user = await loginApi(email, password);
       if (!user) {
         dispatch({
           type: 'SET_LOGIN_LOADING',
@@ -54,9 +55,26 @@ export const useLoginManager = (): {
           message: 'Login failed, user not found',
         };
       } else {
+          dispatch({
+          type: 'LOGIN',
+          payload: {
+            email: user.email,
+            name: `${user.firstName} ${user.lastName}`,
+            id: `${user.userId}`,
+            customerNumbers: user.customerNumbers,
+            phoneNumber: `${user.phoneNumber}`,
+          },
+        });
+        loginCache.user.set({
+          name: `${user.firstName} ${user.lastName}`,
+          id: `${user.userId}`,
+          email: user.email,
+          userAccessCode: '1',
+          customerNumbers: user.customerNumbers,
+          phoneNumber: `${user.phoneNumber}`,
+        });
         const { selectedS1Code, s1Items } = await getS1();
-        const userAccessCode = '345'
-        if (selectedS1Code) {
+        if (selectedS1Code && s1Items) {
           dispatch({
             type: 'SET_S1_CODE',
             payload: selectedS1Code,
@@ -65,8 +83,8 @@ export const useLoginManager = (): {
             type: 'SET_S1_ITEMS',
             payload: s1Items,
           });
-          setS1Code(selectedS1Code);
-          setS1Items(s1Items);
+          cache.s1.code.set(selectedS1Code);
+          cache.s1.items.set(s1Items);
         } else {
           dispatch({
             type: 'SET_S1_CODE',
@@ -76,30 +94,12 @@ export const useLoginManager = (): {
             type: 'SET_S1_ITEMS',
             payload: [],
           });
-          setS1Code('');
-          setS1Items([]);
+          cache.s1.code.set('');
+          cache.s1.items.set([]);
         }
         dispatch({
           type: 'SET_LOGIN_LOADING',
           payload: false,
-        });
-        console.log('User logged in:', user.firstName, user.lastName, user );
-        dispatch({
-          type: 'LOGIN',
-          payload: {
-            email: user.email,
-            name: `${user.firstName} ${user.lastName}`,
-            id: `${user.userId}`,
-            customerNumbers: user.customerNumbers,
-            userAccessCode
-          },
-        });
-        loginCacheService.setLoginCache({
-          name: `${user.firstName} ${user.lastName}`,
-          id: `${user.userId}`,
-          email: user.email,
-          phoneNumber: `${user.phoneNumber}`,
-          userAccessCode,
         });
         return {
           status: 'success',
@@ -118,9 +118,24 @@ export const useLoginManager = (): {
       };
     }
   };
+  const logout = () => {
+    dispatch({
+      type: 'LOGOUT',
+    });
+    dispatch({
+      type: 'SET_S1_CODE',
+      payload: '',
+    });
+    dispatch({
+      type: 'SET_S1_ITEMS',
+      payload: [],
+    });
+    loginCache.user.logout();
+    cache.clearCache();
+  }
   return {
-    login: loginAction,
+    login,
+    logout,
     isLoading: state.auth.isLogingLoading,
-    clearLogin: () => dispatch({ type: 'LOGOUT' }),
   };
 };
