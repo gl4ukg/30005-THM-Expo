@@ -7,7 +7,7 @@ import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
 import { needsThisCodeToGetAccess } from '@/lib/util/getAccess';
 import { Href, Link, useRouter } from 'expo-router';
-import { FC, useCallback, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
