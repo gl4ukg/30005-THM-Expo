@@ -19,11 +19,11 @@ import { useDataManager } from '@/hooks/useDataManager';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { EditProps } from '@/lib/types/edit';
 import { HID, HoseData } from '@/lib/types/hose';
+import { needsThisCodeToGetAccess } from '@/lib/util/getAccess';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 type ExtendedEditProps<T> = EditProps<T> & {
   missingFields?: string[];
@@ -262,6 +262,10 @@ const HoseDetails = () => {
       label: 'Contact TESS Team',
       value: 'CONTACT',
       icon: 'Email',
+      userHasNoAccess: needsThisCodeToGetAccess(
+        7,
+        state.auth.user?.userAccessCode,
+      ),
     },
   ];
 
