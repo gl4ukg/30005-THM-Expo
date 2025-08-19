@@ -1,6 +1,5 @@
 import { AppAction } from '@/context/Reducer';
 import { router } from 'expo-router';
-import { useCallback } from 'react';
 import { Alert } from 'react-native';
 
 export const handleGetAccess = (dispatch: React.Dispatch<AppAction>) => {

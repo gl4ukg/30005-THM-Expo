@@ -43,7 +43,7 @@ const FilteredHosesList: React.FC<Props> = (props) => {
     label: string;
     subtitle?: string;
     icon?: IconName;
-    isAccessDeny?: true;
+    isAccessDenied?: true;
   };
   const options: Option<MultiSelectionActionsType>[] = [
     {
@@ -51,7 +51,7 @@ const FilteredHosesList: React.FC<Props> = (props) => {
       label: 'Contact TESS Team',
       subtitle: '(add hoses to message)',
       icon: 'Email',
-      isAccessDeny: needsThisCodeToGetAccess(
+      isAccessDenied: needsThisCodeToGetAccess(
         2,
         state.auth.user?.userAccessCode,
       ),
@@ -61,7 +61,7 @@ const FilteredHosesList: React.FC<Props> = (props) => {
       label: 'Request for quote',
       subtitle: '(add hoses to quote)',
       icon: 'Cart',
-      isAccessDeny: needsThisCodeToGetAccess(
+      isAccessDenied: needsThisCodeToGetAccess(
         4,
         state.auth.user?.userAccessCode,
       ),
@@ -71,7 +71,7 @@ const FilteredHosesList: React.FC<Props> = (props) => {
       label: 'Scrap hoses',
       subtitle: '(add hoses to bin)',
       icon: 'Trash',
-      isAccessDeny: needsThisCodeToGetAccess(
+      isAccessDenied: needsThisCodeToGetAccess(
         7,
         state.auth.user?.userAccessCode,
       ),

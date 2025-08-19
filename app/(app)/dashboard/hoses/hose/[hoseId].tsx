@@ -226,7 +226,7 @@ const HoseDetails = () => {
       label: 'Inspect hose',
       value: 'INSPECT',
       icon: 'Inspect',
-      userHasNoAccess: needsThisCodeToGetAccess(
+      isAccessDenied: needsThisCodeToGetAccess(
         4,
         state.auth.user?.userAccessCode,
       ),
@@ -235,7 +235,7 @@ const HoseDetails = () => {
       label: 'Edit hose data',
       value: 'EDIT',
       icon: 'Edit',
-      userHasNoAccess: needsThisCodeToGetAccess(
+      isAccessDenied: needsThisCodeToGetAccess(
         5,
         state.auth.user?.userAccessCode,
       ),
@@ -244,7 +244,7 @@ const HoseDetails = () => {
       label: 'Order hose (RFQ)',
       value: 'RFQ',
       icon: 'Cart',
-      userHasNoAccess: needsThisCodeToGetAccess(
+      isAccessDenied: needsThisCodeToGetAccess(
         6,
         state.auth.user?.userAccessCode,
       ),
@@ -253,7 +253,7 @@ const HoseDetails = () => {
       label: 'Scrap hose',
       value: 'SCRAP',
       icon: 'Trash',
-      userHasNoAccess: needsThisCodeToGetAccess(
+      isAccessDenied: needsThisCodeToGetAccess(
         7,
         state.auth.user?.userAccessCode,
       ),
@@ -262,7 +262,7 @@ const HoseDetails = () => {
       label: 'Contact TESS Team',
       value: 'CONTACT',
       icon: 'Email',
-      userHasNoAccess: needsThisCodeToGetAccess(
+      isAccessDenied: needsThisCodeToGetAccess(
         7,
         state.auth.user?.userAccessCode,
       ),

@@ -13,7 +13,7 @@ export type Option<T> = {
   icon?: IconName;
   label: string;
   value: T;
-  userHasNoAccess?: true;
+  isAccessDenied?: true;
 };
 interface Props<T> {
   menuTitle?: string;
@@ -71,26 +71,32 @@ export const ActionsFab: FC<Props<string>> = ({
                 ))}
               </View>
             )}
-   {options.map((option) => {
-  const isDisabled = option.userHasNoAccess;
-  const onPress = isDisabled ? () => handleGetAccess(dispatch) : () => handleChange(option.value);
-  const iconName = isDisabled ? 'Locked' : option.icon;
+            {options.map((option) => {
+              const isDisabled = option.isAccessDenied;
+              const onPress = isDisabled
+                ? () => handleGetAccess(dispatch)
+                : () => handleChange(option.value);
+              const iconName: IconName | undefined = isDisabled
+                ? 'Locked'
+                : option.icon;
 
-  return (
-    <Pressable key={option.value} onPress={onPress}>
-      <View style={[style.option, isDisabled && style.optionDisabled]}>
-        <Typography name='navigation' text={option.label} />
-        {option.icon && (
-          <Icon
-            name={iconName}
-            size='sm'
-            color={colors.primary25}
-          />
-        )}
-      </View>
-    </Pressable>
-  );
-})}
+              return (
+                <Pressable key={option.value} onPress={onPress}>
+                  <View
+                    style={[style.option, isDisabled && style.optionDisabled]}
+                  >
+                    <Typography name='navigation' text={option.label} />
+                    {option.icon && (
+                      <Icon
+                        name={iconName!}
+                        size='sm'
+                        color={colors.primary25}
+                      />
+                    )}
+                  </View>
+                </Pressable>
+              );
+            })}
           </View>
         </Pressable>
       </Modal>
