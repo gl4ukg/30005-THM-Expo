@@ -71,46 +71,26 @@ export const ActionsFab: FC<Props<string>> = ({
                 ))}
               </View>
             )}
-            {options.map((option) => {
-              if (option.userHasNoAccess)
-                return (
-                  <Pressable
-                    key={option.value}
-                    onPress={() => handleGetAccess(dispatch)}
-                  >
-                    <View
-                      key={option.value}
-                      style={[style.option, style.optionDisabled]}
-                    >
-                      <Typography name='navigation' text={option.label} />
-                      {option.icon && (
-                        <Icon
-                          name={'Locked'}
-                          size='sm'
-                          color={colors.primary25}
-                        />
-                      )}
-                    </View>
-                  </Pressable>
-                );
-              return (
-                <Pressable
-                  key={option.value}
-                  onPress={() => handleChange(option.value)}
-                >
-                  <View key={option.value} style={style.option}>
-                    <Typography name='navigation' text={option.label} />
-                    {option.icon && (
-                      <Icon
-                        name={option.icon}
-                        size='sm'
-                        color={colors.primary25}
-                      />
-                    )}
-                  </View>
-                </Pressable>
-              );
-            })}
+   {options.map((option) => {
+  const isDisabled = option.userHasNoAccess;
+  const onPress = isDisabled ? () => handleGetAccess(dispatch) : () => handleChange(option.value);
+  const iconName = isDisabled ? 'Locked' : option.icon;
+
+  return (
+    <Pressable key={option.value} onPress={onPress}>
+      <View style={[style.option, isDisabled && style.optionDisabled]}>
+        <Typography name='navigation' text={option.label} />
+        {option.icon && (
+          <Icon
+            name={iconName}
+            size='sm'
+            color={colors.primary25}
+          />
+        )}
+      </View>
+    </Pressable>
+  );
+})}
           </View>
         </Pressable>
       </Modal>
