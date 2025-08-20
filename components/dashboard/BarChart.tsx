@@ -4,6 +4,9 @@ import { Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { BarChart } from 'react-native-gifted-charts';
 
 const calculateAvg = (arr: { value: number }[]) => {
+  if (arr.length === 0) {
+    return 0;
+  }
   return arr.reduce((a, b) => a + b.value, 0) / arr.length;
 };
 
@@ -20,6 +23,10 @@ export const BarChartDashboard: FC<Props> = ({ barData }) => {
   const width = useWindowDimensions().width;
   const height = (width - 20) / 2;
   const barWidth = (24 / 264) * (width - 20);
+  console.log(calculateAvg(barData));
+  if (calculateAvg(barData) === 0) {
+    return null;
+  }
   return (
     <View style={styles.container}>
       {
@@ -46,18 +53,22 @@ export const BarChartDashboard: FC<Props> = ({ barData }) => {
           }}
           showReferenceLine1
           referenceLine1Position={calculateAvg(barData)}
-          referenceLine1Config={{
-            color: colors.extendedPurple + '90',
-            thickness: 1,
-            type: 'solid',
-            labelText: `Avg ${calculateAvg(barData).toFixed(0)}`,
-            labelTextStyle: {
-              color: colors.extendedPurple,
-              right: -60,
-              top: -10,
-            },
-            zIndex: -1,
-          }}
+          referenceLine1Config={
+            calculateAvg(barData) > 0
+              ? {
+                  color: colors.extendedPurple + '90',
+                  thickness: 1,
+                  type: 'solid',
+                  labelText: `Avg ${calculateAvg(barData).toFixed(0)}`,
+                  labelTextStyle: {
+                    color: colors.extendedPurple,
+                    right: -60,
+                    top: -10,
+                  },
+                  zIndex: -1,
+                }
+              : undefined
+          }
           hideRules
           disablePress
           noOfSections={5}
@@ -69,7 +80,6 @@ export const BarChartDashboard: FC<Props> = ({ barData }) => {
             flex: 1,
             position: 'absolute',
             flexDirection: 'row',
-            noWrap: true,
             left: -50,
             right: -50,
             width: 50 + barWidth + 50,
