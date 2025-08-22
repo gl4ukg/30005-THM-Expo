@@ -5,6 +5,7 @@ import { Typography } from '@/components/Typography';
 import { SelectDropdown } from '@/components/UI/ActionMenu';
 import { AppContext } from '@/context/Reducer';
 import { useDataManager } from '@/hooks/useDataManager';
+import { useLoginManager } from '@/hooks/useLoginManager';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
@@ -66,15 +67,17 @@ const Dashboard = () => {
     useState<(typeof options)[0]['value']>('month');
   const { dispatch, state } = useContext(AppContext);
   const { getHoseData } = useDataManager();
+  const { logout } = useLoginManager();
 
   const fetchData = useCallback(async () => {
     try {
       const { status, message } = await getHoseData();
+      console.log(status, message);
       if (status === 'error') {
         Alert.alert('Data Loading Error', message, [
           {
-            text: 'OK',
-            onPress: () => {},
+            text: 'Logout',
+            onPress: logout,
           },
         ]);
         return;

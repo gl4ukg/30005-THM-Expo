@@ -133,6 +133,7 @@ export const useLoginManager = (): {
     loginCache.user.logout();
     cache.clearCache();
   }
+
   return {
     login,
     logout,

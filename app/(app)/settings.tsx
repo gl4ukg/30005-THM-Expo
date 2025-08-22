@@ -75,7 +75,6 @@ const User = () => {
         <Bookmark title='Synchronization status' />
         <DataField label='Last synced:' value={lastUpdate?.toLocaleString()} />
         <ButtonTHS title='Logout' onPress={logout} />
-        <ButtonTHS title='Clear hoses' onPress={removeHoseData} />
       </View>
     </ScrollView>
   );

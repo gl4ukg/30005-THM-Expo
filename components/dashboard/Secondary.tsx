@@ -18,7 +18,7 @@ export const Secondary: FC<Props> = ({ label, value, onPress, trend }) => {
         <Typography name='navigation' text={label} style={styles.label} />
         <View style={styles.value}>
           <Typography name='numericalHighlight' text={`${value}`} />
-          {trend && (
+          {!!trend && (
             <Trend
               trend={trend}
               style={styles.trend}

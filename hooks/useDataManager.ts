@@ -42,7 +42,7 @@ export const useDataManager = (): {
       type: 'SET_DATA_LOADING',
       payload: true,
     });
-    if (!state.auth.user && !apiKey) {
+    if (!state.auth.user || !apiKey) {
       dispatch({
         type: 'SET_LAST_UPDATE',
         payload: 'error',
