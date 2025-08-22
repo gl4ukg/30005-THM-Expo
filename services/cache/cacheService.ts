@@ -45,7 +45,6 @@ const setS1Items = (s1Items: S1Item[]): void => {
   try {
     const s1ItemsJson = JSON.stringify(s1Items);
     storage.set(CACHE_KEYS.S1_ITEMS, s1ItemsJson);
-    console.log(`${s1Items.length} S1 items cached successfully`);
   } catch (error) {
     console.error('Failed to cache S1 items:', error);
     throw error;

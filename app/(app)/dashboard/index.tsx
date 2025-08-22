@@ -72,7 +72,6 @@ const Dashboard = () => {
   const fetchData = useCallback(async () => {
     try {
       const { status, message } = await getHoseData();
-      console.log(status, message);
       if (status === 'error') {
         Alert.alert('Data Loading Error', message, [
           {
@@ -180,7 +179,7 @@ const Dashboard = () => {
           onPress={() => goToFilter('inspection')}
           label='Hoses soon to be inspected'
           value={state.data.hoses.length}
-          trend={1}
+          trend={0}
         />
         <View style={style.replacements}>
           <Typography name='sectionHeader' text='Replacements' />

@@ -23,7 +23,6 @@ export const BarChartDashboard: FC<Props> = ({ barData }) => {
   const width = useWindowDimensions().width;
   const height = (width - 20) / 2;
   const barWidth = (24 / 264) * (width - 20);
-  console.log(calculateAvg(barData));
   if (calculateAvg(barData) === 0) {
     return null;
   }
