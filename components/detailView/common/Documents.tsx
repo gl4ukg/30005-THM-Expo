@@ -53,7 +53,7 @@ export const Documents = () => {
     {
       id: 'DOC-001',
       name: 'Hose Certificate',
-      uri: 'https://www.uio.no/studier/emner/matnat/ifi/IN1000/h24/ressurser-per-uke/uke07/kort-fra-uke-7---introduksjon-til-oo.pdf',
+      uri: 'https://eamapp36.prevas.cloud/docuploads/TESSAS/10000916_250818092704154.pdf',
     },
     {
       id: 'DOC-002',

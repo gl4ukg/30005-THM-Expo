@@ -8,14 +8,12 @@ import { useDataManager } from '@/hooks/useDataManager';
 import { useLoginManager } from '@/hooks/useLoginManager';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { Alert, Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 
 const month: BarData = [];
 const day: BarData = [];
-
 const week: BarData = [];
-
 const year: BarData = [
   // {
   //   value: 2022,
