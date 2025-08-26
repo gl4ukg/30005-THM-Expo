@@ -12,8 +12,8 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 const User = () => {
   const router = useRouter();
   const { state } = useAppContext();
-  const { clearLogin } = useLoginManager();
-  const { hoses } = useDataManager();
+  const { logout } = useLoginManager();
+  const { removeHoseData } = useDataManager();
   let { user } = state.auth;
   const { appInfo } = state.settings;
   const { customer, s1Code, s1Items, lastUpdate } = state.data;
@@ -74,8 +74,8 @@ const User = () => {
       <View style={styles.section}>
         <Bookmark title='Synchronization status' />
         <DataField label='Last synced:' value={lastUpdate?.toLocaleString()} />
-        <ButtonTHS title='Logout' onPress={clearLogin} />
-        <ButtonTHS title='Clear hoses' onPress={hoses.remove} />
+        <ButtonTHS title='Logout' onPress={logout} />
+        <ButtonTHS title='Clear hoses' onPress={removeHoseData} />
       </View>
     </ScrollView>
   );

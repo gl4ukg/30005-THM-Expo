@@ -5,6 +5,7 @@ import { OpenMenu } from '@/components/UI/BottomNavigation/openMenu';
 import { NavMenu } from '@/components/UI/NavMenu/navMenu';
 import { AppContext } from '@/context/Reducer';
 import { colors } from '@/lib/tokens/colors';
+import { needsThisCodeToGetAccess } from '@/lib/util/getAccess';
 import { Href, Link, useRouter } from 'expo-router';
 import { FC, useContext, useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
@@ -22,11 +23,16 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
     dispatch({ type: 'SET_IS_MENU_OPEN', payload: isOpen });
   }, [isOpen, dispatch]);
 
+  useEffect(() => {
+    setIsOpen(state.settings.isMenuOpen);
+  }, [state.settings.isMenuOpen]);
+
   const handleLinkPress = (to: Href) => {
     setIsOpen(false);
     router.push(to);
     dispatch({ type: 'FINISH_SELECTION' });
   };
+
   return (
     <View style={[styles.modal, isOpen && styles.modalOpen]}>
       {isOpen && (
@@ -49,6 +55,10 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
                 {
                   title: 'Recent activities',
                   to: '/(app)/activites',
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    2,
+                    state.auth.user?.userAccessCode,
+                  ),
                   icon: () => <Icon name='Dashboard' color={colors.primary} />,
                 },
                 {
@@ -57,31 +67,55 @@ export const BottomNavigation: FC<BottomNavigationProps> = ({}) => {
                   icon: () => (
                     <Icon name='RegisterHoses' color={colors.primary} />
                   ),
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    3,
+                    state.auth.user?.userAccessCode,
+                  ),
                 },
                 {
                   title: 'Inspect hose / equipment',
                   to: getScanUrl('INSPECT_HOSE'),
                   icon: () => <Icon name='Inspect' color={colors.primary} />,
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    4,
+                    state.auth.user?.userAccessCode,
+                  ),
                 },
                 {
                   title: 'Order hose',
                   to: getScanUrl('RFQ'),
                   icon: () => <Icon name='Cart' color={colors.primary} />,
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    5,
+                    state.auth.user?.userAccessCode,
+                  ),
                 },
                 {
                   title: 'Replace hose / pressure testing',
                   to: getScanUrl('REPLACE_HOSE'),
                   icon: () => <Icon name='Task' color={colors.primary} />,
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    6,
+                    state.auth.user?.userAccessCode,
+                  ),
                 },
                 {
                   title: 'Scrap hose',
                   to: getScanUrl('SCRAP'),
                   icon: () => <Icon name='Trash' color={colors.primary} />,
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    7,
+                    state.auth.user?.userAccessCode,
+                  ),
                 },
                 {
                   title: 'Contact TESS Support',
                   to: '/(app)/dashboard/actions?action=CONTACT_SUPPORT',
                   icon: () => <Icon name='Email' color={colors.primary} />,
+                  userHasNoAccess: needsThisCodeToGetAccess(
+                    8,
+                    state.auth.user?.userAccessCode,
+                  ),
                 },
                 {
                   title: 'Settings',
