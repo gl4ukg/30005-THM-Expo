@@ -28,7 +28,7 @@ export default function TabLayout() {
         <TopBarNavigation
           selectedS1Code={state.data.s1Code}
           s1Items={state.data.s1Items}
-          onSelectS1={async (s1Code: string) => {
+          onSelectS1={async (s1Code: number) => {
             try {
               dispatch({
                 type: 'CHANGE_S1_SELECTION',

@@ -3,7 +3,6 @@ import { DataField } from '@/components/detailView/common/Datafield';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { useAppContext } from '@/context/ContextProvider';
-import { useDataManager } from '@/hooks/useDataManager';
 import { useLoginManager } from '@/hooks/useLoginManager';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
@@ -13,10 +12,9 @@ const User = () => {
   const router = useRouter();
   const { state } = useAppContext();
   const { logout } = useLoginManager();
-  const { removeHoseData } = useDataManager();
   let { user } = state.auth;
   const { appInfo } = state.settings;
-  const { customer, s1Code, s1Items, lastUpdate } = state.data;
+  const { customers, s1Code, s1Items, lastUpdate } = state.data;
   const location = s1Items.find((unit) => unit.S1Code === s1Code);
   if (!user) {
     router.push('/');
@@ -40,13 +38,7 @@ const User = () => {
         <View style={styles.sectionData}>
           <DataField label='User ID:' value={state.auth.user?.id} />
           <DataField label='Full name:' value={user.name} />
-          {state.auth.user?.phoneNumber && (
-            <DataField label='Phone number:' value={user.phoneNumber} />
-          )}
-          {user.customerNumbers &&
-            user.customerNumbers.map((number) => (
-              <DataField key={number} label='Customer number:' value={number} />
-            ))}
+          <DataField label='Phone number:' value={user.phoneNumber} />
         </View>
       </View>
       <View style={styles.section}>
@@ -63,8 +55,13 @@ const User = () => {
       <View style={styles.section}>
         <Bookmark title='Locations / Structures' />
         <View style={styles.sectionData}>
-          <DataField label='Customer Number:' value={`${customer.id}`} />
-          <DataField label='Customer Description:' value={`${customer.name}`} />
+          {customers.map((customer) => (
+            <DataField
+              key={customer.customerName}
+              label='Customer:'
+              value={`${customer.customerNumber} - ${customer.customerName}`}
+            />
+          ))}
           <DataField
             label='Location:'
             value={`${location?.S1Code} - ${location?.S1Name}`}

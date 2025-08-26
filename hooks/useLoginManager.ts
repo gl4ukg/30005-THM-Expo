@@ -1,6 +1,7 @@
 import { useAppContext } from '@/context/ContextProvider';
 import { login as loginApi } from '@/lib/util/login';
 import { getS1 } from '@/services/api/asset';
+import { getCustomers } from '@/services/api/customer';
 import { cache } from '@/services/cache/cacheService';
 import { loginCache } from '@/services/cache/loginCacheService';
 
@@ -62,7 +63,7 @@ export const useLoginManager = (): {
             name: `${user.firstName} ${user.lastName}`,
             id: `${user.userId}`,
             customerNumbers: user.customerNumbers,
-            phoneNumber: `${user.phoneNumber}`,
+            phoneNumber: user.phoneNumber ?? '',
           },
         });
         loginCache.user.set({
@@ -71,7 +72,7 @@ export const useLoginManager = (): {
           email: user.email,
           userAccessCode: '1',
           customerNumbers: user.customerNumbers,
-          phoneNumber: `${user.phoneNumber}`,
+          phoneNumber: user.phoneNumber ?? '',
         });
         const { selectedS1Code, s1Items } = await getS1();
         if (selectedS1Code && s1Items) {
@@ -88,19 +89,24 @@ export const useLoginManager = (): {
         } else {
           dispatch({
             type: 'SET_S1_CODE',
-            payload: '',
+            payload: null,
           });
           dispatch({
             type: 'SET_S1_ITEMS',
             payload: [],
           });
-          cache.s1.code.set('');
+          cache.s1.code.set(null);
           cache.s1.items.set([]);
         }
         dispatch({
           type: 'SET_LOGIN_LOADING',
           payload: false,
         });
+        const customers = await getCustomers();
+        dispatch({
+          type: 'SET_CUSTOMERS',
+          payload: customers,
+        })
         return {
           status: 'success',
           message: 'Login successful',
@@ -124,7 +130,7 @@ export const useLoginManager = (): {
     });
     dispatch({
       type: 'SET_S1_CODE',
-      payload: '',
+      payload: null,
     });
     dispatch({
       type: 'SET_S1_ITEMS',

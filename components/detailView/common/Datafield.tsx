@@ -6,30 +6,24 @@ import { Typography } from '../../Typography';
 
 interface DataFieldProps {
   label: string;
-  value: string | number | undefined;
-  error?: boolean;
+  value: string | number | undefined | null;
 }
 
-export const DataField: React.FC<DataFieldProps> = ({
-  label,
-  value,
-  error,
-}) => {
-  const isValueEmpty = value === undefined || value === '';
-  if (isValueEmpty) {
-    error = true;
-  }
-
+export const DataField: React.FC<DataFieldProps> = ({ label, value }) => {
+  const isValueEmpty = (
+    value: string | number | undefined | null,
+  ): value is undefined | null =>
+    value === undefined || value === null || value === '';
   return (
     <View style={styles.container}>
       <View style={styles.emptyValueContainer}>
         <Typography
-          style={error ? styles.emptyValueText : styles.label}
+          style={isValueEmpty(value) ? styles.emptyValueText : styles.label}
           name={'sectionText'}
         >
           {label}
         </Typography>
-        {isValueEmpty ? (
+        {isValueEmpty(value) ? (
           <Typography
             style={[styles.value, styles.emptyValueText]}
             name={'sectionText'}
@@ -37,14 +31,16 @@ export const DataField: React.FC<DataFieldProps> = ({
           />
         ) : (
           <Typography
-            style={error ? styles.emptyValueText : styles.value}
+            style={isValueEmpty(value) ? styles.emptyValueText : styles.value}
             name={'sectionText'}
           >
-            {value !== undefined ? value.toString() : 'N/A'}
+            {isValueEmpty(value) ? 'N/A' : value.toString()}
           </Typography>
         )}
       </View>
-      {error && <Icon name='Alert' color={colors.error} size='md' />}
+      {isValueEmpty(value) && (
+        <Icon name='Alert' color={colors.error} size='md' />
+      )}
     </View>
   );
 };

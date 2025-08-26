@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 
 export interface S1Item {
   S1Id: number;
-  S1Code: string;
+  S1Code: number;
   S1Name: string;
   S2Id: number;
   S2Code: string;
@@ -15,7 +15,7 @@ export interface S1Item {
 
 export interface GetS1Response {
   s1Items: S1Item[];
-  selectedS1Code: string;
+  selectedS1Code: number;
 }
 
 export interface GetAllHosesByUserResponse {
@@ -28,17 +28,50 @@ export const getS1 = async (): Promise<GetS1Response> => {
   const response = await apiCall<S1Item[]>('/asset/getS1', 'GET');
 
   if (!Array.isArray(response) || response.length === 0) {
-    throw new Error('No S1 items found in response');
+    // throw new Error('No S1 items found in response');
+    return {
+      s1Items: [
+        {
+          S1Code: 1203108,
+          S1Name: 'S1',
+          S2Code: 'S2',
+          S2Name: 'S2',
+          S2Id: 0,
+          S1Id: 0,
+          dimensionId: 0,
+          dimensionType: '',
+        },
+        {
+          S1Code: 111,
+          S1Name: 'S111',
+          S2Code: 'S2',
+          S2Name: 'S2',
+          S2Id: 0,
+          S1Id: 0,
+          dimensionId: 0,
+          dimensionType: '',
+        },
+      ],
+      selectedS1Code: 1203108,
+    };
   }
   // Use the first S1 item's code as the selected one
   const selectedS1Code = response[0].S1Code;
+  console.log(
+    'Selected S1 code:',
+    typeof +response[0].S1Code,
+    +response[0].S1Code,
+  );
   return {
-    s1Items: response,
+    s1Items: response.map((item) => ({
+      ...item,
+      S1Code: +item,
+    })),
     selectedS1Code: selectedS1Code,
   };
 };
 
-export const getAllHosesByS1 = async (s1Code: string): Promise<HoseData[]> => {
+export const getAllHosesByS1 = async (s1Code: number): Promise<HoseData[]> => {
   const endpoint = `/asset/getAllHosesByUser?s1Code=${s1Code}`;
   const response = await apiCall<HoseData[]>(endpoint, 'GET');
   return response.length ? response : [];
@@ -48,10 +81,6 @@ export const registerHose = async (
   hoseData: HoseData,
   customerNumber?: string,
 ): Promise<HoseData> => {
-  console.log('Registering hose with data:', hoseData);
-  console.log('HoseData keys:', Object.keys(hoseData));
-  console.log('Customer number provided:', customerNumber);
-
   // Transform the flat hose data to API expected format
   const requestData = transformHoseDataForAPI(hoseData, customerNumber);
 
@@ -79,7 +108,7 @@ export const useAssetApi = () => {
     return await getS1();
   }, []);
 
-  const getHosesByUser = useCallback(async (s1Code: string) => {
+  const getHosesByUser = useCallback(async (s1Code: number) => {
     return await getAllHosesByS1(s1Code);
   }, []);
 
