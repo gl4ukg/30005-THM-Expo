@@ -71,7 +71,7 @@ export const ActionForm: React.FC<Props> = ({
     useState<Extract<MultiSelectionActionsType, 'RFQ' | 'CONTACT' | 'SCRAP'>>(
       'RFQ',
     );
-  const { activitiesData } = useDataManager();
+  const { activities } = useDataManager();
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
   usePreventGoBack(isSubmitting);
@@ -112,7 +112,7 @@ export const ActionForm: React.FC<Props> = ({
 
   const onSend = () => {
     setIsSubmitting(true);
-    activitiesData.saveDraft({
+    activities.draft.save({
       id: +draftId,
       selectedIds,
       type: actionType,
@@ -120,7 +120,7 @@ export const ActionForm: React.FC<Props> = ({
       formData,
       modifiedAt: new Date().toISOString(),
     });
-    activitiesData.moveDraftToDone(+draftId);
+    activities.draft.moveToDone(+draftId);
     router.dismissAll();
     router.replace('/dashboard');
     successToast(
@@ -130,7 +130,7 @@ export const ActionForm: React.FC<Props> = ({
   };
   const handleSaveAsDraft = () => {
     setIsSubmitting(true);
-    activitiesData.saveDraft({
+    activities.draft.save({
       id: +draftId,
       selectedIds,
       type: actionType,
@@ -147,7 +147,7 @@ export const ActionForm: React.FC<Props> = ({
   };
 
   const handleAddHoses = () => {
-    activitiesData.saveDraft({
+    activities.draft.save({
       id: +draftId,
       selectedIds,
       type: actionType,
