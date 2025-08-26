@@ -32,7 +32,7 @@ export const TopBarNavigation: React.FC<Props> = ({
     setIsExpanded((exp) => !exp);
   };
 
-  const selectS1 = (s1Code: number) => {
+  const handelSelection = (s1Code: number) => {
     onSelectS1(s1Code);
     setIsExpanded(false);
   };
@@ -68,7 +68,7 @@ export const TopBarNavigation: React.FC<Props> = ({
                 styles.option,
                 pressed && styles.optionPressed,
               ]}
-              onPress={() => selectS1(s1Item.S1Code)}
+              onPress={() => handelSelection(s1Item.S1Code)}
             >
               {s1Item.S1Code === selectedS1Code && (
                 <Icon name='Industry' color={colors.white} size='xsm' />
