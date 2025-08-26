@@ -27,7 +27,7 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
-  const { activitiesData } = useDataManager();
+  const { activities } = useDataManager();
 
   usePreventGoBack(isSubmitting);
 
@@ -74,7 +74,7 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
 
   const handleSend = () => {
     setIsSubmitting(true);
-    activitiesData.saveDraft({
+    activities.draft.save({
       id: +draftId,
       selectedIds,
       type: 'CONTACT_SUPPORT',
@@ -82,7 +82,7 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
       formData,
       modifiedAt: new Date().toISOString(),
     });
-    activitiesData.moveDraftToDone(+draftId);
+    activities.draft.moveToDone(+draftId);
     router.dismissAll();
     router.replace('/dashboard');
     successToast(
@@ -93,7 +93,7 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
 
   const handleSaveAsDraft = () => {
     setIsSubmitting(true);
-    activitiesData.saveDraft({
+    activities.draft.save({
       id: +draftId,
       selectedIds,
       type: 'CONTACT_SUPPORT',
@@ -110,7 +110,7 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
   };
 
   const handleAddHoses = () => {
-    activitiesData.saveDraft({
+    activities.draft.save({
       id: +draftId,
       selectedIds,
       type: 'CONTACT_SUPPORT',

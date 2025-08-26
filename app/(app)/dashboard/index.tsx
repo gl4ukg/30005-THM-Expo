@@ -152,11 +152,11 @@ const Dashboard = () => {
   const [selected, setSelected] =
     useState<(typeof options)[0]['value']>('month');
   const { dispatch, state } = useContext(AppContext);
-  const { getHoseData } = useDataManager();
+  const { hoses } = useDataManager();
 
   const fetchData = useCallback(async () => {
     try {
-      const { status, message } = await getHoseData();
+      const { status, message } = await hoses.get();
       if (status === 'error') {
         Alert.alert('Data Loading Error', message, [
           {

@@ -15,7 +15,7 @@ import { useDataManager } from '@/hooks/useDataManager';
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
   const { state, dispatch } = useAppContext();
-  const { getHoseData } = useDataManager();
+  const { hoses } = useDataManager();
   if (!state.auth.user) {
     // in the headless Node process that the pages are rendered in.
     return <Redirect href='/' />;
@@ -35,7 +35,7 @@ export default function TabLayout() {
                 payload: s1Code,
               });
               cache.s1.code.set(s1Code);
-              const { status } = await getHoseData();
+              const { status } = await hoses.get();
               if (status === 'error') {
                 throw new Error('Failed to get hoses');
               }

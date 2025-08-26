@@ -43,11 +43,11 @@ const Activities: React.FC = () => {
   const [filter, setFilter] = useState<(typeof options)[0]['value']>('ALL');
   const [status, setStatus] = useState<'all' | 'draft' | 'done'>('all');
   const [activitiesToShow, setActivitiesToShow] = useState<Activity[]>([]);
-  const { activitiesData } = useDataManager();
+  const { activities: activitiesData } = useDataManager();
 
   const removeActivity = (id: string) => {
     setActivities(activities.filter((activity) => activity.id !== +id));
-    activitiesData.removeDraft(+id);
+    activitiesData.draft.remove(+id);
   };
   useEffect(() => {
     const filteredActivities = activities.filter((activity) => {
