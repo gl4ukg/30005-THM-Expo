@@ -174,7 +174,7 @@ const Dashboard = () => {
           />
         </View>
         <Secondary
-          onPress={() => goToFilter('inspection')}
+          onPress={() => goToFilter('upcoming')}
           label='Hoses soon to be inspected'
           value={state.data.hoses.length}
           trend={0}

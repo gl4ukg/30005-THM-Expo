@@ -18,11 +18,48 @@ interface Props {
 }
 
 const getFilteredHoses = (filter: string, data: HoseData[]) => {
-  let filteredList = [...data];
+  let filteredList: HoseData[] = [];
+  let listTitle = '';
+
+  switch (filter) {
+    case 'failed':
+      filteredList = data.filter((hose) => hose.status === 'failed');
+      listTitle = `Failed inspections (${filteredList.length})`;
+      break;
+    case 'overdue':
+      filteredList = data.filter((hose) => hose.status === 'overdue');
+      listTitle = `Overdue inspections (${filteredList.length})`;
+      break;
+    case 'withRemarks':
+      filteredList = data.filter((hose) => hose.status === 'withRemarks');
+      listTitle = `Inspections with remarks (${filteredList.length})`;
+      break;
+    case 'inspection':
+      filteredList = data.filter((hose) => hose.status === 'inspection');
+      listTitle = `Hoses soon to be inspected (${filteredList.length})`;
+      break;
+    // Show all for no, only way to list of hoses
+    case 'upcoming':
+      filteredList = [...data];
+      listTitle = `Replacements upcoming (${filteredList.length})`;
+      break;
+    case 'inTransit':
+      filteredList = data.filter((hose) => hose.status === 'inTransit');
+      listTitle = `New hoses in transit (${filteredList.length})`;
+      break;
+    case 'recycled':
+      filteredList = data.filter((hose) => hose.status === 'recycled');
+      listTitle = `Hoses recycled (${filteredList.length})`;
+      break;
+    default:
+      listTitle = `Filtered hoses (${filteredList.length})`;
+      break;
+  }
+
   return {
     listLength: filteredList.length,
-    listTitle: `Failed inspections (${filteredList.length})`,
-    filteredList: filteredList,
+    listTitle,
+    filteredList,
   };
 };
 
