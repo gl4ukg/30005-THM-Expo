@@ -22,12 +22,30 @@ export const convertToISOFormat = (dateString: string): string => {
 
   return date.toISOString().split('T')[0];
 };
-export const stringToDate = (dateString: string) => {
-  try {
-    const parts = dateString.split('/');
-    return new Date(Number(parts[2]), Number(parts[0]) - 1, Number(parts[1]));
-  } catch (error) {
-    console.error('Error formatting date:', error);
-    return '';
+export const dateStringToDDMMYY = (inputDate: string): string => {
+  const dateRegex = /^(\d{2})-(\w{3})-(\d{4})$/;
+  const match = inputDate.match(dateRegex);
+
+  if (!match) {
+    return 'Invalid date format';
   }
+
+  const [day, monthName, year] = match.slice(1);
+  const months: Record<string, string> = {
+    JAN: '01',
+    FEB: '02',
+    MAR: '03',
+    APR: '04',
+    MAY: '05',
+    JUN: '06',
+    JUL: '07',
+    AUG: '08',
+    SEP: '09',
+    OCT: '10',
+    NOV: '11',
+    DEC: '12',
+  };
+
+  const month = months[monthName.toUpperCase()];
+  return `${day}${month}${year.slice(-2)}`;
 };
