@@ -48,7 +48,7 @@ export const InspectHose = () => {
     draftId?: string;
   }>();
   const [hoseData, setHoseData] = useState<Partial<HoseData>>({});
-  const { activitiesData } = useDataManager();
+  const { activities } = useDataManager();
   const router = useRouter();
   const scrollViewRef = useRef<ScrollView>(null);
   let id = useMemo(
@@ -90,7 +90,7 @@ export const InspectHose = () => {
   };
 
   const sendInspection = () => {
-    activitiesData.saveDraft({
+    activities.draft.save({
       id: id,
       selectedIds: [hoseData.assetId!],
       type: 'INSPECT',
@@ -98,7 +98,7 @@ export const InspectHose = () => {
       formData: hoseData,
       modifiedAt: new Date().toISOString(),
     });
-    activitiesData.moveDraftToDone(id);
+    activities.draft.moveToDone(id);
     router.dismissAll();
     router.replace('/dashboard');
     successToast('Inspection completed', 'The inspection has been completed.');
@@ -146,7 +146,7 @@ export const InspectHose = () => {
     }
   };
   const handleSaveAsDraft = () => {
-    activitiesData.saveDraft({
+    activities.draft.save({
       id: id,
       selectedIds: [hoseData.assetId!],
       type: 'INSPECT',

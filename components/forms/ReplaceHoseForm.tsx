@@ -37,7 +37,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
-  const { activitiesData } = useDataManager();
+  const { activities } = useDataManager();
 
   usePreventGoBack(isSubmitting);
 
@@ -84,7 +84,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
 
   const handleSend = () => {
     setIsSubmitting(true);
-    activitiesData.saveDraft({
+    activities.draft.save({
       id: +draftId,
       selectedIds,
       type: 'REPLACE_HOSE',
@@ -92,7 +92,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
       formData,
       modifiedAt: new Date().toISOString(),
     });
-    activitiesData.moveDraftToDone(+draftId);
+    activities.draft.moveToDone(+draftId);
     router.dismissAll();
     router.replace('/dashboard');
     successToast(
@@ -103,7 +103,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
 
   const handleSaveAsDraft = () => {
     setIsSubmitting(true);
-    activitiesData.saveDraft({
+    activities.draft.save({
       id: +draftId,
       selectedIds,
       type: 'REPLACE_HOSE',
@@ -122,7 +122,7 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   const handleAddHoses = () => {
     // const draft = state.data.drafts.find((d) => d.id === +draftId);
     // if (!draft) return;
-    activitiesData.saveDraft({
+    activities.draft.save({
       type: 'REPLACE_HOSE',
       id: +draftId,
       selectedIds,
