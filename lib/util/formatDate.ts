@@ -27,7 +27,7 @@ export const dateStringToDDMMYY = (inputDate: string): string => {
   const match = inputDate.match(dateRegex);
 
   if (!match) {
-    return 'Invalid date format';
+    return 'N/A';
   }
 
   const [day, monthName, year] = match.slice(1);
