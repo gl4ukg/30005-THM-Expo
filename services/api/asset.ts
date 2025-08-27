@@ -56,18 +56,9 @@ export const getS1 = async (): Promise<GetS1Response> => {
     };
   }
   // Use the first S1 item's code as the selected one
-  const selectedS1Code = response[0].S1Code;
-  console.log(
-    'Selected S1 code:',
-    typeof +response[0].S1Code,
-    +response[0].S1Code,
-  );
   return {
-    s1Items: response.map((item) => ({
-      ...item,
-      S1Code: +item,
-    })),
-    selectedS1Code: selectedS1Code,
+    s1Items: response,
+    selectedS1Code: response[0].S1Code,
   };
 };
 

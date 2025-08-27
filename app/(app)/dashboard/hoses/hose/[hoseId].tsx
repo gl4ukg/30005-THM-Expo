@@ -57,10 +57,6 @@ export type Section = {
   content: JSX.Element;
 };
 
-const isHoseDataType = (hose: HoseData | {}): hose is HoseData => {
-  return 'assetId' in hose;
-};
-
 const HoseDetails = () => {
   const {
     hoseId,
