@@ -1,8 +1,10 @@
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { Checkbox } from '@/components/UI/Checkbox';
+import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
+import { dateStringToDDMMYY } from '@/lib/util/formatDate';
 import { FC, useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
@@ -20,11 +22,21 @@ export const ListElement: FC<ElementProps> = ({
   onSelectedChange,
   onRowPress,
 }) => {
-  const { assetId, s1Code, RFID, missingData } = item;
+  const {
+    assetId,
+    s1Code,
+    RFID,
+    missingData,
+    hoseCondition,
+    inspectedDate,
+    S2Equipment,
+  } = item;
+  const { state } = useAppContext();
   const handleSelect = () => {
     if (!canBeSelected || !onSelectedChange) return;
     onSelectedChange(assetId!);
   };
+  console.log('item', inspectedDate);
   const hasAttachment = useMemo(() => Math.random() > 0.5, []);
   return (
     <Pressable onPress={onRowPress}>
@@ -64,19 +76,23 @@ export const ListElement: FC<ElementProps> = ({
         <View style={elementStyle.columnTwo}>
           <Typography
             name='tableContent'
-            text={`${s1Code}`}
+            text={
+              item.S2Equipment ??
+              state.data.s1Items.find((s) => s.S1Code === s1Code)?.S1Name ??
+              ''
+            }
             numberOfLines={1}
           />
           <View style={elementStyle.subtitleDateContainer}>
             <Typography
               name='tableContent'
-              text={item.hoseCondition}
+              text={hoseCondition}
               style={elementStyle.subtitle}
               numberOfLines={1}
             />
             <Typography
               name='tableContentNumber'
-              text={item.inspectedDate}
+              text={dateStringToDDMMYY(inspectedDate ?? '')}
               style={elementStyle.date}
             />
           </View>
