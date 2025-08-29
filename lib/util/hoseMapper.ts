@@ -1,5 +1,5 @@
 import {
-  Hose,
+  APIHose,
   HoseData,
   HoseHeader,
   HoseLine,
@@ -210,7 +210,7 @@ const mapToAdditionals = (hoseData: HoseData): Additionals => ({
   hEnd2: '',
 });
 
-export const mapHoseDataToHose = (hoseData: HoseData): Hose => ({
+export const mapHoseDataToAPIHose = (hoseData: HoseData): APIHose => ({
   hoseHeader: mapToHoseHeader(hoseData),
   hoseLine: mapToHoseLine(hoseData),
   hoseData: mapToHoseDataDetails(hoseData),
@@ -222,8 +222,9 @@ export const mapHoseDataToHose = (hoseData: HoseData): Hose => ({
   additionals: mapToAdditionals(hoseData),
 });
 
-export const mapHoseToHoseData = (hose: Hose): HoseData => ({
+export const mapAPIHoseToHoseData = (hose: APIHose): HoseData => ({
   assetId: hose.hoseHeader.assetId,
+  // HoseHeader
   extSystemCode: hose.hoseHeader.extSystemCode,
   companyCode: hose.hoseHeader.companyCode,
   extDocSequenceId: hose.hoseHeader.extDocSequenceId,
@@ -238,6 +239,8 @@ export const mapHoseToHoseData = (hose: Hose): HoseData => ({
   tessAsOrderNumber: hose.hoseHeader.tessAsOrderNumber,
   organization: hose.hoseHeader.organization,
   department: hose.hoseHeader.department,
+
+  // HoseLine
   hexagonId: Number(hose.hoseLine.hexagonId),
   itemDescription: hose.hoseLine.itemDescription,
   RFID: hose.hoseLine.rfid,
@@ -263,6 +266,8 @@ export const mapHoseToHoseData = (hose: Hose): HoseData => ({
   whipCheck: hose.hoseLine.whipcheck,
   breakaway: hose.hoseLine.breakaway,
   currentStatus: hose.hoseLine.currentStatus,
+
+  // HoseDataDetails
   hoseType: hose.hoseData.hoseTypeId.hoseTypeName,
   hoseLength_mm: hose.hoseData.hoselengthMm,
   hoseLength_ft_in: hose.hoseData.hoselengthFtIn,
@@ -280,6 +285,8 @@ export const mapHoseToHoseData = (hose: Hose): HoseData => ({
   hoseFunction: hose.hoseData.hoseFunction,
   hoseWarranty: hose.hoseData.hoseWarranty,
   hoseWarrantyComment: hose.hoseData.hoseWarrantyComment,
+
+  // CustomerData
   drawingNumber: hose.customerData.drawingNumber,
   posNumber: hose.customerData.posNumber,
   artNumber: hose.customerData.artNumber,
@@ -296,16 +303,22 @@ export const mapHoseToHoseData = (hose: Hose): HoseData => ({
   spareSetHose: hose.customerData.spareSetHose,
   emergencyHoseLink: hose.customerData.emergencyHoseLink,
   emergencyHoseComment: hose.customerData.emergencyHoseComment,
+
+  // Testing
   testTime: hose.testing.testTime,
   testMedium: hose.testing.testMediumStats,
   pressureTest: hose.testing.pressureTestStatus,
   bendingRadius: hose.testing.bendingRadius,
+
+  // MaintenanceDetails
   inspectedDate: hose.maintenanceDetails.inspectedDate,
   inspector: hose.maintenanceDetails.inspector,
   hoseCondition: hose.maintenanceDetails.hoseCondition,
   approved: hose.maintenanceDetails.approved,
   nextInspection: hose.maintenanceDetails.nextInspectionDate,
   replacementDate: hose.maintenanceDetails.nextHoseReplacement,
+
+  // HoseFitting1
   typeFittingEnd1: hose.hoseFitting1.typeFittingEnd.fittingEnd,
   genericDimensionEnd1:
     hose.hoseFitting1.genericDimensionEnd.genericDimensionName,
@@ -313,6 +326,8 @@ export const mapHoseToHoseData = (hose: Hose): HoseData => ({
   angleEnd1: hose.hoseFitting1.angleEnd,
   materialQualityEnd1: hose.hoseFitting1.materialQualityEnd,
   commentEnd1PTC: hose.hoseFitting1.commentEndPtc,
+
+  // HoseFitting2
   typeFittingEnd2: hose.hoseFitting2.typeFittingEnd.fittingEnd,
   genericDimensionEnd2:
     hose.hoseFitting2.genericDimensionEnd.genericDimensionName,
@@ -320,12 +335,16 @@ export const mapHoseToHoseData = (hose: Hose): HoseData => ({
   angleEnd2: hose.hoseFitting2.angleEnd,
   materialQualityEnd2: hose.hoseFitting2.materialQualityEnd,
   commentEnd2PTC: hose.hoseFitting2.commentEndPtc,
+
+  // Additionals
   additionalsAend1: hose.additionals.aEnd1,
   additionalsBend1: hose.additionals.bEnd1,
   additionalsCend1: hose.additionals.cEnd1,
   additionalsAend2: hose.additionals.aEnd2,
   additionalsBend2: hose.additionals.bEnd2,
   additionalsCend2: hose.additionals.cEnd2,
+
+  // Default values
   S2Equipment: '',
   missingData: false,
   innerDiameter: '',

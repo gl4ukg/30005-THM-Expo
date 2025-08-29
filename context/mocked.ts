@@ -1,6 +1,6 @@
-import { Hose } from '@/lib/types/hose';
+import { APIHose } from '@/lib/types/hose';
 
-const hoses: Hose<number | string>[] = [
+const hoses: APIHose<number | string>[] = [
   {
     hoseHeader: {
       hoseLineId: 2540,
