@@ -68,6 +68,13 @@ export const getAllHosesByS1 = async (s1Code: number): Promise<HoseData[]> => {
   return response.length ? response : [];
 };
 
+export const getHose = async (s1Code: number): Promise<HoseData[]> => {
+  const endpoint = `/asset/getHose?s1Code=${s1Code}`;
+  const response = await apiCall<HoseData[]>(endpoint, 'GET');
+
+  return response.length ? response : [];
+};
+
 export const registerHose = async (
   hoseData: HoseData,
   customerNumber?: string,
@@ -100,7 +107,7 @@ export const useAssetApi = () => {
   }, []);
 
   const getHosesByUser = useCallback(async (s1Code: number) => {
-    return await getAllHosesByS1(s1Code);
+    return await getHose(s1Code);
   }, []);
 
   const registerNewHose = useCallback(

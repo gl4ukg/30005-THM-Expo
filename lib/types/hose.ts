@@ -194,3 +194,256 @@ export type HID = Pick<
   | 'posNumber'
   | 'artNumber'
 >;
+
+export interface HoseHeader {
+  hoseLineId: number;
+  assetId: number;
+  extSystemCode: string;
+  companyCode: string;
+  extDocSequenceId: string;
+  requestDate: string;
+  requestTime: string;
+  documentName: string;
+  methodName: string;
+  customerNumber: string;
+  otherInfo: string;
+  customerOrderNumber: string;
+  tessOrderNumber: string;
+  tessAsOrderNumber: string;
+  organization: string;
+  department: string;
+}
+
+export interface S1Id {
+  s1Id: number;
+  s1Code: string;
+  s1Name: string;
+  customerId: number;
+}
+
+export interface S2Id {
+  s2Id: number;
+  s2Code: string;
+  s2Name: string;
+  s1Id: number;
+}
+type DescriptiveObject<
+  IdKey extends string,
+  NameKey extends string,
+  IdType = number,
+> = {
+  [K in IdKey]: IdType;
+} & {
+  [K in NameKey]: string;
+};
+
+export type ClassObject<IdType = number> = DescriptiveObject<
+  'classId',
+  'className',
+  IdType
+>;
+export type StatusObject<IdType = number> = DescriptiveObject<
+  'statusId',
+  'status',
+  IdType
+>;
+export type TypeObject<IdType = number> = DescriptiveObject<
+  'typeId',
+  'typeName',
+  IdType
+>;
+export type HoseTypeObject<IdType = number> = DescriptiveObject<
+  'hoseTypeId',
+  'hoseTypeName',
+  IdType
+>;
+export type HoseDimensionObject<IdType = number> = DescriptiveObject<
+  'hoseDimensionId',
+  'hoseDimension',
+  IdType
+>;
+export type CouplingOrientationObject<IdType = number> = DescriptiveObject<
+  'couplingOrientationId',
+  'orientationCode',
+  IdType
+>;
+
+export type GenericHoseTypeObject<IdType = number> = DescriptiveObject<
+  'genericHoseTypeId',
+  'genericHoseTypeName',
+  IdType
+>;
+
+export type FlushingMediaObject<IdType = number> = DescriptiveObject<
+  'flushingMediaId',
+  'flushingMediaName',
+  IdType
+>;
+
+export type CriticalityObject<IdType = number> = DescriptiveObject<
+  'criticalityId',
+  'criticalityName',
+  IdType
+>;
+export type GenericDimensionEndObject<IdType = number> = DescriptiveObject<
+  'genericDimensionEndId',
+  'genericDimensionName',
+  IdType
+>;
+
+export interface HoseLine<IdType = number | string> {
+  hoseLineId: number;
+  assetId: number;
+  hexagonId: string;
+  itemDescription: string;
+  rfid: string;
+  state: string;
+  classOrg: string;
+  parentSystemId: number;
+  s1Id: S1Id;
+  s2Id: S2Id;
+  equipmentSubunit: string;
+  customerId: IdType;
+  customerEq: string;
+  system: string;
+  productionDate: string;
+  installedDate: string;
+  numberOfHoses: string;
+  genericHoseTypeId: GenericHoseTypeObject<IdType>;
+  generalCommentPtc: string;
+  originalHoseComment: string;
+  additionalComment: string;
+  primarySystem: string;
+  hoseReel: string;
+  spiralGuard: string;
+  hoseProtection: string;
+  hookie: string;
+  whipcheck: string;
+  breakaway: string;
+  currentStatus: string;
+}
+
+export interface HoseDataDetails<IdType = number | string> {
+  hoseLineId: number;
+  assetId: number;
+  classId: ClassObject<IdType>;
+  statusId: StatusObject;
+  typeId: TypeObject;
+  hoseTypeId: HoseTypeObject<IdType>;
+  hoselengthMm: number;
+  hoselengthFtIn: string;
+  wpBar: number;
+  wpPsi: number;
+  ferrule1: string;
+  ferrule2: string;
+  insert1: string;
+  insert2: string;
+  hoseDimensionId: HoseDimensionObject<IdType>;
+  hoseOtherInfo: string;
+  couplingOrientationId: CouplingOrientationObject;
+  pinPricked: boolean;
+  hoseMediumTemperature: string;
+  hoseFunction: string;
+  hoseWarranty: string;
+  hoseWarrantyComment: string;
+}
+
+export interface CustomerData<IdType = string | number> {
+  hoseLineId: number;
+  assetId: number;
+  drawingNumber: string;
+  posNumber: string;
+  artNumber: string;
+  customerArtNumber: string;
+  criticalityId: CriticalityObject<IdType>;
+  pollutionExposure: string;
+  uxExposure: string;
+  cleaning: string;
+  flushingStandard: string;
+  flushingMediaId: FlushingMediaObject<IdType>;
+  minimumTemperature: string;
+  maximumTemperature: string;
+  colorId: number;
+  spareSetHose: boolean;
+  emergencyHoseLink: string;
+  emergencyHoseComment: string;
+  partNumberUpdatesNeeded: boolean;
+}
+
+export interface Testing {
+  hoseLineId: number;
+  assetId: number;
+  testTime: string;
+  testMediumStats: string;
+  pressureTestStatus: string;
+  bendingRadius: string;
+  thirdPartySharing: string;
+}
+
+export interface MaintenanceDetails {
+  hoseLineId: number;
+  assetId: number;
+  inspectedDate: string;
+  inspector: string;
+  hoseCondition: string;
+  approved: boolean;
+  inspectionComment: string;
+  nextInspectionDate: string;
+  pressureTestDate: string;
+  pressureTestOnInterval: boolean;
+  nextPressureTest: string;
+  nextHoseReplacement: string;
+}
+
+export interface TypeFittingEndId<IdType = number | string> {
+  typeFittingEndId: IdType;
+  fittingEnd: string;
+  genericDimensionEndId: IdType;
+}
+
+export interface HoseFitting<IdType = number | string> {
+  hoseLineId: IdType;
+  assetId: IdType;
+  fittingType: IdType;
+  typeFittingEndId: TypeFittingEndId<IdType>;
+  genericDimensionEndId: GenericDimensionEndObject<IdType>;
+  genderEnd: string;
+  angleEnd: string;
+  materialQualityEnd: string;
+  commentEndPtc: string;
+}
+
+export interface Additionals {
+  hoseLineId: number;
+  assetId: number;
+  aEnd1: string;
+  bEnd1: string;
+  cEnd1: string;
+  dEnd1: string;
+  eEnd1: string;
+  fEnd1: string;
+  gEnd1: string;
+  hEnd1: string;
+  aEnd2: string;
+  bEnd2: string;
+  cEnd2: string;
+  dEnd2: string;
+  eEnd2: string;
+  fEnd2: string;
+  gEnd2: string;
+  hEnd2: string;
+}
+
+export interface Hose<IdType = number | string> {
+  hoseHeader: HoseHeader;
+  hoseLine: HoseLine;
+  hoseData: HoseDataDetails;
+  customerData: CustomerData;
+  testing: Testing;
+  maintenanceDetails: MaintenanceDetails;
+  hoseFitting1: HoseFitting<IdType>;
+  hoseFitting2: HoseFitting<IdType>;
+  additionals: Additionals;
+}
+
+export type HoseApiResponse = Hose;
