@@ -227,31 +227,71 @@ export interface S2Id {
   s2Name: string;
   s1Id: number;
 }
-type DescriptiveObject<IdKey extends string, NameKey extends string> = {
-  [K in IdKey]: number;
+type DescriptiveObject<
+  IdKey extends string,
+  NameKey extends string,
+  IdType = number,
+> = {
+  [K in IdKey]: IdType;
 } & {
   [K in NameKey]: string;
 };
 
-export type ClassObject = DescriptiveObject<'classId', 'className'>;
-export type StatusObject = DescriptiveObject<'statusId', 'status'>;
-export type TypeObject = DescriptiveObject<'typeId', 'typeName'>;
-export type HoseTypeObject = DescriptiveObject<'hoseTypeId', 'hoseTypeName'>;
-export type HoseDimensionObject = DescriptiveObject<
+export type ClassObject<IdType = number> = DescriptiveObject<
+  'classId',
+  'className',
+  IdType
+>;
+export type StatusObject<IdType = number> = DescriptiveObject<
+  'statusId',
+  'status',
+  IdType
+>;
+export type TypeObject<IdType = number> = DescriptiveObject<
+  'typeId',
+  'typeName',
+  IdType
+>;
+export type HoseTypeObject<IdType = number> = DescriptiveObject<
+  'hoseTypeId',
+  'hoseTypeName',
+  IdType
+>;
+export type HoseDimensionObject<IdType = number> = DescriptiveObject<
   'hoseDimensionId',
-  'hoseDimension'
+  'hoseDimension',
+  IdType
 >;
-export type CouplingOrientationObject = DescriptiveObject<
+export type CouplingOrientationObject<IdType = number> = DescriptiveObject<
   'couplingOrientationId',
-  'orientationCode'
+  'orientationCode',
+  IdType
 >;
 
-export type GenericHoseTypeObject = DescriptiveObject<
+export type GenericHoseTypeObject<IdType = number> = DescriptiveObject<
   'genericHoseTypeId',
-  'genericHoseTypeName'
+  'genericHoseTypeName',
+  IdType
 >;
 
-export interface HoseLine {
+export type FlushingMediaObject<IdType = number> = DescriptiveObject<
+  'flushingMediaId',
+  'flushingMediaName',
+  IdType
+>;
+
+export type CriticalityObject<IdType = number> = DescriptiveObject<
+  'criticalityId',
+  'criticalityName',
+  IdType
+>;
+export type GenericDimensionEndObject<IdType = number> = DescriptiveObject<
+  'genericDimensionEndId',
+  'genericDimensionName',
+  IdType
+>;
+
+export interface HoseLine<IdType = number | string> {
   hoseLineId: number;
   assetId: number;
   hexagonId: string;
@@ -263,13 +303,13 @@ export interface HoseLine {
   s1Id: S1Id;
   s2Id: S2Id;
   equipmentSubunit: string;
-  customerId: number | number;
+  customerId: IdType;
   customerEq: string;
   system: string;
   productionDate: string;
   installedDate: string;
   numberOfHoses: string;
-  genericHoseTypeId: GenericHoseTypeObject;
+  genericHoseTypeId: GenericHoseTypeObject<IdType>;
   generalCommentPtc: string;
   originalHoseComment: string;
   additionalComment: string;
@@ -283,13 +323,13 @@ export interface HoseLine {
   currentStatus: string;
 }
 
-export interface HoseDataDetails {
+export interface HoseDataDetails<IdType = number | string> {
   hoseLineId: number;
   assetId: number;
-  classId: ClassObject;
+  classId: ClassObject<IdType>;
   statusId: StatusObject;
   typeId: TypeObject;
-  hoseTypeId: HoseTypeObject;
+  hoseTypeId: HoseTypeObject<IdType>;
   hoselengthMm: number;
   hoselengthFtIn: string;
   wpBar: number;
@@ -298,7 +338,7 @@ export interface HoseDataDetails {
   ferrule2: string;
   insert1: string;
   insert2: string;
-  hoseDimensionId: HoseDimensionObject;
+  hoseDimensionId: HoseDimensionObject<IdType>;
   hoseOtherInfo: string;
   couplingOrientationId: CouplingOrientationObject;
   pinPricked: boolean;
@@ -308,29 +348,19 @@ export interface HoseDataDetails {
   hoseWarrantyComment: string;
 }
 
-export interface CriticalityId {
-  criticalityId: number;
-  criticalityName: string;
-}
-
-export interface FlushingMediaId {
-  flushingMediaId: number;
-  flushingMediaName: string;
-}
-
-export interface CustomerData {
+export interface CustomerData<IdType = string | number> {
   hoseLineId: number;
   assetId: number;
   drawingNumber: string;
   posNumber: string;
   artNumber: string;
   customerArtNumber: string;
-  criticalityId: CriticalityId;
+  criticalityId: CriticalityObject<IdType>;
   pollutionExposure: string;
   uxExposure: string;
   cleaning: string;
   flushingStandard: string;
-  flushingMediaId: FlushingMediaId;
+  flushingMediaId: FlushingMediaObject<IdType>;
   minimumTemperature: string;
   maximumTemperature: string;
   colorId: number;
@@ -365,23 +395,18 @@ export interface MaintenanceDetails {
   nextHoseReplacement: string;
 }
 
-export interface TypeFittingEndId {
-  typeFittingEndId: number;
+export interface TypeFittingEndId<IdType = number | string> {
+  typeFittingEndId: IdType;
   fittingEnd: string;
-  genericDimensionEndId: number;
+  genericDimensionEndId: IdType;
 }
 
-export interface GenericDimensionEndId {
-  genericDimensionEndId: number;
-  genericDimensionName: string;
-}
-
-export interface HoseFitting {
-  hoseLineId: number;
-  assetId: number;
-  fittingType: number;
-  typeFittingEndId: TypeFittingEndId;
-  genericDimensionEndId: GenericDimensionEndId;
+export interface HoseFitting<IdType = number | string> {
+  hoseLineId: IdType;
+  assetId: IdType;
+  fittingType: IdType;
+  typeFittingEndId: TypeFittingEndId<IdType>;
+  genericDimensionEndId: GenericDimensionEndObject<IdType>;
   genderEnd: string;
   angleEnd: string;
   materialQualityEnd: string;
@@ -397,27 +422,27 @@ export interface Additionals {
   dEnd1: string;
   eEnd1: string;
   fEnd1: string;
-  gend1: string;
-  hend1: string;
-  aend2: string;
-  bend2: string;
-  cend2: string;
-  dend2: string;
-  eend2: string;
-  fend2: string;
-  gend2: string;
-  hend2: string;
+  gEnd1: string;
+  hEnd1: string;
+  aEnd2: string;
+  bEnd2: string;
+  cEnd2: string;
+  dEnd2: string;
+  eEnd2: string;
+  fEnd2: string;
+  gEnd2: string;
+  hEnd2: string;
 }
 
-export interface Hose {
+export interface Hose<IdType = number | string> {
   hoseHeader: HoseHeader;
   hoseLine: HoseLine;
   hoseData: HoseDataDetails;
   customerData: CustomerData;
   testing: Testing;
   maintenanceDetails: MaintenanceDetails;
-  hoseFitting1: HoseFitting;
-  hoseFitting2: HoseFitting;
+  hoseFitting1: HoseFitting<IdType>;
+  hoseFitting2: HoseFitting<IdType>;
   additionals: Additionals;
 }
 
