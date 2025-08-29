@@ -227,11 +227,29 @@ export interface S2Id {
   s2Name: string;
   s1Id: number;
 }
+type DescriptiveObject<IdKey extends string, NameKey extends string> = {
+  [K in IdKey]: number;
+} & {
+  [K in NameKey]: string;
+};
 
-export interface GenericHoseType {
-  genericHoseTypeId: number;
-  genericHoseTypeName: string;
-}
+export type ClassObject = DescriptiveObject<'classId', 'className'>;
+export type StatusObject = DescriptiveObject<'statusId', 'status'>;
+export type TypeObject = DescriptiveObject<'typeId', 'typeName'>;
+export type HoseTypeObject = DescriptiveObject<'hoseTypeId', 'hoseTypeName'>;
+export type HoseDimensionObject = DescriptiveObject<
+  'hoseDimensionId',
+  'hoseDimension'
+>;
+export type CouplingOrientationObject = DescriptiveObject<
+  'couplingOrientationId',
+  'orientationCode'
+>;
+
+export type GenericHoseTypeObject = DescriptiveObject<
+  'genericHoseTypeId',
+  'genericHoseTypeName'
+>;
 
 export interface HoseLine {
   hoseLineId: number;
@@ -251,7 +269,7 @@ export interface HoseLine {
   productionDate: string;
   installedDate: string;
   numberOfHoses: string;
-  genericHoseTypeId: GenericHoseType;
+  genericHoseTypeId: GenericHoseTypeObject;
   generalCommentPtc: string;
   originalHoseComment: string;
   additionalComment: string;
@@ -265,32 +283,13 @@ export interface HoseLine {
   currentStatus: string;
 }
 
-type DescriptiveField<IdKey extends string, NameKey extends string> = {
-  [K in IdKey]: number;
-} & {
-  [K in NameKey]: string;
-};
-
-export type ClassId = DescriptiveField<'classId', 'className'>;
-export type StatusId = DescriptiveField<'statusId', 'status'>;
-export type TypeId = DescriptiveField<'typeId', 'typeName'>;
-export type HoseTypeId = DescriptiveField<'hoseTypeId', 'hoseTypeName'>;
-export type HoseDimensionId = DescriptiveField<
-  'hoseDimensionId',
-  'hoseDimension'
->;
-export type CouplingOrientationId = DescriptiveField<
-  'couplingOrientationId',
-  'orientationCode'
->;
-
 export interface HoseDataDetails {
   hoseLineId: number;
   assetId: number;
-  classId: ClassId;
-  statusId: StatusId;
-  typeId: TypeId;
-  hoseTypeId: HoseTypeId;
+  classId: ClassObject;
+  statusId: StatusObject;
+  typeId: TypeObject;
+  hoseTypeId: HoseTypeObject;
   hoselengthMm: number;
   hoselengthFtIn: string;
   wpBar: number;
@@ -299,9 +298,9 @@ export interface HoseDataDetails {
   ferrule2: string;
   insert1: string;
   insert2: string;
-  hoseDimensionId: HoseDimensionId;
+  hoseDimensionId: HoseDimensionObject;
   hoseOtherInfo: string;
-  couplingOrientationId: CouplingOrientationId;
+  couplingOrientationId: CouplingOrientationObject;
   pinPricked: boolean;
   hoseMediumTemperature: string;
   hoseFunction: string;
