@@ -29,6 +29,7 @@ export async function apiRequest<T>(
     }
   } catch (error) {
     console.error('Failed to get authentication token:', error);
+    throw error;
   }
 
   const defaultHeaders = {
@@ -45,8 +46,6 @@ export async function apiRequest<T>(
   };
 
   try {
-    // console.log('Making API request to:', url);
-    // console.log('Request method:', config.method || 'GET');
     if (config.body) {
       console.log('Request body:', config.body);
     }

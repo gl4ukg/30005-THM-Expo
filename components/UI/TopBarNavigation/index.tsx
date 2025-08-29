@@ -14,9 +14,9 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
-  selectedS1Code: string | null;
+  selectedS1Code: number | null;
   s1Items: S1Item[];
-  onSelectS1: (s1Code: string) => void;
+  onSelectS1: (s1Code: number) => void;
 }
 
 export const TopBarNavigation: React.FC<Props> = ({
@@ -32,7 +32,7 @@ export const TopBarNavigation: React.FC<Props> = ({
     setIsExpanded((exp) => !exp);
   };
 
-  const selectS1 = (s1Code: string) => {
+  const handelSelection = (s1Code: number) => {
     onSelectS1(s1Code);
     setIsExpanded(false);
   };
@@ -68,7 +68,7 @@ export const TopBarNavigation: React.FC<Props> = ({
                 styles.option,
                 pressed && styles.optionPressed,
               ]}
-              onPress={() => selectS1(s1Item.S1Code)}
+              onPress={() => handelSelection(s1Item.S1Code)}
             >
               {s1Item.S1Code === selectedS1Code && (
                 <Icon name='Industry' color={colors.white} size='xsm' />

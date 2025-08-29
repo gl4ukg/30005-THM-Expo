@@ -22,19 +22,19 @@ const CACHE_KEYS = {
   EDITED_HOSES: 'edited_hoses',
 } as const;
 
-const setS1Code = (s1Code: string): void => {
+const setS1Code = (s1Code: number | null): void => {
   try {
-    storage.set(CACHE_KEYS.S1_CODE, s1Code);
+    storage.set(CACHE_KEYS.S1_CODE, s1Code?.toString() ?? '');
   } catch (error) {
     console.error('Failed to cache S1 code:', error);
     throw error;
   }
 };
 
-const getS1Code = (): string | null => {
+const getS1Code = (): number | null => {
   try {
     const s1Code = storage.getString(CACHE_KEYS.S1_CODE);
-    return s1Code ?? null;
+    return s1Code ? parseInt(s1Code) : null;
   } catch (error) {
     console.error('Failed to get S1 code from cache:', error);
     return null;
@@ -45,7 +45,6 @@ const setS1Items = (s1Items: S1Item[]): void => {
   try {
     const s1ItemsJson = JSON.stringify(s1Items);
     storage.set(CACHE_KEYS.S1_ITEMS, s1ItemsJson);
-    console.log(`${s1Items.length} S1 items cached successfully`);
   } catch (error) {
     console.error('Failed to cache S1 items:', error);
     throw error;

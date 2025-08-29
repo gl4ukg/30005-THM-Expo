@@ -61,7 +61,7 @@ export type User = {
   lastName: string;
   username: string;
   email: string;
-  phoneNumber: number;
+  phoneNumber: string | null;
   defaultAddressId: number;
   defaultWarehouseId: string;
   assortmentIds: number[];

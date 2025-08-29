@@ -8,6 +8,7 @@ import {
 import { Activity } from '@/components/dashboard/activitiesList/activity';
 import { loginCache } from '@/services/cache/loginCacheService';
 import { cache } from '@/services/cache/cacheService';
+import { Customer } from '@/services/api/customer';
 
 interface AppState {
   auth: AuthState;
@@ -107,14 +108,11 @@ interface DataState {
   isLoading: boolean;
   lastUpdate: null | Date;
   lastUpdateStatus?: 'error' | 'syncing' | 'synced';
-  s1Code: string | null;
+  s1Code: number | null;
   s1Items: S1Item[];
   // define data state properties
   hoses: HoseData[];
-  customer: {
-    id?: string;
-    name?: string;
-  };
+  customers: Customer[];
   selection: HoseSelection | null;
   hoseTemplate?: Partial<HoseData>;
   isCancelable: boolean;
@@ -190,7 +188,7 @@ const initialDataState: DataState = {
   lastUpdate: null,
   s1Code: null,
   s1Items: [],
-  customer: { id: '223949', name: 'CUSTOMER WEB DEMO (Main)' },
+  customers: [],
   // initial data state values
   hoses: [],
   selection: null,
@@ -280,7 +278,7 @@ const getInitialState = (): AppState => {
         isLogingLoading: false,
       },
       data: {
-        customer: {},
+        customers: [],
         hoses: cache.hoses.get(),
         selection: null,
         isCancelable: false,
@@ -302,7 +300,7 @@ const getInitialState = (): AppState => {
         isLogingLoading: false,
       },
       data: {
-        customer: {},
+        customers: [],
         hoses: [],
         selection: null,
         isCancelable: false,

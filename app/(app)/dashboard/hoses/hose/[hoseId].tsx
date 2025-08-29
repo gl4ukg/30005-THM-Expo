@@ -57,10 +57,6 @@ export type Section = {
   content: JSX.Element;
 };
 
-const isHoseDataType = (hose: HoseData | {}): hose is HoseData => {
-  return 'assetId' in hose;
-};
-
 const HoseDetails = () => {
   const {
     hoseId,
@@ -269,15 +265,6 @@ const HoseDetails = () => {
     },
   ];
 
-  const getStructure = (hose: Partial<HoseData>) => {
-    const structure: (string | undefined | null)[] = [
-      hose.s1Code ? `${hose.s1Code}` : undefined,
-      hose.S2Equipment,
-      hose.equipmentSubunit,
-    ];
-    return structure.filter((s): s is string => !!s && s.trim() !== '');
-  };
-
   return (
     <View style={styles.container}>
       {!editMode && !isNotEditable && (
@@ -321,14 +308,7 @@ const HoseDetails = () => {
         {!editMode && (
           <>
             <Documents />
-            <Structure
-              structure={getStructure(hoseData)}
-              name={
-                state.data.s1Items.find(
-                  (unit) => unit.S1Code === state.data.s1Code,
-                )?.S1Name ?? ''
-              }
-            />
+            <Structure hose={hoseData} />
             <HistoryView items={mockedHistory} />
           </>
         )}

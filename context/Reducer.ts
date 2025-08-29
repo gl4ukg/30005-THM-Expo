@@ -17,6 +17,7 @@ import {
 } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
 import { S1Item } from '@/services/api/asset';
+import { Customer } from '@/services/api/customer';
 import { createContext } from 'react';
 
 export interface PartialFormData {
@@ -97,9 +98,9 @@ type AuthAction =
   | ActionWithPayload<'SET_TOKEN', string>
   | ActionWithPayload<'SET_LOGIN_LOADING', boolean>;
 type DataAction =
-  | ActionWithPayload<'SET_S1_CODE', string>
+  | ActionWithPayload<'SET_S1_CODE', number | null>
   | ActionWithPayload<'SET_S1_ITEMS', S1Item[]>
-  | ActionWithPayload<'CHANGE_S1_SELECTION', string>
+  | ActionWithPayload<'CHANGE_S1_SELECTION', number>
   | ActionWithPayload<
       'REMOVE_ACTION',
       { id: string; actionType: SingleSelectionActionsType }
@@ -114,7 +115,7 @@ type DataAction =
   | ActionWithPayload<'SET_HOSE_DATA', HoseData[]>
   | ActionWithPayload<'SET_DATA_LOADING', boolean>
   | ActionWithPayload<'SET_LAST_UPDATE', 'error' | 'syncing' | 'synced'>
-  | ActionWithPayload<'SET_CUSTOMER', { id: string; name: string }>
+  | ActionWithPayload<'SET_CUSTOMERS', Customer[]>
   | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: number; hoseData: any }>
   | ActionWithPayload<'REMOVE_HOSES', number[]>
   | ActionWithPayload<'SELECT_ONE_HOSE', SingleSelection>
@@ -254,10 +255,10 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         ...state,
         hoses: action.payload,
       };
-    case 'SET_CUSTOMER':
+    case 'SET_CUSTOMERS':
       return {
         ...state,
-        customer: action.payload,
+        customers: action.payload,
       };
     case 'ADD_NEW_HOSE':
       return {

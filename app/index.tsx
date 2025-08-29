@@ -22,7 +22,6 @@ import { colors } from '@/lib/tokens/colors';
 import { Link, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useEffect } from 'react';
 
 const Login = () => {
   const router = useRouter();
@@ -38,60 +37,6 @@ const Login = () => {
       <StatusBar style='light' />
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView style={styles.safeArea}>
-          {/* TODO: remove View block under */}
-          <View
-            style={{
-              flexDirection: 'row',
-              gap: 5,
-              top: Platform.OS === 'ios' ? 0 : insets.top,
-              zIndex: 200,
-            }}
-          >
-            <Link
-              href={{
-                pathname: '/(app)/dashboard/hoses/register',
-                params: { id: '2209045' },
-              }}
-              style={{ backgroundColor: 'hotpink' }}
-            >
-              Register Hose 123
-            </Link>
-
-            <Link
-              href={'/photo'}
-              asChild
-              style={[
-                styles.link,
-                { flex: 1, backgroundColor: colors.dashboardGreen },
-              ]}
-            >
-              <Pressable
-                style={[
-                  styles.link,
-                  { flex: 1, backgroundColor: colors.extendedBlue },
-                ]}
-              >
-                <Typography name='navigation' text='Photos' numberOfLines={1} />
-              </Pressable>
-            </Link>
-            <Link
-              href={'/ui'}
-              asChild
-              style={[
-                styles.link,
-                { flex: 1, backgroundColor: colors.dashboardGreen },
-              ]}
-            >
-              <Pressable
-                style={[
-                  styles.link,
-                  { flex: 1, backgroundColor: colors.dashboardRed },
-                ]}
-              >
-                <Typography name='navigation' text='Ui' numberOfLines={1} />
-              </Pressable>
-            </Link>
-          </View>
           <View
             style={[
               styles.scrollViewWrapper,

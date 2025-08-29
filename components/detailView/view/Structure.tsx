@@ -1,14 +1,26 @@
 import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
+import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
+import { HoseData } from '@/lib/types/hose';
 import { StyleSheet, View } from 'react-native';
 
 type StructureProps = {
-  structure: string[];
-  name: string;
+  hose: Partial<HoseData>;
 };
-export const Structure: React.FC<StructureProps> = ({ structure, name }) => {
+export const Structure: React.FC<StructureProps> = ({ hose }) => {
+  const { state } = useAppContext();
+  const customer = state.data.customers.find(
+    (c) => c.customerNumber === hose.customerNumber,
+  );
+  const S1 = state.data.s1Items.find((s) => s.S1Code === hose.s1Code);
+  const structure: string[] = [
+    customer?.customerName,
+    S1?.S1Name,
+    hose.S2Equipment,
+  ].filter((s): s is string => !!s && s.trim() !== '');
+
   return (
     <View style={styles.container}>
       <Bookmark title='Structure' />
@@ -29,7 +41,7 @@ export const Structure: React.FC<StructureProps> = ({ structure, name }) => {
           <Typography
             style={[styles.name, styles.textContent]}
             name={'navigationBold'}
-            text={name}
+            text={hose.itemDescription}
           />
         </View>
       </View>

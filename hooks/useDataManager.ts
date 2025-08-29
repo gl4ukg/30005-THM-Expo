@@ -59,7 +59,7 @@ export const useDataManager = (): {
       payload: true,
     });
 
-    const apiKey = loginCacheService.getApiKey();
+    const apiKey = loginCache.apiKey.get();
     if (!state.auth.user && !apiKey) {
       dispatch({
         type: 'SET_LAST_UPDATE',
