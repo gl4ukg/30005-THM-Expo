@@ -194,3 +194,232 @@ export type HID = Pick<
   | 'posNumber'
   | 'artNumber'
 >;
+
+export interface HoseHeader {
+  hoseLineId: number;
+  assetId: number;
+  extSystemCode: string;
+  companyCode: string;
+  extDocSequenceId: string;
+  requestDate: string;
+  requestTime: string;
+  documentName: string;
+  methodName: string;
+  customerNumber: string;
+  otherInfo: string;
+  customerOrderNumber: string;
+  tessOrderNumber: string;
+  tessAsOrderNumber: string;
+  organization: string;
+  department: string;
+}
+
+export interface S1Id {
+  s1Id: number;
+  s1Code: string;
+  s1Name: string;
+  customerId: number;
+}
+
+export interface S2Id {
+  s2Id: number;
+  s2Code: string;
+  s2Name: string;
+  s1Id: number;
+}
+
+export interface GenericHoseType {
+  genericHoseTypeId: number;
+  genericHoseTypeName: string;
+}
+
+export interface HoseLine {
+  hoseLineId: number;
+  assetId: number;
+  hexagonId: string;
+  itemDescription: string;
+  rfid: string;
+  state: string;
+  classOrg: string;
+  parentSystemId: number;
+  s1Id: S1Id;
+  s2Id: S2Id;
+  equipmentSubunit: string;
+  customerId: number | number;
+  customerEq: string;
+  system: string;
+  productionDate: string;
+  installedDate: string;
+  numberOfHoses: string;
+  genericHoseTypeId: GenericHoseType;
+  generalCommentPtc: string;
+  originalHoseComment: string;
+  additionalComment: string;
+  primarySystem: string;
+  hoseReel: string;
+  spiralGuard: string;
+  hoseProtection: string;
+  hookie: string;
+  whipcheck: string;
+  breakaway: string;
+  currentStatus: string;
+}
+
+type DescriptiveField<IdKey extends string, NameKey extends string> = {
+  [K in IdKey]: number;
+} & {
+  [K in NameKey]: string;
+};
+
+export type ClassId = DescriptiveField<'classId', 'className'>;
+export type StatusId = DescriptiveField<'statusId', 'status'>;
+export type TypeId = DescriptiveField<'typeId', 'typeName'>;
+export type HoseTypeId = DescriptiveField<'hoseTypeId', 'hoseTypeName'>;
+export type HoseDimensionId = DescriptiveField<
+  'hoseDimensionId',
+  'hoseDimension'
+>;
+export type CouplingOrientationId = DescriptiveField<
+  'couplingOrientationId',
+  'orientationCode'
+>;
+
+export interface HoseDataDetails {
+  hoseLineId: number;
+  assetId: number;
+  classId: ClassId;
+  statusId: StatusId;
+  typeId: TypeId;
+  hoseTypeId: HoseTypeId;
+  hoselengthMm: number;
+  hoselengthFtIn: string;
+  wpBar: number;
+  wpPsi: number;
+  ferrule1: string;
+  ferrule2: string;
+  insert1: string;
+  insert2: string;
+  hoseDimensionId: HoseDimensionId;
+  hoseOtherInfo: string;
+  couplingOrientationId: CouplingOrientationId;
+  pinPricked: boolean;
+  hoseMediumTemperature: string;
+  hoseFunction: string;
+  hoseWarranty: string;
+  hoseWarrantyComment: string;
+}
+
+export interface CriticalityId {
+  criticalityId: number;
+  criticalityName: string;
+}
+
+export interface FlushingMediaId {
+  flushingMediaId: number;
+  flushingMediaName: string;
+}
+
+export interface CustomerData {
+  hoseLineId: number;
+  assetId: number;
+  drawingNumber: string;
+  posNumber: string;
+  artNumber: string;
+  customerArtNumber: string;
+  criticalityId: CriticalityId;
+  pollutionExposure: string;
+  uxExposure: string;
+  cleaning: string;
+  flushingStandard: string;
+  flushingMediaId: FlushingMediaId;
+  minimumTemperature: string;
+  maximumTemperature: string;
+  colorId: number;
+  spareSetHose: boolean;
+  emergencyHoseLink: string;
+  emergencyHoseComment: string;
+  partNumberUpdatesNeeded: boolean;
+}
+
+export interface Testing {
+  hoseLineId: number;
+  assetId: number;
+  testTime: string;
+  testMediumStats: string;
+  pressureTestStatus: string;
+  bendingRadius: string;
+  thirdPartySharing: string;
+}
+
+export interface MaintenanceDetails {
+  hoseLineId: number;
+  assetId: number;
+  inspectedDate: string;
+  inspector: string;
+  hoseCondition: string;
+  approved: boolean;
+  inspectionComment: string;
+  nextInspectionDate: string;
+  pressureTestDate: string;
+  pressureTestOnInterval: boolean;
+  nextPressureTest: string;
+  nextHoseReplacement: string;
+}
+
+export interface TypeFittingEndId {
+  typeFittingEndId: number;
+  fittingEnd: string;
+  genericDimensionEndId: number;
+}
+
+export interface GenericDimensionEndId {
+  genericDimensionEndId: number;
+  genericDimensionName: string;
+}
+
+export interface HoseFitting {
+  hoseLineId: number;
+  assetId: number;
+  fittingType: number;
+  typeFittingEndId: TypeFittingEndId;
+  genericDimensionEndId: GenericDimensionEndId;
+  genderEnd: string;
+  angleEnd: string;
+  materialQualityEnd: string;
+  commentEndPtc: string;
+}
+
+export interface Additionals {
+  hoseLineId: number;
+  assetId: number;
+  aEnd1: string;
+  bEnd1: string;
+  cEnd1: string;
+  dEnd1: string;
+  eEnd1: string;
+  fEnd1: string;
+  gend1: string;
+  hend1: string;
+  aend2: string;
+  bend2: string;
+  cend2: string;
+  dend2: string;
+  eend2: string;
+  fend2: string;
+  gend2: string;
+  hend2: string;
+}
+
+export interface Hose {
+  hoseHeader: HoseHeader;
+  hoseLine: HoseLine;
+  hoseData: HoseDataDetails;
+  customerData: CustomerData;
+  testing: Testing;
+  maintenanceDetails: MaintenanceDetails;
+  hoseFitting1: HoseFitting;
+  hoseFitting2: HoseFitting;
+  additionals: Additionals;
+}
+
+export type HoseApiResponse = Hose;
