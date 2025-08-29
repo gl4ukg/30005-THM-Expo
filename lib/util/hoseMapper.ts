@@ -9,7 +9,7 @@ import {
   MaintenanceDetails,
   HoseFitting,
   Additionals,
-  TypeFittingEndId,
+  TypeFittingEnd,
   GenericDimensionEndObject,
 } from '../types/hose';
 
@@ -41,13 +41,13 @@ const mapToHoseLine = (hoseData: HoseData): HoseLine => ({
   state: '',
   classOrg: hoseData.class || '',
   parentSystemId: 0,
-  s1Id: {
+  s1: {
     s1Id: 0,
     s1Code: String(hoseData.s1Code || ''),
     s1Name: '',
     customerId: Number(hoseData.customerID || 0),
   },
-  s2Id: {
+  s2: {
     s2Id: 0,
     s2Code: String(hoseData.s2Code || ''),
     s2Name: '',
@@ -60,7 +60,7 @@ const mapToHoseLine = (hoseData: HoseData): HoseLine => ({
   productionDate: hoseData.productionDate || '',
   installedDate: hoseData.installedDate || '',
   numberOfHoses: String(hoseData.numberOfHoses || ''),
-  genericHoseTypeId: {
+  genericHoseType: {
     genericHoseTypeId: 0,
     genericHoseTypeName: hoseData.genericHoseType || '',
   },
@@ -80,9 +80,9 @@ const mapToHoseLine = (hoseData: HoseData): HoseLine => ({
 const mapToHoseDataDetails = (hoseData: HoseData): HoseDataDetails => ({
   hoseLineId: hoseData.assetId,
   assetId: hoseData.assetId,
-  classId: { classId: 0, className: hoseData.class || '' },
-  statusId: { statusId: 0, status: hoseData.status || '' },
-  typeId: { typeId: 0, typeName: hoseData.type || '' },
+  class: { classId: 0, className: hoseData.class || '' },
+  status: { statusId: 0, status: hoseData.status || '' },
+  type: { typeId: 0, typeName: hoseData.type || '' },
   hoseTypeId: {
     hoseTypeId: 0,
     hoseTypeName: hoseData.hoseType || '',
@@ -95,7 +95,7 @@ const mapToHoseDataDetails = (hoseData: HoseData): HoseDataDetails => ({
   ferrule2: hoseData.ferrule2 || '',
   insert1: hoseData.insert1 || '',
   insert2: hoseData.insert2 || '',
-  hoseDimensionId: {
+  hoseDimension: {
     hoseDimensionId: 0,
     hoseDimension: '',
   },
@@ -118,7 +118,7 @@ const mapToCustomerData = (hoseData: HoseData): CustomerData => ({
   posNumber: hoseData.posNumber || '',
   artNumber: hoseData.artNumber || '',
   customerArtNumber: hoseData.customerArtNumber || '',
-  criticalityId: {
+  criticality: {
     criticalityId: 0,
     criticalityName: String(hoseData.criticality || ''),
   },
@@ -126,7 +126,7 @@ const mapToCustomerData = (hoseData: HoseData): CustomerData => ({
   uxExposure: hoseData.uvExposure || '',
   cleaning: hoseData.cleaning || '',
   flushingStandard: hoseData.flushingStandard || '',
-  flushingMediaId: {
+  flushingMedia: {
     flushingMediaId: 0,
     flushingMediaName: hoseData.flushingMedia || '',
   },
@@ -165,13 +165,13 @@ const mapToMaintenanceDetails = (hoseData: HoseData): MaintenanceDetails => ({
 });
 
 const mapToHoseFitting = (hoseData: HoseData, end: '1' | '2'): HoseFitting => {
-  const typeFittingEndId: TypeFittingEndId = {
+  const typeFittingEnd: TypeFittingEnd = {
     typeFittingEndId: 0,
     fittingEnd: hoseData[`typeFittingEnd${end}`] || '',
     genericDimensionEndId: 0,
   };
 
-  const genericDimensionEndId: GenericDimensionEndObject = {
+  const genericDimensionEnd: GenericDimensionEndObject = {
     genericDimensionEndId: 0,
     genericDimensionName: hoseData[`genericDimensionEnd${end}`] || '',
   };
@@ -180,8 +180,8 @@ const mapToHoseFitting = (hoseData: HoseData, end: '1' | '2'): HoseFitting => {
     hoseLineId: hoseData.assetId,
     assetId: hoseData.assetId,
     fittingType: 0,
-    typeFittingEndId,
-    genericDimensionEndId,
+    typeFittingEnd,
+    genericDimensionEnd,
     genderEnd: hoseData[`genderEnd${end}`] || '',
     angleEnd: hoseData[`angleEnd${end}`] || '',
     materialQualityEnd: hoseData[`materialQualityEnd${end}`] || '',
@@ -241,9 +241,9 @@ export const mapHoseToHoseData = (hose: Hose): HoseData => ({
   hexagonId: Number(hose.hoseLine.hexagonId),
   itemDescription: hose.hoseLine.itemDescription,
   RFID: hose.hoseLine.rfid,
-  class: hose.hoseData.classId.className,
-  s1Code: Number(hose.hoseLine.s1Id.s1Code),
-  s2Code: Number(hose.hoseLine.s2Id.s2Code),
+  class: hose.hoseData.class.className,
+  s1Code: Number(hose.hoseLine.s1.s1Code),
+  s2Code: Number(hose.hoseLine.s2.s2Code),
   equipmentSubunit: hose.hoseLine.equipmentSubunit,
   customerID: String(hose.hoseLine.customerId),
   customerEq: hose.hoseLine.customerEq,
@@ -251,7 +251,7 @@ export const mapHoseToHoseData = (hose: Hose): HoseData => ({
   productionDate: hose.hoseLine.productionDate,
   installedDate: hose.hoseLine.installedDate,
   numberOfHoses: Number(hose.hoseLine.numberOfHoses),
-  genericHoseType: hose.hoseLine.genericHoseTypeId.genericHoseTypeName,
+  genericHoseType: hose.hoseLine.genericHoseType.genericHoseTypeName,
   generalCommentPTC: hose.hoseLine.generalCommentPtc,
   originalHoseComment: hose.hoseLine.originalHoseComment,
   additionalComment: hose.hoseLine.additionalComment,
@@ -284,12 +284,12 @@ export const mapHoseToHoseData = (hose: Hose): HoseData => ({
   posNumber: hose.customerData.posNumber,
   artNumber: hose.customerData.artNumber,
   customerArtNumber: hose.customerData.customerArtNumber,
-  criticality: hose.customerData.criticalityId.criticalityName,
+  criticality: hose.customerData.criticality.criticalityName,
   pollutionExposure: hose.customerData.pollutionExposure,
   uvExposure: hose.customerData.uxExposure,
   cleaning: hose.customerData.cleaning,
   flushingStandard: hose.customerData.flushingStandard,
-  flushingMedia: hose.customerData.flushingMediaId.flushingMediaName,
+  flushingMedia: hose.customerData.flushingMedia.flushingMediaName,
   minimumTemperature: hose.customerData.minimumTemperature,
   maximumTemperature: hose.customerData.maximumTemperature,
   colorCode: String(hose.customerData.colorId),
@@ -306,16 +306,16 @@ export const mapHoseToHoseData = (hose: Hose): HoseData => ({
   approved: hose.maintenanceDetails.approved,
   nextInspection: hose.maintenanceDetails.nextInspectionDate,
   replacementDate: hose.maintenanceDetails.nextHoseReplacement,
-  typeFittingEnd1: hose.hoseFitting1.typeFittingEndId.fittingEnd,
+  typeFittingEnd1: hose.hoseFitting1.typeFittingEnd.fittingEnd,
   genericDimensionEnd1:
-    hose.hoseFitting1.genericDimensionEndId.genericDimensionName,
+    hose.hoseFitting1.genericDimensionEnd.genericDimensionName,
   genderEnd1: hose.hoseFitting1.genderEnd,
   angleEnd1: hose.hoseFitting1.angleEnd,
   materialQualityEnd1: hose.hoseFitting1.materialQualityEnd,
   commentEnd1PTC: hose.hoseFitting1.commentEndPtc,
-  typeFittingEnd2: hose.hoseFitting2.typeFittingEndId.fittingEnd,
+  typeFittingEnd2: hose.hoseFitting2.typeFittingEnd.fittingEnd,
   genericDimensionEnd2:
-    hose.hoseFitting2.genericDimensionEndId.genericDimensionName,
+    hose.hoseFitting2.genericDimensionEnd.genericDimensionName,
   genderEnd2: hose.hoseFitting2.genderEnd,
   angleEnd2: hose.hoseFitting2.angleEnd,
   materialQualityEnd2: hose.hoseFitting2.materialQualityEnd,
@@ -331,6 +331,6 @@ export const mapHoseToHoseData = (hose: Hose): HoseData => ({
   innerDiameter: '',
   parentSystem: String(hose.hoseLine.parentSystemId),
   customerFlushingMedia: '',
-  status: hose.hoseData.statusId.status,
-  type: hose.hoseData.typeId.typeName,
+  status: hose.hoseData.status.status,
+  type: hose.hoseData.type.typeName,
 });
