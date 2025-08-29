@@ -300,8 +300,8 @@ export interface HoseLine<IdType = number | string> {
   state: string;
   classOrg: string;
   parentSystemId: number;
-  s1Id: S1Id;
-  s2Id: S2Id;
+  s1: S1Id;
+  s2: S2Id;
   equipmentSubunit: string;
   customerId: IdType;
   customerEq: string;
@@ -309,7 +309,7 @@ export interface HoseLine<IdType = number | string> {
   productionDate: string;
   installedDate: string;
   numberOfHoses: string;
-  genericHoseTypeId: GenericHoseTypeObject<IdType>;
+  genericHoseType: GenericHoseTypeObject<IdType>;
   generalCommentPtc: string;
   originalHoseComment: string;
   additionalComment: string;
@@ -326,9 +326,9 @@ export interface HoseLine<IdType = number | string> {
 export interface HoseDataDetails<IdType = number | string> {
   hoseLineId: number;
   assetId: number;
-  classId: ClassObject<IdType>;
-  statusId: StatusObject;
-  typeId: TypeObject;
+  class: ClassObject<IdType>;
+  status: StatusObject;
+  type: TypeObject;
   hoseTypeId: HoseTypeObject<IdType>;
   hoselengthMm: number;
   hoselengthFtIn: string;
@@ -338,7 +338,7 @@ export interface HoseDataDetails<IdType = number | string> {
   ferrule2: string;
   insert1: string;
   insert2: string;
-  hoseDimensionId: HoseDimensionObject<IdType>;
+  hoseDimension: HoseDimensionObject<IdType>;
   hoseOtherInfo: string;
   couplingOrientationId: CouplingOrientationObject;
   pinPricked: boolean;
@@ -355,12 +355,12 @@ export interface CustomerData<IdType = string | number> {
   posNumber: string;
   artNumber: string;
   customerArtNumber: string;
-  criticalityId: CriticalityObject<IdType>;
+  criticality: CriticalityObject<IdType>;
   pollutionExposure: string;
   uxExposure: string;
   cleaning: string;
   flushingStandard: string;
-  flushingMediaId: FlushingMediaObject<IdType>;
+  flushingMedia: FlushingMediaObject<IdType>;
   minimumTemperature: string;
   maximumTemperature: string;
   colorId: number;
@@ -395,7 +395,7 @@ export interface MaintenanceDetails {
   nextHoseReplacement: string;
 }
 
-export interface TypeFittingEndId<IdType = number | string> {
+export interface TypeFittingEnd<IdType = number | string> {
   typeFittingEndId: IdType;
   fittingEnd: string;
   genericDimensionEndId: IdType;
@@ -405,8 +405,8 @@ export interface HoseFitting<IdType = number | string> {
   hoseLineId: IdType;
   assetId: IdType;
   fittingType: IdType;
-  typeFittingEndId: TypeFittingEndId<IdType>;
-  genericDimensionEndId: GenericDimensionEndObject<IdType>;
+  typeFittingEnd: TypeFittingEnd<IdType>;
+  genericDimensionEnd: GenericDimensionEndObject<IdType>;
   genderEnd: string;
   angleEnd: string;
   materialQualityEnd: string;
