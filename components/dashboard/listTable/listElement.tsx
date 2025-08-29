@@ -4,7 +4,7 @@ import { Checkbox } from '@/components/UI/Checkbox';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
-import { dateStringToDDMMYY } from '@/lib/util/formatDate';
+import { stringToDate } from '@/lib/util/formatDate';
 import { FC, useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
@@ -92,7 +92,7 @@ export const ListElement: FC<ElementProps> = ({
             />
             <Typography
               name='tableContentNumber'
-              text={dateStringToDDMMYY(inspectedDate ?? '')}
+              text={stringToDate(inspectedDate ?? '').SHOW}
               style={elementStyle.date}
             />
           </View>

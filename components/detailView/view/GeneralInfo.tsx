@@ -10,7 +10,6 @@ type GeneralInfoProps = {
 
 export const GeneralInfo: React.FC<GeneralInfoProps> = ({ info }) => {
   const { state } = useAppContext();
-  console.log('info', state.data.s1Items);
   return (
     <View style={styles.container}>
       <DataField label='RFID:' value={info.RFID} />
