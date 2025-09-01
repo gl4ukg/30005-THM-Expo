@@ -446,4 +446,3 @@ export interface APIHose<IdType = number | string> {
   additionals: Additionals;
 }
 
-export type HoseApiResponse = APIHose;
