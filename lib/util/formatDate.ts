@@ -116,9 +116,12 @@ export const stringToDate = (input: string): DateFormats => {
 
   // Check if date is valid
   if (!date || isNaN(date.getTime())) {
-    throw new Error(
-      'Invalid date format. Supported formats: DD-MMM-YYYY, MM/DD/YYYY, YYYY-MM-DD',
-    );
+    console.error('Invalid date format:', input);
+    return {
+      ISO: 'N/A',
+      SHOW: 'N/A',
+      DDMMMYYYY: 'N/A',
+    };
   }
 
   // Format the date parts

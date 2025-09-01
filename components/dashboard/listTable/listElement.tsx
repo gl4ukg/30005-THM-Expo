@@ -28,15 +28,14 @@ export const ListElement: FC<ElementProps> = ({
     RFID,
     missingData,
     hoseCondition,
+    productionDate,
     inspectedDate,
-    S2Equipment,
   } = item;
   const { state } = useAppContext();
   const handleSelect = () => {
     if (!canBeSelected || !onSelectedChange) return;
     onSelectedChange(assetId!);
   };
-  console.log('item', inspectedDate);
   const hasAttachment = useMemo(() => Math.random() > 0.5, []);
   return (
     <Pressable onPress={onRowPress}>
@@ -92,7 +91,7 @@ export const ListElement: FC<ElementProps> = ({
             />
             <Typography
               name='tableContentNumber'
-              text={stringToDate(inspectedDate ?? '').SHOW}
+              text={inspectedDate ? stringToDate(inspectedDate).SHOW : 'N/A'}
               style={elementStyle.date}
             />
           </View>

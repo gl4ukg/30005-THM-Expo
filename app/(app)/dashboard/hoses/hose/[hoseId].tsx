@@ -13,7 +13,6 @@ import { Structure } from '@/components/detailView/view/Structure';
 import { TessPartNumbers } from '@/components/detailView/view/TessPartNumbers';
 import { UniversalHoseData } from '@/components/detailView/view/UniversalHoseData';
 import { AppContext } from '@/context/Reducer';
-import { mockedHistory } from '@/context/mocked';
 import { SingleSelection, SingleSelectionActionsType } from '@/context/state';
 import { useDataManager } from '@/hooks/useDataManager';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
@@ -309,7 +308,7 @@ const HoseDetails = () => {
           <>
             <Documents />
             <Structure hose={hoseData} />
-            <HistoryView items={mockedHistory} />
+            <HistoryView items={[]} />
           </>
         )}
         {editMode && (

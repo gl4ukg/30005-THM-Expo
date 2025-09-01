@@ -70,12 +70,7 @@ const Dashboard = () => {
     try {
       const { status, message } = await hoses.get();
       if (status === 'error') {
-        Alert.alert('Data Loading Error', message, [
-          {
-            text: 'Logout',
-            onPress: logout,
-          },
-        ]);
+        Alert.alert('Data Loading Error', message);
         return;
       }
     } catch (dataError) {

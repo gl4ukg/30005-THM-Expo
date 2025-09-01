@@ -319,22 +319,22 @@ export const mapAPIHoseToHoseData = (hose: APIHose): HoseData => ({
   replacementDate: hose.maintenanceDetails.nextHoseReplacement,
 
   // HoseFitting1
-  typeFittingEnd1: hose.hoseFitting1.typeFittingEnd.fittingEnd,
+  typeFittingEnd1: hose.hoseFitting1.typeFittingEnd?.fittingEnd || '',
   genericDimensionEnd1:
-    hose.hoseFitting1.genericDimensionEnd.genericDimensionName,
-  genderEnd1: hose.hoseFitting1.genderEnd,
-  angleEnd1: hose.hoseFitting1.angleEnd,
-  materialQualityEnd1: hose.hoseFitting1.materialQualityEnd,
-  commentEnd1PTC: hose.hoseFitting1.commentEndPtc,
+    hose.hoseFitting1.genericDimensionEnd?.genericDimensionName || '',
+  genderEnd1: hose.hoseFitting1?.genderEnd || '',
+  angleEnd1: hose.hoseFitting1?.angleEnd || '',
+  materialQualityEnd1: hose.hoseFitting1?.materialQualityEnd || '',
+  commentEnd1PTC: hose.hoseFitting1?.commentEndPtc || '',
 
   // HoseFitting2
-  typeFittingEnd2: hose.hoseFitting2.typeFittingEnd.fittingEnd,
+  typeFittingEnd2: hose.hoseFitting2.typeFittingEnd?.fittingEnd || '',
   genericDimensionEnd2:
-    hose.hoseFitting2.genericDimensionEnd.genericDimensionName,
-  genderEnd2: hose.hoseFitting2.genderEnd,
-  angleEnd2: hose.hoseFitting2.angleEnd,
-  materialQualityEnd2: hose.hoseFitting2.materialQualityEnd,
-  commentEnd2PTC: hose.hoseFitting2.commentEndPtc,
+    hose.hoseFitting2.genericDimensionEnd?.genericDimensionName || '',
+  genderEnd2: hose.hoseFitting2?.genderEnd || '',
+  angleEnd2: hose.hoseFitting2?.angleEnd || '',
+  materialQualityEnd2: hose.hoseFitting2?.materialQualityEnd || '',
+  commentEnd2PTC: hose.hoseFitting2?.commentEndPtc || '',
 
   // Additionals
   additionalsAend1: hose.additionals.aEnd1,

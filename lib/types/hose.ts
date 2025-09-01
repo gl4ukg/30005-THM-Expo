@@ -402,15 +402,15 @@ export interface TypeFittingEnd<IdType = number | string> {
 }
 
 export interface HoseFitting<IdType = number | string> {
-  hoseLineId: IdType;
-  assetId: IdType;
-  fittingType: IdType;
-  typeFittingEnd: TypeFittingEnd<IdType>;
-  genericDimensionEnd: GenericDimensionEndObject<IdType>;
-  genderEnd: string;
-  angleEnd: string;
-  materialQualityEnd: string;
-  commentEndPtc: string;
+  hoseLineId?: IdType;
+  assetId?: IdType;
+  fittingType?: IdType;
+  typeFittingEnd?: TypeFittingEnd<IdType>;
+  genericDimensionEnd?: GenericDimensionEndObject<IdType>;
+  genderEnd?: string;
+  angleEnd?: string;
+  materialQualityEnd?: string;
+  commentEndPtc?: string;
 }
 
 export interface Additionals {
@@ -445,4 +445,3 @@ export interface APIHose<IdType = number | string> {
   hoseFitting2: HoseFitting<IdType>;
   additionals: Additionals;
 }
-

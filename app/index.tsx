@@ -2,8 +2,6 @@ import {
   Dimensions,
   ImageBackground,
   KeyboardAvoidingView,
-  Platform,
-  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -19,7 +17,7 @@ import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
