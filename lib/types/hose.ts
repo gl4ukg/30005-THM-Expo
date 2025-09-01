@@ -434,7 +434,7 @@ export interface Additionals {
   hEnd2: string;
 }
 
-export interface Hose<IdType = number | string> {
+export interface APIHose<IdType = number | string> {
   hoseHeader: HoseHeader;
   hoseLine: HoseLine;
   hoseData: HoseDataDetails;
@@ -446,4 +446,3 @@ export interface Hose<IdType = number | string> {
   additionals: Additionals;
 }
 
-export type HoseApiResponse = Hose;

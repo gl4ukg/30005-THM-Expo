@@ -7,16 +7,16 @@ import { Typography } from '@/components/Typography';
 import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { colors } from '@/lib/tokens/colors';
-import { HID } from '@/lib/types/hose';
+import { HID, Hose, MaintenanceDetails } from '@/lib/types/hose';
 import { formatDate } from '@/lib/util/formatDate';
 import { StyleSheet, View } from 'react-native';
 
 export const EditMaintenanceInfo: React.FC<
   {
-    info: Partial<HID>;
+    info: Hose;
     onInputChange: (
-      field: keyof Partial<HID>,
-      value: Partial<HID>[keyof Partial<HID>],
+      field: keyof Partial<Hose>,
+      value: Partial<Hose>[keyof Partial<Hose>],
     ) => void;
   } & { isInspect?: boolean }
 > = ({ info, onInputChange, isInspect }) => {
@@ -48,8 +48,13 @@ export const EditMaintenanceInfo: React.FC<
         <TooltipWrapper>
           <Input
             label='Inspected By:'
-            value={info.inspector || ''}
-            onChangeText={(text) => onInputChange('inspector', text)}
+            value={info.maintenanceDetails.inspector || ''}
+            onChangeText={(text) =>
+              onInputChange('maintenanceDetails', {
+                ...info.maintenanceDetails,
+                inspector: text,
+              })
+            }
             type={'text'}
           />
         </TooltipWrapper>
