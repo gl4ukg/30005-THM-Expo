@@ -1,8 +1,9 @@
 import { useAppContext } from '@/context/ContextProvider';
 import { ActivityDone, ActivityDraft } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
+import { mapAPIHoseToHoseData } from '@/lib/util/hoseMapper';
 import { generateNumericDraftId } from '@/lib/util/unikId';
-import { getAllHosesByS1 } from '@/services/api/asset';
+import { getS1Hoses } from '@/services/api/asset';
 import { cache } from '@/services/cache/cacheService';
 import { loginCache } from '@/services/cache/loginCacheService';
 
@@ -82,7 +83,8 @@ export const useDataManager = (): {
           message: 'S1 code not found',
         };
       } else {
-        const S1Hoses = await getAllHosesByS1(S1Code);
+        const S1Hoses = await getS1Hoses(S1Code);
+        console.log('S1Hoses', S1Hoses.length);
         if (!S1Hoses?.length) {
           dispatch({
             type: 'SET_LAST_UPDATE',
@@ -97,11 +99,17 @@ export const useDataManager = (): {
             message: 'No hoses found',
           };
         }
+        const reformattedHoses = S1Hoses.map((hose) => {
+          return mapAPIHoseToHoseData(hose);
+        });
+
+        console.log('reformattedHoses', reformattedHoses.length);
+
         dispatch({
           type: 'SET_HOSE_DATA',
-          payload: S1Hoses,
+          payload: reformattedHoses,
         });
-        cache.hoses.set(S1Hoses);
+        cache.hoses.set(reformattedHoses);
         dispatch({
           type: 'SET_DATA_LOADING',
           payload: false,

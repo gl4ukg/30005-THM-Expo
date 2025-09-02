@@ -1,4 +1,4 @@
-import { HoseData } from '@/lib/types/hose';
+import { APIHose, HoseData } from '@/lib/types/hose';
 import { transformHoseDataForAPI, apiCall, BASE_URL } from './util';
 import { useCallback } from 'react';
 
@@ -9,12 +9,22 @@ export interface S1Item {
   S2Id: number;
   S2Code: string;
   S2Name: string | null;
-  dimensionId: number;
-  dimensionType: string;
+}
+
+export interface S2Item {
+  S2Id: number;
+  S2Code: string;
+  S2Name: string | null;
+}
+export interface TransformedS1 {
+  S1Id: number;
+  S1Code: number;
+  S1Name: string;
+  S2: S2Item[];
 }
 
 export interface GetS1Response {
-  s1Items: S1Item[];
+  s1Items: TransformedS1[];
   selectedS1Code: number;
 }
 
@@ -22,49 +32,59 @@ export interface GetAllHosesByUserResponse {
   hoses: HoseData[];
   total: number;
 }
+const transformS1Array = (items: S1Item[]): TransformedS1[] => {
+  if (!Array.isArray(items)) {
+    throw new TypeError('Input must be an array');
+  }
 
+  if (items.length === 0) {
+    return [];
+  }
+
+  const groupedMap = new Map<string, TransformedS1>();
+
+  for (const item of items) {
+    const groupKey = `${item.S1Id}_${item.S1Code}_${item.S1Name}`;
+
+    const s2Item: S2Item = {
+      S2Id: item.S2Id,
+      S2Code: item.S2Code,
+      S2Name: item.S2Name,
+    };
+
+    if (groupedMap.has(groupKey)) {
+      groupedMap.get(groupKey)!.S2.push(s2Item);
+    } else {
+      groupedMap.set(groupKey, {
+        S1Id: item.S1Id,
+        S1Code: item.S1Code,
+        S1Name: item.S1Name,
+        S2: [s2Item],
+      });
+    }
+  }
+
+  return Array.from(groupedMap.values());
+};
 // API functions - Handles all HTTP requests to the backend
 export const getS1 = async (): Promise<GetS1Response> => {
   const response = await apiCall<S1Item[]>('/asset/getS1', 'GET');
-
   if (!Array.isArray(response) || response.length === 0) {
-    // throw new Error('No S1 items found in response');
     return {
-      s1Items: [
-        {
-          S1Code: 1203108,
-          S1Name: 'S1',
-          S2Code: 'S2',
-          S2Name: 'S2',
-          S2Id: 0,
-          S1Id: 0,
-          dimensionId: 0,
-          dimensionType: '',
-        },
-        {
-          S1Code: 111,
-          S1Name: 'S111',
-          S2Code: 'S2',
-          S2Name: 'S2',
-          S2Id: 0,
-          S1Id: 0,
-          dimensionId: 0,
-          dimensionType: '',
-        },
-      ],
-      selectedS1Code: 1203108,
+      s1Items: [],
+      selectedS1Code: 0,
     };
   }
   // Use the first S1 item's code as the selected one
   return {
-    s1Items: response,
-    selectedS1Code: response[0].S1Code,
+    s1Items: transformS1Array(response) as S1Item[],
+    selectedS1Code: response[0]?.S1Code,
   };
 };
 
-export const getAllHosesByS1 = async (s1Code: number): Promise<HoseData[]> => {
-  const endpoint = `/asset/getAllHosesByUser?s1Code=${s1Code}`;
-  const response = await apiCall<HoseData[]>(endpoint, 'GET');
+export const getS1Hoses = async (s1Code: number): Promise<APIHose[]> => {
+  const endpoint = `/asset/getHose?s1Code=${s1Code}`;
+  const response = await apiCall<APIHose[]>(endpoint, 'GET');
   return response.length ? response : [];
 };
 
@@ -87,7 +107,7 @@ export const registerHose = async (
 
 export const getS1AndHoses = async (): Promise<{
   s1Data: GetS1Response;
-  hosesData: HoseData[];
+  hosesData: APIHose[];
 }> => {
   console.log('Getting S1 data and hoses...');
 
@@ -95,7 +115,7 @@ export const getS1AndHoses = async (): Promise<{
   const s1Data = await getS1();
 
   // Then get hoses using the first S1 code
-  const hosesData = await getAllHosesByS1(s1Data.selectedS1Code);
+  const hosesData = await getS1Hoses(s1Data.selectedS1Code);
 
   console.log('Successfully retrieved S1 data and hoses');
   return { s1Data, hosesData };

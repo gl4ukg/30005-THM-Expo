@@ -16,7 +16,7 @@ import {
   ActivityDone,
 } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
-import { S1Item } from '@/services/api/asset';
+import { S1Item, TransformedS1 } from '@/services/api/asset';
 import { Customer } from '@/services/api/customer';
 import { createContext } from 'react';
 

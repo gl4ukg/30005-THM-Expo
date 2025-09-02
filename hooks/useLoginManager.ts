@@ -21,8 +21,11 @@ export const useLoginManager = (): {
       const apiKey = loginCache.apiKey.get();
       if (apiKey) {
         //  loginCache.user.get() checks if it is not expired end logout if needed
-        const { name: userName, id: userId, email: userEmail } =
-          loginCache.user.get();
+        const {
+          name: userName,
+          id: userId,
+          email: userEmail,
+        } = loginCache.user.get();
         dispatch({
           type: 'LOGIN',
           payload: {
@@ -38,7 +41,7 @@ export const useLoginManager = (): {
         };
       }
     }
-    
+
     dispatch({
       type: 'SET_LOGIN_LOADING',
       payload: true,
@@ -56,7 +59,7 @@ export const useLoginManager = (): {
           message: 'Login failed, user not found',
         };
       } else {
-          dispatch({
+        dispatch({
           type: 'LOGIN',
           payload: {
             email: user.email,
@@ -82,10 +85,10 @@ export const useLoginManager = (): {
           });
           dispatch({
             type: 'SET_S1_ITEMS',
-            payload: s1Items,
+            payload: s1Items as any, // TODO : We need to change S1Item type
           });
           cache.s1.code.set(selectedS1Code);
-          cache.s1.items.set(s1Items);
+          cache.s1.items.set(s1Items as any); // TODO : We need to change S1Item type
         } else {
           dispatch({
             type: 'SET_S1_CODE',
@@ -106,7 +109,7 @@ export const useLoginManager = (): {
         dispatch({
           type: 'SET_CUSTOMERS',
           payload: customers,
-        })
+        });
         return {
           status: 'success',
           message: 'Login successful',
@@ -138,7 +141,7 @@ export const useLoginManager = (): {
     });
     loginCache.user.logout();
     cache.clearCache();
-  }
+  };
 
   return {
     login,
