@@ -47,7 +47,7 @@ export const InspectHose = () => {
     hoseId: string;
     draftId?: string;
   }>();
-  const [hoseData, setHoseData] = useState<Partial<HoseData>>({});
+  const [hoseData, setHoseData] = useState<any>({}); // TODO: fix any
   const { activities } = useDataManager();
   const router = useRouter();
   const scrollViewRef = useRef<ScrollView>(null);
@@ -80,10 +80,11 @@ export const InspectHose = () => {
   );
 
   const handleInputChange = (
-    field: keyof Partial<HoseData>,
-    value: HoseData[keyof Partial<HoseData>],
+    field: keyof HoseData,
+    value: HoseData[keyof HoseData],
   ) => {
-    setHoseData((prevData) => ({
+    setHoseData((prevData: any) => ({
+      // TODO: fix any
       ...prevData,
       [field]: value,
     }));

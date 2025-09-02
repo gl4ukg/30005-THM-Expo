@@ -245,8 +245,10 @@ export const mapAPIHoseToHoseData = (hose: APIHose): HoseData => ({
   itemDescription: hose.hoseLine.itemDescription,
   RFID: hose.hoseLine.rfid,
   class: hose.hoseData.class.className,
-  s1Code: Number(hose.hoseLine.s1.s1Code),
-  s2Code: Number(hose.hoseLine.s2.s2Code),
+  s1Code: hose.hoseLine.s1.s1Code,
+  s1Name: hose.hoseLine.s1.s1Name,
+  s2Code: hose.hoseLine.s2.s2Code,
+  s2Name: hose.hoseLine.s2.s2Name,
   equipmentSubunit: hose.hoseLine.equipmentSubunit,
   customerID: String(hose.hoseLine.customerId),
   customerEq: hose.hoseLine.customerEq,
@@ -345,11 +347,27 @@ export const mapAPIHoseToHoseData = (hose: APIHose): HoseData => ({
   additionalsCend2: hose.additionals.cEnd2,
 
   // Default values
-  S2Equipment: '',
-  missingData: false,
+  S2Equipment: hose.hoseLine.s2.s2Name,
+  missingData: isHoseDataMissing(hose),
   innerDiameter: '',
   parentSystem: String(hose.hoseLine.parentSystemId),
   customerFlushingMedia: '',
   status: hose.hoseData.status.status,
   type: hose.hoseData.type.typeName,
+
+  // CHECK
+  hoseStandard: '',
+  generalComment: hose.hoseLine.generalCommentPtc,
+  inspectionInterval: '',
+  replacementInterval: '',
 });
+
+const isHoseDataMissing = (hoseData: APIHose): boolean => {
+  return (
+    !hoseData.hoseLine.productionDate ||
+    !hoseData.hoseLine.installedDate ||
+    !hoseData.hoseData.hoseTypeId.hoseTypeName ||
+    !hoseData.hoseData.hoselengthMm ||
+    !hoseData.hoseData.wpBar
+  );
+};

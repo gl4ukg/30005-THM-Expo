@@ -114,11 +114,10 @@ interface DataState {
   hoses: HoseData[];
   customers: Customer[];
   selection: HoseSelection | null;
-  hoseTemplate?: Partial<HoseData>;
   isCancelable: boolean;
   drafts: ActivityDraft[];
   done: ActivityDone[];
-  editedHoses: Partial<HoseData>[];
+  editedHoses: HoseData[];
 }
 
 interface DraftAction extends Activity {
@@ -139,7 +138,7 @@ interface DraftReplaceHose extends Activity {
 interface DraftRegisterHose extends Activity {
   type: 'REGISTER_HOSE';
   status: 'draft';
-  formData: Partial<HoseData>;
+  formData: HoseData;
 }
 interface DraftInspectHose extends Activity {
   type: 'INSPECT';
@@ -192,7 +191,6 @@ const initialDataState: DataState = {
   // initial data state values
   hoses: [],
   selection: null,
-  hoseTemplate: undefined,
   isCancelable: false,
   drafts: [
     {

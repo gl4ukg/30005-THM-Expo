@@ -38,20 +38,6 @@ export interface PartialReplaceHoseFormData extends PartialFormData {
   downtime?: string;
 }
 
-export interface TemporaryInspectionData {
-  hoseId?: number;
-  changes?: Partial<HoseData>;
-}
-
-export interface TemporaryRegistrationData {
-  formData?: Partial<HoseData> & { showValidationErrors?: boolean };
-}
-
-export interface TemporaryHoseEditData {
-  hoseId?: number;
-  changes?: Partial<HoseData>;
-}
-
 interface ActionWithPayload<T extends string, Payload> {
   type: T;
   payload: Payload;
@@ -125,7 +111,6 @@ type DataAction =
   | ActionWithoutPayload<'FINISH_SELECTION'>
   | ActionWithPayload<'SELECT_MANY_HOSES_MULTI_SELECTION', number[]>
   | ActionWithoutPayload<'DESELECT_ALL_HOSES_MULTI_SELECTION'>
-  | ActionWithPayload<'SET_HOSE_TEMPLATE', Partial<HoseData>>
   | ActionWithPayload<'SET_IS_CANCELABLE', boolean>
   | ActionWithPayload<'SET_TEMPORARY_CONTACT_FORM_DATA', PartialRFQFormData>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_CONTACT_FORM_DATA'>
@@ -139,12 +124,7 @@ type DataAction =
       PartialReplaceHoseFormData
     >
   | ActionWithoutPayload<'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA'>
-  | ActionWithPayload<'SET_TEMPORARY_INSPECTION_DATA', TemporaryInspectionData>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_INSPECTION_DATA'>
-  | ActionWithPayload<
-      'SET_TEMPORARY_REGISTRATION_DATA',
-      TemporaryRegistrationData
-    >
   | ActionWithPayload<'CREATE_DRAFT', Omit<ActivityDraft, 'modifiedAt'>>
   | ActionWithPayload<'REMOVE_DRAFT', number>
   | ActionWithPayload<'SAVE_DRAFT', Omit<ActivityDraft, 'modifiedAt'>>
@@ -169,10 +149,8 @@ type DataAction =
     >
   | ActionWithPayload<'REMOVE_FROM_DRAFT', number>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_REGISTRATION_DATA'>
-  | ActionWithPayload<'SET_TEMPORARY_HOSE_EDIT_DATA', TemporaryHoseEditData>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_HOSE_EDIT_DATA'>
-  | ActionWithoutPayload<'CLEAR_ALL_TEMPORARY_DATA'>
-  | ActionWithPayload<'FINISH_SELECTION_AND_RESET', Partial<HoseData>>;
+  | ActionWithoutPayload<'CLEAR_ALL_TEMPORARY_DATA'>;
 
 type SettingsAction =
   // | ActionWithPayload<'UPDATE_SETTINGS', any>
@@ -345,11 +323,6 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       return {
         ...state,
         selection: null,
-      };
-    case 'SET_HOSE_TEMPLATE':
-      return {
-        ...state,
-        hoseTemplate: action.payload,
       };
     case 'SET_IS_CANCELABLE':
       return {

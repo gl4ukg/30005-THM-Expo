@@ -4,26 +4,25 @@ import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanc
 import { EditTessPartNumbers } from '@/components/detailView/edit/EditTessPartNumbers';
 import { EditUniversalHoseData } from '@/components/detailView/edit/EditUniversalHoseData';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
+import { saveAsDraftToast } from '@/components/forms/ActionForm';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { Checkbox } from '@/components/UI/Checkbox';
+import { BarcodeInput } from '@/components/UI/Input/BarcodeInput';
+import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
 import { DateInput } from '@/components/UI/Input/DateInput';
 import { RFIDInput } from '@/components/UI/Input/RFID';
 import { useAppContext } from '@/context/ContextProvider';
+import { useDataManager } from '@/hooks/useDataManager';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
-import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
-import { BarcodeInput } from '@/components/UI/Input/BarcodeInput';
-import { BarcodeScannerModal } from '@/components/UI/Input/BarcodeScannerModal';
-import { getDefaultRequiredHoseData } from '@/lib/util/validation';
-import { usePreventGoBack } from '@/hooks/usePreventGoBack';
-import { generateNumericDraftId } from '@/lib/util/unikId';
-import { saveAsDraftToast } from '@/components/forms/ActionForm';
 import { successToast } from '@/lib/util/toasts';
-import { useDataManager } from '@/hooks/useDataManager';
+import { getDefaultRequiredHoseData } from '@/lib/util/validation';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 
 const excludedTemplateFields: (keyof HoseData)[] = [
   'customerID',
@@ -56,13 +55,10 @@ const RegisterHose = () => {
   const [hoseData, setHoseData] = useState<
     Partial<HoseData> & { showValidationErrors?: boolean }
   >(() => {
-    const templateData = state.data.hoseTemplate || {};
+    const templateData = {};
     const defaultRequired = getDefaultRequiredHoseData();
     const mergedTemplate = { ...defaultRequired, ...templateData };
 
-    excludedTemplateFields.forEach((field) => {
-      delete mergedTemplate[field];
-    });
     return {
       ...mergedTemplate,
       assetId: incomingId ? Number(incomingId) : undefined,
@@ -70,13 +66,6 @@ const RegisterHose = () => {
       showValidationErrors: false,
     };
   });
-  // let id = useMemo(
-  //   () =>
-  //     draftId
-  //       ? +draftId
-  //       : generateNumericDraftId(state.data.drafts.map((d) => d.id)),
-  //   [],
-  // );
   useFocusEffect(
     useCallback(() => {
       if (scrollViewRef.current) {
@@ -102,23 +91,6 @@ const RegisterHose = () => {
   const handleCancel = () => {
     showDiscardChangesAlert(dispatch);
   };
-
-  useEffect(() => {
-    if (state.data.hoseTemplate) {
-      const templateData = state.data.hoseTemplate || {};
-      const defaultRequired = getDefaultRequiredHoseData();
-      const mergedTemplate = { ...defaultRequired, ...templateData };
-
-      setHoseData((prevState) => ({
-        ...mergedTemplate,
-        ...prevState,
-        assetId: incomingId
-          ? Number(incomingId)
-          : (prevState.assetId ?? mergedTemplate?.assetId),
-        RFID: incomingRfid ?? prevState.RFID ?? mergedTemplate?.RFID,
-      }));
-    }
-  }, [state.data.hoseTemplate, incomingId, incomingRfid]);
 
   const handleInputChange = (
     field: keyof HoseData,
@@ -253,7 +225,7 @@ const RegisterHose = () => {
       });
     } else {
       activities.draft.save({
-        formData: hoseData,
+        formData: hoseData as any, // TODO remove any
         selectedIds: [hoseData.assetId!],
         type: 'REGISTER_HOSE',
         id: +draftId,
@@ -355,7 +327,7 @@ const RegisterHose = () => {
         />
         <EditMaintenanceInfo
           info={hoseData}
-          onInputChange={handleInputChange}
+          onInputChange={handleInputChange as any} // TODO remove any
         />
         <Documents />
         <View style={styles.checkboxContainer}>

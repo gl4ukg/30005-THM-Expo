@@ -84,7 +84,6 @@ export const useDataManager = (): {
         };
       } else {
         const S1Hoses = await getS1Hoses(S1Code);
-        console.log('S1Hoses', S1Hoses.length);
         if (!S1Hoses?.length) {
           dispatch({
             type: 'SET_LAST_UPDATE',
@@ -102,8 +101,6 @@ export const useDataManager = (): {
         const reformattedHoses = S1Hoses.map((hose) => {
           return mapAPIHoseToHoseData(hose);
         });
-
-        console.log('reformattedHoses', reformattedHoses.length);
 
         dispatch({
           type: 'SET_HOSE_DATA',

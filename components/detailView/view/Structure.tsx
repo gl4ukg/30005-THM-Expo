@@ -7,18 +7,17 @@ import { HoseData } from '@/lib/types/hose';
 import { StyleSheet, View } from 'react-native';
 
 type StructureProps = {
-  hose: Partial<HoseData>;
+  hose: HoseData;
 };
 export const Structure: React.FC<StructureProps> = ({ hose }) => {
   const { state } = useAppContext();
   const customer = state.data.customers.find(
     (c) => c.customerNumber === hose.customerNumber,
   );
-  const S1 = state.data.s1Items.find((s) => s.S1Code === hose.s1Code);
   const structure: string[] = [
     customer?.customerName,
-    S1?.S1Name,
-    hose.S2Equipment,
+    hose.s1Name,
+    hose.s2Name,
   ].filter((s): s is string => !!s && s.trim() !== '');
 
   return (

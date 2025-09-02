@@ -75,8 +75,8 @@ const HoseDetails = () => {
 
   const [editMode, setEditMode] = useState(startInEditMode === 'true');
   const [missingFields, setMissingFields] = useState<string[]>([]);
-  const [hoseData, setHoseData] = useState<Partial<HoseData>>(
-    state.data.hoses.find((hose) => hose.assetId === +hoseId) ?? {},
+  const [hoseData, setHoseData] = useState<HoseData>(
+    state.data.hoses.find((hose) => hose.assetId === +hoseId) as HoseData,
   );
 
   // Get original hose data from state
@@ -298,7 +298,8 @@ const HoseDetails = () => {
           editMode,
           missingFields: editMode ? missingFields : undefined,
         })}
-        {renderComponent(MaintenanceInfo, EditMaintenanceInfo, {
+        {renderComponent(MaintenanceInfo, EditMaintenanceInfo as any, {
+          // TODO: fix type
           info: hoseData,
           onInputChange: handleInputChange,
           editMode,

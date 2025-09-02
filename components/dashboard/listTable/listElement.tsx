@@ -9,7 +9,7 @@ import { FC, useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 interface ElementProps {
-  item: Partial<HoseData>;
+  item: HoseData;
   canBeSelected?: boolean;
   isSelected?: boolean;
   onSelectedChange?: (id: number) => void;
@@ -22,15 +22,8 @@ export const ListElement: FC<ElementProps> = ({
   onSelectedChange,
   onRowPress,
 }) => {
-  const {
-    assetId,
-    s1Code,
-    RFID,
-    missingData,
-    hoseCondition,
-    productionDate,
-    inspectedDate,
-  } = item;
+  const { assetId, s1Code, RFID, missingData, hoseCondition, inspectedDate } =
+    item;
   const { state } = useAppContext();
   const handleSelect = () => {
     if (!canBeSelected || !onSelectedChange) return;
@@ -46,10 +39,7 @@ export const ListElement: FC<ElementProps> = ({
         ]}
       >
         <View style={elementStyle.columnOne}>
-          <Typography
-            name='tableContentNumber'
-            text={assetId?.toString() ?? 'no id'}
-          />
+          <Typography name='tableContentNumber' text={`${assetId}`} />
           <View style={elementStyle.iconsContainer}>
             <View style={elementStyle.iconContainer}>
               {!!RFID && (
@@ -75,11 +65,7 @@ export const ListElement: FC<ElementProps> = ({
         <View style={elementStyle.columnTwo}>
           <Typography
             name='tableContent'
-            text={
-              item.S2Equipment ??
-              state.data.s1Items.find((s) => s.S1Code === s1Code)?.S1Name ??
-              ''
-            }
+            text={item.s2Name}
             numberOfLines={1}
           />
           <View style={elementStyle.subtitleDateContainer}>
