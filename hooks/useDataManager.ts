@@ -6,6 +6,7 @@ import { generateNumericDraftId } from '@/lib/util/unikId';
 import { getS1Hoses } from '@/services/api/asset';
 import { cache } from '@/services/cache/cacheService';
 import { loginCache } from '@/services/cache/loginCacheService';
+import NetInfo from '@react-native-community/netinfo';
 
 type DataAction = { status: 'success' | 'error'; message?: string };
 export const useDataManager = (): {
@@ -36,24 +37,39 @@ export const useDataManager = (): {
 
   const getHoseData = async (): Promise<DataAction> => {
     if (!state.settings.internetReachable) {
-      // check if mmkv storage is available
-      dispatch({
-        type: 'SET_LAST_UPDATE',
-        payload: 'error',
+      NetInfo.fetch().then((state) => {
+        console.log('Connection type', state.type);
+        console.log('Is connected?', state.isConnected);
+        if (state.isInternetReachable) {
+          dispatch({
+            type: 'SET_INTERNET_REACHABLE',
+            payload: true,
+          });
+        } else {
+          dispatch({
+            type: 'SET_INTERNET_REACHABLE',
+            payload: false,
+          });
+          // check if mmkv storage is available
+          dispatch({
+            type: 'SET_LAST_UPDATE',
+            payload: 'error',
+          });
+          const hoses = cache.hoses.get();
+          if (hoses.length > 0) {
+            return {
+              status: 'error',
+              message:
+                'No internet connection, but cached data found. Founded hoses: ' +
+                hoses.length,
+            };
+          }
+          return {
+            status: 'error',
+            message: 'No internet connection',
+          };
+        }
       });
-      const hoses = cache.hoses.get();
-      if (hoses.length > 0) {
-        return {
-          status: 'error',
-          message:
-            'No internet connection, but cached data found. Founded hoses: ' +
-            hoses.length,
-        };
-      }
-      return {
-        status: 'error',
-        message: 'No internet connection',
-      };
     }
     dispatch({
       type: 'SET_DATA_LOADING',
@@ -84,7 +100,7 @@ export const useDataManager = (): {
         };
       } else {
         const S1Hoses = await getS1Hoses(S1Code);
-        if (!S1Hoses?.length) {
+        if (!S1Hoses) {
           dispatch({
             type: 'SET_LAST_UPDATE',
             payload: 'error',
@@ -121,6 +137,7 @@ export const useDataManager = (): {
         status: 'success',
       };
     } catch (error) {
+      console.error('Failed to sync data', error);
       dispatch({
         type: 'SET_DATA_LOADING',
         payload: false,

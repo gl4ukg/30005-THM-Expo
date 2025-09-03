@@ -78,6 +78,7 @@ export const useLoginManager = (): {
           phoneNumber: user.phoneNumber ?? '',
         });
         const { selectedS1Code, s1Items } = await getS1();
+
         if (selectedS1Code && s1Items) {
           dispatch({
             type: 'SET_S1_CODE',

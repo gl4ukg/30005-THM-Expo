@@ -83,7 +83,7 @@ const mapToHoseDataDetails = (hoseData: HoseData): HoseDataDetails => ({
   class: { classId: 0, className: hoseData.class || '' },
   status: { statusId: 0, status: hoseData.status || '' },
   type: { typeId: 0, typeName: hoseData.type || '' },
-  hoseTypeId: {
+  hoseType: {
     hoseTypeId: 0,
     hoseTypeName: hoseData.hoseType || '',
   },
@@ -100,7 +100,7 @@ const mapToHoseDataDetails = (hoseData: HoseData): HoseDataDetails => ({
     hoseDimension: '',
   },
   hoseOtherInfo: hoseData.hoseOtherInfo || '',
-  couplingOrientationId: {
+  couplingOrientation: {
     couplingOrientationId: Number(hoseData.couplingOrientation || 0),
     orientationCode: '',
   },
@@ -270,7 +270,7 @@ export const mapAPIHoseToHoseData = (hose: APIHose): HoseData => ({
   currentStatus: hose.hoseLine.currentStatus,
 
   // HoseDataDetails
-  hoseType: hose.hoseData.hoseTypeId.hoseTypeName,
+  hoseType: hose.hoseData.hoseType.hoseTypeName,
   hoseLength_mm: hose.hoseData.hoselengthMm,
   hoseLength_ft_in: hose.hoseData.hoselengthFtIn,
   wp_BAR: hose.hoseData.wpBar,
@@ -280,8 +280,7 @@ export const mapAPIHoseToHoseData = (hose: APIHose): HoseData => ({
   insert1: hose.hoseData.insert1,
   insert2: hose.hoseData.insert2,
   hoseOtherInfo: hose.hoseData.hoseOtherInfo,
-  couplingOrientation:
-    hose.hoseData.couplingOrientationId.couplingOrientationId,
+  couplingOrientation: hose.hoseData.couplingOrientation.couplingOrientationId,
   pinpricked: hose.hoseData.pinPricked,
   hoseMediumTemperature: hose.hoseData.hoseMediumTemperature,
   hoseFunction: hose.hoseData.hoseFunction,
@@ -364,10 +363,30 @@ export const mapAPIHoseToHoseData = (hose: APIHose): HoseData => ({
 
 const isHoseDataMissing = (hoseData: APIHose): boolean => {
   return (
+    !hoseData.hoseLine.itemDescription ||
     !hoseData.hoseLine.productionDate ||
-    !hoseData.hoseLine.installedDate ||
-    !hoseData.hoseData.hoseTypeId.hoseTypeName ||
-    !hoseData.hoseData.hoselengthMm ||
-    !hoseData.hoseData.wpBar
+    !hoseData.hoseLine.installedDate
   );
 };
+
+// itemDescription: '',
+// productionDate: '',
+// installedDate: new Date().toISOString(),
+// criticality: 0,
+// hoseType: '',
+// hoseLength_mm: '',
+// wp_BAR: '',
+// ferrule1: '',
+// ferrule2: '',
+// insert1: '',
+// insert2: '',
+// //genericHoseType: '',
+// typeFittingEnd1: '',
+// genericDimensionEnd1: '',
+// genderEnd1: '',
+// angleEnd1: '',
+// materialQualityEnd1: '',
+// typeFittingEnd2: '',
+// genericDimensionEnd2: '',
+// genderEnd2: '',
+// angleEnd2: '',

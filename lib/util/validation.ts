@@ -25,7 +25,7 @@ export const getDefaultRequiredHoseData = (): Pick<
   | 'angleEnd2'
 > => ({
   itemDescription: '',
-  productionDate: undefined,
+  productionDate: '',
   installedDate: new Date().toISOString(),
   criticality: 0,
   hoseType: '',

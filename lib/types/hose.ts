@@ -331,7 +331,7 @@ export interface HoseDataDetails<IdType = number | string> {
   class: ClassObject<IdType>;
   status: StatusObject;
   type: TypeObject;
-  hoseTypeId: HoseTypeObject<IdType>;
+  hoseType: HoseTypeObject<IdType>;
   hoselengthMm: number;
   hoselengthFtIn: string;
   wpBar: number;
@@ -342,7 +342,7 @@ export interface HoseDataDetails<IdType = number | string> {
   insert2: string;
   hoseDimension: HoseDimensionObject<IdType>;
   hoseOtherInfo: string;
-  couplingOrientationId: CouplingOrientationObject;
+  couplingOrientation: CouplingOrientationObject;
   pinPricked: boolean;
   hoseMediumTemperature: string;
   hoseFunction: string;
