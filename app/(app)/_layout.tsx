@@ -52,7 +52,7 @@ export default function TabLayout() {
                 payload: s1Code,
               });
               cache.s1.code.set(s1Code);
-              const { status } = await hoses.get();
+              const { status } = await hoses.get(s1Code);
               if (status === 'error') {
                 throw new Error('Failed to get hoses');
               }
@@ -78,6 +78,7 @@ export default function TabLayout() {
           selectedS1Code={state.data.s1Code}
           s1Items={state.data.s1Items}
           onSelectS1={handleSelection}
+          isLoading={state.data.isLoading}
         />
         <Tabs
           screenOptions={{

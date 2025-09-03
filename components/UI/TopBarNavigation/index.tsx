@@ -4,6 +4,7 @@ import { colors } from '@/lib/tokens/colors';
 import { S1Item } from '@/services/api/asset';
 import { useState } from 'react';
 import {
+  ActivityIndicator,
   LayoutAnimation,
   Modal,
   Platform,
@@ -18,12 +19,14 @@ interface Props {
   selectedS1Code: number | null;
   s1Items: S1Item[];
   onSelectS1: (s1Code: number) => void;
+  isLoading: boolean;
 }
 
 export const TopBarNavigation: React.FC<Props> = ({
   onSelectS1,
   selectedS1Code,
   s1Items = [],
+  isLoading,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const insets = useSafeAreaInsets();
@@ -38,9 +41,8 @@ export const TopBarNavigation: React.FC<Props> = ({
     setIsExpanded(false);
   };
 
-  const selectedS1Item = s1Items?.find(
-    (item) => item.S1Code === selectedS1Code,
-  );
+  const selectedS1Item =
+    s1Items?.find((item) => item.S1Code === selectedS1Code) || s1Items[0];
 
   return (
     <View style={styles.container}>
@@ -51,7 +53,11 @@ export const TopBarNavigation: React.FC<Props> = ({
           text={selectedS1Item?.S1Name || 'Select S1'}
           style={styles.selectText}
         />
-        <Icon name='ChevronDown' color={colors.white} size='xsm' />
+        {isLoading ? (
+          <ActivityIndicator color={colors.white} />
+        ) : (
+          <Icon name='ChevronDown' color={colors.white} size='xsm' />
+        )}
       </Pressable>
 
       <Modal visible={isExpanded} transparent style={styles.modal}>
