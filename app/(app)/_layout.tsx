@@ -21,6 +21,9 @@ export default function TabLayout() {
     return <Redirect href='/' />;
   }
   const handleSelection = (s1Code: number) => {
+    if (s1Code === state.data.s1Code) {
+      return;
+    }
     if (!state.settings.internetReachable) {
       Alert.alert(
         'No internet connection',
