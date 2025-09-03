@@ -2,7 +2,7 @@ import { BottomNavigation } from '@/components/UI/BottomNavigation';
 import { TopBarNavigation } from '@/components/UI/TopBarNavigation';
 import { useAppContext } from '@/context/ContextProvider';
 import { colors } from '@/lib/tokens/colors';
-import { Redirect, router, Tabs } from 'expo-router';
+import { Redirect, router, Tabs, useFocusEffect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Alert, StyleSheet, View } from 'react-native';
 import {
@@ -11,11 +11,13 @@ import {
 } from 'react-native-safe-area-context';
 import { cache } from '@/services/cache/cacheService';
 import { useDataManager } from '@/hooks/useDataManager';
+import { useEffect } from 'react';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
   const { state, dispatch } = useAppContext();
   const { hoses } = useDataManager();
+
   if (!state.auth.user) {
     // in the headless Node process that the pages are rendered in.
     return <Redirect href='/' />;

@@ -75,24 +75,25 @@ export const getS1 = async (): Promise<GetS1Response> => {
       selectedS1Code: 0,
     };
   }
+  const transformedResponse = transformS1Array(response);
   // Use the first S1 item's code as the selected one
   return {
-    s1Items: transformS1Array(response) as S1Item[],
-    selectedS1Code: response[0]?.S1Code,
+    s1Items: transformedResponse,
+    selectedS1Code: transformedResponse[0]?.S1Code,
   };
 };
 
 export const getS1Hoses = async (s1Code: number): Promise<APIHose[]> => {
-  const endpoint = `/asset/getHose?s1Code=${s1Code}`;
-  const response = await apiCall<APIHose[]>(endpoint, 'GET');
-  return response.length ? response : [];
+  const endpoint = `/asset/getHose?s1Code=${s1Code}&pageSize=10000`;
+  const response = await apiCall<{ data: APIHose[] }>(endpoint, 'GET');
+  return response.data.length ? response.data : [];
 };
 
-export const getHose = async (s1Code: number): Promise<HoseData[]> => {
-  const endpoint = `/asset/getHose?s1Code=${s1Code}`;
-  const response = await apiCall<HoseData[]>(endpoint, 'GET');
+export const getHose = async (s1Code: number): Promise<APIHose[]> => {
+  const endpoint = `/asset/getHose?s1Code=${s1Code}&pageSize=10000`;
+  const response = await apiCall<{ data: APIHose[] }>(endpoint, 'GET');
 
-  return response.length ? response : [];
+  return response.data.length ? response.data : [];
 };
 
 export const registerHose = async (
