@@ -79,7 +79,7 @@ const hoses: APIHose<number | string>[] = [
         typeId: 156,
         typeName: '529-10',
       },
-      hoseTypeId: {
+      hoseType: {
         hoseTypeId: 155,
         hoseTypeName: '529-10',
       },
@@ -96,7 +96,7 @@ const hoses: APIHose<number | string>[] = [
         hoseDimension: '',
       },
       hoseOtherInfo: '',
-      couplingOrientationId: {
+      couplingOrientation: {
         couplingOrientationId: 3,
         orientationCode: '0°',
       },
