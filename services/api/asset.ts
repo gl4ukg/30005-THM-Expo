@@ -62,7 +62,6 @@ const transformS1Array = (items: S1Item[]): TransformedS1[] => {
   });
 
   const transformedItems = Object.values(s1Objects);
-  console.log('transformedItems', transformedItems);
   return transformedItems;
 };
 // API functions - Handles all HTTP requests to the backend
@@ -109,15 +108,11 @@ export const getS1AndHoses = async (): Promise<{
   s1Data: GetS1Response;
   hosesData: APIHose[];
 }> => {
-  console.log('Getting S1 data and hoses...');
-
   // First get S1 data
   const s1Data = await getS1();
-
   // Then get hoses using the first S1 code
   const hosesData = await getS1Hoses(s1Data.selectedS1Code);
 
-  console.log('Successfully retrieved S1 data and hoses');
   return { s1Data, hosesData };
 };
 

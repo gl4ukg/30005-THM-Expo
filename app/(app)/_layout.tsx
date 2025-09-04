@@ -16,15 +16,6 @@ export default function TabLayout() {
   const insets = useSafeAreaInsets();
   const { state, dispatch } = useAppContext();
   const { hoses } = useDataManager();
-  useFocusEffect(
-    useCallback(() => {
-      console.log(
-        's1Code changed',
-        typeof state.data.s1Code,
-        state.data.s1Code,
-      );
-    }, [state.data.s1Code]),
-  );
   if (!state.auth.user) {
     // in the headless Node process that the pages are rendered in.
     return <Redirect href='/' />;
