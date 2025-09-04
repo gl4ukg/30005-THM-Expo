@@ -17,7 +17,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   selectedS1Code: string | null;
-  onSelectS1: (s1Code: number) => void;
+  onSelectS1: (s1Code: string) => void;
   isLoading: boolean;
   s1Items: TransformedS1[];
 }
