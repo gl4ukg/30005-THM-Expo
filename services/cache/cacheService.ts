@@ -1,6 +1,6 @@
 import { ActivityDone, ActivityDraft } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
-import { S1Item } from '@/services/api/asset';
+import { S1Item, TransformedS1 } from '@/services/api/asset';
 import { MMKV } from 'react-native-mmkv';
 
 /**
@@ -22,26 +22,26 @@ const CACHE_KEYS = {
   EDITED_HOSES: 'edited_hoses',
 } as const;
 
-const setS1Code = (s1Code: number | null): void => {
+const setS1Code = (s1Code: string | null): void => {
   try {
-    storage.set(CACHE_KEYS.S1_CODE, s1Code?.toString() ?? '');
+    storage.set(CACHE_KEYS.S1_CODE, s1Code ?? '');
   } catch (error) {
     console.error('Failed to cache S1 code:', error);
     throw error;
   }
 };
 
-const getS1Code = (): number | null => {
+const getS1Code = (): string | null => {
   try {
     const s1Code = storage.getString(CACHE_KEYS.S1_CODE);
-    return s1Code ? parseInt(s1Code) : null;
+    return s1Code ?? null;
   } catch (error) {
     console.error('Failed to get S1 code from cache:', error);
     return null;
   }
 };
 
-const setS1Items = (s1Items: S1Item[]): void => {
+const setS1Items = (s1Items: TransformedS1[]): void => {
   try {
     const s1ItemsJson = JSON.stringify(s1Items);
     storage.set(CACHE_KEYS.S1_ITEMS, s1ItemsJson);
@@ -51,7 +51,7 @@ const setS1Items = (s1Items: S1Item[]): void => {
   }
 };
 
-const getS1Items = (): S1Item[] => {
+const getS1Items = (): TransformedS1[] => {
   try {
     const s1ItemsJson = storage.getString(CACHE_KEYS.S1_ITEMS);
     if (s1ItemsJson) {

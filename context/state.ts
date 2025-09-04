@@ -1,5 +1,5 @@
 import { HID, HoseData } from '@/lib/types/hose';
-import { S1Item } from '@/services/api/asset';
+import { S1Item, TransformedS1 } from '@/services/api/asset';
 import {
   PartialReplaceHoseFormData,
   PartialRFQFormData,
@@ -108,8 +108,8 @@ interface DataState {
   isLoading: boolean;
   lastUpdate: null | Date;
   lastUpdateStatus?: 'error' | 'syncing' | 'synced';
-  s1Code: number | null;
-  s1Items: S1Item[];
+  s1Code: string | null;
+  s1Items: TransformedS1[];
   // define data state properties
   hoses: HoseData[];
   customers: Customer[];

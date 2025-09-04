@@ -1,28 +1,32 @@
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
-import { S1Item } from '@/services/api/asset';
+import { S1Item, TransformedS1 } from '@/services/api/asset';
 import { useState } from 'react';
 import {
+  ActivityIndicator,
   LayoutAnimation,
   Modal,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
-  selectedS1Code: number | null;
-  s1Items: S1Item[];
+  selectedS1Code: string | null;
   onSelectS1: (s1Code: number) => void;
+  isLoading: boolean;
+  s1Items: TransformedS1[];
 }
 
 export const TopBarNavigation: React.FC<Props> = ({
   onSelectS1,
   selectedS1Code,
   s1Items = [],
+  isLoading,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const insets = useSafeAreaInsets();
@@ -32,7 +36,7 @@ export const TopBarNavigation: React.FC<Props> = ({
     setIsExpanded((exp) => !exp);
   };
 
-  const handelSelection = (s1Code: number) => {
+  const handelSelection = (s1Code: string) => {
     onSelectS1(s1Code);
     setIsExpanded(false);
   };
@@ -50,7 +54,11 @@ export const TopBarNavigation: React.FC<Props> = ({
           text={selectedS1Item?.S1Name || 'Select S1'}
           style={styles.selectText}
         />
-        <Icon name='ChevronDown' color={colors.white} size='xsm' />
+        {isLoading ? (
+          <ActivityIndicator color={colors.white} />
+        ) : (
+          <Icon name='ChevronDown' color={colors.white} size='xsm' />
+        )}
       </Pressable>
 
       <Modal visible={isExpanded} transparent style={styles.modal}>
@@ -61,25 +69,27 @@ export const TopBarNavigation: React.FC<Props> = ({
             { top: Platform.OS === 'ios' ? insets.top : 0 },
           ]}
         >
-          {s1Items?.map((s1Item) => (
-            <Pressable
-              key={s1Item.S1Code}
-              style={({ pressed }) => [
-                styles.option,
-                pressed && styles.optionPressed,
-              ]}
-              onPress={() => handelSelection(s1Item.S1Code)}
-            >
-              {s1Item.S1Code === selectedS1Code && (
-                <Icon name='Industry' color={colors.white} size='xsm' />
-              )}
-              <Typography
-                name='navigation'
-                text={s1Item.S1Name}
-                style={styles.optionText}
-              />
-            </Pressable>
-          )) || []}
+          <ScrollView>
+            {s1Items?.map((s1Item) => (
+              <Pressable
+                key={s1Item.S1Code}
+                style={({ pressed }) => [
+                  styles.option,
+                  pressed && styles.optionPressed,
+                ]}
+                onPress={() => handelSelection(s1Item.S1Code)}
+              >
+                {s1Item.S1Code === selectedS1Code && (
+                  <Icon name='Industry' color={colors.white} size='xsm' />
+                )}
+                <Typography
+                  name='navigation'
+                  text={s1Item.S1Name}
+                  style={styles.optionText}
+                />
+              </Pressable>
+            )) || []}
+          </ScrollView>
         </View>
       </Modal>
     </View>
@@ -126,12 +136,13 @@ const styles = StyleSheet.create({
   dropdownContainer: {
     backgroundColor: colors.linkLightGreen,
     width: '100%',
+    maxHeight: '40%',
     zIndex: 2,
     position: 'absolute',
     top: 0,
-    left: 0,
-    right: 0,
     gap: 1,
+    borderRadius: 5,
+    overflow: 'hidden',
   },
   option: {
     backgroundColor: colors.secondary25,

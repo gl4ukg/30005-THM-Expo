@@ -84,9 +84,9 @@ type AuthAction =
   | ActionWithPayload<'SET_TOKEN', string>
   | ActionWithPayload<'SET_LOGIN_LOADING', boolean>;
 type DataAction =
-  | ActionWithPayload<'SET_S1_CODE', number | null>
-  | ActionWithPayload<'SET_S1_ITEMS', S1Item[]>
-  | ActionWithPayload<'CHANGE_S1_SELECTION', number>
+  | ActionWithPayload<'SET_S1_CODE', string | null>
+  | ActionWithPayload<'SET_S1_ITEMS', TransformedS1[]>
+  | ActionWithPayload<'CHANGE_S1_SELECTION', string>
   | ActionWithPayload<
       'REMOVE_ACTION',
       { id: string; actionType: SingleSelectionActionsType }

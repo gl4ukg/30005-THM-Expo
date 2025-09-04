@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 
 export interface S1Item {
   S1Id: number;
-  S1Code: number;
+  S1Code: string;
   S1Name: string;
   S2Id: number;
   S2Code: string;
@@ -18,14 +18,14 @@ export interface S2Item {
 }
 export interface TransformedS1 {
   S1Id: number;
-  S1Code: number;
+  S1Code: string;
   S1Name: string;
   S2: S2Item[];
 }
 
 export interface GetS1Response {
   s1Items: TransformedS1[];
-  selectedS1Code: number;
+  selectedS1Code: string;
 }
 
 export interface GetAllHosesByUserResponse {
@@ -34,37 +34,36 @@ export interface GetAllHosesByUserResponse {
 }
 const transformS1Array = (items: S1Item[]): TransformedS1[] => {
   if (!Array.isArray(items)) {
-    throw new TypeError('Input must be an array');
+    console.error('items is not an array');
+    return [];
   }
 
   if (items.length === 0) {
     return [];
   }
 
-  const groupedMap = new Map<string, TransformedS1>();
+  const s1Objects: { [key: string]: TransformedS1 } = {};
 
-  for (const item of items) {
-    const groupKey = `${item.S1Id}_${item.S1Code}_${item.S1Name}`;
-
-    const s2Item: S2Item = {
-      S2Id: item.S2Id,
-      S2Code: item.S2Code,
-      S2Name: item.S2Name,
-    };
-
-    if (groupedMap.has(groupKey)) {
-      groupedMap.get(groupKey)!.S2.push(s2Item);
-    } else {
-      groupedMap.set(groupKey, {
+  items.forEach((item) => {
+    if (typeof item.S1Code !== 'string') return;
+    if (!s1Objects[item.S1Code]) {
+      s1Objects[item.S1Code] = {
         S1Id: item.S1Id,
         S1Code: item.S1Code,
         S1Name: item.S1Name,
-        S2: [s2Item],
-      });
+        S2: [],
+      };
     }
-  }
+    s1Objects[item.S1Code].S2.push({
+      S2Id: item.S2Id,
+      S2Code: item.S2Code,
+      S2Name: item.S2Name,
+    });
+  });
 
-  return Array.from(groupedMap.values());
+  const transformedItems = Object.values(s1Objects);
+  console.log('transformedItems', transformedItems);
+  return transformedItems;
 };
 // API functions - Handles all HTTP requests to the backend
 export const getS1 = async (): Promise<GetS1Response> => {
@@ -72,7 +71,7 @@ export const getS1 = async (): Promise<GetS1Response> => {
   if (!Array.isArray(response) || response.length === 0) {
     return {
       s1Items: [],
-      selectedS1Code: 0,
+      selectedS1Code: '',
     };
   }
   const transformedResponse = transformS1Array(response);
@@ -83,13 +82,13 @@ export const getS1 = async (): Promise<GetS1Response> => {
   };
 };
 
-export const getS1Hoses = async (s1Code: number): Promise<APIHose[]> => {
+export const getS1Hoses = async (s1Code: string): Promise<APIHose[]> => {
   const endpoint = `/asset/getHose?s1Code=${s1Code}&pageSize=10000`;
   const response = await apiCall<{ data: APIHose[] }>(endpoint, 'GET');
   return response.data.length ? response.data : [];
 };
 
-export const getHose = async (s1Code: number): Promise<APIHose[]> => {
+export const getHose = async (s1Code: string): Promise<APIHose[]> => {
   const endpoint = `/asset/getHose?s1Code=${s1Code}&pageSize=10000`;
   const response = await apiCall<{ data: APIHose[] }>(endpoint, 'GET');
 
@@ -127,7 +126,7 @@ export const useAssetApi = () => {
     return await getS1();
   }, []);
 
-  const getHosesByUser = useCallback(async (s1Code: number) => {
+  const getHosesByUser = useCallback(async (s1Code: string) => {
     return await getHose(s1Code);
   }, []);
 

@@ -79,7 +79,7 @@ export const useLoginManager = (): {
         });
         const { selectedS1Code, s1Items } = await getS1();
 
-        if (selectedS1Code && s1Items) {
+        if (selectedS1Code !== null && selectedS1Code !== undefined && s1Items) {
           dispatch({
             type: 'SET_S1_CODE',
             payload: selectedS1Code,

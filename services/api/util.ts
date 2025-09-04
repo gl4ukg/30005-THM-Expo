@@ -116,8 +116,8 @@ export interface RegisterHoseRequest {
     itemDescription: string;
     RFID: string;
     parentSystem: number;
-    s1Code: number;
-    s2Code: number;
+    s1Code: string;
+    s2Code: string;
     equipmentSubunit: string;
     otherInfo: string;
     customerID: string;
@@ -240,8 +240,8 @@ export const transformHoseDataForAPI = (
         itemDescription: hoseData.itemDescription || 'string',
         RFID: hoseData.RFID || 'string',
         parentSystem: Number(hoseData.parentSystem) || 0,
-        s1Code: Number(hoseData.s1Code) || 0,
-        s2Code: hoseData.s2Code ? Number(hoseData.s2Code) : 0,
+        s1Code: hoseData.s1Code ?? '',
+        s2Code: hoseData.s2Code ?? '',
         equipmentSubunit: hoseData.equipmentSubunit || 'string',
         otherInfo: hoseData.hoseOtherInfo || 'string',
         customerID: hoseData.customerID || 'string',
