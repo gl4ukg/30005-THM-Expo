@@ -21,6 +21,9 @@ export default function TabLayout() {
     return <Redirect href='/' />;
   }
   const handleSelection = (s1Code: number) => {
+    if (s1Code === state.data.s1Code) {
+      return;
+    }
     if (!state.settings.internetReachable) {
       Alert.alert(
         'No internet connection',
@@ -52,7 +55,7 @@ export default function TabLayout() {
                 payload: s1Code,
               });
               cache.s1.code.set(s1Code);
-              const { status } = await hoses.get();
+              const { status } = await hoses.get(s1Code);
               if (status === 'error') {
                 throw new Error('Failed to get hoses');
               }
@@ -78,6 +81,7 @@ export default function TabLayout() {
           selectedS1Code={state.data.s1Code}
           s1Items={state.data.s1Items}
           onSelectS1={handleSelection}
+          isLoading={state.data.isLoading}
         />
         <Tabs
           screenOptions={{
