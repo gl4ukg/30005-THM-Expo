@@ -41,9 +41,8 @@ export const TopBarNavigation: React.FC<Props> = ({
     setIsExpanded(false);
   };
 
-  const selectedS1Item = s1Items?.find(
-    (item) => item.S1Code === selectedS1Code,
-  );
+  const selectedS1Item =
+    s1Items?.find((item) => item.S1Code === selectedS1Code) || s1Items[0];
 
   return (
     <View style={styles.container}>
