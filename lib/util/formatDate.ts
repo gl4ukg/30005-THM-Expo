@@ -69,7 +69,7 @@ export const stringToDate = (input: string): DateFormats => {
 
   // Format 1: DD-MMM-YYYY (with optional time)
   const format1 =
-    /^(\d{2})-([A-Za-z]{3})-(\d{4})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/i;
+    /^(\d{1,2})-([A-Za-z]{3})-(\d{4})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/i;
   // Format 2: MM/DD/YYYY (with optional time)
   const format2 =
     /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/;
