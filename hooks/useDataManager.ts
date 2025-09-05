@@ -11,7 +11,7 @@ import NetInfo from '@react-native-community/netinfo';
 type DataAction = { status: 'success' | 'error'; message?: string };
 export const useDataManager = (): {
   hoses: {
-    get: (s1Code?: number) => Promise<DataAction>;
+    get: (s1Code?: string) => Promise<DataAction>;
     remove: () => Promise<DataAction>;
     save: (hose: Partial<HoseData>) => Promise<DataAction>;
     isLoading: boolean;
@@ -35,7 +35,7 @@ export const useDataManager = (): {
 } => {
   const { state, dispatch } = useAppContext();
 
-  const getHoseData = async (s1Code?: number): Promise<DataAction> => {
+  const getHoseData = async (s1Code?: string): Promise<DataAction> => {
     if (!state.settings.internetReachable) {
       NetInfo.fetch().then((state) => {
         console.log('Connection type', state.type);

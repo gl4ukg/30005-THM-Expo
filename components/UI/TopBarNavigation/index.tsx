@@ -1,7 +1,7 @@
 import { Icon } from '@/components/Icon/Icon';
 import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
-import { S1Item } from '@/services/api/asset';
+import { S1Item, TransformedS1 } from '@/services/api/asset';
 import { useState } from 'react';
 import {
   ActivityIndicator,
@@ -16,10 +16,10 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
-  selectedS1Code: number | null;
-  s1Items: S1Item[];
-  onSelectS1: (s1Code: number) => void;
+  selectedS1Code: string | null;
+  onSelectS1: (s1Code: string) => void;
   isLoading: boolean;
+  s1Items: TransformedS1[];
 }
 
 export const TopBarNavigation: React.FC<Props> = ({
@@ -36,7 +36,7 @@ export const TopBarNavigation: React.FC<Props> = ({
     setIsExpanded((exp) => !exp);
   };
 
-  const handelSelection = (s1Code: number) => {
+  const handleSelection = (s1Code: string) => {
     onSelectS1(s1Code);
     setIsExpanded(false);
   };

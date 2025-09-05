@@ -4,8 +4,9 @@ import { useAppContext } from '@/context/ContextProvider';
 import { useDataManager } from '@/hooks/useDataManager';
 import { colors } from '@/lib/tokens/colors';
 import { cache } from '@/services/cache/cacheService';
-import { Redirect, router, Tabs } from 'expo-router';
+import { Redirect, router, Tabs, useFocusEffect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useCallback } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import {
   SafeAreaView,
@@ -15,12 +16,11 @@ export default function TabLayout() {
   const insets = useSafeAreaInsets();
   const { state, dispatch } = useAppContext();
   const { hoses } = useDataManager();
-
   if (!state.auth.user) {
     // in the headless Node process that the pages are rendered in.
     return <Redirect href='/' />;
   }
-  const handleSelection = (s1Code: number) => {
+  const handleSelection = (s1Code: string) => {
     if (s1Code === state.data.s1Code) {
       return;
     }

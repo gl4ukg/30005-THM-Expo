@@ -54,9 +54,7 @@ const App = () => {
         }}
       >
         <Stack.Screen name='index' />
-        <Stack.Screen name='/login' />
-        {/* <Stack.Screen name='/photo' />
-        <Stack.Screen name='/ui' /> */}
+        <Stack.Screen name='login' />
       </Stack>
     );
   return (
