@@ -36,7 +36,7 @@ export const TopBarNavigation: React.FC<Props> = ({
     setIsExpanded((exp) => !exp);
   };
 
-  const handelSelection = (s1Code: string) => {
+  const handleSelection = (s1Code: string) => {
     onSelectS1(s1Code);
     setIsExpanded(false);
   };
