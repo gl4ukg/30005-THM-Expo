@@ -66,14 +66,14 @@ const transformS1Array = (items: S1Item[]): TransformedS1[] => {
 };
 // API functions - Handles all HTTP requests to the backend
 export const getS1 = async (): Promise<GetS1Response> => {
-  const response = await apiCall<S1Item[]>('/asset/getS1', 'GET');
-  if (!Array.isArray(response) || response.length === 0) {
+  const response = await apiCall<{ data: S1Item[] }>('/asset/getS1', 'GET');
+  if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
     return {
       s1Items: [],
       selectedS1Code: '',
     };
   }
-  const transformedResponse = transformS1Array(response);
+  const transformedResponse = transformS1Array(response.data);
   // Use the first S1 item's code as the selected one
   return {
     s1Items: transformedResponse,
