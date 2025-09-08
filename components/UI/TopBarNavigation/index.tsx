@@ -76,7 +76,7 @@ export const TopBarNavigation: React.FC<Props> = ({
                   styles.option,
                   pressed && styles.optionPressed,
                 ]}
-                onPress={() => handelSelection(s1Item.S1Code)}
+                onPress={() => handleSelection(s1Item.S1Code)}
               >
                 {s1Item.S1Code === selectedS1Code && (
                   <Icon name='Industry' color={colors.white} size='xsm' />
