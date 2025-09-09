@@ -2,27 +2,34 @@ import { getScanUrl } from '@/app/(app)/scan';
 import { ListTable } from '@/components/dashboard/listTable';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
+import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
 import { PartialSendMailFormData } from '@/context/Reducer';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { useUserValidation } from '@/hooks/useUserValidation';
 import { colors } from '@/lib/tokens/colors';
 import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { act, useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { saveAsDraftToast } from './ActionForm';
 import { successToast } from '@/lib/util/toasts';
+import { useDataManager } from '@/hooks/useDataManager';
 
 interface Props {
   draftId: string;
 }
 export const SendMailForm: React.FC<Props> = ({ draftId }) => {
   const { state, dispatch } = useAppContext();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<PartialSendMailFormData>({});
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
+  const { activities } = useDataManager();
+
+  usePreventGoBack(isSubmitting);
 
   const originallySelectedHoses = useMemo(() => {
     const draft = state.data.drafts.find((d) => d.id === +draftId);
@@ -66,60 +73,51 @@ export const SendMailForm: React.FC<Props> = ({ draftId }) => {
   }, []);
 
   const handleSend = () => {
-    dispatch({
-      type: 'MOVE_DRAFT_TO_DONE',
-      payload: +draftId,
+    setIsSubmitting(true);
+    activities.draft.save({
+      id: +draftId,
+      selectedIds,
+      type: 'CONTACT_SUPPORT',
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
+    activities.draft.moveToDone(+draftId);
+    router.dismissAll();
+    router.replace('/dashboard');
     successToast(
       'Contact request sent',
       'Your contact request has been sent successfully.',
     );
-    router.push('/dashboard');
   };
 
   const handleSaveAsDraft = () => {
-    dispatch({
-      type: 'SAVE_DRAFT',
-      payload: {
-        id: +draftId,
-        selectedIds,
-        type: 'CONTACT_SUPPORT',
-        status: 'draft',
-        formData,
-      },
+    setIsSubmitting(true);
+    activities.draft.save({
+      id: +draftId,
+      selectedIds,
+      type: 'CONTACT_SUPPORT',
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
     saveAsDraftToast();
-    router.push('/dashboard');
+    router.dismissAll();
+    router.replace('/dashboard');
   };
   const handleCancel = () => {
-    router.push('/dashboard');
+    showDiscardChangesAlert(dispatch);
   };
 
   const handleAddHoses = () => {
-    const draft = state.data.drafts.find((d) => d.id === +draftId);
-    if (!draft) {
-      dispatch({
-        type: 'CREATE_DRAFT',
-        payload: {
-          id: +draftId,
-          status: 'draft',
-          selectedIds,
-          type: 'CONTACT_SUPPORT',
-          formData,
-        },
-      });
-    } else {
-      dispatch({
-        type: 'SAVE_DRAFT',
-        payload: {
-          id: +draftId,
-          selectedIds,
-          status: 'draft',
-          type: 'CONTACT_SUPPORT',
-          formData,
-        },
-      });
-    }
+    activities.draft.save({
+      id: +draftId,
+      selectedIds,
+      type: 'CONTACT_SUPPORT',
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
+    });
     router.navigate(getScanUrl('CONTACT_SUPPORT', draftId.toString()));
   };
 

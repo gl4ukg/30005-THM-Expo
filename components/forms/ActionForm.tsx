@@ -2,13 +2,13 @@ import { getScanUrl } from '@/app/(app)/scan';
 import { ListTable } from '@/components/dashboard/listTable';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
+import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { useAppContext } from '@/context/ContextProvider';
 import { PartialRFQFormData } from '@/context/Reducer';
 import { MultiSelectionActionsType } from '@/context/state';
-import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { useUserValidation } from '@/hooks/useUserValidation';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
@@ -17,6 +17,8 @@ import { useCallback, useRef, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { TooltipWrapper } from '../detailView/edit/TooltipWrapper';
 import { successToast } from '@/lib/util/toasts';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+import { useDataManager } from '@/hooks/useDataManager';
 
 const formLabels: Record<
   Extract<MultiSelectionActionsType, 'RFQ' | 'CONTACT' | 'SCRAP'>,
@@ -60,6 +62,7 @@ export const ActionForm: React.FC<Props> = ({
   allowScanToAdd = false,
 }) => {
   const { state, dispatch } = useAppContext();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [hoses, setHoses] = useState<HoseData[]>([]);
   const [formData, setFormData] = useState<PartialRFQFormData>({});
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -68,10 +71,10 @@ export const ActionForm: React.FC<Props> = ({
     useState<Extract<MultiSelectionActionsType, 'RFQ' | 'CONTACT' | 'SCRAP'>>(
       'RFQ',
     );
+  const { activities } = useDataManager();
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
-
-  usePreventGoBack();
+  usePreventGoBack(isSubmitting);
 
   useFocusEffect(
     useCallback(() => {
@@ -108,44 +111,49 @@ export const ActionForm: React.FC<Props> = ({
   }, []);
 
   const onSend = () => {
-    dispatch({
-      type: 'MOVE_DRAFT_TO_DONE',
-      payload: +draftId,
+    setIsSubmitting(true);
+    activities.draft.save({
+      id: +draftId,
+      selectedIds,
+      type: actionType,
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
+    activities.draft.moveToDone(+draftId);
+    router.dismissAll();
+    router.replace('/dashboard');
     successToast(
       `${formLabels[actionType].title} request sent`,
       `Your ${formLabels[actionType].title.toLowerCase()} has been sent successfully.`,
     );
-    router.push('/dashboard');
   };
   const handleSaveAsDraft = () => {
-    dispatch({
-      type: 'SAVE_DRAFT',
-      payload: {
-        id: +draftId,
-        selectedIds,
-        type: actionType,
-        status: 'draft',
-        formData,
-      },
+    setIsSubmitting(true);
+    activities.draft.save({
+      id: +draftId,
+      selectedIds,
+      type: actionType,
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
     saveAsDraftToast();
-    router.push('/dashboard');
+    router.dismissAll();
+    router.replace('/dashboard');
   };
   const handleCancel = () => {
-    router.push('/dashboard');
+    showDiscardChangesAlert(dispatch);
   };
 
   const handleAddHoses = () => {
-    dispatch({
-      type: 'SAVE_DRAFT',
-      payload: {
-        id: +draftId,
-        selectedIds,
-        type: actionType,
-        status: 'draft',
-        formData,
-      },
+    activities.draft.save({
+      id: +draftId,
+      selectedIds,
+      type: actionType,
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
     router.navigate(getScanUrl(actionType, draftId.toString()));
   };

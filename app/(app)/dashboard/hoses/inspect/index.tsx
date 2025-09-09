@@ -5,7 +5,9 @@ import { Photos } from '@/components/detailView/common/Photos';
 import { EditMaintenanceInfo } from '@/components/detailView/edit/EditMaintenanceInfo';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
+import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { useAppContext } from '@/context/ContextProvider';
+import { useDataManager } from '@/hooks/useDataManager';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { HoseData } from '@/lib/types/hose';
 import { successToast } from '@/lib/util/toasts';
@@ -45,7 +47,8 @@ export const InspectHose = () => {
     hoseId: string;
     draftId?: string;
   }>();
-  const [hoseData, setHoseData] = useState<Partial<HoseData>>({});
+  const [hoseData, setHoseData] = useState<any>({}); // TODO: fix any
+  const { activities } = useDataManager();
   const router = useRouter();
   const scrollViewRef = useRef<ScrollView>(null);
   let id = useMemo(
@@ -77,22 +80,29 @@ export const InspectHose = () => {
   );
 
   const handleInputChange = (
-    field: keyof Partial<HoseData>,
-    value: HoseData[keyof Partial<HoseData>],
+    field: keyof HoseData,
+    value: HoseData[keyof HoseData],
   ) => {
-    setHoseData((prevData) => ({
+    setHoseData((prevData: any) => ({
+      // TODO: fix any
       ...prevData,
       [field]: value,
     }));
   };
 
   const sendInspection = () => {
-    dispatch({
-      type: 'MOVE_DRAFT_TO_DONE',
-      payload: id,
+    activities.draft.save({
+      id: id,
+      selectedIds: [hoseData.assetId!],
+      type: 'INSPECT',
+      status: 'draft',
+      formData: hoseData,
+      modifiedAt: new Date().toISOString(),
     });
+    activities.draft.moveToDone(id);
+    router.dismissAll();
+    router.replace('/dashboard');
     successToast('Inspection completed', 'The inspection has been completed.');
-    router.push('/dashboard');
   };
   const handleSend = () => {
     if (!hoseData) return;
@@ -137,22 +147,20 @@ export const InspectHose = () => {
     }
   };
   const handleSaveAsDraft = () => {
-    dispatch({
-      type: 'SAVE_DRAFT',
-      payload: {
-        id: id,
-        selectedIds: [hoseData.assetId!],
-        type: 'INSPECT',
-        status: 'draft',
-        formData: hoseData,
-      },
+    activities.draft.save({
+      id: id,
+      selectedIds: [hoseData.assetId!],
+      type: 'INSPECT',
+      status: 'draft',
+      formData: hoseData,
+      modifiedAt: new Date().toISOString(),
     });
-    router.push('/dashboard');
+    router.dismissAll();
+    router.replace('/dashboard');
   };
 
   const handleCancel = () => {
-    console.log('Cancel Inspection');
-    router.back();
+    showDiscardChangesAlert(dispatch);
   };
 
   if (!hoseData.assetId) {

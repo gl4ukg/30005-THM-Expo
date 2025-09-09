@@ -7,16 +7,16 @@ import { Typography } from '@/components/Typography';
 import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { colors } from '@/lib/tokens/colors';
-import { HID } from '@/lib/types/hose';
+import { HoseData } from '@/lib/types/hose';
 import { formatDate } from '@/lib/util/formatDate';
 import { StyleSheet, View } from 'react-native';
 
 export const EditMaintenanceInfo: React.FC<
   {
-    info: Partial<HID>;
+    info: HoseData;
     onInputChange: (
-      field: keyof Partial<HID>,
-      value: Partial<HID>[keyof Partial<HID>],
+      field: keyof HoseData,
+      value: HoseData[keyof HoseData],
     ) => void;
   } & { isInspect?: boolean }
 > = ({ info, onInputChange, isInspect }) => {
@@ -29,13 +29,11 @@ export const EditMaintenanceInfo: React.FC<
   };
 
   const handleApprovalChange = (selectedId: string) => {
-    let approvalValue: boolean | undefined;
+    let approvalValue: boolean;
     if (selectedId === 'Yes') {
       approvalValue = true;
-    } else if (selectedId === 'No') {
+    } else {
       approvalValue = false;
-    } else if (selectedId === 'NotInspected') {
-      approvalValue = undefined;
     }
 
     onInputChange('approved', approvalValue);

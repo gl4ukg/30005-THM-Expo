@@ -7,6 +7,7 @@ import { useAppContext } from '@/context/ContextProvider';
 import { MultiSelectionActionsType } from '@/context/state';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
+import { needsThisCodeToGetAccess } from '@/lib/util/getAccess';
 import { generateNumericDraftId } from '@/lib/util/unikId';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -17,11 +18,48 @@ interface Props {
 }
 
 const getFilteredHoses = (filter: string, data: HoseData[]) => {
-  let filteredList = [...data];
+  let filteredList: HoseData[] = [];
+  let listTitle = '';
+
+  switch (filter) {
+    case 'failed':
+      filteredList = data.filter((hose) => hose.status === 'failed');
+      listTitle = `Failed inspections (${filteredList.length})`;
+      break;
+    case 'overdue':
+      filteredList = data.filter((hose) => hose.status === 'overdue');
+      listTitle = `Overdue inspections (${filteredList.length})`;
+      break;
+    case 'withRemarks':
+      filteredList = data.filter((hose) => hose.status === 'withRemarks');
+      listTitle = `Inspections with remarks (${filteredList.length})`;
+      break;
+    case 'inspection':
+      filteredList = data.filter((hose) => hose.status === 'inspection');
+      listTitle = `Hoses soon to be inspected (${filteredList.length})`;
+      break;
+    // Show all for no, only way to list of hoses
+    case 'upcoming':
+      filteredList = [...data];
+      listTitle = `Replacements upcoming (${filteredList.length})`;
+      break;
+    case 'inTransit':
+      filteredList = data.filter((hose) => hose.status === 'inTransit');
+      listTitle = `New hoses in transit (${filteredList.length})`;
+      break;
+    case 'recycled':
+      filteredList = data.filter((hose) => hose.status === 'recycled');
+      listTitle = `Hoses recycled (${filteredList.length})`;
+      break;
+    default:
+      listTitle = `Filtered hoses (${filteredList.length})`;
+      break;
+  }
+
   return {
     listLength: filteredList.length,
-    listTitle: `Failed inspections (${filteredList.length})`,
-    filteredList: filteredList,
+    listTitle,
+    filteredList,
   };
 };
 
@@ -42,6 +80,7 @@ const FilteredHosesList: React.FC<Props> = (props) => {
     label: string;
     subtitle?: string;
     icon?: IconName;
+    isAccessDenied?: true;
   };
   const options: Option<MultiSelectionActionsType>[] = [
     {
@@ -49,18 +88,30 @@ const FilteredHosesList: React.FC<Props> = (props) => {
       label: 'Contact TESS Team',
       subtitle: '(add hoses to message)',
       icon: 'Email',
+      isAccessDenied: needsThisCodeToGetAccess(
+        2,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       value: 'RFQ',
       label: 'Request for quote',
       subtitle: '(add hoses to quote)',
       icon: 'Cart',
+      isAccessDenied: needsThisCodeToGetAccess(
+        4,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       value: 'SCRAP',
       label: 'Scrap hoses',
       subtitle: '(add hoses to bin)',
       icon: 'Trash',
+      isAccessDenied: needsThisCodeToGetAccess(
+        7,
+        state.auth.user?.userAccessCode,
+      ),
     },
   ] as const;
 

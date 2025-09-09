@@ -1,32 +1,29 @@
-import { AuthState } from '@/context/state';
-import {
-  deleteFromStore,
-  getFromStore,
-  saveInStore,
-} from '@/lib/util/secureStore';
+import { loginCache } from '@/services/cache/loginCacheService';
 
+const baseUrl: string | undefined = process.env.EXPO_PUBLIC_API_BASE_URL;
 export const login = async (username: string, password: string) => {
-  const url: string | undefined = process.env.EXPO_PUBLIC_API_BASE_URL;
-  if (!url) {
+  if (!baseUrl) {
     throw new Error('API_URL is not defined');
   }
   try {
-    const response = await fetch(`${url}/login`, {
+    const response = await fetch(`${baseUrl}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
     });
-
     if (response.status === 401) {
       throw new Error('Invalid username or password');
     } else if (response.status === 404) {
       throw new Error('User not found');
     } else if (response.status === 200) {
       const cookie = response.headers.get('Set-Cookie');
-      let userData: AuthState['user'] = null;
       if (cookie) {
-        // cookie 'accessToken=abc.def.ghi; Path=/; HttpOnly; Secure; SameSite=None'
-        await saveCookie(cookie);
+        const token = parseAuthCookie(cookie);
+        if (!token) {
+          throw new Error('Failed to parse authentication cookie');
+        }
+        const { accessToken, expiresDate } = token;
+        loginCache.apiKey.set(accessToken, expiresDate);
         // get user data
         const user = await getUserData();
         return user;
@@ -38,29 +35,24 @@ export const login = async (username: string, password: string) => {
     throw error;
   }
 };
-const saveCookie = async (cookie: string) => {
-  try {
-    await saveInStore('cookie', cookie);
-  } catch (error) {
-    console.error('Error saving cookie:', error);
-  }
-};
 
-const getCookie = async () => {
-  try {
-    const cookie = await getFromStore('cookie');
-    return cookie;
-  } catch (error) {
-    console.error('Error getting cookie:', error);
-  }
-};
+const parseAuthCookie = (
+  cookieString: string,
+): { accessToken: string; expiresDate: string } | null => {
+  // 1. Extract access token
+  const tokenMatch = cookieString.match(/accessToken=([^;]+)/);
+  if (!tokenMatch) return null;
+  // 2. Extract expiration date
+  const expiresMatch = cookieString.match(/Expires=([^;]+)/);
+  if (!expiresMatch) return null;
+  // 3. Parse and format expiration date
+  const expiresDate = new Date(expiresMatch[1]);
+  if (isNaN(expiresDate.getTime())) return null;
 
-const removeCookie = async () => {
-  try {
-    await deleteFromStore('cookie');
-  } catch (error) {
-    console.error('Error deleting cookie:', error);
-  }
+  return {
+    accessToken: tokenMatch[1],
+    expiresDate: expiresDate.toISOString(),
+  };
 };
 
 export type User = {
@@ -69,7 +61,7 @@ export type User = {
   lastName: string;
   username: string;
   email: string;
-  phoneNumber: number;
+  phoneNumber: string | null;
   defaultAddressId: number;
   defaultWarehouseId: string;
   assortmentIds: number[];
@@ -79,27 +71,21 @@ export type User = {
 
 const getUserData = async () => {
   try {
-    const cookie = await getCookie();
-    console.log('cookie', cookie);
-    if (!cookie) {
-      throw new Error('Cookie not found');
+    const apiKey = loginCache.apiKey.get();
+    if (!apiKey) {
+      throw new Error('Api key not found');
     }
-    const accessToken = cookie.split(';')[0].split('=')[1];
-    console.log('accessToken', accessToken);
-    const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_BASE_URL}/user`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          accessToken: accessToken,
-        },
+    const response = await fetch(`${baseUrl}/user`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        accessToken: apiKey,
       },
     );
 
     if (response.status === 200) {
       const userData: User[] = await response.json();
-      console.log('userData', userData);
+      // console.log('userData', userData)
       return userData.length > 0 ? userData[0] : null;
     } else {
       throw new Error('Failed to get user data');

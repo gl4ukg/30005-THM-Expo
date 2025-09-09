@@ -1,0 +1,392 @@
+import {
+  APIHose,
+  HoseData,
+  HoseHeader,
+  HoseLine,
+  HoseDataDetails,
+  CustomerData,
+  Testing,
+  MaintenanceDetails,
+  HoseFitting,
+  Additionals,
+  TypeFittingEnd,
+  GenericDimensionEndObject,
+} from '../types/hose';
+
+const mapToHoseHeader = (hoseData: HoseData): HoseHeader => ({
+  hoseLineId: hoseData.assetId,
+  assetId: hoseData.assetId,
+  extSystemCode: hoseData.extSystemCode || '',
+  companyCode: hoseData.companyCode || '',
+  extDocSequenceId: hoseData.extDocSequenceId || '',
+  requestDate: hoseData.requestDate || '',
+  requestTime: hoseData.requestTime || '',
+  documentName: hoseData.documentName || '',
+  methodName: hoseData.methodName || '',
+  customerNumber: hoseData.customerNumber || '',
+  otherInfo: hoseData.otherInfo || '',
+  customerOrderNumber: String(hoseData.customerOrderNumber || ''),
+  tessOrderNumber: hoseData.tessOrderNumber || '',
+  tessAsOrderNumber: hoseData.tessAsOrderNumber || '',
+  organization: hoseData.organization || '',
+  department: hoseData.department || '',
+});
+
+const mapToHoseLine = (hoseData: HoseData): HoseLine => ({
+  hoseLineId: hoseData.assetId,
+  assetId: hoseData.assetId,
+  hexagonId: String(hoseData.hexagonId || ''),
+  itemDescription: hoseData.itemDescription || '',
+  rfid: hoseData.RFID || '',
+  state: '',
+  classOrg: hoseData.class || '',
+  parentSystemId: 0,
+  s1: {
+    s1Id: 0,
+    s1Code: String(hoseData.s1Code || ''),
+    s1Name: '',
+    customerId: Number(hoseData.customerID || 0),
+  },
+  s2: {
+    s2Id: 0,
+    s2Code: String(hoseData.s2Code || ''),
+    s2Name: '',
+    s1Id: 0,
+  },
+  equipmentSubunit: hoseData.equipmentSubunit || '',
+  customerId: Number(hoseData.customerID || 0),
+  customerEq: hoseData.customerEq || '',
+  system: hoseData.system || '',
+  productionDate: hoseData.productionDate || '',
+  installedDate: hoseData.installedDate || '',
+  numberOfHoses: String(hoseData.numberOfHoses || ''),
+  genericHoseType: {
+    genericHoseTypeId: 0,
+    genericHoseTypeName: hoseData.genericHoseType || '',
+  },
+  generalCommentPtc: hoseData.generalCommentPTC || '',
+  originalHoseComment: hoseData.originalHoseComment || '',
+  additionalComment: hoseData.additionalComment || '',
+  primarySystem: hoseData.primarySystem || '',
+  hoseReel: hoseData.hoseReel || '',
+  spiralGuard: hoseData.spiralGuard || '',
+  hoseProtection: hoseData.hoseProtection || '',
+  hookie: hoseData.hookie || '',
+  whipcheck: hoseData.whipCheck || '',
+  breakaway: hoseData.breakaway || '',
+  currentStatus: hoseData.currentStatus || '',
+});
+
+const mapToHoseDataDetails = (hoseData: HoseData): HoseDataDetails => ({
+  hoseLineId: hoseData.assetId,
+  assetId: hoseData.assetId,
+  class: { classId: 0, className: hoseData.class || '' },
+  status: { statusId: 0, status: hoseData.status || '' },
+  type: { typeId: 0, typeName: hoseData.type || '' },
+  hoseType: {
+    hoseTypeId: 0,
+    hoseTypeName: hoseData.hoseType || '',
+  },
+  hoselengthMm: Number(hoseData.hoseLength_mm || 0),
+  hoselengthFtIn: String(hoseData.hoseLength_ft_in || ''),
+  wpBar: Number(hoseData.wp_BAR || 0),
+  wpPsi: Number(hoseData.wp_PSI || 0),
+  ferrule1: hoseData.ferrule1 || '',
+  ferrule2: hoseData.ferrule2 || '',
+  insert1: hoseData.insert1 || '',
+  insert2: hoseData.insert2 || '',
+  hoseDimension: {
+    hoseDimensionId: 0,
+    hoseDimension: '',
+  },
+  hoseOtherInfo: hoseData.hoseOtherInfo || '',
+  couplingOrientation: {
+    couplingOrientationId: Number(hoseData.couplingOrientation || 0),
+    orientationCode: '',
+  },
+  pinPricked: hoseData.pinpricked || false,
+  hoseMediumTemperature: String(hoseData.hoseMediumTemperature || ''),
+  hoseFunction: hoseData.hoseFunction || '',
+  hoseWarranty: hoseData.hoseWarranty || '',
+  hoseWarrantyComment: hoseData.hoseWarrantyComment || '',
+});
+
+const mapToCustomerData = (hoseData: HoseData): CustomerData => ({
+  hoseLineId: hoseData.assetId,
+  assetId: hoseData.assetId,
+  drawingNumber: hoseData.drawingNumber || '',
+  posNumber: hoseData.posNumber || '',
+  artNumber: hoseData.artNumber || '',
+  customerArtNumber: hoseData.customerArtNumber || '',
+  criticality: {
+    criticalityId: 0,
+    criticalityName: String(hoseData.criticality || ''),
+  },
+  pollutionExposure: hoseData.pollutionExposure || '',
+  uxExposure: hoseData.uvExposure || '',
+  cleaning: hoseData.cleaning || '',
+  flushingStandard: hoseData.flushingStandard || '',
+  flushingMedia: {
+    flushingMediaId: 0,
+    flushingMediaName: hoseData.flushingMedia || '',
+  },
+  minimumTemperature: hoseData.minimumTemperature || '',
+  maximumTemperature: hoseData.maximumTemperature || '',
+  colorId: 0,
+  spareSetHose: hoseData.spareSetHose || false,
+  emergencyHoseLink: hoseData.emergencyHoseLink || '',
+  emergencyHoseComment: hoseData.emergencyHoseComment || '',
+  partNumberUpdatesNeeded: false,
+});
+
+const mapToTesting = (hoseData: HoseData): Testing => ({
+  hoseLineId: hoseData.assetId,
+  assetId: hoseData.assetId,
+  testTime: hoseData.testTime || '',
+  testMediumStats: hoseData.testMedium || '',
+  pressureTestStatus: hoseData.pressureTest || '',
+  bendingRadius: hoseData.bendingRadius || '',
+  thirdPartySharing: '',
+});
+
+const mapToMaintenanceDetails = (hoseData: HoseData): MaintenanceDetails => ({
+  hoseLineId: hoseData.assetId,
+  assetId: hoseData.assetId,
+  inspectedDate: hoseData.inspectedDate || '',
+  inspector: hoseData.inspector || '',
+  hoseCondition: hoseData.hoseCondition || '',
+  approved: hoseData.approved || false,
+  inspectionComment: '',
+  nextInspectionDate: hoseData.nextInspection || '',
+  pressureTestDate: '',
+  pressureTestOnInterval: false,
+  nextPressureTest: '',
+  nextHoseReplacement: hoseData.replacementDate || '',
+});
+
+const mapToHoseFitting = (hoseData: HoseData, end: '1' | '2'): HoseFitting => {
+  const typeFittingEnd: TypeFittingEnd = {
+    typeFittingEndId: 0,
+    fittingEnd: hoseData[`typeFittingEnd${end}`] || '',
+    genericDimensionEndId: 0,
+  };
+
+  const genericDimensionEnd: GenericDimensionEndObject = {
+    genericDimensionEndId: 0,
+    genericDimensionName: hoseData[`genericDimensionEnd${end}`] || '',
+  };
+
+  return {
+    hoseLineId: hoseData.assetId,
+    assetId: hoseData.assetId,
+    fittingType: 0,
+    typeFittingEnd,
+    genericDimensionEnd,
+    genderEnd: hoseData[`genderEnd${end}`] || '',
+    angleEnd: hoseData[`angleEnd${end}`] || '',
+    materialQualityEnd: hoseData[`materialQualityEnd${end}`] || '',
+    commentEndPtc: hoseData[`commentEnd${end}PTC`] || '',
+  };
+};
+
+const mapToAdditionals = (hoseData: HoseData): Additionals => ({
+  hoseLineId: hoseData.assetId,
+  assetId: hoseData.assetId,
+  aEnd1: hoseData.additionalsAend1 || '',
+  bEnd1: hoseData.additionalsBend1 || '',
+  cEnd1: hoseData.additionalsCend1 || '',
+  dEnd1: '',
+  eEnd1: '',
+  fEnd1: '',
+  gEnd1: '',
+  hEnd1: '',
+  aEnd2: hoseData.additionalsAend2 || '',
+  bEnd2: hoseData.additionalsBend2 || '',
+  cEnd2: hoseData.additionalsCend2 || '',
+  dEnd2: '',
+  eEnd2: '',
+  fEnd2: '',
+  gEnd2: '',
+  hEnd2: '',
+});
+
+export const mapHoseDataToAPIHose = (hoseData: HoseData): APIHose => ({
+  hoseHeader: mapToHoseHeader(hoseData),
+  hoseLine: mapToHoseLine(hoseData),
+  hoseData: mapToHoseDataDetails(hoseData),
+  customerData: mapToCustomerData(hoseData),
+  testing: mapToTesting(hoseData),
+  maintenanceDetails: mapToMaintenanceDetails(hoseData),
+  hoseFitting1: mapToHoseFitting(hoseData, '1'),
+  hoseFitting2: mapToHoseFitting(hoseData, '2'),
+  additionals: mapToAdditionals(hoseData),
+});
+
+export const mapAPIHoseToHoseData = (hose: APIHose): HoseData => ({
+  assetId: hose.hoseHeader.assetId,
+  // HoseHeader
+  extSystemCode: hose.hoseHeader.extSystemCode,
+  companyCode: hose.hoseHeader.companyCode,
+  extDocSequenceId: hose.hoseHeader.extDocSequenceId,
+  requestDate: hose.hoseHeader.requestDate,
+  requestTime: hose.hoseHeader.requestTime,
+  documentName: hose.hoseHeader.documentName,
+  methodName: hose.hoseHeader.methodName,
+  customerNumber: hose.hoseHeader.customerNumber,
+  otherInfo: hose.hoseHeader.otherInfo,
+  customerOrderNumber: Number(hose.hoseHeader.customerOrderNumber),
+  tessOrderNumber: hose.hoseHeader.tessOrderNumber,
+  tessAsOrderNumber: hose.hoseHeader.tessAsOrderNumber,
+  organization: hose.hoseHeader.organization,
+  department: hose.hoseHeader.department,
+
+  // HoseLine
+  hexagonId: Number(hose.hoseLine.hexagonId),
+  itemDescription: hose.hoseLine.itemDescription,
+  RFID: hose.hoseLine.rfid,
+  class: hose.hoseData.class.className,
+  s1Code: hose.hoseLine.s1.s1Code,
+  s1Name: hose.hoseLine.s1.s1Name,
+  s2Code: hose.hoseLine.s2.s2Code,
+  s2Name: hose.hoseLine.s2.s2Name,
+  equipmentSubunit: hose.hoseLine.equipmentSubunit,
+  customerID: String(hose.hoseLine.customerId),
+  customerEq: hose.hoseLine.customerEq,
+  system: hose.hoseLine.system,
+  productionDate: hose.hoseLine.productionDate,
+  installedDate: hose.hoseLine.installedDate,
+  numberOfHoses: Number(hose.hoseLine.numberOfHoses),
+  genericHoseType: hose.hoseLine.genericHoseType.genericHoseTypeName,
+  generalCommentPTC: hose.hoseLine.generalCommentPtc,
+  originalHoseComment: hose.hoseLine.originalHoseComment,
+  additionalComment: hose.hoseLine.additionalComment,
+  primarySystem: hose.hoseLine.primarySystem,
+  hoseReel: hose.hoseLine.hoseReel,
+  spiralGuard: hose.hoseLine.spiralGuard,
+  hoseProtection: hose.hoseLine.hoseProtection,
+  hookie: hose.hoseLine.hookie,
+  whipCheck: hose.hoseLine.whipcheck,
+  breakaway: hose.hoseLine.breakaway,
+  currentStatus: hose.hoseLine.currentStatus,
+
+  // HoseDataDetails
+  hoseType: hose.hoseData.hoseType.hoseTypeName,
+  hoseLength_mm: hose.hoseData.hoselengthMm,
+  hoseLength_ft_in: hose.hoseData.hoselengthFtIn,
+  wp_BAR: hose.hoseData.wpBar,
+  wp_PSI: hose.hoseData.wpPsi,
+  ferrule1: hose.hoseData.ferrule1,
+  ferrule2: hose.hoseData.ferrule2,
+  insert1: hose.hoseData.insert1,
+  insert2: hose.hoseData.insert2,
+  hoseOtherInfo: hose.hoseData.hoseOtherInfo,
+  couplingOrientation: hose.hoseData.couplingOrientation.couplingOrientationId,
+  pinpricked: hose.hoseData.pinPricked,
+  hoseMediumTemperature: hose.hoseData.hoseMediumTemperature,
+  hoseFunction: hose.hoseData.hoseFunction,
+  hoseWarranty: hose.hoseData.hoseWarranty,
+  hoseWarrantyComment: hose.hoseData.hoseWarrantyComment,
+
+  // CustomerData
+  drawingNumber: hose.customerData.drawingNumber,
+  posNumber: hose.customerData.posNumber,
+  artNumber: hose.customerData.artNumber,
+  customerArtNumber: hose.customerData.customerArtNumber,
+  criticality: hose.customerData.criticality.criticalityName,
+  pollutionExposure: hose.customerData.pollutionExposure,
+  uvExposure: hose.customerData.uxExposure,
+  cleaning: hose.customerData.cleaning,
+  flushingStandard: hose.customerData.flushingStandard,
+  flushingMedia: hose.customerData.flushingMedia.flushingMediaName,
+  minimumTemperature: hose.customerData.minimumTemperature,
+  maximumTemperature: hose.customerData.maximumTemperature,
+  colorCode: String(hose.customerData.colorId),
+  spareSetHose: hose.customerData.spareSetHose,
+  emergencyHoseLink: hose.customerData.emergencyHoseLink,
+  emergencyHoseComment: hose.customerData.emergencyHoseComment,
+
+  // Testing
+  testTime: hose.testing.testTime,
+  testMedium: hose.testing.testMediumStats,
+  pressureTest: hose.testing.pressureTestStatus,
+  bendingRadius: hose.testing.bendingRadius,
+
+  // MaintenanceDetails
+  inspectedDate: hose.maintenanceDetails.inspectedDate,
+  inspector: hose.maintenanceDetails.inspector,
+  hoseCondition: hose.maintenanceDetails.hoseCondition,
+  approved: hose.maintenanceDetails.approved,
+  nextInspection: hose.maintenanceDetails.nextInspectionDate,
+  replacementDate: hose.maintenanceDetails.nextHoseReplacement,
+
+  // HoseFitting1
+  typeFittingEnd1: hose.hoseFitting1.typeFittingEnd?.fittingEnd || '',
+  genericDimensionEnd1:
+    hose.hoseFitting1.genericDimensionEnd?.genericDimensionName || '',
+  genderEnd1: hose.hoseFitting1?.genderEnd || '',
+  angleEnd1: hose.hoseFitting1?.angleEnd || '',
+  materialQualityEnd1: hose.hoseFitting1?.materialQualityEnd || '',
+  commentEnd1PTC: hose.hoseFitting1?.commentEndPtc || '',
+
+  // HoseFitting2
+  typeFittingEnd2: hose.hoseFitting2.typeFittingEnd?.fittingEnd || '',
+  genericDimensionEnd2:
+    hose.hoseFitting2.genericDimensionEnd?.genericDimensionName || '',
+  genderEnd2: hose.hoseFitting2?.genderEnd || '',
+  angleEnd2: hose.hoseFitting2?.angleEnd || '',
+  materialQualityEnd2: hose.hoseFitting2?.materialQualityEnd || '',
+  commentEnd2PTC: hose.hoseFitting2?.commentEndPtc || '',
+
+  // Additionals
+  additionalsAend1: hose.additionals.aEnd1,
+  additionalsBend1: hose.additionals.bEnd1,
+  additionalsCend1: hose.additionals.cEnd1,
+  additionalsAend2: hose.additionals.aEnd2,
+  additionalsBend2: hose.additionals.bEnd2,
+  additionalsCend2: hose.additionals.cEnd2,
+
+  // Default values
+  S2Equipment: hose.hoseLine.s2.s2Name,
+  missingData: isHoseDataMissing(hose),
+  innerDiameter: '',
+  parentSystem: String(hose.hoseLine.parentSystemId),
+  customerFlushingMedia: '',
+  status: hose.hoseData.status.status,
+  type: hose.hoseData.type.typeName,
+
+  // CHECK
+  hoseStandard: '',
+  generalComment: hose.hoseLine.generalCommentPtc,
+  inspectionInterval: '',
+  replacementInterval: '',
+});
+
+const isHoseDataMissing = (hoseData: APIHose): boolean => {
+  return (
+    !hoseData.hoseLine.itemDescription ||
+    !hoseData.hoseLine.productionDate ||
+    !hoseData.hoseLine.installedDate
+  );
+};
+
+// itemDescription: '',
+// productionDate: '',
+// installedDate: new Date().toISOString(),
+// criticality: 0,
+// hoseType: '',
+// hoseLength_mm: '',
+// wp_BAR: '',
+// ferrule1: '',
+// ferrule2: '',
+// insert1: '',
+// insert2: '',
+// //genericHoseType: '',
+// typeFittingEnd1: '',
+// genericDimensionEnd1: '',
+// genderEnd1: '',
+// angleEnd1: '',
+// materialQualityEnd1: '',
+// typeFittingEnd2: '',
+// genericDimensionEnd2: '',
+// genderEnd2: '',
+// angleEnd2: '',

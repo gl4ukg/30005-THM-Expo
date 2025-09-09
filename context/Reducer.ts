@@ -13,11 +13,12 @@ import {
   SettingsState,
   SingleSelection,
   SingleSelectionActionsType,
+  ActivityDone,
 } from '@/context/state';
 import { HoseData } from '@/lib/types/hose';
-import { S1Item } from '@/services/api/asset';
+import { S1Item, TransformedS1 } from '@/services/api/asset';
+import { Customer } from '@/services/api/customer';
 import { createContext } from 'react';
-import { updateHose } from '@/services/cache/cacheService';
 
 export interface PartialFormData {
   comment?: string;
@@ -35,20 +36,6 @@ export interface PartialReplaceHoseFormData extends PartialFormData {
   replacementReasons?: string[];
   replacementImpacts?: string[];
   downtime?: string;
-}
-
-export interface TemporaryInspectionData {
-  hoseId?: number;
-  changes?: Partial<HoseData>;
-}
-
-export interface TemporaryRegistrationData {
-  formData?: Partial<HoseData> & { showValidationErrors?: boolean };
-}
-
-export interface TemporaryHoseEditData {
-  hoseId?: number;
-  changes?: Partial<HoseData>;
 }
 
 interface ActionWithPayload<T extends string, Payload> {
@@ -97,8 +84,8 @@ type AuthAction =
   | ActionWithPayload<'SET_TOKEN', string>
   | ActionWithPayload<'SET_LOGIN_LOADING', boolean>;
 type DataAction =
-  | ActionWithPayload<'SET_S1_CODE', string>
-  | ActionWithPayload<'SET_S1_ITEMS', S1Item[]>
+  | ActionWithPayload<'SET_S1_CODE', string | null>
+  | ActionWithPayload<'SET_S1_ITEMS', TransformedS1[]>
   | ActionWithPayload<'CHANGE_S1_SELECTION', string>
   | ActionWithPayload<
       'REMOVE_ACTION',
@@ -114,7 +101,7 @@ type DataAction =
   | ActionWithPayload<'SET_HOSE_DATA', HoseData[]>
   | ActionWithPayload<'SET_DATA_LOADING', boolean>
   | ActionWithPayload<'SET_LAST_UPDATE', 'error' | 'syncing' | 'synced'>
-  | ActionWithPayload<'SET_CUSTOMER', { id: string; name: string }>
+  | ActionWithPayload<'SET_CUSTOMERS', Customer[]>
   | ActionWithPayload<'SAVE_HOSE_DATA', { hoseId: number; hoseData: any }>
   | ActionWithPayload<'REMOVE_HOSES', number[]>
   | ActionWithPayload<'SELECT_ONE_HOSE', SingleSelection>
@@ -124,7 +111,6 @@ type DataAction =
   | ActionWithoutPayload<'FINISH_SELECTION'>
   | ActionWithPayload<'SELECT_MANY_HOSES_MULTI_SELECTION', number[]>
   | ActionWithoutPayload<'DESELECT_ALL_HOSES_MULTI_SELECTION'>
-  | ActionWithPayload<'SET_HOSE_TEMPLATE', Partial<HoseData>>
   | ActionWithPayload<'SET_IS_CANCELABLE', boolean>
   | ActionWithPayload<'SET_TEMPORARY_CONTACT_FORM_DATA', PartialRFQFormData>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_CONTACT_FORM_DATA'>
@@ -138,13 +124,9 @@ type DataAction =
       PartialReplaceHoseFormData
     >
   | ActionWithoutPayload<'CLEAR_TEMPORARY_REPLACE_HOSE_FORM_DATA'>
-  | ActionWithPayload<'SET_TEMPORARY_INSPECTION_DATA', TemporaryInspectionData>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_INSPECTION_DATA'>
-  | ActionWithPayload<
-      'SET_TEMPORARY_REGISTRATION_DATA',
-      TemporaryRegistrationData
-    >
   | ActionWithPayload<'CREATE_DRAFT', Omit<ActivityDraft, 'modifiedAt'>>
+  | ActionWithPayload<'REMOVE_DRAFT', number>
   | ActionWithPayload<'SAVE_DRAFT', Omit<ActivityDraft, 'modifiedAt'>>
   | ActionWithPayload<
       'ADD_HOSE_TO_DRAFT',
@@ -153,36 +135,41 @@ type DataAction =
         hoseId: number;
       }
     >
-  | ActionWithPayload<'ADD_HOSE_TO_EDITED_HOSES', Partial<HoseData>>
+  | ActionWithPayload<'SET_ACTIVITIES_DONE', ActivityDone[]>
+  | ActionWithPayload<'ADD_ACTIVITY_DONE', ActivityDone>
+  | ActionWithPayload<
+      'ACTIVITY_DONE_TIMESTAMP',
+      { id: number; timestamp: number }
+    >
   | ActionWithPayload<'ADD_NEW_HOSE', HoseData>
   | ActionWithPayload<'MOVE_DRAFT_TO_DONE', number>
+  | ActionWithPayload<
+      'ACTIVITY_DONE_TIMESTAMP',
+      { id: number; timestamp: number }
+    >
   | ActionWithPayload<'REMOVE_FROM_DRAFT', number>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_REGISTRATION_DATA'>
-  | ActionWithPayload<'SET_TEMPORARY_HOSE_EDIT_DATA', TemporaryHoseEditData>
   | ActionWithoutPayload<'CLEAR_TEMPORARY_HOSE_EDIT_DATA'>
-  | ActionWithoutPayload<'CLEAR_ALL_TEMPORARY_DATA'>
-  | ActionWithPayload<'FINISH_SELECTION_AND_RESET', Partial<HoseData>>;
+  | ActionWithoutPayload<'CLEAR_ALL_TEMPORARY_DATA'>;
 
 type SettingsAction =
   // | ActionWithPayload<'UPDATE_SETTINGS', any>
   | ActionWithPayload<'UPDATE_CONNECTION_TYPE', 'wifi' | 'mobile' | null>
+  | ActionWithPayload<'SET_INTERNET_REACHABLE', boolean>
   | ActionWithPayload<'SET_IS_MENU_OPEN', boolean>;
 
 // Reducers for each slice of the app state (these should be defined elsewhere)
 const authReducer = (state: AuthState, action: AppAction): AuthState => {
   switch (action.type) {
     case 'LOGIN':
-      console.log('LOGIN', action.payload);
       return {
         ...state,
-        // Populate with default value for phone number to enable submitting forms
         user: {
-          email: state.user?.email || 'slange_mester@tess.no',
-          name: state.user?.name || 'Ole Slange Mester',
-          id: state.user?.id || '223949MOB',
-          customerNumbers: state.user?.customerNumbers || [],
-          ...action.payload,
-          phoneNumber: state.user?.phoneNumber || 12345678,
+          name: action.payload?.name || '',
+          email: action.payload?.email || '',
+          id: action.payload?.id || '',
+          phoneNumber: action.payload?.phoneNumber,
+          customerNumbers: action.payload?.customerNumbers,
         },
       };
     case 'LOGOUT':
@@ -199,7 +186,7 @@ const authReducer = (state: AuthState, action: AppAction): AuthState => {
     case 'SET_LOGIN_LOADING':
       return {
         ...state,
-        isLoingLoading: action.payload,
+        isLogingLoading: action.payload,
       };
     default:
       return state;
@@ -212,6 +199,7 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       return {
         ...state,
         isLoading: action.payload,
+        lastUpdateStatus: action.payload ? 'syncing' : state.lastUpdateStatus,
       };
     case 'SET_LAST_UPDATE':
       return {
@@ -245,10 +233,10 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         ...state,
         hoses: action.payload,
       };
-    case 'SET_CUSTOMER':
+    case 'SET_CUSTOMERS':
       return {
         ...state,
-        customer: action.payload,
+        customers: action.payload,
       };
     case 'ADD_NEW_HOSE':
       return {
@@ -256,32 +244,19 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         hoses: [...state.hoses, action.payload],
       };
     case 'SAVE_HOSE_DATA':
-      console.log('SAVE_HOSE_DATA', action.payload.hoseId),
-        action.payload.hoseData.installationDate;
       if (action.payload.hoseId === undefined) {
         console.error('hoseId is undefined', action.payload.hoseId);
         return state;
       }
-
       // On submit, when the hose is to be saved, update the cache to persist the changes
-      const updatedHoses = state.hoses.map((hose) => {
-        if (hose.assetId === action.payload.hoseId) {
-          const updatedHose = {
-            ...hose,
-            ...action.payload.hoseData,
-          };
-
-          try {
-            updateHose(updatedHose);
-          } catch (error) {
-            console.error('Failed to update hose in cache:', error);
-          }
-
-          return updatedHose;
-        }
-        return hose;
-      });
-
+      const updatedHoses = state.hoses.map((hose) =>
+        hose.assetId === action.payload.hoseId
+          ? {
+              ...hose,
+              ...action.payload.hoseData,
+            }
+          : hose,
+      );
       return {
         ...state,
         hoses: updatedHoses,
@@ -349,11 +324,6 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         ...state,
         selection: null,
       };
-    case 'SET_HOSE_TEMPLATE':
-      return {
-        ...state,
-        hoseTemplate: action.payload,
-      };
     case 'SET_IS_CANCELABLE':
       return {
         ...state,
@@ -364,7 +334,7 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
       const newDraft = {
         ...action.payload,
         status: 'draft',
-        modifiedAt: new Date(),
+        modifiedAt: new Date().toISOString(),
       } as ActivityDraft;
       return {
         ...state,
@@ -379,18 +349,27 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
             if (draft.id === action.payload.id) {
               return {
                 ...action.payload,
-                modifiedAt: new Date(),
+                modifiedAt: new Date().toISOString(),
               } as ActivityDraft;
             }
             return draft;
           })
         : [
             ...state.drafts,
-            { ...action.payload, modifiedAt: new Date() } as ActivityDraft,
+            {
+              ...action.payload,
+              modifiedAt: new Date().toISOString(),
+            } as ActivityDraft,
           ];
       return {
         ...state,
         drafts,
+      };
+    }
+    case 'REMOVE_DRAFT': {
+      return {
+        ...state,
+        drafts: state.drafts.filter((draft) => draft.id !== action.payload),
       };
     }
     case 'ADD_HOSE_TO_DRAFT': {
@@ -403,7 +382,7 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
           if (draft.id === draftId) {
             return {
               ...draft,
-              modifiedAt: new Date(),
+              modifiedAt: new Date().toISOString(),
               selectedIds: draft.selectedIds.includes(hoseId)
                 ? draft.selectedIds
                 : [...draft.selectedIds, hoseId],
@@ -432,15 +411,36 @@ const dataReducer = (state: DataState, action: AppAction): DataState => {
         done: draft
           ? [
               ...state.done,
-              { ...draft, status: 'done', modifiedAt: new Date() },
+              {
+                ...draft,
+                status: 'done',
+                modifiedAt: new Date().toISOString(),
+              },
             ]
           : state.done,
       };
     }
-    case 'ADD_HOSE_TO_EDITED_HOSES': {
+
+    case 'SET_ACTIVITIES_DONE': {
       return {
         ...state,
-        editedHoses: [...state.editedHoses, action.payload],
+        done: action.payload,
+      };
+    }
+    case 'ACTIVITY_DONE_TIMESTAMP': {
+      const done = state.done.find((d) => d.id === action.payload.id);
+      if (!done) return state;
+      return {
+        ...state,
+        done: state.done.map((d) => {
+          if (d.id === action.payload.id) {
+            return {
+              ...d,
+              syncingTimestamp: action.payload.timestamp,
+            };
+          }
+          return d;
+        }),
       };
     }
 
@@ -459,10 +459,14 @@ const settingReducer = (
     // case 'UPDATE_SETTINGS':
     //   return state;
     case 'UPDATE_CONNECTION_TYPE':
-      console.log('UPDATE_CONNECTION_TYPE', action.payload);
       return {
         ...state,
         connectionType: action.payload,
+      };
+    case 'SET_INTERNET_REACHABLE':
+      return {
+        ...state,
+        internetReachable: action.payload,
       };
     case 'SET_IS_MENU_OPEN':
       return {

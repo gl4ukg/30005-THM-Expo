@@ -4,7 +4,7 @@ import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDi
 import { usePreventRemove } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
 
-export const usePreventGoBack = () => {
+export const usePreventGoBack = (preventGoBack: boolean = true) => {
   const { dispatch, state } = useAppContext();
   const preventionActiveRef = useRef(false);
   const isAlertShowingRef = useRef(false);
@@ -25,10 +25,20 @@ export const usePreventGoBack = () => {
   useFocusEffect(
     useCallback(() => {
       isAlertShowingRef.current = false;
-      dispatch({
-        type: 'SET_IS_CANCELABLE',
-        payload: true,
-      });
-    }, [dispatch]),
+
+      if (preventGoBack) {
+        dispatch({
+          type: 'SET_IS_CANCELABLE',
+          payload: true,
+        });
+
+        return () => {
+          dispatch({
+            type: 'SET_IS_CANCELABLE',
+            payload: false,
+          });
+        };
+      }
+    }, [dispatch, preventGoBack]),
   );
 };

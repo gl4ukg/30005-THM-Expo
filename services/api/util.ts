@@ -1,6 +1,6 @@
 import { HoseData } from '@/lib/types/hose';
-import { convertToISOFormat, formatDate } from '@/lib/util/formatDate';
-import { getFromStore } from '@/lib/util/secureStore';
+import { convertToISOFormat } from '@/lib/util/formatDate';
+import { loginCache } from '@/services/cache/loginCacheService';
 
 // Base URL for all API requests
 export const BASE_URL =
@@ -17,20 +17,19 @@ export async function apiRequest<T>(
   options: RequestInit = {},
 ): Promise<T> {
   const url = `${BASE_URL}${endpoint}`;
-
   let authHeaders = {};
   try {
-    const cookie = await getFromStore('cookie');
-    if (cookie) {
-      const accessToken = cookie.split(';')[0].split('=')[1];
+    const apiKey = loginCache.apiKey.get();
+    if (apiKey) {
       authHeaders = {
-        accessToken: accessToken,
+        accessToken: apiKey,
       };
     } else {
-      console.warn('No authentication cookie found');
+      throw new Error('API key not found');
     }
   } catch (error) {
     console.error('Failed to get authentication token:', error);
+    throw error;
   }
 
   const defaultHeaders = {
@@ -47,9 +46,6 @@ export async function apiRequest<T>(
   };
 
   try {
-    console.log('Making API request to:', url);
-    console.log('Request headers:', config.headers);
-    console.log('Request method:', config.method || 'GET');
     if (config.body) {
       console.log('Request body:', config.body);
     }
@@ -78,11 +74,6 @@ export async function apiCall<T>(
   const methodName = `${method} ${endpoint}`;
 
   try {
-    console.log(`API Call: ${methodName}`);
-    if (data) {
-      console.log(`API Call Data:`, data);
-    }
-
     const config: RequestInit = {
       method,
       ...options,
@@ -94,7 +85,6 @@ export async function apiCall<T>(
     }
 
     const response = await apiRequest<T>(endpoint, config);
-    console.log(`API Success: ${methodName}`);
     return response;
   } catch (error) {
     console.error(`API Error: ${methodName}`, error);
@@ -126,8 +116,8 @@ export interface RegisterHoseRequest {
     itemDescription: string;
     RFID: string;
     parentSystem: number;
-    s1Code: number;
-    s2Code: number;
+    s1Code: string;
+    s2Code: string;
     equipmentSubunit: string;
     otherInfo: string;
     customerID: string;
@@ -250,8 +240,8 @@ export const transformHoseDataForAPI = (
         itemDescription: hoseData.itemDescription || 'string',
         RFID: hoseData.RFID || 'string',
         parentSystem: Number(hoseData.parentSystem) || 0,
-        s1Code: Number(hoseData.s1Code) || 0,
-        s2Code: hoseData.s2Code ? Number(hoseData.s2Code) : 0,
+        s1Code: hoseData.s1Code ?? '',
+        s2Code: hoseData.s2Code ?? '',
         equipmentSubunit: hoseData.equipmentSubunit || 'string',
         otherInfo: hoseData.hoseOtherInfo || 'string',
         customerID: hoseData.customerID || 'string',

@@ -3,6 +3,7 @@ import { Typography } from '@/components/Typography';
 import { Input } from '@/components/UI/Input/Input';
 import { useAppContext } from '@/context/ContextProvider';
 import { MultiSelectionActionsType } from '@/context/state';
+import { useDataManager } from '@/hooks/useDataManager';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
 import { reverseHexString } from '@/lib/util/rfid';
@@ -45,7 +46,7 @@ const Scan = () => {
     scanPurpose?: ScanPurpose;
     draftId?: string;
   }>();
-  const { state, dispatch } = useAppContext();
+  const { state } = useAppContext();
   const [scanMethod, setScanMethod] = useState<'RFID' | 'Barcode' | null>(
     'Barcode',
   );
@@ -61,6 +62,7 @@ const Scan = () => {
   const previousRfid = useRef<string | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { activities } = useDataManager();
 
   const title = getScanTitle(scanPurpose);
   const isProcessingHose = useRef(false);
@@ -211,22 +213,16 @@ const Scan = () => {
     }
     if (hose) {
       if (scanPurpose === 'REGISTER_HOSE' || scanPurpose === 'INSPECT_HOSE') {
-        const draftId = generateNumericDraftId(
-          state.data.drafts.map((d) => d.id),
-        ).toString();
         const params: { [key: string]: any } = {
           hoseId: hose.assetId,
           draftId: draftId,
         };
-        dispatch({
-          type: 'CREATE_DRAFT',
-          payload: {
-            id: +draftId,
-            selectedIds: [hose.assetId],
-            type: scanPurpose === 'REGISTER_HOSE' ? 'REGISTER_HOSE' : 'INSPECT',
-            status: 'draft',
-            formData: hose,
-          },
+        activities.draft.add({
+          type: scanPurpose === 'REGISTER_HOSE' ? 'REGISTER_HOSE' : 'INSPECT',
+          formData: hose,
+          selectedIds: [hose.assetId],
+          status: 'draft',
+          modifiedAt: new Date().toISOString(),
         });
         router.replace({
           pathname: `/dashboard/hoses/${scanPurpose === 'REGISTER_HOSE' ? 'register' : 'inspect'}`,
@@ -235,26 +231,14 @@ const Scan = () => {
         return;
       } else if (scanPurpose) {
         if (draftId) {
-          dispatch({
-            type: 'ADD_HOSE_TO_DRAFT',
-            payload: {
-              draftId: +draftId,
-              hoseId: hose.assetId,
-            },
-          });
+          activities.draft.addHose(hose.assetId, +draftId);
         } else {
-          draftId = generateNumericDraftId(
-            state.data.drafts.map((d) => d.id),
-          ).toString();
-          dispatch({
-            type: 'CREATE_DRAFT',
-            payload: {
-              id: +draftId,
-              status: 'draft',
-              selectedIds: [hose.assetId],
-              type: scanPurpose,
-              formData: {},
-            },
+          activities.draft.add({
+            type: scanPurpose,
+            formData: {},
+            selectedIds: [hose.assetId],
+            status: 'draft',
+            modifiedAt: new Date().toISOString(),
           });
         }
         setId(null);

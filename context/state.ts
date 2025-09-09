@@ -1,11 +1,14 @@
 import { HID, HoseData } from '@/lib/types/hose';
-import { S1Item } from '@/services/api/asset';
+import { S1Item, TransformedS1 } from '@/services/api/asset';
 import {
   PartialReplaceHoseFormData,
   PartialRFQFormData,
   PartialSendMailFormData,
 } from './Reducer';
 import { Activity } from '@/components/dashboard/activitiesList/activity';
+import { loginCache } from '@/services/cache/loginCacheService';
+import { cache } from '@/services/cache/cacheService';
+import { Customer } from '@/services/api/customer';
 
 interface AppState {
   auth: AuthState;
@@ -20,10 +23,11 @@ interface AuthState {
     email: string;
     name: string;
     id: string;
-    phoneNumber?: number;
+    phoneNumber?: string;
     customerNumbers?: string[];
+    userAccessCode?: `${number}`;
   };
-  isLoingLoading: boolean;
+  isLogingLoading: boolean;
   token: null | string;
 }
 
@@ -105,19 +109,15 @@ interface DataState {
   lastUpdate: null | Date;
   lastUpdateStatus?: 'error' | 'syncing' | 'synced';
   s1Code: string | null;
-  s1Items: S1Item[];
+  s1Items: TransformedS1[];
   // define data state properties
   hoses: HoseData[];
-  customer: {
-    id: string;
-    name: string;
-  };
+  customers: Customer[];
   selection: HoseSelection | null;
-  hoseTemplate?: Partial<HoseData>;
   isCancelable: boolean;
   drafts: ActivityDraft[];
   done: ActivityDone[];
-  editedHoses: Partial<HoseData>[];
+  editedHoses: HoseData[];
 }
 
 interface DraftAction extends Activity {
@@ -138,7 +138,7 @@ interface DraftReplaceHose extends Activity {
 interface DraftRegisterHose extends Activity {
   type: 'REGISTER_HOSE';
   status: 'draft';
-  formData: Partial<HoseData>;
+  formData: HoseData;
 }
 interface DraftInspectHose extends Activity {
   type: 'INSPECT';
@@ -152,14 +152,15 @@ export type ActivityDraft =
   | DraftReplaceHose
   | DraftRegisterHose
   | DraftInspectHose;
-
 export type ActivityDone = Omit<ActivityDraft, 'status'> & {
   status: 'done';
+  syncingTimestamp?: number;
 };
 
 interface SettingsState {
   // define settings state properties
   connectionType: 'wifi' | 'mobile' | null;
+  internetReachable: boolean;
   appInfo: {
     version: string;
     environment: string;
@@ -174,10 +175,10 @@ const initialAuthState: AuthState = {
   user: {
     email: 'slange_mester@tess.no ',
     name: 'Ole Slange Mester',
-    phoneNumber: 12345678,
+    phoneNumber: '+4799999999',
     id: '223949MOB',
   },
-  isLoingLoading: false,
+  isLogingLoading: false,
   token: null,
 };
 
@@ -186,11 +187,10 @@ const initialDataState: DataState = {
   lastUpdate: null,
   s1Code: null,
   s1Items: [],
-  customer: { id: '223949', name: 'CUSTOMER WEB DEMO (Main)' },
+  customers: [],
   // initial data state values
   hoses: [],
   selection: null,
-  hoseTemplate: undefined,
   isCancelable: false,
   drafts: [
     {
@@ -198,7 +198,7 @@ const initialDataState: DataState = {
       type: 'SCRAP',
       status: 'draft',
       selectedIds: [27, 30],
-      modifiedAt: new Date(),
+      modifiedAt: new Date().toISOString(),
       formData: {
         comment: 'test',
       },
@@ -209,14 +209,14 @@ const initialDataState: DataState = {
       status: 'draft',
       selectedIds: [27],
       formData: {},
-      modifiedAt: new Date('2016-07-29T20:23:01.804Z'),
+      modifiedAt: '2016-07-29T20:23:01.804Z',
     },
     {
       id: 191820,
       type: 'REPLACE_HOSE',
       status: 'draft',
       selectedIds: [27],
-      modifiedAt: new Date('2016-07-19T20:25:01.804Z'),
+      modifiedAt: '2016-07-19T20:25:01.804Z',
       formData: {
         comment: 'test',
         replacementImpacts: ['test'],
@@ -232,7 +232,7 @@ const initialDataState: DataState = {
       type: 'RFQ',
       status: 'done',
       selectedIds: [27],
-      modifiedAt: new Date('2016-07-19T20:21:01.804Z'),
+      modifiedAt: '2016-07-19T20:21:01.804Z',
       formData: {},
     },
     {
@@ -240,7 +240,7 @@ const initialDataState: DataState = {
       type: 'REPLACE_HOSE',
       status: 'done',
       selectedIds: [27],
-      modifiedAt: new Date('2017-07-29T20:23:01.804Z'),
+      modifiedAt: '2017-07-29T20:23:01.804Z',
       formData: {
         comment: 'test',
         replacementImpacts: ['test'],
@@ -256,6 +256,7 @@ const initialDataState: DataState = {
 const initialSettingsState: SettingsState = {
   // initial settings state values
   connectionType: null,
+  internetReachable: false,
   appInfo: {
     version: '1.0.0',
     environment: 'DEV',
@@ -263,18 +264,61 @@ const initialSettingsState: SettingsState = {
   },
   isMenuOpen: false,
 };
-
-const initialState: AppState = {
-  auth: initialAuthState,
-  data: initialDataState,
-  settings: initialSettingsState,
+const getInitialState = (): AppState => {
+  const token = loginCache.apiKey.get();
+  if (token) {
+    //
+    const user = loginCache.user.get();
+    return {
+      auth: {
+        user: { ...user, userAccessCode: '1' }, //
+        token: token,
+        isLogingLoading: false,
+      },
+      data: {
+        customers: [],
+        hoses: cache.hoses.get(),
+        selection: null,
+        isCancelable: false,
+        drafts: cache.activities.draft.get(),
+        done: cache.activities.done.get(),
+        editedHoses: [],
+        isLoading: false,
+        s1Code: cache.s1.code.get(),
+        s1Items: cache.s1.items.get(),
+        lastUpdate: cache.hoses.getSyncTime() || null,
+      },
+      settings: initialSettingsState,
+    };
+  } else {
+    return {
+      auth: {
+        user: null,
+        token: null,
+        isLogingLoading: false,
+      },
+      data: {
+        customers: [],
+        hoses: [],
+        selection: null,
+        isCancelable: false,
+        drafts: [],
+        done: [],
+        editedHoses: [],
+        isLoading: false,
+        s1Code: null,
+        s1Items: [],
+        lastUpdate: null,
+      },
+      settings: initialSettingsState,
+    };
+  }
 };
+
+const initialState: AppState = getInitialState();
 
 export {
   initialState,
-  initialAuthState,
-  initialDataState,
-  initialSettingsState,
   type AppState,
   type AuthState,
   type DataState,

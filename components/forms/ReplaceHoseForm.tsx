@@ -6,6 +6,7 @@ import {
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
+import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
 import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
@@ -14,6 +15,7 @@ import { useAppContext } from '@/context/ContextProvider';
 import { PartialReplaceHoseFormData } from '@/context/Reducer';
 
 import { getScanUrl } from '@/app/(app)/scan';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { useUserValidation } from '@/hooks/useUserValidation';
 import { colors } from '@/lib/tokens/colors';
 import { router, useFocusEffect } from 'expo-router';
@@ -22,6 +24,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import { UnitInput } from '../detailView/edit/UnitInput';
 import { saveAsDraftToast } from './ActionForm';
 import { successToast } from '@/lib/util/toasts';
+import { useDataManager } from '@/hooks/useDataManager';
 
 interface Props {
   draftId: string;
@@ -31,8 +34,12 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   const { state, dispatch } = useAppContext();
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [formData, setFormData] = useState<PartialReplaceHoseFormData>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const { hasErrors } = useUserValidation();
+  const { activities } = useDataManager();
+
+  usePreventGoBack(isSubmitting);
 
   const originallySelectedHoses = useMemo(() => {
     const draft = state.data.drafts.find((d) => d.id === +draftId);
@@ -76,52 +83,57 @@ export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
   }, []);
 
   const handleSend = () => {
-    dispatch({
-      type: 'MOVE_DRAFT_TO_DONE',
-      payload: +draftId,
+    setIsSubmitting(true);
+    activities.draft.save({
+      id: +draftId,
+      selectedIds,
+      type: 'REPLACE_HOSE',
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
+    activities.draft.moveToDone(+draftId);
+    router.dismissAll();
+    router.replace('/dashboard');
     successToast(
       'Hose replacement report sent',
       'Your hose replacement report has been sent successfully.',
     );
-    router.push('/dashboard');
   };
 
   const handleSaveAsDraft = () => {
-    dispatch({
-      type: 'SAVE_DRAFT',
-      payload: {
-        id: +draftId,
-        selectedIds,
-        type: 'REPLACE_HOSE',
-        status: 'draft',
-        formData,
-      },
+    setIsSubmitting(true);
+    activities.draft.save({
+      id: +draftId,
+      selectedIds,
+      type: 'REPLACE_HOSE',
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
     });
     saveAsDraftToast();
-    router.push('/dashboard');
+    router.dismissAll();
+    router.replace('/dashboard');
   };
   const handleCancel = () => {
-    router.push('/dashboard');
+    showDiscardChangesAlert(dispatch);
   };
 
   const handleAddHoses = () => {
-    const draft = state.data.drafts.find((d) => d.id === +draftId);
-    if (!draft) return;
-    dispatch({
-      type: 'SAVE_DRAFT',
-      payload: {
-        id: +draftId,
-        selectedIds,
-        status: 'draft',
-        type: 'REPLACE_HOSE',
-        formData,
-      },
+    // const draft = state.data.drafts.find((d) => d.id === +draftId);
+    // if (!draft) return;
+    activities.draft.save({
+      type: 'REPLACE_HOSE',
+      id: +draftId,
+      selectedIds,
+      status: 'draft',
+      modifiedAt: new Date().toISOString(),
+      formData,
     });
     router.push(getScanUrl('REPLACE_HOSE', draftId.toString()));
   };
 
-  const isButtonDisabled = !hasErrors || selectedIds.length === 0;
+  const isButtonDisabled = hasErrors || selectedIds.length === 0;
   return (
     <FlatList
       ref={flatListRef}

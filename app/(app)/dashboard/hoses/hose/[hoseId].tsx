@@ -12,15 +12,15 @@ import { MaintenanceInfo } from '@/components/detailView/view/MaintenanceInfo';
 import { Structure } from '@/components/detailView/view/Structure';
 import { TessPartNumbers } from '@/components/detailView/view/TessPartNumbers';
 import { UniversalHoseData } from '@/components/detailView/view/UniversalHoseData';
-import { AppContext, PartialRFQFormData } from '@/context/Reducer';
-import { mockedHistory } from '@/context/mocked';
+import { AppContext } from '@/context/Reducer';
 import { SingleSelection, SingleSelectionActionsType } from '@/context/state';
+import { useDataManager } from '@/hooks/useDataManager';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { EditProps } from '@/lib/types/edit';
 import { HID, HoseData } from '@/lib/types/hose';
-import { generateNumericDraftId } from '@/lib/util/unikId';
+import { needsThisCodeToGetAccess } from '@/lib/util/getAccess';
 import { getDefaultRequiredHoseData } from '@/lib/util/validation';
-import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 
@@ -56,10 +56,6 @@ export type Section = {
   content: JSX.Element;
 };
 
-const isHoseDataType = (hose: HoseData | {}): hose is HoseData => {
-  return 'assetId' in hose;
-};
-
 const HoseDetails = () => {
   const {
     hoseId,
@@ -74,13 +70,13 @@ const HoseDetails = () => {
   }>();
 
   const { state, dispatch } = useContext(AppContext);
-
+  const { activities, hoses } = useDataManager();
   const scrollViewRef = useRef<ScrollView>(null);
 
   const [editMode, setEditMode] = useState(startInEditMode === 'true');
   const [missingFields, setMissingFields] = useState<string[]>([]);
-  const [hoseData, setHoseData] = useState<Partial<HoseData>>(
-    state.data.hoses.find((hose) => hose.assetId === +hoseId) ?? {},
+  const [hoseData, setHoseData] = useState<HoseData>(
+    state.data.hoses.find((hose) => hose.assetId === +hoseId) as HoseData,
   );
 
   // Get original hose data from state
@@ -90,8 +86,7 @@ const HoseDetails = () => {
 
   const router = useRouter();
 
-  // Use preventGoBack when in edit mode
-  usePreventGoBack();
+  usePreventGoBack(false);
   useEffect(() => {
     dispatch({
       type: 'SET_IS_CANCELABLE',
@@ -140,16 +135,7 @@ const HoseDetails = () => {
   };
 
   const saveHoseChanges = (markAsMissingData: boolean) => {
-    // Save hose data
-    dispatch({
-      type: 'SAVE_HOSE_DATA',
-      payload: { hoseId: hoseData?.assetId ?? +hoseId, hoseData },
-    });
-    dispatch({
-      type: 'ADD_HOSE_TO_EDITED_HOSES',
-      payload: hoseData,
-    });
-
+    hoses.save(hoseData);
     // Clear temporary data and exit edit mode
     dispatch({ type: 'SET_IS_CANCELABLE', payload: false });
     setEditMode(false);
@@ -203,18 +189,12 @@ const HoseDetails = () => {
       setEditMode(true);
       return;
     } else if (value === 'INSPECT') {
-      const draftId = generateNumericDraftId(
-        state.data.drafts.map((d) => d.id),
-      );
-      dispatch({
-        type: 'CREATE_DRAFT',
-        payload: {
-          id: draftId,
-          status: 'draft',
-          selectedIds: [hoseData.assetId ?? +hoseId],
-          type: 'INSPECT',
-          formData: hoseData as Partial<HID>,
-        },
+      const draftId = activities.draft.add({
+        type: 'INSPECT',
+        status: 'draft',
+        selectedIds: [hoseData.assetId ?? +hoseId],
+        formData: hoseData as Partial<HID>,
+        modifiedAt: new Date().toISOString(),
       });
       router.push({
         pathname: `/dashboard/hoses/inspect`,
@@ -222,18 +202,12 @@ const HoseDetails = () => {
       });
       return;
     } else {
-      const draftId = generateNumericDraftId(
-        state.data.drafts.map((d) => d.id),
-      );
-      dispatch({
-        type: 'CREATE_DRAFT',
-        payload: {
-          id: draftId,
-          status: 'draft',
-          selectedIds: [hoseData.assetId ?? +hoseId],
-          type: value,
-          formData: hoseData as PartialRFQFormData,
-        },
+      const draftId = activities.draft.add({
+        type: value,
+        status: 'draft',
+        selectedIds: [hoseData.assetId ?? +hoseId],
+        formData: hoseData as Partial<HID>,
+        modifiedAt: new Date().toISOString(),
       });
       router.push({
         pathname: `/dashboard/actions`,
@@ -247,37 +221,48 @@ const HoseDetails = () => {
       label: 'Inspect hose',
       value: 'INSPECT',
       icon: 'Inspect',
+      isAccessDenied: needsThisCodeToGetAccess(
+        4,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       label: 'Edit hose data',
       value: 'EDIT',
       icon: 'Edit',
+      isAccessDenied: needsThisCodeToGetAccess(
+        5,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       label: 'Order hose (RFQ)',
       value: 'RFQ',
       icon: 'Cart',
+      isAccessDenied: needsThisCodeToGetAccess(
+        6,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       label: 'Scrap hose',
       value: 'SCRAP',
       icon: 'Trash',
+      isAccessDenied: needsThisCodeToGetAccess(
+        7,
+        state.auth.user?.userAccessCode,
+      ),
     },
     {
       label: 'Contact TESS Team',
       value: 'CONTACT',
       icon: 'Email',
+      isAccessDenied: needsThisCodeToGetAccess(
+        7,
+        state.auth.user?.userAccessCode,
+      ),
     },
   ];
-
-  const getStructure = (hose: Partial<HoseData>) => {
-    const structure: (string | undefined | null)[] = [
-      hose.s1Code ? `${hose.s1Code}` : undefined,
-      hose.S2Equipment,
-      hose.equipmentSubunit,
-    ];
-    return structure.filter((s): s is string => !!s && s.trim() !== '');
-  };
 
   return (
     <View style={styles.container}>
@@ -313,7 +298,8 @@ const HoseDetails = () => {
           editMode,
           missingFields: editMode ? missingFields : undefined,
         })}
-        {renderComponent(MaintenanceInfo, EditMaintenanceInfo, {
+        {renderComponent(MaintenanceInfo, EditMaintenanceInfo as any, {
+          // TODO: fix type
           info: hoseData,
           onInputChange: handleInputChange,
           editMode,
@@ -322,15 +308,8 @@ const HoseDetails = () => {
         {!editMode && (
           <>
             <Documents />
-            <Structure
-              structure={getStructure(hoseData)}
-              name={
-                state.data.s1Items.find(
-                  (unit) => unit.S1Code === state.data.s1Code,
-                )?.S1Name ?? ''
-              }
-            />
-            <HistoryView items={mockedHistory} />
+            <Structure hose={hoseData} />
+            <HistoryView items={[]} />
           </>
         )}
         {editMode && (

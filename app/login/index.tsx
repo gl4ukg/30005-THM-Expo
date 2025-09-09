@@ -4,11 +4,9 @@ import { Typography } from '@/components/Typography';
 import { ButtonTHS } from '@/components/UI';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
 import { Input } from '@/components/UI/Input/Input';
-import { useAppContext } from '@/context/ContextProvider';
+import { useLoginManager } from '@/hooks/useLoginManager';
 import { colors } from '@/lib/tokens/colors';
-import { login } from '@/lib/util/login';
 import { emailValidation } from '@/lib/util/validation';
-import { initializeUserData } from '@/services/data/dataService';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
@@ -19,9 +17,7 @@ export default function Login() {
   const [password, setPassword] = useState('iteraTest');
   const [nameError, setNameError] = useState<undefined | string>(undefined);
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
-
-  const { state, dispatch } = useAppContext();
-
+  const { login, isLoading } = useLoginManager();
   const handleEmail = (email: string) => {
     setEmail(email);
     const validation = emailValidation(email);
@@ -40,96 +36,15 @@ export default function Login() {
   };
 
   const handleLogin = async () => {
-    dispatch({
-      type: 'SET_LOGIN_LOADING',
-      payload: true,
-    });
-
-    // /login -> 200 and cookie or 400 and error
-    try {
-      const user = await login(email, password);
-      if (!user) {
-        dispatch({
-          type: 'SET_LOGIN_LOADING',
-          payload: false,
-        });
-        Alert.alert('Login - failed', 'Invalid password or user not found', [
-          {
-            text: 'OK',
-          },
-        ]);
-        return;
-      } else {
-        dispatch({
-          type: 'SET_LOGIN_LOADING',
-          payload: false,
-        });
-        dispatch({
-          type: 'LOGIN',
-          payload: {
-            email: user.email,
-            name: `${user.firstName} ${user.lastName}`,
-            id: `${user.userId}`,
-            customerNumbers: user.customerNumbers,
-          },
-        });
-
-        try {
-          const userData = await initializeUserData();
-
-          dispatch({
-            type: 'SET_S1_CODE',
-            payload: userData.s1Code,
-          });
-
-          dispatch({
-            type: 'SET_S1_ITEMS',
-            payload: userData.s1Items,
-          });
-
-          dispatch({
-            type: 'SET_HOSE_DATA',
-            payload: userData.hoses,
-          });
-
-          console.log(
-            `Login successful: S1 Code: ${userData.s1Code}, S1 Items: ${userData.s1Items.length}, Hoses: ${userData.hoses.length}`,
-          );
-
-          // Only navigate on successful data initialization
-          router.push('/(app)/dashboard');
-        } catch (dataError) {
-          console.error('Failed to initialize user data:', dataError);
-          Alert.alert(
-            'Data Loading Error',
-            'Login successful but failed to load user data. Please try again.',
-            [{ text: 'OK' }],
-          );
-          return;
-        }
-      }
-    } catch (error) {
-      const message = (error as Error).message;
-      Alert.alert(
-        'Login - failed',
-        message || 'Invalid password or user not found',
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              dispatch({
-                type: 'SET_LOGIN_LOADING',
-                payload: false,
-              });
-            },
-          },
-        ],
-      );
+    const { status, message } = await login(email, password);
+    if (status === 'error') {
+      Alert.alert('Login failed', message);
+    } else {
+      router.push('/(app)/dashboard');
     }
   };
 
-  const isButtonDisabled =
-    !email || !fullName || !password || state.auth.isLoingLoading;
+  const isButtonDisabled = !email || !fullName || !password || isLoading;
 
   return (
     <View style={styles.formContainer}>
@@ -143,6 +58,7 @@ export default function Login() {
           onChangeText={handleEmail}
           darkMode={true}
           type='email'
+          disabled={isLoading}
           errorMessage={emailError}
         />
         <Input
@@ -152,6 +68,7 @@ export default function Login() {
           onChangeText={handleName}
           darkMode={true}
           errorMessage={nameError}
+          disabled={isLoading}
         />
         <Input
           icon='Password'
@@ -160,6 +77,7 @@ export default function Login() {
           onChangeText={setPassword}
           darkMode={true}
           type='password'
+          disabled={isLoading}
         />
         <View
           style={{
@@ -172,6 +90,7 @@ export default function Login() {
             variant='dark'
             title='Forgot Password?'
             onPress={() => router.push('/login/forgotPassword')}
+            disabled={isLoading}
           />
         </View>
       </View>

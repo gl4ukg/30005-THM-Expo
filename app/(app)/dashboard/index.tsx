@@ -4,128 +4,41 @@ import { SyncStatus } from '@/components/dashboard/SyncStatus';
 import { Typography } from '@/components/Typography';
 import { SelectDropdown } from '@/components/UI/ActionMenu';
 import { AppContext } from '@/context/Reducer';
+import { useDataManager } from '@/hooks/useDataManager';
+import { useLoginManager } from '@/hooks/useLoginManager';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { Alert, Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 
-const month: BarData = [
-  {
-    value: 72,
-    label: 'Jan',
-  },
-  {
-    value: 138,
-    label: 'Feb',
-  },
-  {
-    value: 91,
-    label: 'Mar',
-  },
-  {
-    value: 125,
-    label: 'Apr',
-  },
-  {
-    value: 141,
-    label: 'May',
-  },
-  {
-    value: 68,
-    label: 'Jun',
-  },
-  {
-    value: 68,
-    label: 'Jul',
-  },
-];
-const day: BarData = [
-  {
-    value: 2,
-    label: 'Mon',
-  },
-  {
-    value: 5,
-    label: 'Tue',
-  },
-  {
-    value: 10,
-    label: 'Wed',
-  },
-  {
-    value: 12,
-    label: 'Thu',
-  },
-  {
-    value: 15,
-    label: 'Fri',
-  },
-  {
-    value: 18,
-    label: 'Sat',
-  },
-  {
-    value: 20,
-    label: 'Sun',
-  },
-];
-
-const week: BarData = [
-  {
-    value: 72,
-    label: 'w46',
-  },
-  {
-    value: 138,
-    label: 'w47',
-  },
-  {
-    value: 91,
-    label: 'w48',
-  },
-  {
-    value: 125,
-    label: 'w49',
-  },
-  {
-    value: 141,
-    label: 'w50',
-  },
-  {
-    value: 68,
-    label: 'w51',
-  },
-  {
-    value: 68,
-    label: 'w52',
-  },
-];
-
+const month: BarData = [];
+const day: BarData = [];
+const week: BarData = [];
 const year: BarData = [
-  {
-    value: 2022,
-    label: '2020',
-  },
-  {
-    value: 3122,
-    label: '2021',
-  },
-  {
-    value: 2122,
-    label: '2022',
-  },
-  {
-    value: 5121,
-    label: '2023',
-  },
-  {
-    value: 1012,
-    label: '2024',
-  },
-  {
-    value: 1221,
-    label: '2025',
-  },
+  // {
+  //   value: 2022,
+  //   label: '2020',
+  // },
+  // {
+  //   value: 3122,
+  //   label: '2021',
+  // },
+  // {
+  //   value: 2122,
+  //   label: '2022',
+  // },
+  // {
+  //   value: 5121,
+  //   label: '2023',
+  // },
+  // {
+  //   value: 1012,
+  //   label: '2024',
+  // },
+  // {
+  //   value: 1221,
+  //   label: '2025',
+  // },
 ];
 
 const options = [
@@ -151,12 +64,32 @@ const Dashboard = () => {
   const [selected, setSelected] =
     useState<(typeof options)[0]['value']>('month');
   const { dispatch, state } = useContext(AppContext);
+  const { hoses } = useDataManager();
+
+  const fetchData = useCallback(async () => {
+    try {
+      const { status, message } = await hoses.get();
+      if (status === 'error') {
+        Alert.alert('Data Loading Error', message);
+        return;
+      }
+    } catch (dataError) {
+      console.error('Failed to initialize user data:', dataError);
+      Alert.alert(
+        'Data Loading Error',
+        'Login successful but failed to load user data. Please try again.',
+        [{ text: 'OK' }],
+      );
+      return;
+    }
+  }, [dispatch]);
 
   useFocusEffect(
     useCallback(() => {
       dispatch({
         type: 'FINISH_SELECTION',
       });
+      fetchData();
     }, [dispatch]),
   );
 
@@ -196,20 +129,7 @@ const Dashboard = () => {
         <SyncStatus
           timestamp={state.data.lastUpdate?.getTime() ?? null}
           status={state.data.lastUpdateStatus}
-          onRetry={() => {
-            const random = Math.random();
-            dispatch({
-              type: 'SET_LAST_UPDATE',
-              payload: 'syncing',
-            });
-            // TODO: add syncing
-            setTimeout(() => {
-              dispatch({
-                type: 'SET_LAST_UPDATE',
-                payload: random < 0.5 ? 'synced' : 'error',
-              });
-            }, 2000);
-          }}
+          onRetry={fetchData}
         />
         <Typography name='sectionHeader' text='Inspections' />
         <SelectDropdown
@@ -227,7 +147,7 @@ const Dashboard = () => {
         >
           <Primary
             label='Failed'
-            value={1129}
+            value={0}
             trend={1}
             state='error'
             onPress={() => goToFilter('failed')}
@@ -241,17 +161,17 @@ const Dashboard = () => {
           />
           <Primary
             label='w/Remarks'
-            value={12}
+            value={0}
             trend={0}
             state='success'
             onPress={() => goToFilter('withRemarks')}
           />
         </View>
         <Secondary
-          onPress={() => goToFilter('inspection')}
+          onPress={() => goToFilter('upcoming')}
           label='Hoses soon to be inspected'
-          value={230}
-          trend={1}
+          value={state.data.hoses.length}
+          trend={0}
         />
         <View style={style.replacements}>
           <Typography name='sectionHeader' text='Replacements' />
@@ -259,26 +179,26 @@ const Dashboard = () => {
         <Secondary
           onPress={() => goToFilter('overdue')}
           label='Replacements overdue'
-          value={123}
-          trend={-1}
+          value={0}
+          trend={0}
         />
         <Secondary
           onPress={() => goToFilter('upcoming')}
           label='Replacements upcoming'
-          value={8}
-          trend={1}
+          value={0}
+          trend={0}
         />
         <Secondary
           onPress={() => goToFilter('iInTransit')}
           label='New hoses in transit'
-          value={14}
-          trend={-1}
+          value={0}
+          trend={0}
         />
         <Secondary
           onPress={() => goToFilter('recycled')}
           label='Hoses recycled'
-          value={14}
-          trend={1}
+          value={0}
+          trend={0}
         />
         <View></View>
       </ScrollView>
