@@ -1,15 +1,21 @@
 import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { BarToPsiInput } from '@/components/detailView/edit/BarToPsiInput';
-import { options } from '@/components/detailView/edit/fakeOptions';
 import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
 import { UnitInput } from '@/components/detailView/edit/UnitInput';
+import {
+  useFieldDependencies,
+  buildDependencyConfig,
+  type FieldDependencyConfig,
+  type DependencyMap,
+} from '@/components/detailView/edit/useFieldDependencies';
 import { Typography } from '@/components/Typography';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
-import { UHD } from '@/lib/types/hose';
-import React, { useEffect, useState } from 'react';
+import { type UHD } from '@/lib/types/hose';
+import React, { useEffect, useState, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { options } from './fakeOptions';
 
 export const couplingsFields = [
   'materialQualityEnd1',
@@ -55,6 +61,167 @@ const buildDescription = (data: {
     : (description ?? '');
 };
 
+const uhdDependencyMap: DependencyMap<UHD> = {
+  hoseStandard: {
+    childField: 'innerDiameter',
+    filterMap: {
+      '1SC': ['6L M12x1,5', '6S M14x1,5', '8L M14x1,5'],
+      '2SC': ['8S M16x1,5', '10L M16x1,5', '10S M18x1,5', '12L M18x1,5'],
+      '1SN': ['12S M20x1,5', '14S M22x1,5', '15L M22x1,5', '16S M24x1,5'],
+      '2SN': ['18L M26x1,5', '20S M30x2', '22L M30x2', '25S M36x2'],
+      '4SP': ['28L M36x2', '30S M42x2', '35L M45x2', '38S M52x2'],
+      '4SH': ['42L M52x2', '6L M12x1,5', '8S M16x1,5', '12L M18x1,5'],
+      R13: ['15L M22x1,5', '20S M30x2', '25S M36x2', '30S M42x2'],
+      R15: ['35L M45x2', '38S M52x2', '42L M52x2'],
+      ISO18752: ['6S M14x1,5', '10S M18x1,5', '16S M24x1,5', '22L M30x2'],
+      'Steel 1 Layer': ['6L M12x1,5', '8L M14x1,5', '10L M16x1,5'],
+      'Steel 2 Layer': ['12L M18x1,5', '15L M22x1,5', '18L M26x1,5'],
+      'LP Sea Water': ['20S M30x2', '25S M36x2', '30S M42x2'],
+      'LP Fresh Water': ['22L M30x2', '28L M36x2', '35L M45x2'],
+      'LP Air': ['6L M12x1,5', '10L M16x1,5', '15L M22x1,5'],
+      'LP N2': ['8S M16x1,5', '12S M20x1,5', '16S M24x1,5'],
+      'LP HC': ['14S M22x1,5', '18L M26x1,5', '22L M30x2'],
+      Thermoplast: ['6L M12x1,5', '8L M14x1,5', '10L M16x1,5', '12L M18x1,5'],
+    },
+  },
+  innerDiameter: {
+    childField: 'materialQualityEnd1',
+    filterMap: {
+      '6L M12x1,5': ['AISI 316', 'Carbon steel', 'Brass'],
+      '6S M14x1,5': ['AISI 316', 'Carbon steel', 'Duplex 22Cr'],
+      '8L M14x1,5': ['AISI 316', 'Carbon steel', '6MO'],
+      '8S M16x1,5': ['AISI 316', 'Carbon steel', 'Superduplex 25Cr'],
+      '10L M16x1,5': ['Carbon steel', 'Cast iron'],
+      '12L M18x1,5': ['AISI 316', 'Carbon steel', 'Titan'],
+      '20S M30x2': ['6MO', 'Duplex 22Cr', 'Superduplex 25Cr'],
+      '25S M36x2': ['Hastelloy', 'Titan'],
+    },
+  },
+  materialQualityEnd1: {
+    childField: 'typeFittingEnd1',
+    filterMap: {
+      '6MO': ['SAE6000', 'DIN 2633 Flange', 'BOSS'],
+      'AISI 316': ['BSP', 'JIC', 'NPT', 'SAE3000', 'TW Female', 'TW Male'],
+      Aluminum: [
+        'CAM-LOCK type A',
+        'CAM-LOCK type B',
+        'CAM-LOCK type C',
+        'CAM-LOCK type D',
+        'CAM-LOCK type DC',
+        'CAM-LOCK type DP',
+        'CAM-LOCK type E',
+        'CAM-LOCK type F',
+      ],
+      Brass: ['BSP', 'NPT', 'Clawcoupling', 'Clawc. AM'],
+      'Carbon steel': ['JIC', 'SAE3000', 'SAE6000', 'Flange ASA 150 rf'],
+      'Cast iron': ['DIN 2633 Flange', 'Flange ASA 150 rf'],
+      'Duplex 22Cr': ['SAE6000', 'DIN 2633 Flange', 'BOSS'],
+      Hastelloy: ['DIN 2633 Flange', 'BOSS'],
+      'Superduplex 25Cr': ['SAE6000', 'DIN 2633 Flange', 'BOSS'],
+      Titan: ['DIN 2633 Flange', 'BOSS'],
+    },
+  },
+  typeFittingEnd1: {
+    childField: 'genericDimensionEnd1',
+    filterMap: {
+      BSP: ['6L M12x1,5', '8L M14x1,5', '10L M16x1,5', '12L M18x1,5'],
+      JIC: ['6S M14x1,5', '8S M16x1,5', '10S M18x1,5', '12S M20x1,5'],
+      MM: ['14S M22x1,5', '15L M22x1,5', '16S M24x1,5', '18L M26x1,5'],
+      NPT: ['6L M12x1,5', '8L M14x1,5', '10L M16x1,5', '12L M18x1,5'],
+      SAE3000: ['20S M30x2', '22L M30x2', '25S M36x2', '28L M36x2'],
+      SAE6000: ['30S M42x2', '35L M45x2', '38S M52x2', '42L M52x2'],
+      'CAM-LOCK type A': ['6L M12x1,5', '8L M14x1,5'],
+      'CAM-LOCK type B': ['10L M16x1,5', '12L M18x1,5'],
+      'CAM-LOCK type C': ['15L M22x1,5', '18L M26x1,5'],
+      'CAM-LOCK type D': ['22L M30x2', '28L M36x2'],
+      'CAM-LOCK type DC': ['6S M14x1,5', '8S M16x1,5'],
+      'CAM-LOCK type DP': ['10S M18x1,5', '12S M20x1,5'],
+      'CAM-LOCK type E': ['14S M22x1,5', '16S M24x1,5'],
+      'CAM-LOCK type F': ['20S M30x2', '25S M36x2'],
+      'TW Female': ['30S M42x2', '35L M45x2'],
+      'TW Male': ['38S M52x2', '42L M52x2'],
+      'DDC Hose unit': ['6L M12x1,5', '6S M14x1,5', '8L M14x1,5', '8S M16x1,5'],
+      Clawcoupling: [
+        '10L M16x1,5',
+        '10S M18x1,5',
+        '12L M18x1,5',
+        '12S M20x1,5',
+      ],
+      'Clawc. AM': ['14S M22x1,5', '15L M22x1,5', '16S M24x1,5', '18L M26x1,5'],
+      'DIN 2633 Flange': ['20S M30x2', '22L M30x2', '25S M36x2', '28L M36x2'],
+      'Flange ASA 150 rf': ['30S M42x2', '35L M45x2', '38S M52x2', '42L M52x2'],
+      BOSS: ['18L M26x1,5', '20S M30x2', '22L M30x2', '25S M36x2'],
+    },
+  },
+  materialQualityEnd2: {
+    childField: 'typeFittingEnd2',
+    filterMap: {
+      '6MO': ['SAE6000', 'DIN 2633 Flange', 'BOSS'],
+      'AISI 316': ['BSP', 'JIC', 'NPT', 'SAE3000', 'TW Female', 'TW Male'],
+      Aluminum: [
+        'CAM-LOCK type A',
+        'CAM-LOCK type B',
+        'CAM-LOCK type C',
+        'CAM-LOCK type D',
+        'CAM-LOCK type DC',
+        'CAM-LOCK type DP',
+        'CAM-LOCK type E',
+        'CAM-LOCK type F',
+      ],
+      Brass: ['BSP', 'NPT', 'Clawcoupling', 'Clawc. AM'],
+      'Carbon steel': ['JIC', 'SAE3000', 'SAE6000', 'Flange ASA 150 rf'],
+      'Cast iron': ['DIN 2633 Flange', 'Flange ASA 150 rf'],
+      'Duplex 22Cr': ['SAE6000', 'DIN 2633 Flange', 'BOSS'],
+      Hastelloy: ['DIN 2633 Flange', 'BOSS'],
+      'Superduplex 25Cr': ['SAE6000', 'DIN 2633 Flange', 'BOSS'],
+      Titan: ['DIN 2633 Flange', 'BOSS'],
+    },
+  },
+  typeFittingEnd2: {
+    childField: 'genericDimensionEnd2',
+    filterMap: {
+      BSP: ['6L M12x1,5', '8L M14x1,5', '10L M16x1,5', '12L M18x1,5'],
+      JIC: ['6S M14x1,5', '8S M16x1,5', '10S M18x1,5', '12S M20x1,5'],
+      MM: ['14S M22x1,5', '15L M22x1,5', '16S M24x1,5', '18L M26x1,5'],
+      NPT: ['6L M12x1,5', '8L M14x1,5', '10L M16x1,5', '12L M18x1,5'],
+      SAE3000: ['20S M30x2', '22L M30x2', '25S M36x2', '28L M36x2'],
+      SAE6000: ['30S M42x2', '35L M45x2', '38S M52x2', '42L M52x2'],
+      'CAM-LOCK type A': ['6L M12x1,5', '8L M14x1,5'],
+      'CAM-LOCK type B': ['10L M16x1,5', '12L M18x1,5'],
+      'CAM-LOCK type C': ['15L M22x1,5', '18L M26x1,5'],
+      'CAM-LOCK type D': ['22L M30x2', '28L M36x2'],
+      'CAM-LOCK type DC': ['6S M14x1,5', '8S M16x1,5'],
+      'CAM-LOCK type DP': ['10S M18x1,5', '12S M20x1,5'],
+      'CAM-LOCK type E': ['14S M22x1,5', '16S M24x1,5'],
+      'CAM-LOCK type F': ['20S M30x2', '25S M36x2'],
+      'TW Female': ['30S M42x2', '35L M45x2'],
+      'TW Male': ['38S M52x2', '42L M52x2'],
+      'DDC Hose unit': ['6L M12x1,5', '6S M14x1,5', '8L M14x1,5', '8S M16x1,5'],
+      Clawcoupling: [
+        '10L M16x1,5',
+        '10S M18x1,5',
+        '12L M18x1,5',
+        '12S M20x1,5',
+      ],
+      'Clawc. AM': ['14S M22x1,5', '15L M22x1,5', '16S M24x1,5', '18L M26x1,5'],
+      'DIN 2633 Flange': ['20S M30x2', '22L M30x2', '25S M36x2', '28L M36x2'],
+      'Flange ASA 150 rf': ['30S M42x2', '35L M45x2', '38S M52x2', '42L M52x2'],
+      BOSS: ['18L M26x1,5', '20S M30x2', '22L M30x2', '25S M36x2'],
+    },
+  },
+};
+
+const allDependencyOptions = [
+  ...new Set(
+    Object.values(uhdDependencyMap).flatMap((dependency) => {
+      if (!dependency) return [];
+      const parentOptions = Object.keys(dependency.filterMap);
+      const childOptions = Object.values(dependency.filterMap).flat();
+      return [...parentOptions, ...childOptions];
+    }),
+  ),
+];
+
 export const EditUniversalHoseData: React.FC<{
   info: Partial<UHD>;
   onInputChange: (
@@ -65,6 +232,23 @@ export const EditUniversalHoseData: React.FC<{
 }> = ({ info, onInputChange, showValidationErrors }) => {
   const [sameAsEnd1, setSameAsEnd1] = useState(false);
   const [localInfo, setLocalInfo] = useState<Partial<UHD>>(info);
+
+  const fieldDependencyConfig: FieldDependencyConfig<UHD> = useMemo(
+    () => buildDependencyConfig(uhdDependencyMap, allDependencyOptions),
+    [],
+  );
+
+  const { getFilteredOptionsForField, shouldResetField, isParentField } =
+    useFieldDependencies(localInfo, fieldDependencyConfig);
+
+  const getCascadingChildren = (parentField: keyof UHD): (keyof UHD)[] => {
+    const dependency = uhdDependencyMap[parentField];
+    if (!dependency?.childField) {
+      return [];
+    }
+    const childField = dependency.childField;
+    return [childField, ...getCascadingChildren(childField)];
+  };
 
   useEffect(() => {
     const newLocalInfo = { ...info };
@@ -104,8 +288,15 @@ export const EditUniversalHoseData: React.FC<{
   };
 
   const handleFieldChange = (field: keyof UHD, value: any) => {
-    const oldInfo = { ...localInfo };
-    let nextInfo = { ...oldInfo, [field]: value };
+    let nextInfo = { ...localInfo, [field]: value };
+
+    if (isParentField(field)) {
+      const fieldsToReset = getCascadingChildren(field);
+      fieldsToReset.forEach((childField) => {
+        nextInfo[childField] = '';
+        onInputChange(childField as keyof Partial<UHD>, '');
+      });
+    }
 
     if (['hoseStandard', 'innerDiameter', 'hoseLength_mm'].includes(field)) {
       const descriptionData = {
@@ -130,7 +321,7 @@ export const EditUniversalHoseData: React.FC<{
 
     setLocalInfo(nextInfo);
 
-    if (nextInfo.itemDescription !== oldInfo.itemDescription) {
+    if (nextInfo.itemDescription !== localInfo.itemDescription) {
       onInputChange('itemDescription', nextInfo.itemDescription);
     }
 
@@ -159,7 +350,7 @@ export const EditUniversalHoseData: React.FC<{
             label='Hose Standard'
             selectedOption={localInfo.hoseStandard || ''}
             onChange={(value) => handleFieldChange('hoseStandard', value)}
-            options={options}
+            options={Object.keys(uhdDependencyMap.hoseStandard!.filterMap)}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -173,7 +364,7 @@ export const EditUniversalHoseData: React.FC<{
             label='Inner Diameter'
             selectedOption={localInfo.innerDiameter || ''}
             onChange={(value) => handleFieldChange('innerDiameter', value)}
-            options={options}
+            options={getFilteredOptionsForField('innerDiameter')}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -239,7 +430,7 @@ export const EditUniversalHoseData: React.FC<{
             onChange={(value) =>
               handleFieldChange('materialQualityEnd1', value)
             }
-            options={options}
+            options={getFilteredOptionsForField('materialQualityEnd1')}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -249,7 +440,7 @@ export const EditUniversalHoseData: React.FC<{
             label='Type Fitting'
             selectedOption={info.typeFittingEnd1 || ''}
             onChange={(value) => handleFieldChange('typeFittingEnd1', value)}
-            options={options}
+            options={getFilteredOptionsForField('typeFittingEnd1')}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -266,7 +457,7 @@ export const EditUniversalHoseData: React.FC<{
             onChange={(value) =>
               handleFieldChange('genericDimensionEnd1', value)
             }
-            options={options}
+            options={getFilteredOptionsForField('genericDimensionEnd1')}
             required={showValidationErrors}
           />
         </TooltipWrapper>
@@ -323,9 +514,9 @@ export const EditUniversalHoseData: React.FC<{
       >
         <Select
           label='Material Quality'
-          selectedOption={info.materialQualityEnd2 || ''}
+          selectedOption={localInfo.materialQualityEnd2 || ''}
           onChange={(value) => handleFieldChange('materialQualityEnd2', value)}
-          options={options}
+          options={getFilteredOptionsForField('materialQualityEnd2')}
           required={showValidationErrors}
         />
       </TooltipWrapper>
@@ -333,9 +524,9 @@ export const EditUniversalHoseData: React.FC<{
       <TooltipWrapper tooltipData={{ title: 'Type Fitting 2', message: '' }}>
         <Select
           label='Type Fitting'
-          selectedOption={info.typeFittingEnd2 || ''}
+          selectedOption={localInfo.typeFittingEnd2 || ''}
           onChange={(value) => handleFieldChange('typeFittingEnd2', value)}
-          options={options}
+          options={getFilteredOptionsForField('typeFittingEnd2')}
           required={showValidationErrors}
         />
       </TooltipWrapper>
@@ -345,9 +536,9 @@ export const EditUniversalHoseData: React.FC<{
       >
         <Select
           label='Generic Dimension'
-          selectedOption={info.genericDimensionEnd2 || ''}
+          selectedOption={localInfo.genericDimensionEnd2 || ''}
           onChange={(value) => handleFieldChange('genericDimensionEnd2', value)}
-          options={options}
+          options={getFilteredOptionsForField('genericDimensionEnd2')}
           required={showValidationErrors}
         />
       </TooltipWrapper>
@@ -355,7 +546,7 @@ export const EditUniversalHoseData: React.FC<{
       <TooltipWrapper tooltipData={{ title: 'Gender 2', message: '' }}>
         <Select
           label='Gender'
-          selectedOption={info.genderEnd2 || ''}
+          selectedOption={localInfo.genderEnd2 || ''}
           onChange={(value) => handleFieldChange('genderEnd2', value)}
           required={showValidationErrors}
           options={options}
@@ -365,7 +556,7 @@ export const EditUniversalHoseData: React.FC<{
       <TooltipWrapper tooltipData={{ title: 'Angle 2', message: '' }}>
         <Select
           label='Angle'
-          selectedOption={info.angleEnd2 || ''}
+          selectedOption={localInfo.angleEnd2 || ''}
           onChange={(value) => handleFieldChange('angleEnd2', value)}
           options={options}
           required={showValidationErrors}
@@ -375,8 +566,9 @@ export const EditUniversalHoseData: React.FC<{
       <View style={styles.inputContainer}>
         <Input
           label='Comment End 2'
-          value={info.commentEnd2PTC || ''}
+          value={localInfo.commentEnd2PTC || ''}
           onChangeText={(text) => handleFieldChange('commentEnd2PTC', text)}
+          disabled={sameAsEnd1}
         />
       </View>
     </View>
