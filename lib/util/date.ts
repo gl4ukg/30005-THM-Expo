@@ -26,6 +26,18 @@ export function getMonthAbbrevationByIndex(index: number): string | null {
 }
 
 /**
+ * Gets the zero-based month index for a given month abbreviation.
+ * @param abbr - The month abbreviation (e.g., "Jan", "Feb", "Mar"). Case-insensitive and only the first 3 characters are used.
+ * @returns The zero-based month index (0-11) if found, or NaN if the abbreviation is invalid.
+ */
+export function getMonthIndexByAbbrevation(abbr: string): number | typeof NaN {
+  const index = monthAbbrIndexMap.indexOf(
+    abbr.slice(0, 3).toUpperCase() as (typeof monthAbbrIndexMap)[number],
+  );
+  return index !== -1 ? index : NaN;
+}
+
+/**
  * A utility class for formatting dates into various string representations.
  * Provides cached formatting methods for common date formats including ISO 8601,
  * SQL date format, and short date format. All formatting is performed lazily
@@ -78,13 +90,17 @@ export class DateFormatter {
    */
   static fromDate(date: Date): DateFormatter | null {
     if (!(date instanceof Date)) {
-      console.debug('Failed to create DateFormatter: Value is not a Date object.');
+      console.debug(
+        'Failed to create DateFormatter: Value is not a Date object.',
+      );
       return null;
     }
+
     if (isNaN(date.getTime())) {
       console.debug('Failed to create DateFormatter: Invalid date.');
       return null;
     }
+
     return new DateFormatter(date);
   }
 
@@ -94,15 +110,31 @@ export class DateFormatter {
    * @returns A new DateFormatter instance if the string is valid, null otherwise
    */
   static fromString(value: string): DateFormatter | null {
-    if (typeof value !== 'string') {
-      console.debug(`Failed to create DateFormatter: Value is not a string.`);
+    if (!value || typeof value !== 'string' || value.trim() === '') {
       return null;
     }
-    if (value.trim() === '') {
-      console.debug(`Failed to create DateFormatter: Value is empty.`);
-      return null;
+
+    // console.debug(`Parsing date string: ${value}`);
+
+    // Current version of Date can not parse Oracle SQL date format (DD-MON-YYYY).
+    // Convert it to a format that can be parsed (YYYY-MM-DD).
+    // Otherwise, rely on the Date constructor to parse the string.
+    if (/^\d{1,2}-\w{3,4}-\d{1,4}$/.test(value)) {
+      const parts = value.split('-');
+      const day = parseInt(parts[0]);
+      const month = getMonthIndexByAbbrevation(parts[1]);
+      const year = parseInt(parts[2]);
+      if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+        return DateFormatter.fromDate(new Date(year, month, day));
+      } else {
+        console.debug(
+          `Failed to parse date string: ${value}`,
+        );
+        return null;
+      }
+    } else {
+      return DateFormatter.fromDate(new Date(value));
     }
-    return DateFormatter.fromDate(new Date(value));
   }
 
   private constructor(date: Date) {
