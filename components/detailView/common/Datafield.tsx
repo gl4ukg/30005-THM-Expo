@@ -7,38 +7,40 @@ import { Typography } from '../../Typography';
 interface DataFieldProps {
   label: string;
   value: string | number | undefined | null;
+  isMissing?: boolean;
 }
 
-export const DataField: React.FC<DataFieldProps> = ({ label, value }) => {
+export const DataField: React.FC<DataFieldProps> = ({ label, value, isMissing }) => {
   const isValueEmpty = (
     value: string | number | undefined | null,
   ): value is undefined | null =>
     value === undefined || value === null || value === '';
+
   return (
     <View style={styles.container}>
       <View style={styles.emptyValueContainer}>
         <Typography
-          style={isValueEmpty(value) ? styles.emptyValueText : styles.label}
+          style={isMissing ? styles.emptyValueText : styles.label}
           name={'sectionText'}
         >
           {label}
         </Typography>
         {isValueEmpty(value) ? (
           <Typography
-            style={[styles.value, styles.emptyValueText]}
+            style={[styles.value, isMissing ? styles.emptyValueText : null]}
             name={'sectionText'}
             text='Not set'
           />
         ) : (
           <Typography
-            style={isValueEmpty(value) ? styles.emptyValueText : styles.value}
+            style={styles.value}
             name={'sectionText'}
           >
-            {isValueEmpty(value) ? 'N/A' : value.toString()}
+            {value.toString()}
           </Typography>
         )}
       </View>
-      {isValueEmpty(value) && (
+      {isMissing && (
         <Icon name='Alert' color={colors.error} size='md' />
       )}
     </View>

@@ -7,10 +7,11 @@ import { EditProps } from '@/lib/types/edit';
 import { TPN } from '@/lib/types/hose';
 import { StyleSheet, View } from 'react-native';
 
-export const EditTessPartNumbers: React.FC<EditProps<TPN>> = ({
+export const EditTessPartNumbers: React.FC<EditProps<TPN> & { missingRequiredFields?: string[] }> = ({
   info,
   onInputChange,
   showValidationErrors,
+  missingRequiredFields,
 }) => (
   <View style={styles.container}>
     <Bookmark title='Tess Part Numbers' />

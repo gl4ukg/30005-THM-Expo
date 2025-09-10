@@ -229,7 +229,8 @@ export const EditUniversalHoseData: React.FC<{
     value: Partial<UHD>[keyof Partial<UHD>],
   ) => void;
   showValidationErrors?: boolean;
-}> = ({ info, onInputChange, showValidationErrors }) => {
+  missingRequiredFields?: string[];
+}> = ({ info, onInputChange, showValidationErrors, missingRequiredFields }) => {
   const [sameAsEnd1, setSameAsEnd1] = useState(false);
   const [localInfo, setLocalInfo] = useState<Partial<UHD>>(info);
 

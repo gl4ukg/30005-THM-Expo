@@ -18,7 +18,8 @@ export const EditGeneralInfo: React.FC<{
     value: Partial<GHD>[keyof Partial<GHD>],
   ) => void;
   isRegisterView?: boolean;
-}> = ({ info, onInputChange, isRegisterView }) => {
+  missingRequiredFields?: string[];
+}> = ({ info, onInputChange, isRegisterView, missingRequiredFields }) => {
   const [rfid, setRfid] = useState<string>(info.RFID ?? '');
   const { state } = useAppContext();
 
