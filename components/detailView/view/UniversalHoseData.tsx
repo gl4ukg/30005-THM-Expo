@@ -12,17 +12,20 @@ import { StyleSheet, View } from 'react-native';
 
 type UniversalHoseDataProps = {
   info: Partial<UHD>;
+  missingFields?: string[];
 };
 
 export type CouplingSectionProps = {
   info: Partial<UHD>;
   endSuffix: 'End1' | 'End2';
   isCopyOfEnd1?: boolean;
+  missingFields?: string[];
 };
 const CouplingSection: React.FC<CouplingSectionProps> = ({
   info,
   endSuffix,
   isCopyOfEnd1 = false,
+  missingFields,
 }) => (
   <View style={styles.couplingSection}>
     <View style={styles.sectionTitleContainer}>
@@ -46,33 +49,39 @@ const CouplingSection: React.FC<CouplingSectionProps> = ({
         <DataField
           label='Material Quality'
           value={info[`materialQuality${endSuffix}`] || undefined}
+          isMissing={missingFields?.includes(`materialQuality${endSuffix}`)}
         />
         <DataField
           label='Type Fitting'
           value={info[`typeFitting${endSuffix}`] || undefined}
+          isMissing={missingFields?.includes(`typeFitting${endSuffix}`)}
         />
         <DataField
           label='Inner Diameter'
           value={info[`genericDimension${endSuffix}`] || undefined}
+          isMissing={missingFields?.includes(`genericDimension${endSuffix}`)}
         />
         <DataField
           label='Gender'
           value={info[`gender${endSuffix}`] || undefined}
+          isMissing={missingFields?.includes(`gender${endSuffix}`)}
         />
         <DataField
           label='Angle'
           value={info[`angle${endSuffix}`] || undefined}
+          isMissing={missingFields?.includes(`angle${endSuffix}`)}
         />
         <DataField
           label={`Comment ${endSuffix.replace('End', 'End ')}`}
           value={info[`comment${endSuffix}PTC`] || undefined}
+          isMissing={missingFields?.includes(`comment${endSuffix}PTC`)}
         />
       </>
     )}
   </View>
 );
 
-export const UniversalHoseData = ({ info }: UniversalHoseDataProps) => {
+export const UniversalHoseData = ({ info, missingFields }: UniversalHoseDataProps) => {
   const areCouplingsSame = couplingsFields.every((key) => {
     const keyEnd1 = key;
     const keyEnd2 = `${key.replace('End1', 'End2')}` as CouplingsFieldsEnd;
@@ -85,17 +94,18 @@ export const UniversalHoseData = ({ info }: UniversalHoseDataProps) => {
     <View style={styles.container}>
       <Bookmark title='Universal Hose Data' />
       <View style={styles.dataFieldsContainer}>
-        <DataField label='Hose Standard' value={info.hoseStandard} />
-        <DataField label='Inner Diameter' value={info.genericDimensionEnd1} />
-        <DataField label='Total Length' value={info.hoseLength_mm} />
-        <DataField label='WP BAR' value={info.wp_BAR} />
-        <DataField label='WP PSI' value={info.wp_PSI} />
+        <DataField label='Hose Standard' value={info.hoseStandard} isMissing={missingFields?.includes('hoseStandard')}/>
+        <DataField label='Inner Diameter' value={info.genericDimensionEnd1} isMissing={missingFields?.includes('genericDimensionEnd1')}/>
+        <DataField label='Total Length' value={info.hoseLength_mm} isMissing={missingFields?.includes('hoseLength_mm')}/>
+        <DataField label='WP BAR' value={info.wp_BAR} isMissing={missingFields?.includes('wp_BAR')}/>
+        <DataField label='WP PSI' value={info.wp_PSI} isMissing={missingFields?.includes('wp_PSI')}/>
       </View>
-      <CouplingSection info={info} endSuffix='End1' />
+      <CouplingSection info={info} endSuffix='End1' missingFields={missingFields}/>
       <CouplingSection
         info={info}
         endSuffix='End2'
         isCopyOfEnd1={areCouplingsSame}
+        missingFields={missingFields}
       />
     </View>
   );

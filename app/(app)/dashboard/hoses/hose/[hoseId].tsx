@@ -29,7 +29,7 @@ type ExtendedEditProps<T> = EditProps<T> & {
 };
 
 const renderComponent = <T,>(
-  Component: React.FC<{ info: Partial<T> }>,
+  Component: React.FC<{ info: Partial<T>; missingFields?: string[] }>,
   EditComponent: React.FC<ExtendedEditProps<T>>,
   props: {
     info: Partial<T>;
@@ -46,7 +46,7 @@ const renderComponent = <T,>(
       showValidationErrors
     />
   ) : (
-    <Component info={props.info} />
+    <Component info={props.info} missingFields={props.missingFields} />
   );
 };
 
@@ -104,8 +104,21 @@ const HoseDetails = () => {
       } catch (error) {
         console.error('Failed to parse missingFields parameter:', error);
       }
+    } else if (hoseData) {
+      const requiredFieldsList = Object.keys(
+        getDefaultRequiredHoseData(),
+      ) as (keyof HoseData)[];
+
+      const currentMissingFields = requiredFieldsList.filter(
+        (field) =>
+          hoseData[field] === undefined ||
+          hoseData[field] === null ||
+          String(hoseData[field]).trim() === '',
+      );
+
+      setMissingFields(currentMissingFields);
     }
-  }, [missingFieldsParam]);
+  }, [missingFieldsParam, hoseData]);
 
   const isDataMissing =
     missingFields.length > 0 || originalHoseData?.missingData;
@@ -173,7 +186,7 @@ const HoseDetails = () => {
             style: 'cancel',
           },
           {
-            text: 'Continue anyway.',
+            text: 'Continue anyway',
             onPress: () => saveHoseChanges(true),
           },
         ],
@@ -284,26 +297,26 @@ const HoseDetails = () => {
           info: hoseData,
           onInputChange: handleInputChange,
           editMode,
-          missingFields: editMode ? missingFields : undefined,
+          missingFields,
         })}
         {renderComponent(UniversalHoseData, EditUniversalHoseData, {
           info: hoseData,
           onInputChange: handleInputChange,
           editMode,
-          missingFields: editMode ? missingFields : undefined,
+          missingFields,
         })}
         {renderComponent(TessPartNumbers, EditTessPartNumbers, {
           info: hoseData,
           onInputChange: handleInputChange,
           editMode,
-          missingFields: editMode ? missingFields : undefined,
+          missingFields,
         })}
         {renderComponent(MaintenanceInfo, EditMaintenanceInfo as any, {
           // TODO: fix type
           info: hoseData,
           onInputChange: handleInputChange,
           editMode,
-          missingFields: editMode ? missingFields : undefined,
+          missingFields,
         })}
         {!editMode && (
           <>

@@ -18,8 +18,9 @@ export const EditMaintenanceInfo: React.FC<
       field: keyof HoseData,
       value: HoseData[keyof HoseData],
     ) => void;
+    missingRequiredFields?: string[];
   } & { isInspect?: boolean }
-> = ({ info, onInputChange, isInspect }) => {
+> = ({ info, onInputChange, isInspect, missingRequiredFields }) => {
   const getSelectedApprovalId = (
     approved: boolean | undefined,
   ): 'Yes' | 'No' | 'NotInspected' => {

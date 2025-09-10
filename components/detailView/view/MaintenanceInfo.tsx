@@ -7,9 +7,11 @@ import { formatDate } from '@/lib/util/formatDate';
 import { StyleSheet, View } from 'react-native';
 type MaintenanceProps = {
   info: Partial<HID>;
+  missingFields?: string[];
 };
 export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
   info: hoseData,
+  missingFields,
 }) => {
   return (
     <View style={styles.container}>
@@ -23,9 +25,10 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
               ? formatDate(new Date(hoseData.inspectedDate))
               : ''
           }
+          isMissing={missingFields?.includes('inspectedDate')}
         />
-        <DataField label={'Inspected By:'} value={hoseData.inspector} />
-        <DataField label={'Condition:'} value={hoseData.hoseCondition} />
+        <DataField label={'Inspected By:'} value={hoseData.inspector} isMissing={missingFields?.includes('inspector')}/>
+        <DataField label={'Condition:'} value={hoseData.hoseCondition} isMissing={missingFields?.includes('hoseCondition')}/>
         <DataField
           label={'Approved:'}
           value={
@@ -35,8 +38,9 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
                 ? 'Yes'
                 : 'No'
           }
+          isMissing={missingFields?.includes('approved')}
         />
-        <DataField label={'Comment:'} value={hoseData.generalComment} />
+        <DataField label={'Comment:'} value={hoseData.generalComment} isMissing={missingFields?.includes('generalComment')}/>
       </View>
       <View style={styles.section}>
         <Typography name={'navigationBold'} text='Criticality / Intervals' />
@@ -47,14 +51,16 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
               ? formatDate(new Date(hoseData.productionDate))
               : ''
           }
+          isMissing={missingFields?.includes('productionDate')}
         />
-        <DataField label={'Criticality:'} value={hoseData.criticality} />
+        <DataField label={'Criticality:'} value={hoseData.criticality} isMissing={missingFields?.includes('criticality')}/>
       </View>
 
       <View style={styles.inspectionDetails}>
         <DataField
           label={'Inspection Interval:'}
           value={hoseData.inspectionInterval}
+          isMissing={missingFields?.includes('inspectionInterval')}
         />
         <DataField
           label={'Next Inspection:'}
@@ -63,10 +69,12 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
               ? formatDate(new Date(hoseData.nextInspection))
               : ''
           }
+          isMissing={missingFields?.includes('nextInspection')}
         />
         <DataField
           label={'Replacement Interval:'}
           value={hoseData.replacementInterval}
+          isMissing={missingFields?.includes('replacementInterval')}
         />
         <DataField
           label={'Replacement Date:'}
@@ -75,17 +83,20 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
               ? formatDate(new Date(hoseData.replacementDate))
               : ''
           }
+          isMissing={missingFields?.includes('replacementDate')}
         />
       </View>
       <View style={styles.section}>
-        <DataField label={'Drawing number:'} value={hoseData.drawingNumber} />
+        <DataField label={'Drawing number:'} value={hoseData.drawingNumber} isMissing={missingFields?.includes('drawingNumber')}/>
         <DataField
           label={'Drawing position number:'}
           value={hoseData.posNumber}
+          isMissing={missingFields?.includes('posNumber')}
         />
         <DataField
           label={'Drawing Article Number:'}
           value={hoseData.artNumber}
+          isMissing={missingFields?.includes('artNumber')}
         />
       </View>
     </View>
