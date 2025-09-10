@@ -81,7 +81,7 @@ const getUserData = async () => {
         'Content-Type': 'application/json',
         accessToken: apiKey,
       },
-    );
+    });
 
     if (response.status === 200) {
       const userData: User[] = await response.json();
