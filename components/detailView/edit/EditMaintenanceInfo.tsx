@@ -8,7 +8,7 @@ import { Input } from '@/components/UI/Input/Input';
 import { Select } from '@/components/UI/SelectModal/Select';
 import { colors } from '@/lib/tokens/colors';
 import { HoseData } from '@/lib/types/hose';
-import { formatDate } from '@/lib/util/formatDate';
+import { DateFormatter } from '@/lib/util/date';
 import { StyleSheet, View } from 'react-native';
 
 export const EditMaintenanceInfo: React.FC<
@@ -101,11 +101,7 @@ export const EditMaintenanceInfo: React.FC<
               />
               <DataField
                 label={'Next Inspection:'}
-                value={
-                  info.nextInspection
-                    ? formatDate(new Date(info.nextInspection))
-                    : ''
-                }
+                value={DateFormatter.fromString(info.nextInspection)?.sql ?? 'N/A'}
               />
               <DataField
                 label={'Replacement Interval:'}
@@ -113,11 +109,7 @@ export const EditMaintenanceInfo: React.FC<
               />
               <DataField
                 label={'Replacement Date:'}
-                value={
-                  info.replacementDate
-                    ? formatDate(new Date(info.replacementDate))
-                    : ''
-                }
+                value={DateFormatter.fromString(info.replacementDate)?.sql ?? 'N/A'}
               />
             </View>
           </>
@@ -147,11 +139,7 @@ export const EditMaintenanceInfo: React.FC<
               />
               <DataField
                 label={'Next Inspection:'}
-                value={
-                  info.nextInspection
-                    ? formatDate(new Date(info.nextInspection))
-                    : ''
-                }
+                value={DateFormatter.fromString(info.nextInspection)?.sql ?? 'N/A'}
               />
               <DataField
                 label={'Replacement Interval:'}
@@ -159,11 +147,7 @@ export const EditMaintenanceInfo: React.FC<
               />
               <DataField
                 label={'Replacement Date:'}
-                value={
-                  info.replacementDate
-                    ? formatDate(new Date(info.replacementDate))
-                    : ''
-                }
+                value={DateFormatter.fromString(info.replacementDate)?.sql ?? 'N/A'}
               />
             </View>
           </>
