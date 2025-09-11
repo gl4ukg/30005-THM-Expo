@@ -12,10 +12,12 @@ import { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 
 export default function Login() {
-  const [email, setEmail] = useState('itera@test.no');
-  const [fullName, setFullName] = useState('Test Tess User');
-  const [password, setPassword] = useState('iteraTest');
-  const [nameError, setNameError] = useState<undefined | string>(undefined);
+  const [email, setEmail] = useState(
+    process.env.EXPO_PUBLIC_DEV_USER_EMAIL ?? '',
+  );
+  const [password, setPassword] = useState(
+    process.env.EXPO_PUBLIC_DEV_USER_PASSWORD ?? '',
+  );
   const [emailError, setEmailError] = useState<undefined | string>(undefined);
   const { login, isLoading } = useLoginManager();
   const handleEmail = (email: string) => {
@@ -24,15 +26,6 @@ export default function Login() {
     if (validation === true) {
       setEmailError(undefined);
     } else setEmailError(validation);
-  };
-
-  const handleName = (name: string) => {
-    setFullName(name);
-    if (!/^[\p{L}\s]+$/u.test(fullName) && fullName !== '') {
-      setNameError('Invalid Name: Please enter a valid name.');
-    } else if (name.length < 4) {
-      setNameError('too short');
-    } else setNameError(undefined);
   };
 
   const handleLogin = async () => {
@@ -44,7 +37,7 @@ export default function Login() {
     }
   };
 
-  const isButtonDisabled = !email || !fullName || !password || isLoading;
+  const isButtonDisabled = !email || !password || isLoading;
 
   return (
     <View style={styles.formContainer}>
@@ -60,15 +53,6 @@ export default function Login() {
           type='email'
           disabled={isLoading}
           errorMessage={emailError}
-        />
-        <Input
-          icon='User'
-          label='Your full name'
-          value={fullName}
-          onChangeText={handleName}
-          darkMode={true}
-          errorMessage={nameError}
-          disabled={isLoading}
         />
         <Input
           icon='Password'
