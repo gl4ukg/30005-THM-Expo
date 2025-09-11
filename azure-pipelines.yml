@@ -1,5 +1,5 @@
 trigger:
-- test/ci-cd
+- feat/deployment-prep
 - dev
 - stag
 - main
@@ -32,7 +32,7 @@ steps:
 
 - script: |
     EXPO_TOKEN=$(eas-access-token) npx eas-cli build --profile development --platform all --non-interactive
-  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/test/ci-cd')))
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/feat/deployment-prep')))
   displayName: 'Build for development with EAS'
 
 - script: |
