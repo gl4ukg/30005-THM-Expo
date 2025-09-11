@@ -30,7 +30,7 @@ const Login = () => {
   return (
     <ImageBackground
       style={styles.imageBackground}
-      source={require('@/assets/images/Island-Patriot-11.png')}
+      source={require('@/assets/images/background-faded.png')}
     >
       <StatusBar style='light' />
       <SafeAreaView style={styles.safeArea}>
