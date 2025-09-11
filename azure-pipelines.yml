@@ -1,5 +1,8 @@
 trigger:
 - test/ci-cd
+- dev
+- stag
+- main
 
 pool:
   vmImage: ubuntu-latest
@@ -29,4 +32,15 @@ steps:
 
 - script: |
     EXPO_TOKEN=$(eas-access-token) npx eas-cli build --profile development --platform all --non-interactive
-  displayName: 'Build with EAS'
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/test/ci-cd')))
+  displayName: 'Build for development with EAS'
+
+- script: |
+    EXPO_TOKEN=$(eas-access-token) npx eas-cli build --profile preview --platform all --non-interactive
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/stag'))
+  displayName: 'Build for preview with EAS'
+
+- script: |
+    EXPO_TOKEN=$(eas-access-token) npx eas-cli build --profile production --platform all --non-interactive
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  displayName: 'Build for production with EAS'
