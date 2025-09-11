@@ -4,7 +4,7 @@
     "slug": "thm-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/tess-icon-thm_white-on-green.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -32,26 +32,21 @@
         "policy": "appVersion"
       }
     },
-	"androidStatusBar": {
-	  "backgroundColor": "#000000",
-	  "barStyle": "light-content",
-	  "translucent": false,
-	  "hidden": false
-	},
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+    "androidStatusBar": {
+      "backgroundColor": "#000000",
+      "barStyle": "dark-content",
+      "translucent": true,
+      "hidden": false
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 250,
+          "image": "./assets/images/tess-icon-thm_white.png",
+          "imageWidth": 1024,
           "resizeMode": "contain",
-          "backgroundColor": "#000"
+          "backgroundColor": "#009640"
         }
       ],
       [
@@ -100,12 +95,8 @@
         "react-native-nfc-manager",
         {
           "nfcPermission": "$(PRODUCT_NAME) needs access to your NFC reader.",
-          "selectIdentifiers": [
-            "A0000002471001"
-          ],
-          "systemCodes": [
-            "8008"
-          ],
+          "selectIdentifiers": ["A0000002471001"],
+          "systemCodes": ["8008"],
           "includeNdefEntitlement": false
         }
       ],
