@@ -28,7 +28,9 @@
         "android.permission.CAMERA",
         "android.permission.NFC",
         "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE"
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ],
       "runtimeVersion": {
         "policy": "appVersion"
@@ -96,8 +98,12 @@
         "react-native-nfc-manager",
         {
           "nfcPermission": "$(PRODUCT_NAME) needs access to your NFC reader.",
-          "selectIdentifiers": ["A0000002471001"],
-          "systemCodes": ["8008"],
+          "selectIdentifiers": [
+            "A0000002471001"
+          ],
+          "systemCodes": [
+            "8008"
+          ],
           "includeNdefEntitlement": false
         }
       ],
@@ -112,11 +118,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "975f2122-d912-413d-a0a1-3371afd5e891"
+        "projectId": "10ceefff-1bf3-4ebf-801a-ba18eb6ee142"
       }
     },
-    "updates": {
-      "url": "https://u.expo.dev/975f2122-d912-413d-a0a1-3371afd5e891"
-    }
+    "owner": "tess-as"
   }
 }
