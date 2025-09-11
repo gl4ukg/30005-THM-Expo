@@ -15,7 +15,7 @@
         "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera.",
         "ITSAppUsesNonExemptEncryption": false
       },
-      "bundleIdentifier": "no.tess.THM",
+      "bundleIdentifier": "no.tess.thm-mobile",
       "runtimeVersion": "1.0.0"
     },
     "android": {
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "no.tess.THM",
+      "package": "no.tess.thm_mobile",
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.NFC",
