@@ -7,13 +7,13 @@
       "layers" : [
         {
           "glass" : false,
-          "image-name" : "tess-icon-thm_white-on-green_foreground.png",
-          "name" : "tess-icon-thm_white-on-green_foreground"
+          "image-name" : "tess-icon-thm_white.png",
+          "name" : "tess-icon-thm_white"
         },
         {
           "glass" : false,
-          "image-name" : "tess-icon-thm_white-on-green_background.png",
-          "name" : "tess-icon-thm_white-on-green_background"
+          "image-name" : "tess-icon-thm_background.png",
+          "name" : "tess-icon-thm_background"
         }
       ],
       "shadow" : {

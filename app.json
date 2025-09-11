@@ -4,7 +4,7 @@
     "slug": "thm-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/tess-icon-thm_white-on-green.png",
+    "icon": "./assets/images/tess-icon-thm_white-on-background.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -16,7 +16,8 @@
         "ITSAppUsesNonExemptEncryption": false
       },
       "bundleIdentifier": "no.tess.thm-mobile",
-      "runtimeVersion": "1.0.0"
+      "runtimeVersion": "1.0.0",
+      "icon": "./assets/app.icon"
     },
     "android": {
       "package": "no.tess.thm_mobile",
@@ -30,6 +31,10 @@
       ],
       "runtimeVersion": {
         "policy": "appVersion"
+      },
+      "adaptiveIcon": {
+        "backgroundImage": "./assets/images/tess-icon-thm_background.png",
+        "foregroundImage": "./assets/images/tess-icon-thm_white.png"
       }
     },
     "androidStatusBar": {
