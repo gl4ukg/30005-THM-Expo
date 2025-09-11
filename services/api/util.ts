@@ -1,5 +1,5 @@
 import { HoseData } from '@/lib/types/hose';
-import { convertToISOFormat } from '@/lib/util/formatDate';
+import { DateFormatter } from '@/lib/util/date';
 import { loginCache } from '@/services/cache/loginCacheService';
 
 // Base URL for all API requests
@@ -217,9 +217,9 @@ export const transformHoseDataForAPI = (
       extSystemCode: hoseData.extSystemCode || 'XX',
       companyCode: hoseData.companyCode || 'XX',
       extDocSequenceId: hoseData.extDocSequenceId || '1234567890',
-      requestDate: hoseData.requestDate
-        ? convertToISOFormat(hoseData.requestDate)
-        : new Date().toISOString().split('T')[0],
+      requestDate:
+        DateFormatter.fromString(hoseData.requestDate)?.iso ??
+        new Date().toISOString(),
       requestTime:
         hoseData.requestTime || new Date().toTimeString().split(' ')[0],
       documentName: hoseData.documentName || 'ASSETS',
@@ -247,12 +247,10 @@ export const transformHoseDataForAPI = (
         customerID: hoseData.customerID || 'string',
         customerEq: hoseData.customerEq || 'string',
         system: hoseData.system || 'string',
-        productionDate: hoseData.productionDate
-          ? convertToISOFormat(hoseData.productionDate)
-          : 'string',
-        installedDate: hoseData.installedDate
-          ? convertToISOFormat(hoseData.installedDate)
-          : 'string',
+        productionDate:
+          DateFormatter.fromString(hoseData.productionDate)?.iso ?? 'N/A',
+        installedDate:
+          DateFormatter.fromString(hoseData.installedDate)?.iso ?? 'N/A',
         class: hoseData.class || 'string',
         status: hoseData.status || 'string',
         type: hoseData.type || 'string',
@@ -307,9 +305,8 @@ export const transformHoseDataForAPI = (
         whipCheck: hoseData.whipCheck || 'string',
         breakaway: hoseData.breakaway || 'string',
         maintenanceDetails: {
-          inspectedDate: hoseData.inspectedDate
-            ? convertToISOFormat(hoseData.inspectedDate)
-            : 'string',
+          inspectedDate:
+            DateFormatter.fromString(hoseData.inspectedDate)?.iso ?? 'string',
           inspector: hoseData.inspector || 'string',
           hoseCondition: hoseData.hoseCondition || 'string',
           approved: Boolean(hoseData.approved),

@@ -1,7 +1,7 @@
 import { Bookmark } from '@/components/detailView/common/Bookmark';
 import { Typography } from '@/components/Typography';
 import { View, Alert, StyleSheet } from 'react-native';
-import { formatDate } from '@/lib/util/formatDate';
+import { DateFormatter } from '@/lib/util/date';
 import { Icon } from '@/components/Icon/Icon';
 import { colors } from '@/lib/tokens/colors';
 import { LinkButton } from '@/components/UI/Button/LinkButton';
@@ -27,7 +27,7 @@ export const HistoryView = ({
 
   const handleShowComments = (item: HistoryItemProps) => {
     if (!item.comments) return;
-    const alertTitle = `(${formatDate(item.date)}) ${item.id} - ${item.name}`;
+    const alertTitle = `(${DateFormatter.fromDate(item.date)?.sql}) ${item.id} - ${item.name}`;
     Alert.alert(alertTitle, item.comments);
   };
 
@@ -48,7 +48,7 @@ export const HistoryView = ({
             <Icon name='Time' size={'sm'} color={colors.primary} />
             <View style={styles.itemContent}>
               <Typography name='navigation'>
-                ({formatDate(item.date)}) {item.id} - {item.name}
+                ({DateFormatter.fromDate(item.date)?.sql}) {item.id} - {item.name}
                 {item.comments && (
                   <LinkButton
                     onPress={() => handleShowComments(item)}

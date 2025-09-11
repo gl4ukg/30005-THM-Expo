@@ -3,7 +3,7 @@ import { DataField } from '@/components/detailView/common/Datafield';
 import { Typography } from '@/components/Typography';
 import { colors } from '@/lib/tokens/colors';
 import { HID } from '@/lib/types/hose';
-import { formatDate } from '@/lib/util/formatDate';
+import { DateFormatter } from '@/lib/util/date';
 import { StyleSheet, View } from 'react-native';
 type MaintenanceProps = {
   info: Partial<HID>;
@@ -20,11 +20,7 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
         <Typography name={'navigationBold'} text='Inspection' />
         <DataField
           label={'Inspected Date:'}
-          value={
-            hoseData.inspectedDate
-              ? formatDate(new Date(hoseData.inspectedDate))
-              : ''
-          }
+          value={DateFormatter.fromString(hoseData.inspectedDate ?? '')?.sql ?? 'N/A'}
           isMissing={missingFields?.includes('inspectedDate')}
         />
         <DataField label={'Inspected By:'} value={hoseData.inspector} isMissing={missingFields?.includes('inspector')}/>
@@ -46,11 +42,7 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
         <Typography name={'navigationBold'} text='Criticality / Intervals' />
         <DataField
           label={'Hose Production Date:'}
-          value={
-            hoseData.productionDate
-              ? formatDate(new Date(hoseData.productionDate))
-              : ''
-          }
+          value={DateFormatter.fromString(hoseData.productionDate ?? '')?.sql ?? 'N/A'}
           isMissing={missingFields?.includes('productionDate')}
         />
         <DataField label={'Criticality:'} value={hoseData.criticality} isMissing={missingFields?.includes('criticality')}/>
@@ -64,11 +56,7 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
         />
         <DataField
           label={'Next Inspection:'}
-          value={
-            hoseData.nextInspection
-              ? formatDate(new Date(hoseData.nextInspection))
-              : ''
-          }
+          value={DateFormatter.fromString(hoseData.nextInspection ?? '')?.sql ?? 'N/A'}
           isMissing={missingFields?.includes('nextInspection')}
         />
         <DataField
@@ -78,11 +66,7 @@ export const MaintenanceInfo: React.FC<MaintenanceProps> = ({
         />
         <DataField
           label={'Replacement Date:'}
-          value={
-            hoseData.replacementDate
-              ? formatDate(new Date(hoseData.replacementDate))
-              : ''
-          }
+          value={DateFormatter.fromString(hoseData.replacementDate ?? '')?.sql ?? 'N/A'}
           isMissing={missingFields?.includes('replacementDate')}
         />
       </View>
