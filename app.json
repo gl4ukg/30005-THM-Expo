@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "THM",
-    "slug": "THM",
+    "slug": "thm-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -19,10 +19,6 @@
       "runtimeVersion": "1.0.0"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
       "package": "no.tess.thm_mobile",
       "permissions": [
         "android.permission.CAMERA",
@@ -36,6 +32,12 @@
         "policy": "appVersion"
       }
     },
+	"androidStatusBar": {
+	  "backgroundColor": "#000000",
+	  "barStyle": "light-content",
+	  "translucent": false,
+	  "hidden": false
+	},
     "web": {
       "bundler": "metro",
       "output": "static",
