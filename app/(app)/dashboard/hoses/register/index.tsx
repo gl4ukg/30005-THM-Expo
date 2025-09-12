@@ -326,7 +326,7 @@ const RegisterHose = () => {
           showValidationErrors={hoseData.showValidationErrors}
         />
         <EditMaintenanceInfo
-          info={hoseData}
+          info={hoseData as HoseData}
           onInputChange={handleInputChange as any} // TODO remove any
         />
         <Documents />
