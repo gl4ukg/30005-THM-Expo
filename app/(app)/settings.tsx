@@ -71,7 +71,7 @@ const User = () => {
       <View style={styles.section}>
         <Bookmark title='Synchronization status' />
         <DataField label='Last synced:' value={lastUpdate?.toLocaleString()} />
-        <ButtonTHS title='Logout' onPress={logout} />
+        <ButtonTHS title='Log out' onPress={logout} />
       </View>
     </ScrollView>
   );
