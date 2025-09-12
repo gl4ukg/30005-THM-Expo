@@ -9,6 +9,7 @@ import { Activity } from '@/components/dashboard/activitiesList/activity';
 import { loginCache } from '@/services/cache/loginCacheService';
 import { cache } from '@/services/cache/cacheService';
 import { Customer } from '@/services/api/customer';
+import Constants from 'expo-constants';
 
 interface AppState {
   auth: AuthState;
@@ -245,9 +246,9 @@ const initialSettingsState: SettingsState = {
   connectionType: null,
   internetReachable: false,
   appInfo: {
-    // version: '1.0.0',
-    // environment: 'DEV',
-    // webServiceEndpoint: 'http://localhost:3000',
+    version: Constants.expoConfig?.version || 'N/A',
+    environment: Constants.expoConfig?.extra?.environment || 'N/A',
+    webServiceEndpoint: Constants.expoConfig?.extra?.webServiceEndpoint || 'N/A',
   },
   isMenuOpen: false,
 };
