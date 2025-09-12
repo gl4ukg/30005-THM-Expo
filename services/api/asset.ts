@@ -67,7 +67,11 @@ const transformS1Array = (items: S1Item[]): TransformedS1[] => {
 // API functions - Handles all HTTP requests to the backend
 export const getS1 = async (): Promise<GetS1Response> => {
   const response = await apiCall<{ data: S1Item[] }>('/asset/getS1', 'GET');
-  if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
+  if (
+    !response.data ||
+    !Array.isArray(response.data) ||
+    response.data.length === 0
+  ) {
     return {
       s1Items: [],
       selectedS1Code: '',
@@ -82,13 +86,13 @@ export const getS1 = async (): Promise<GetS1Response> => {
 };
 
 export const getS1Hoses = async (s1Code: string): Promise<APIHose[]> => {
-  const endpoint = `/asset/getHose?s1Code=${s1Code}&pageSize=10000`;
+  const endpoint = `/asset/getHose?s1Code=${s1Code}&pageSize=1000`;
   const response = await apiCall<{ data: APIHose[] }>(endpoint, 'GET');
   return response.data.length ? response.data : [];
 };
 
 export const getHose = async (s1Code: string): Promise<APIHose[]> => {
-  const endpoint = `/asset/getHose?s1Code=${s1Code}&pageSize=10000`;
+  const endpoint = `/asset/getHose?s1Code=${s1Code}&pageSize=1000`;
   const response = await apiCall<{ data: APIHose[] }>(endpoint, 'GET');
 
   return response.data.length ? response.data : [];
