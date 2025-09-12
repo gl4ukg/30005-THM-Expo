@@ -16,8 +16,7 @@
         "ITSAppUsesNonExemptEncryption": false
       },
       "bundleIdentifier": "no.tess.thm-mobile",
-      "runtimeVersion": "1.0.0",
-      "icon": "./assets/app.icon"
+      "runtimeVersion": "1.0.0"
     },
     "android": {
       "package": "no.tess.thm_mobile",
