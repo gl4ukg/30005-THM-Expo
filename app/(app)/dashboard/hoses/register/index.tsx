@@ -326,10 +326,10 @@ const RegisterHose = () => {
           showValidationErrors={hoseData.showValidationErrors}
         />
         <EditMaintenanceInfo
-          info={hoseData}
+          info={hoseData as HoseData}
           onInputChange={handleInputChange as any} // TODO remove any
         />
-        <Documents />
+        <Documents editMode={true} />
         <View style={styles.checkboxContainer}>
           <Checkbox
             isChecked={registerMultiple}

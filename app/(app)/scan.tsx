@@ -506,7 +506,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
-    backgroundColor: colors.black,
   },
   camera: { flex: 1, width: '100%', borderColor: colors.black },
   rfidContainer: {
