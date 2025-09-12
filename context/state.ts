@@ -169,19 +169,6 @@ interface SettingsState {
   isMenuOpen: boolean;
 }
 
-// Define initial states for each slice of the app state
-const initialAuthState: AuthState = {
-  // initial auth state values
-  user: {
-    email: 'slange_mester@tess.no ',
-    name: 'Ole Slange Mester',
-    phoneNumber: '+4799999999',
-    id: '223949MOB',
-  },
-  isLogingLoading: false,
-  token: null,
-};
-
 const initialDataState: DataState = {
   isLoading: false,
   lastUpdate: null,
@@ -258,9 +245,9 @@ const initialSettingsState: SettingsState = {
   connectionType: null,
   internetReachable: false,
   appInfo: {
-    version: '1.0.0',
-    environment: 'DEV',
-    webServiceEndpoint: 'http://localhost:3000',
+    // version: '1.0.0',
+    // environment: 'DEV',
+    // webServiceEndpoint: 'http://localhost:3000',
   },
   isMenuOpen: false,
 };
