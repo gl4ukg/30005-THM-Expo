@@ -320,7 +320,7 @@ const HoseDetails = () => {
         })}
         {!editMode && (
           <>
-            <Documents />
+            <Documents editMode={editMode} />
             <Structure hose={hoseData} />
             <HistoryView items={[]} />
           </>
