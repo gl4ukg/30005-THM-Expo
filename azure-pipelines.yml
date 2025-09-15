@@ -1,0 +1,35 @@
+trigger:
+- dev
+- stag
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: 30005-thm-variable-group
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '20.19.2'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install --global corepack
+    corepack enable
+    corepack install
+  displayName: 'Install and enable corepack'
+
+- script: corepack install
+  displayName: 'Install Yarn'
+
+- script: yarn
+  displayName: 'Install project dependencies'
+
+- script: EXPO_TOKEN=$(eas-access-token) npx eas-cli build --profile development --platform all --non-interactive
+  condition: eq(variables['Build.SourceBranchName'], 'refs/heads/dev')
+  displayName: 'Build (development) with EAS'
+
+- script: EXPO_TOKEN=$(eas-access-token) npx eas-cli build --profile preview --platform all --non-interactive
+  condition: eq(variables['Build.SourceBranchName'], 'refs/heads/stag')
+  displayName: 'Build (preview) with EAS'
