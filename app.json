@@ -4,7 +4,7 @@
     "slug": "THM",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/tess-icon-thm_white-on-bg.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -15,39 +15,42 @@
         "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera.",
         "ITSAppUsesNonExemptEncryption": false
       },
-      "bundleIdentifier": "no.tess.THM",
+      "bundleIdentifier": "no.tess.thm-mobile",
       "runtimeVersion": "1.0.0"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "no.tess.THM",
+      "package": "no.tess.thm_mobile",
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.NFC",
         "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE"
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ],
       "runtimeVersion": {
         "policy": "appVersion"
+      },
+      "adaptiveIcon": {
+        "backgroundImage": "./assets/images/tess-icon_bg.png",
+        "foregroundImage": "./assets/images/tess-icon-thm_fg.png"
       }
     },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+    "androidStatusBar": {
+      "backgroundColor": "#009640",
+      "barStyle": "dark-content",
+      "translucent": true,
+      "hidden": false
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 250,
+          "image": "./assets/images/tess-icon-thm_white.png",
+          "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#000"
+          "backgroundColor": "#009640"
         }
       ],
       [
@@ -112,11 +115,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "975f2122-d912-413d-a0a1-3371afd5e891"
+        "projectId": "10ceefff-1bf3-4ebf-801a-ba18eb6ee142"
       }
     },
-    "updates": {
-      "url": "https://u.expo.dev/975f2122-d912-413d-a0a1-3371afd5e891"
-    }
+    "owner": "tess-as"
   }
 }

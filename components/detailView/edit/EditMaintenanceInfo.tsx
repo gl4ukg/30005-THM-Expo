@@ -18,9 +18,8 @@ export const EditMaintenanceInfo: React.FC<
       field: keyof HoseData,
       value: HoseData[keyof HoseData],
     ) => void;
-    missingRequiredFields?: string[];
   } & { isInspect?: boolean }
-> = ({ info, onInputChange, isInspect, missingRequiredFields }) => {
+> = ({ info, onInputChange, isInspect }) => {
   const getSelectedApprovalId = (
     approved: boolean | undefined,
   ): 'Yes' | 'No' | 'NotInspected' => {
@@ -101,7 +100,9 @@ export const EditMaintenanceInfo: React.FC<
               />
               <DataField
                 label={'Next Inspection:'}
-                value={DateFormatter.fromString(info.nextInspection)?.sql ?? 'N/A'}
+                value={
+                  DateFormatter.fromString(info.nextInspection)?.sql ?? 'N/A'
+                }
               />
               <DataField
                 label={'Replacement Interval:'}
@@ -109,7 +110,9 @@ export const EditMaintenanceInfo: React.FC<
               />
               <DataField
                 label={'Replacement Date:'}
-                value={DateFormatter.fromString(info.replacementDate)?.sql ?? 'N/A'}
+                value={
+                  DateFormatter.fromString(info.replacementDate)?.sql ?? 'N/A'
+                }
               />
             </View>
           </>
@@ -139,7 +142,9 @@ export const EditMaintenanceInfo: React.FC<
               />
               <DataField
                 label={'Next Inspection:'}
-                value={DateFormatter.fromString(info.nextInspection)?.sql ?? 'N/A'}
+                value={
+                  DateFormatter.fromString(info.nextInspection)?.sql ?? 'N/A'
+                }
               />
               <DataField
                 label={'Replacement Interval:'}
@@ -147,7 +152,9 @@ export const EditMaintenanceInfo: React.FC<
               />
               <DataField
                 label={'Replacement Date:'}
-                value={DateFormatter.fromString(info.replacementDate)?.sql ?? 'N/A'}
+                value={
+                  DateFormatter.fromString(info.replacementDate)?.sql ?? 'N/A'
+                }
               />
             </View>
           </>

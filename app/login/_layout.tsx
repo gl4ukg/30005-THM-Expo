@@ -15,7 +15,7 @@ export default function LoginLayout() {
   return (
     <ImageBackground
       style={styles.imageBackground}
-      source={require('@/assets/images/Island-Patriot-11.png')}
+      source={require('@/assets/images/background-faded.png')}
     >
       <SafeAreaView style={[styles.safeArea]}>
         <KeyboardAvoidingView style={[styles.safeArea]}>

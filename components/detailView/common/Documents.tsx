@@ -48,24 +48,8 @@ const DocumentItem: React.FC<DocumentProps> = ({
   );
 };
 
-export const Documents = () => {
-  const initialDocuments: Array<DocumentData> = [
-    {
-      id: 'DOC-001',
-      name: 'Hose Certificate',
-      uri: 'https://eamapp36.prevas.cloud/docuploads/TESSAS/10000916_250818092704154.pdf',
-    },
-    {
-      id: 'DOC-002',
-      name: 'Inspection Report',
-      uri: 'https://www.uio.no/studier/emner/matnat/ifi/IN1000/h24/ressurser-per-uke/uke07/kort-fra-uke-7---introduksjon-til-oo.pdf',
-    },
-    {
-      id: 'DOC-003',
-      name: 'Maintenance Log',
-      uri: 'https://www.uio.no/studier/emner/matnat/ifi/IN1000/h24/ressurser-per-uke/uke07/kort-fra-uke-7---introduksjon-til-oo.pdf',
-    },
-  ];
+export const Documents = ({ editMode }: { editMode: boolean }) => {
+  const initialDocuments: Array<DocumentData> = [];
 
   const [documents, setDocuments] = useState(initialDocuments);
   const [selectedPdfUri, setSelectedPdfUri] = useState<string | null>(null);
@@ -134,13 +118,19 @@ export const Documents = () => {
           />
         ))}
       </View>
-      <Pressable style={styles.addDocumentButton} onPress={handleAddDocument}>
-        <Icon name='Plus' size='xsm' color={colors.primary} />
-        <Typography name='button' style={styles.addDocumentButtonText}>
-          Add document
+      {editMode && (
+        <Pressable style={styles.addDocumentButton} onPress={handleAddDocument}>
+          <Icon name='Plus' size='xsm' color={colors.primary} />
+          <Typography name='button' style={styles.addDocumentButtonText}>
+            Add document
+          </Typography>
+        </Pressable>
+      )}
+      {!editMode && documents.length === 0 && (
+        <Typography name='fieldValue' style={{ marginLeft: 20 }}>
+          No documents available.
         </Typography>
-      </Pressable>
-
+      )}
       <Modal
         visible={isPdfVisible}
         onRequestClose={handleClosePdfViewer}
