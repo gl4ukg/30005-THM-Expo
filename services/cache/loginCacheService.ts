@@ -1,0 +1,129 @@
+import { MMKV } from 'react-native-mmkv';
+
+const storage = new MMKV({
+  id: 'app_login_cache',
+  encryptionKey: 'THM-app_login_cache_key',
+});
+
+const CACHE_KEYS = {
+  USER_NAME: 'user_name',
+  USER_ID: 'user_id',
+  USER_EMAIL: 'user_email',
+  USER_PHONE_NUMBER: 'user_phone_number',
+  USER_ACCESS_CODE: 'user_access_code',
+  USER_CUSTOMER_NUMBERS: 'user_customer_numbers',
+  API_KEY: 'api_token',
+  API_KEY_EXPIRATION: 'api_token_expiration',
+} as const;
+
+const logout = (): void => {
+  try {
+    storage.clearAll();
+    console.log('Login cache cleared successfully');
+  } catch (error) {
+    console.error('Failed to clear login cache:', error);
+    throw error;
+  }
+};
+
+const setUserCache = (user: {
+  name: string;
+  id: string;
+  email: string;
+  phoneNumber: string;
+  userAccessCode?: `${number}`;
+  customerNumbers: string[];
+}): void => {
+  try {
+    storage.set(CACHE_KEYS.USER_NAME, user.name);
+    storage.set(CACHE_KEYS.USER_ID, user.id);
+    storage.set(CACHE_KEYS.USER_EMAIL, user.email);
+    storage.set(CACHE_KEYS.USER_PHONE_NUMBER, user.phoneNumber);
+    storage.set(CACHE_KEYS.USER_ACCESS_CODE, user.userAccessCode ?? '');
+    storage.set(
+      CACHE_KEYS.USER_CUSTOMER_NUMBERS,
+      JSON.stringify(user.customerNumbers),
+    );
+  } catch (error) {
+    console.error('Failed to set login cache:', error);
+    throw error;
+  }
+};
+
+const getUserCache = (): {
+  name: string;
+  id: string;
+  email: string;
+  phoneNumber: string;
+  userAccessCode?: `${number}`;
+  customerNumbers: string[];
+} => {
+  try {
+    const userName = storage.getString(CACHE_KEYS.USER_NAME) ?? '';
+    const userId = storage.getString(CACHE_KEYS.USER_ID) ?? '';
+    const userEmail = storage.getString(CACHE_KEYS.USER_EMAIL) ?? '';
+    const userPhoneNumber =
+      storage.getString(CACHE_KEYS.USER_PHONE_NUMBER) ?? '';
+    const userAccessCode =
+      (storage.getString(CACHE_KEYS.USER_ACCESS_CODE) as
+        | `${number}`
+        | undefined) ?? undefined;
+    return {
+      name: userName,
+      id: userId,
+      email: userEmail,
+      phoneNumber: userPhoneNumber,
+      customerNumbers: JSON.parse(
+        storage.getString(CACHE_KEYS.USER_CUSTOMER_NUMBERS) ?? '[]',
+      ),
+      userAccessCode: userAccessCode,
+    };
+  } catch (error) {
+    console.error('Failed to get login cache:', error);
+    return {
+      name: '',
+      id: '',
+      email: '',
+      phoneNumber: '',
+      customerNumbers: [],
+    };
+  }
+};
+
+const getApiKey = (): string | null => {
+  try {
+    const apiKeyExpiration =
+      storage.getString(CACHE_KEYS.API_KEY_EXPIRATION) ?? '';
+    if (apiKeyExpiration && new Date(apiKeyExpiration) < new Date()) {
+      logout();
+      return null;
+    }
+    const apiKey = storage.getString(CACHE_KEYS.API_KEY) ?? '';
+    return apiKey;
+  } catch (error) {
+    console.error('Failed to get API key:', error);
+    return null;
+  }
+};
+
+const setApiKey = (apiKey: string, apiKeyExpiration: string): void => {
+  try {
+    storage.set(CACHE_KEYS.API_KEY, apiKey);
+    storage.set(CACHE_KEYS.API_KEY_EXPIRATION, apiKeyExpiration);
+  } catch (error) {
+    console.error('Failed to set API key:', error);
+    throw error;
+  }
+};
+
+export const loginCache = {
+  user: {
+    get: getUserCache,
+    set: setUserCache,
+    logout,
+  },
+  apiKey: {
+    get: getApiKey,
+    set: setApiKey,
+  },
+};

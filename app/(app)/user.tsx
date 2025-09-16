@@ -1,0 +1,59 @@
+import { Typography } from '@/components/Typography';
+import { ButtonTHS } from '@/components/UI';
+import { useAppContext } from '@/context/ContextProvider';
+import { cache } from '@/services/cache/cacheService';
+
+import { useRouter } from 'expo-router';
+import { SafeAreaView, View } from 'react-native';
+
+const User = () => {
+  const { state, dispatch } = useAppContext();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    cache.clearCache();
+    dispatch({ type: 'LOGOUT' });
+    router.push('/');
+  };
+  return (
+    <SafeAreaView
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      {state.auth.user === null ? (
+        <ButtonTHS
+          variant='primary'
+          size='sm'
+          title='Log in'
+          onPress={() => router.push('/')}
+        />
+      ) : (
+        <View
+          style={{ gap: 10, width: '100%', alignItems: 'center', padding: 20 }}
+        >
+          <Typography name='navigationBold'>User</Typography>
+          <Typography name='navigationBold'>
+            Name: {state.auth.user?.name}
+          </Typography>
+          <Typography name='navigationBold'>
+            Email: {state.auth.user?.email}
+          </Typography>
+          <Typography name='navigationBold'>
+            Password: {state.auth.user?.id}
+          </Typography>
+          <ButtonTHS
+            variant='primary'
+            size='sm'
+            title='Log out'
+            onPress={handleLogout}
+          />
+        </View>
+      )}
+    </SafeAreaView>
+  );
+};
+
+export default User;

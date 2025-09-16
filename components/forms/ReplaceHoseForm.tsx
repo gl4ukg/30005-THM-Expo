@@ -1,0 +1,291 @@
+import { ListTable } from '@/components/dashboard/listTable';
+import {
+  replaceImpacts,
+  replaceReasons,
+} from '@/components/detailView/data/lists';
+import { TooltipWrapper } from '@/components/detailView/edit/TooltipWrapper';
+import { Typography } from '@/components/Typography';
+import { ButtonTHS } from '@/components/UI';
+import { showDiscardChangesAlert } from '@/components/UI/BottomNavigation/showDiscardChangesAlert';
+import { LinkButton } from '@/components/UI/Button/LinkButton';
+import { Input } from '@/components/UI/Input/Input';
+import { MultiSelect } from '@/components/UI/SelectModal/MultiSelect';
+import { Select } from '@/components/UI/SelectModal/Select';
+import { useAppContext } from '@/context/ContextProvider';
+import { PartialReplaceHoseFormData } from '@/context/Reducer';
+
+import { getScanUrl } from '@/app/(app)/scan';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+import { useUserValidation } from '@/hooks/useUserValidation';
+import { colors } from '@/lib/tokens/colors';
+import { router, useFocusEffect } from 'expo-router';
+import { FC, useCallback, useMemo, useRef, useState } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { UnitInput } from '../detailView/edit/UnitInput';
+import { saveAsDraftToast } from './ActionForm';
+import { successToast } from '@/lib/util/toasts';
+import { useDataManager } from '@/hooks/useDataManager';
+
+interface Props {
+  draftId: string;
+}
+
+export const ReplaceHoseForm: FC<Props> = ({ draftId }) => {
+  const { state, dispatch } = useAppContext();
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [formData, setFormData] = useState<PartialReplaceHoseFormData>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const flatListRef = useRef<FlatList>(null);
+  const { hasErrors } = useUserValidation();
+  const { activities } = useDataManager();
+
+  usePreventGoBack(isSubmitting);
+
+  const originallySelectedHoses = useMemo(() => {
+    const draft = state.data.drafts.find((d) => d.id === +draftId);
+    if (!draft) return [];
+    return state.data.hoses.filter((hose) =>
+      draft.selectedIds?.includes(hose.assetId),
+    );
+  }, [selectedIds]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (flatListRef.current) {
+        flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+      }
+      const draft = state.data.drafts.find((d) => d.id === +draftId);
+      if (!draft) {
+        setFormData({});
+        setSelectedIds([]);
+        return;
+      }
+      setFormData(draft.formData as PartialReplaceHoseFormData);
+      setSelectedIds([...draft.selectedIds]);
+    }, [draftId, state.data.drafts]),
+  );
+
+  const handleInputChange = (
+    field: keyof PartialReplaceHoseFormData,
+    value: string | string[],
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSelectionChange = useCallback((id: number) => {
+    setSelectedIds((prevSelectedIds) => {
+      if (prevSelectedIds.includes(id)) {
+        return prevSelectedIds.filter((i) => i !== id);
+      } else {
+        return [...prevSelectedIds, id];
+      }
+    });
+  }, []);
+
+  const handleSend = () => {
+    setIsSubmitting(true);
+    activities.draft.save({
+      id: +draftId,
+      selectedIds,
+      type: 'REPLACE_HOSE',
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
+    });
+    activities.draft.moveToDone(+draftId);
+    router.dismissAll();
+    router.replace('/dashboard');
+    successToast(
+      'Hose replacement report sent',
+      'Your hose replacement report has been sent successfully.',
+    );
+  };
+
+  const handleSaveAsDraft = () => {
+    setIsSubmitting(true);
+    activities.draft.save({
+      id: +draftId,
+      selectedIds,
+      type: 'REPLACE_HOSE',
+      status: 'draft',
+      formData,
+      modifiedAt: new Date().toISOString(),
+    });
+    saveAsDraftToast();
+    router.dismissAll();
+    router.replace('/dashboard');
+  };
+  const handleCancel = () => {
+    showDiscardChangesAlert(dispatch);
+  };
+
+  const handleAddHoses = () => {
+    // const draft = state.data.drafts.find((d) => d.id === +draftId);
+    // if (!draft) return;
+    activities.draft.save({
+      type: 'REPLACE_HOSE',
+      id: +draftId,
+      selectedIds,
+      status: 'draft',
+      modifiedAt: new Date().toISOString(),
+      formData,
+    });
+    router.push(getScanUrl('REPLACE_HOSE', draftId.toString()));
+  };
+
+  const isButtonDisabled = hasErrors || selectedIds.length === 0;
+  return (
+    <FlatList
+      ref={flatListRef}
+      ListHeaderComponent={
+        <View style={styles.listHeaderComponent}>
+          <Typography
+            name='navigationBold'
+            text='Replace hose'
+            style={styles.contactTitle}
+          />
+          <Typography
+            name='navigation'
+            text='Replacement'
+            style={styles.contactSubtitle}
+          />
+        </View>
+      }
+      ListFooterComponent={
+        <View style={styles.inputsContainer}>
+          <TooltipWrapper
+            tooltipData={{ title: 'Replacement type', message: '' }}
+          >
+            <Select
+              label='Replacement type:'
+              selectedOption={formData.replacementType || ''}
+              onChange={(value) =>
+                handleInputChange('replacementType', value as string)
+              }
+              hasAlternativeOption={false}
+              options={['Planned', 'Unplanned']}
+            />
+          </TooltipWrapper>
+          {formData.replacementType === 'Unplanned' && (
+            <>
+              <TooltipWrapper
+                tooltipData={{ title: 'Reason for replacement', message: '' }}
+              >
+                <MultiSelect
+                  label='Reason:'
+                  options={replaceReasons}
+                  selectedOptions={formData.replacementReasons || []}
+                  onSave={(value) =>
+                    handleInputChange('replacementReasons', value)
+                  }
+                />
+              </TooltipWrapper>
+              <TooltipWrapper
+                tooltipData={{ title: 'Impact of replacement', message: '' }}
+              >
+                <MultiSelect
+                  label='Impact:'
+                  options={replaceImpacts}
+                  selectedOptions={formData.replacementImpacts || []}
+                  onSave={(value) =>
+                    handleInputChange('replacementImpacts', value)
+                  }
+                />
+              </TooltipWrapper>
+              <TooltipWrapper tooltipData={{ title: 'Downtime', message: '' }}>
+                <UnitInput
+                  value={formData.downtime ? Number(formData.downtime) : null}
+                  onChange={(value) =>
+                    handleInputChange('downtime', String(value))
+                  }
+                  unit={'hours'}
+                  label='Did it cause any downtime? (hours)'
+                />
+              </TooltipWrapper>
+            </>
+          )}
+          <Input
+            type='textArea'
+            label='Comment:'
+            value={formData.comment || ''}
+            onChangeText={(value) => handleInputChange('comment', value)}
+          />
+
+          <View style={styles.buttonContainer}>
+            <ButtonTHS
+              title='Replace hoses'
+              size='sm'
+              disabled={isButtonDisabled}
+              onPress={handleSend}
+            />
+            <ButtonTHS
+              title='Save as draft'
+              size='sm'
+              variant='secondary'
+              onPress={handleSaveAsDraft}
+            />
+            <ButtonTHS
+              title='Cancel'
+              variant='tertiary'
+              size='sm'
+              onPress={handleCancel}
+            />
+          </View>
+        </View>
+      }
+      data={['one']}
+      renderItem={() => (
+        <>
+          <ListTable
+            items={originallySelectedHoses}
+            selectedIds={selectedIds}
+            onSelectionChange={handleSelectionChange}
+            canSelect={true}
+          />
+          <View style={styles.addHoseContainer}>
+            <LinkButton
+              variant='light'
+              title={`+ Add hose to this replacement report`}
+              onPress={handleAddHoses}
+            />
+          </View>
+        </>
+      )}
+    />
+  );
+};
+const styles = StyleSheet.create({
+  listHeaderComponent: {
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 30,
+  },
+  contactTitle: {
+    color: colors.black,
+  },
+  contactSubtitle: {
+    color: colors.extended333,
+  },
+  inputsContainer: {
+    paddingHorizontal: 10,
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 20,
+    paddingBottom: 50,
+    paddingTop: 30,
+  },
+  addHoseContainer: {
+    width: '100%',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingTop: 20,
+    paddingLeft: 10,
+  },
+  buttonContainer: {
+    paddingTop: 30,
+    width: '100%',
+    flexDirection: 'column',
+    gap: 20,
+    alignItems: 'center',
+  },
+});

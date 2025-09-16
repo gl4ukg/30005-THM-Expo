@@ -1,0 +1,326 @@
+import { HID, HoseData } from '@/lib/types/hose';
+import { S1Item, TransformedS1 } from '@/services/api/asset';
+import {
+  PartialReplaceHoseFormData,
+  PartialRFQFormData,
+  PartialSendMailFormData,
+} from './Reducer';
+import { Activity } from '@/components/dashboard/activitiesList/activity';
+import { loginCache } from '@/services/cache/loginCacheService';
+import { cache } from '@/services/cache/cacheService';
+import { Customer } from '@/services/api/customer';
+
+interface AppState {
+  auth: AuthState;
+  data: DataState;
+  settings: SettingsState;
+}
+
+// Define your state interfaces
+interface AuthState {
+  // define auth state properties
+  user: null | {
+    email: string;
+    name: string;
+    id: string;
+    phoneNumber?: string;
+    customerNumbers?: string[];
+    userAccessCode?: `${number}`;
+  };
+  isLogingLoading: boolean;
+  token: null | string;
+}
+
+export interface Action {
+  id: number;
+  createdAt: string; // TODO: change to timestamp
+  actionId: string;
+  actionHoseIdList: HoseData[];
+  status: 'DRAFT' | 'SENDT';
+  position: string;
+}
+export type ActionRFQ = Action & {
+  pressureTested: boolean;
+  type: 'RFQ';
+};
+export interface ActionSCRAP extends Action {
+  type: 'SCRAP';
+}
+
+export interface ActionCONTACT extends Action {
+  type: 'CONTACT';
+}
+export type SingleSelectionActionsType =
+  | 'RFQ'
+  | 'SCRAP'
+  | 'CONTACT'
+  | 'INSPECT'
+  | 'EDIT';
+
+export type MultiSelectionActionsType =
+  | 'RFQ'
+  | 'SCRAP'
+  | 'CONTACT'
+  | 'CONTACT_SUPPORT'
+  | 'REPLACE_HOSE';
+
+type MultiHosesSelection<T extends MultiSelectionActionsType> = {
+  type: T;
+  ids: number[];
+};
+type SingleHoseSelection<T extends SingleSelectionActionsType> = {
+  type: T;
+  id: number;
+};
+type ScrapSingleHoseSelection = SingleHoseSelection<'SCRAP'>;
+type ContactSingleHoseSelection = SingleHoseSelection<'CONTACT'>;
+type RFQSingleHoseSelection = SingleHoseSelection<'RFQ'>;
+type InspectSingleHoseSelection = SingleHoseSelection<'INSPECT'>;
+type EditSingleHoseSelection = SingleHoseSelection<'EDIT'>;
+type ScrapMultiHosesSelection = MultiHosesSelection<'SCRAP'>;
+type ContactMultiHosesSelection = MultiHosesSelection<'CONTACT'>;
+type ContactSupportMultiHosesSelection = MultiHosesSelection<'CONTACT_SUPPORT'>;
+type RFQMultiHosesSelection = MultiHosesSelection<'RFQ'>;
+type ReplaceMultiHosesSelection = MultiHosesSelection<'REPLACE_HOSE'>;
+export type SingleSelection =
+  | ScrapSingleHoseSelection
+  | ContactSingleHoseSelection
+  | RFQSingleHoseSelection
+  | InspectSingleHoseSelection
+  | EditSingleHoseSelection;
+export type MultiSelection =
+  | ScrapMultiHosesSelection
+  | ContactMultiHosesSelection
+  | RFQMultiHosesSelection
+  | ContactSupportMultiHosesSelection
+  | ReplaceMultiHosesSelection;
+export type HoseSelection = SingleSelection | MultiSelection;
+
+export const isMultiSelection = (
+  selection: HoseSelection | null,
+): selection is MultiSelection => !!selection && 'ids' in selection;
+
+export const isSingleSelection = (
+  selection: HoseSelection | null,
+): selection is SingleSelection => !!selection && 'id' in selection;
+
+interface DataState {
+  isLoading: boolean;
+  lastUpdate: null | Date;
+  lastUpdateStatus?: 'error' | 'syncing' | 'synced';
+  s1Code: string | null;
+  s1Items: TransformedS1[];
+  // define data state properties
+  hoses: HoseData[];
+  customers: Customer[];
+  selection: HoseSelection | null;
+  isCancelable: boolean;
+  drafts: ActivityDraft[];
+  done: ActivityDone[];
+  editedHoses: HoseData[];
+}
+
+interface DraftAction extends Activity {
+  type: 'RFQ' | 'SCRAP' | 'CONTACT';
+  status: 'draft';
+  formData: PartialRFQFormData;
+}
+interface DraftSendMail extends Activity {
+  type: 'CONTACT_SUPPORT';
+  status: 'draft';
+  formData: PartialSendMailFormData;
+}
+interface DraftReplaceHose extends Activity {
+  type: 'REPLACE_HOSE';
+  status: 'draft';
+  formData: PartialReplaceHoseFormData;
+}
+interface DraftRegisterHose extends Activity {
+  type: 'REGISTER_HOSE';
+  status: 'draft';
+  formData: HoseData;
+}
+interface DraftInspectHose extends Activity {
+  type: 'INSPECT';
+  status: 'draft';
+  formData: Partial<HID>;
+}
+
+export type ActivityDraft =
+  | DraftAction
+  | DraftSendMail
+  | DraftReplaceHose
+  | DraftRegisterHose
+  | DraftInspectHose;
+export type ActivityDone = Omit<ActivityDraft, 'status'> & {
+  status: 'done';
+  syncingTimestamp?: number;
+};
+
+interface SettingsState {
+  // define settings state properties
+  connectionType: 'wifi' | 'mobile' | null;
+  internetReachable: boolean;
+  appInfo: {
+    version: string;
+    environment: string;
+    webServiceEndpoint: string;
+  };
+  isMenuOpen: boolean;
+}
+
+// Define initial states for each slice of the app state
+const initialAuthState: AuthState = {
+  // initial auth state values
+  user: {
+    email: 'slange_mester@tess.no ',
+    name: 'Ole Slange Mester',
+    phoneNumber: '+4799999999',
+    id: '223949MOB',
+  },
+  isLogingLoading: false,
+  token: null,
+};
+
+const initialDataState: DataState = {
+  isLoading: false,
+  lastUpdate: null,
+  s1Code: null,
+  s1Items: [],
+  customers: [],
+  // initial data state values
+  hoses: [],
+  selection: null,
+  isCancelable: false,
+  drafts: [
+    {
+      id: 191818,
+      type: 'SCRAP',
+      status: 'draft',
+      selectedIds: [27, 30],
+      modifiedAt: new Date().toISOString(),
+      formData: {
+        comment: 'test',
+      },
+    },
+    {
+      id: 191819,
+      type: 'RFQ',
+      status: 'draft',
+      selectedIds: [27],
+      formData: {},
+      modifiedAt: '2016-07-29T20:23:01.804Z',
+    },
+    {
+      id: 191820,
+      type: 'REPLACE_HOSE',
+      status: 'draft',
+      selectedIds: [27],
+      modifiedAt: '2016-07-19T20:25:01.804Z',
+      formData: {
+        comment: 'test',
+        replacementImpacts: ['test'],
+        replacementReasons: ['test'],
+        replacementType: 'Unplanned',
+        downtime: '100',
+      },
+    },
+  ],
+  done: [
+    {
+      id: 153819,
+      type: 'RFQ',
+      status: 'done',
+      selectedIds: [27],
+      modifiedAt: '2016-07-19T20:21:01.804Z',
+      formData: {},
+    },
+    {
+      id: 391821,
+      type: 'REPLACE_HOSE',
+      status: 'done',
+      selectedIds: [27],
+      modifiedAt: '2017-07-29T20:23:01.804Z',
+      formData: {
+        comment: 'test',
+        replacementImpacts: ['test'],
+        replacementReasons: ['test'],
+        replacementType: 'Unplanned',
+        downtime: '100',
+      },
+    },
+  ],
+  editedHoses: [],
+};
+
+const initialSettingsState: SettingsState = {
+  // initial settings state values
+  connectionType: null,
+  internetReachable: false,
+  appInfo: {
+    version: '1.0.0',
+    environment: 'DEV',
+    webServiceEndpoint: 'http://localhost:3000',
+  },
+  isMenuOpen: false,
+};
+const getInitialState = (): AppState => {
+  const token = loginCache.apiKey.get();
+  if (token) {
+    //
+    const user = loginCache.user.get();
+    return {
+      auth: {
+        user: { ...user, userAccessCode: '1' }, //
+        token: token,
+        isLogingLoading: false,
+      },
+      data: {
+        customers: [],
+        hoses: cache.hoses.get(),
+        selection: null,
+        isCancelable: false,
+        drafts: cache.activities.draft.get(),
+        done: cache.activities.done.get(),
+        editedHoses: [],
+        isLoading: false,
+        s1Code: cache.s1.code.get(),
+        s1Items: cache.s1.items.get(),
+        lastUpdate: cache.hoses.getSyncTime() || null,
+      },
+      settings: initialSettingsState,
+    };
+  } else {
+    return {
+      auth: {
+        user: null,
+        token: null,
+        isLogingLoading: false,
+      },
+      data: {
+        customers: [],
+        hoses: [],
+        selection: null,
+        isCancelable: false,
+        drafts: [],
+        done: [],
+        editedHoses: [],
+        isLoading: false,
+        s1Code: null,
+        s1Items: [],
+        lastUpdate: null,
+      },
+      settings: initialSettingsState,
+    };
+  }
+};
+
+const initialState: AppState = getInitialState();
+
+export {
+  initialState,
+  type AppState,
+  type AuthState,
+  type DataState,
+  type SettingsState,
+};

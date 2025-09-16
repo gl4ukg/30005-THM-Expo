@@ -1,4 +1,4 @@
-# Welcome to your Expo app 👋
+# Welcome to your THS - TESS APP in EXPO 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
@@ -17,17 +17,16 @@ npm run reset-project
 1. Install dependencies
 
    ```bash
-   npm i
-   ```
-
-2. Build project with expo
-
-   ```
+   yarn add expo
+   npx expo install
    npx expo prebuild --clean
+   cd ios
+   pod install
+   cd ..
+   
    ```
-
-3. We will need to use developer build (we can not use expo go)
-   Set up you env
+2. We will need to use developer build (we can not use expo go)
+   Sett up you env
 
    [docs](https://docs.expo.dev/get-started/set-up-your-environment/)
    [Troubleshoot XCode](https://lonare.medium.com/exp-oxcode-must-be-fully-installed-before-you-can-continue-continue-to-the-app-store-65c8ff0d1496)

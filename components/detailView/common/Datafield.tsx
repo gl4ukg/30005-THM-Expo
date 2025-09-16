@@ -1,0 +1,69 @@
+import { colors } from '@/lib/tokens/colors';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Icon } from '../../Icon/Icon';
+import { Typography } from '../../Typography';
+
+interface DataFieldProps {
+  label: string;
+  value: string | number | undefined | null;
+  isMissing?: boolean;
+}
+
+export const DataField: React.FC<DataFieldProps> = ({ label, value, isMissing }) => {
+  const isValueEmpty = (
+    value: string | number | undefined | null,
+  ): value is undefined | null =>
+    value === undefined || value === null || value === '';
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.emptyValueContainer}>
+        <Typography
+          style={isMissing ? styles.emptyValueText : styles.label}
+          name={'sectionText'}
+        >
+          {label}
+        </Typography>
+        {isValueEmpty(value) ? (
+          <Typography
+            style={[styles.value, isMissing ? styles.emptyValueText : null]}
+            name={'sectionText'}
+            text='Not set'
+          />
+        ) : (
+          <Typography
+            style={styles.value}
+            name={'sectionText'}
+          >
+            {value.toString()}
+          </Typography>
+        )}
+      </View>
+      {isMissing && (
+        <Icon name='Alert' color={colors.error} size='md' />
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 30,
+  },
+  label: {
+    color: colors.extended666,
+  },
+  value: {
+    color: colors.extended333,
+  },
+  emptyValueContainer: {
+    alignItems: 'flex-start',
+  },
+  emptyValueText: {
+    color: colors.errorText,
+  },
+});
