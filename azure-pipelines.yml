@@ -1,6 +1,6 @@
 trigger:
 - dev
-- stag
+- main
 
 pool:
   vmImage: ubuntu-latest
@@ -26,10 +26,14 @@ steps:
 - script: yarn
   displayName: 'Install project dependencies'
 
-- script: EXPO_TOKEN=$(eas-access-token) npx eas-cli build --profile development --platform all --non-interactive
+- script: 
   condition: eq(variables['Build.SourceBranchName'], 'refs/heads/dev')
   displayName: 'Build (development) with EAS'
 
-- script: EXPO_TOKEN=$(eas-access-token) npx eas-cli build --profile preview --platform all --non-interactive
-  condition: eq(variables['Build.SourceBranchName'], 'refs/heads/stag')
-  displayName: 'Build (preview) with EAS'
+- ${{ if eq(variables['Build.SourceBranchName'], 'refs/heads/dev') }}:
+  - script: EXPO_TOKEN=$(eas-access-token) npx eas-cli build --profile development --platform all --non-interactive
+    displayName: 'Build (development) with EAS'
+
+- ${{ if eq(variables['Build.SourceBranchName'], 'refs/heads/main') }}:
+  - script: EXPO_TOKEN=$(eas-access-token) npx eas-cli build --profile preview --platform all --non-interactive
+    displayName: 'Build (preview) with EAS'
