@@ -31,5 +31,5 @@ steps:
 - script: yarn
   displayName: 'Install project dependencies'
 
-- script: EXPO_TOKEN=$(eas-access-token) npx eas-cli build --profile ${{ variables.easProfile }} --platform all --non-interactive
+- script: EXPO_TOKEN=$(eas-access-token) npx eas-cli build --profile ${{ variables.easProfile }} --platform all --non-interactive --no-wait
   displayName: 'Build (${{ variables.easProfile }}) with EAS'
