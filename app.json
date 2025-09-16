@@ -4,7 +4,7 @@
     "slug": "THM",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/tess-icon-thm_white-on-background.png",
+    "icon": "./assets/images/tess-icon-thm_white-on-bg.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -32,8 +32,8 @@
         "policy": "appVersion"
       },
       "adaptiveIcon": {
-        "backgroundImage": "./assets/images/tess-icon-thm_background.png",
-        "foregroundImage": "./assets/images/tess-icon-thm_white.png"
+        "backgroundImage": "./assets/images/tess-icon_bg.png",
+        "foregroundImage": "./assets/images/tess-icon-thm_fg.png"
       }
     },
     "androidStatusBar": {
@@ -48,7 +48,7 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/tess-icon-thm_white.png",
-          "imageWidth": 1024,
+          "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#009640"
         }
